@@ -11,6 +11,13 @@
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
+Route::get('/login', ['as' => 'login', 'uses' => 'LoginController@login']);
+Route::get('/logout', ['as' => 'logout', 'uses' => 'LoginController@logout']);
+Route::post('/loginPost', ['as' => 'login.post', 'uses' => 'LoginController@postLogin']);
+//验证码
+Route::get('/captcha', ['as' => 'captcha', 'uses' => 'LoginController@captcha']);
+
+
+Route::group(['middleware' => ['auth', 'web']], function() {
+    Route::get('/', ['as' => 'home.dashboard', 'uses' => 'LoginController@dashboard']);
 });
