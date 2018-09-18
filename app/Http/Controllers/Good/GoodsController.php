@@ -70,66 +70,7 @@ class GoodsController extends Controller
         return view('goods.index', compact('goods'));
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  GoodCreateRequest $request
-     *
-     * @return \Illuminate\Http\Response
-     *
-     * @throws \Prettus\Validator\Exceptions\ValidatorException
-     */
-    public function store(GoodCreateRequest $request)
-    {
-        try {
 
-            $this->validator->with($request->all())->passesOrFail(ValidatorInterface::RULE_CREATE);
-
-            $good = $this->repository->create($request->all());
-
-            $response = [
-                'message' => 'Good created.',
-                'data'    => $good->toArray(),
-            ];
-
-            if ($request->wantsJson()) {
-
-                return response()->json($response);
-            }
-
-            return redirect()->back()->with('message', $response['message']);
-        } catch (ValidatorException $e) {
-            if ($request->wantsJson()) {
-                return response()->json([
-                    'error'   => true,
-                    'message' => $e->getMessageBag()
-                ]);
-            }
-
-            return redirect()->back()->withErrors($e->getMessageBag())->withInput();
-        }
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  int $id
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        $good = $this->repository->find($id);
-
-        if (request()->wantsJson()) {
-
-            return response()->json([
-                'data' => $good,
-            ]);
-        }
-
-        return view('goods.show', compact('good'));
-    }
 
     /**
      * Show the form for editing the specified resource.
@@ -158,68 +99,49 @@ class GoodsController extends Controller
     }
 
     /**
-     * Update the specified resource in storage.
-     *
-     * @param  GoodUpdateRequest $request
-     * @param  string            $id
-     *
-     * @return Response
-     *
-     * @throws \Prettus\Validator\Exceptions\ValidatorException
+     * 审核通过
      */
-    public function update(GoodUpdateRequest $request, $id)
+    public function auditPass(Request $request)
     {
-        try {
-
-            $this->validator->with($request->all())->passesOrFail(ValidatorInterface::RULE_UPDATE);
-
-            $good = $this->repository->update($request->all(), $id);
-
-            $response = [
-                'message' => 'Good updated.',
-                'data'    => $good->toArray(),
-            ];
-
-            if ($request->wantsJson()) {
-
-                return response()->json($response);
-            }
-
-            return redirect()->back()->with('message', $response['message']);
-        } catch (ValidatorException $e) {
-
-            if ($request->wantsJson()) {
-
-                return response()->json([
-                    'error'   => true,
-                    'message' => $e->getMessageBag()
-                ]);
-            }
-
-            return redirect()->back()->withErrors($e->getMessageBag())->withInput();
+        if (! $id = $request->id) {
+            return jsonMessage('请先选择商品！');
         }
+        // 同步商品数据
+        $result = $this->goodsService->auditPass($request);
+        if ($result) {
+            return jsonMessage('', '审核通过成功');
+        }
+        return jsonMessage('审核通过失败，请重试');
     }
-
 
     /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int $id
-     *
-     * @return \Illuminate\Http\Response
+     * 审核拒绝
      */
-    public function destroy($id)
+    public function auditReject(Request $request)
     {
-        $deleted = $this->repository->delete($id);
-
-        if (request()->wantsJson()) {
-
-            return response()->json([
-                'message' => 'Good deleted.',
-                'deleted' => $deleted,
-            ]);
+        if (! $id = $request->id) {
+            return jsonMessage('请先选择商品！');
         }
-
-        return redirect()->back()->with('message', 'Good deleted.');
+        $result = $this->goodsService->auditReject($request);
+        if ($result) {
+            return jsonMessage('', '审核拒绝成功');
+        }
+        return jsonMessage('审核拒绝失败，请重试');
     }
+
+    /**
+     * 退回修改
+     */
+    public function auditReturn(Request $request)
+    {
+        if (! $id = $request->id) {
+            return jsonMessage('请先选择商品！');
+        }
+        $result = $this->goodsService->auditReturn($request);
+        if ($result) {
+            return jsonMessage('', '退回修改成功');
+        }
+        return jsonMessage('退回修改失败，请重试');
+    }
+
 }

@@ -13,7 +13,8 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        //
+        //导入文件
+        $this->import();
     }
 
     /**
@@ -24,5 +25,15 @@ class AppServiceProvider extends ServiceProvider
     public function register()
     {
         $this->app->register(RepositoryServiceProvider::class);
+    }
+
+    /**
+     * 引入自定义的头文件
+     *
+     * @return void
+     */
+    private function import()
+    {
+        require_once app_path().'/Helpers/header.php';
     }
 }
