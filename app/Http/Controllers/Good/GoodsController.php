@@ -7,6 +7,7 @@ use App\Repositories\CateAttr\CategoryAttributeRepository;
 use App\Repositories\CateAttr\CategoryAttributeRepositoryEloquent;
 use App\Repositories\CateAttr\CategoryRepository;
 use App\Repositories\Good\GoodRepositoryEloquent;
+use App\Services\ApiResponse;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
@@ -104,14 +105,14 @@ class GoodsController extends Controller
     public function auditPass(Request $request)
     {
         if (! $id = $request->id) {
-            return jsonMessage('请先选择商品！');
+            return ApiResponse::failure(g_API_ERROR, '请先选择商品');
         }
         // 同步商品数据
-        $result = $this->goodsService->auditPass($request);
+        $result = app(GoodRepositoryEloquent::class)->auditPass($request);
         if ($result) {
-            return jsonMessage('', '审核通过成功');
+            return ApiResponse::success('', '审核通过成功');
         }
-        return jsonMessage('审核通过失败，请重试');
+        return ApiResponse::failure(g_API_ERROR, '审核通过失败，请重试');
     }
 
     /**
@@ -120,13 +121,13 @@ class GoodsController extends Controller
     public function auditReject(Request $request)
     {
         if (! $id = $request->id) {
-            return jsonMessage('请先选择商品！');
+            return ApiResponse::failure(g_API_ERROR, '请先选择商品');
         }
-        $result = $this->goodsService->auditReject($request);
+        $result = app(GoodRepositoryEloquent::class)->auditReject($request);
         if ($result) {
-            return jsonMessage('', '审核拒绝成功');
+            return ApiResponse::success('', '审核拒绝成功');
         }
-        return jsonMessage('审核拒绝失败，请重试');
+        return ApiResponse::failure(g_API_ERROR, '审核拒绝失败，请重试');
     }
 
     /**
@@ -137,7 +138,7 @@ class GoodsController extends Controller
         if (! $id = $request->id) {
             return jsonMessage('请先选择商品！');
         }
-        $result = $this->goodsService->auditReturn($request);
+        $result = app(GoodRepositoryEloquent::class)->auditReturn($request);
         if ($result) {
             return jsonMessage('', '退回修改成功');
         }
