@@ -20,4 +20,10 @@ Route::get('/captcha', ['as' => 'captcha', 'uses' => 'LoginController@captcha'])
 
 Route::group(['middleware' => ['auth', 'web']], function() {
     Route::get('/', ['as' => 'home.dashboard', 'uses' => 'LoginController@dashboard']);
+
+
+    //商品模块
+    Route::group(['prefix' => 'good', 'namespace' => 'Good'], function() {
+        Route::get('/',['as' => 'good.index', 'uses' =>'GoodsController@index']);
+    });
 });

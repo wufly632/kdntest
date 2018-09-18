@@ -135,7 +135,20 @@ class GoodsController extends Controller
      */
     public function edit($id)
     {
+
         $good = $this->repository->find($id);
+
+        //获取该分类对应的类目属性
+        $categoryAttributes = $this->categoryService->getCategoryAttribute($good->category_id);
+        //获取该类目下对应的图片属性id
+        $picAttributeId = $this->categoryService->getPicAttributeId($good->category_id);
+        $goodSkus = $good->getSkus;
+
+        $good->good_sku_image = $this->goodsService->getProductSkuImage($goodSkus, $good->category_id);
+
+        // 分类信息
+        $cate = Category::find($good->category_id);
+        return view('good.audit', compact('categoryAttributes', 'picAttributeId', 'goodSkus', 'good', 'cate'));
 
         return view('goods.edit', compact('good'));
     }

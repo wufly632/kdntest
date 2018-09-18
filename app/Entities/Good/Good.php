@@ -15,6 +15,8 @@ class Good extends Model implements Transformable
 {
     use TransformableTrait;
 
+    protected $table = 'audit_goods';
+
     /**
      * The attributes that are mass assignable.
      *
