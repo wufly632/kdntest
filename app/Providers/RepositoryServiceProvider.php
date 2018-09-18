@@ -27,6 +27,7 @@ class RepositoryServiceProvider extends ServiceProvider
         $this->app->bind(\App\Repositories\CateAttr\CategoryRepository::class, \App\Repositories\CateAttr\CategoryRepositoryEloquent::class);
         $this->app->bind(\App\Repositories\CateAttr\CategoryAttributeRepository::class, \App\Repositories\CateAttr\CategoryAttributeRepositoryEloquent::class);
         $this->app->bind(\App\Repositories\CateAttr\AttributeRepository::class, \App\Repositories\CateAttr\AttributeRepositoryEloquent::class);
+        $this->app->bind(\App\Repositories\CateAttr\AttributeValueRepository::class, \App\Repositories\CateAttr\AttributeValueRepositoryEloquent::class);
         //:end-bindings:
     }
 }
