@@ -2,6 +2,11 @@
 
 namespace App\Http\Controllers\Good;
 
+use App\Entities\CateAttr\Category;
+use App\Repositories\CateAttr\CategoryAttributeRepository;
+use App\Repositories\CateAttr\CategoryAttributeRepositoryEloquent;
+use App\Repositories\CateAttr\CategoryRepository;
+use App\Repositories\Good\GoodRepositoryEloquent;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
@@ -133,24 +138,23 @@ class GoodsController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function audit($id)
     {
 
         $good = $this->repository->find($id);
 
         //获取该分类对应的类目属性
-        $categoryAttributes = $this->categoryService->getCategoryAttribute($good->category_id);
+        $categoryAttributes = app(CategoryAttributeRepositoryEloquent::class)->getCategoryAttribute($good->category_id);
+
         //获取该类目下对应的图片属性id
-        $picAttributeId = $this->categoryService->getPicAttributeId($good->category_id);
+        $picAttributeId = app(CategoryAttributeRepositoryEloquent::class)->getPicAttributeId($good->category_id);
         $goodSkus = $good->getSkus;
 
-        $good->good_sku_image = $this->goodsService->getProductSkuImage($goodSkus, $good->category_id);
+        $good->good_sku_image = app(GoodRepositoryEloquent::class)->getProductSkuImage($goodSkus, $good->category_id);
 
         // 分类信息
         $cate = Category::find($good->category_id);
-        return view('good.audit', compact('categoryAttributes', 'picAttributeId', 'goodSkus', 'good', 'cate'));
-
-        return view('goods.edit', compact('good'));
+        return view('goods.audit', compact('categoryAttributes', 'picAttributeId', 'goodSkus', 'good', 'cate'));
     }
 
     /**
