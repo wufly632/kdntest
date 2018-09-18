@@ -7,10 +7,11 @@ use Illuminate\Http\Request;
 use App\Http\Requests;
 use Prettus\Validator\Contracts\ValidatorInterface;
 use Prettus\Validator\Exceptions\ValidatorException;
-use App\Http\Requests\GoodCreateRequest;
-use App\Http\Requests\GoodUpdateRequest;
+use App\Http\Requests\Good\GoodCreateRequest;
+use App\Http\Requests\Good\GoodUpdateRequest;
 use App\Repositories\Good\GoodRepository;
 use App\Validators\Good\GoodValidator;
+use App\Http\Controllers\Controller;
 
 /**
  * Class GoodsController.
@@ -46,10 +47,13 @@ class GoodsController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
         $this->repository->pushCriteria(app('Prettus\Repository\Criteria\RequestCriteria'));
-        $goods = $this->repository->all();
+        $orderBy = $request->orderBy ?? 'id';
+        $sort = $request->sort ?? 'desc';
+        $length = $request->length ?? 20;
+        $goods = $this->repository->orderBy($orderBy, $sort)->paginate($length);
 
         if (request()->wantsJson()) {
 
