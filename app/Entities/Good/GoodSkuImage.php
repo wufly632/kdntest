@@ -1,21 +1,21 @@
 <?php
 
-namespace App\Entities\CateAttr;
+namespace App\Entities\Good;
 
 use Illuminate\Database\Eloquent\Model;
 use Prettus\Repository\Contracts\Transformable;
 use Prettus\Repository\Traits\TransformableTrait;
 
 /**
- * Class Attribute.
+ * Class GoodSkuImage.
  *
- * @package namespace App\Entities\CateAttr;
+ * @package namespace App\Entities\Good;
  */
-class Attribute extends Model implements Transformable
+class GoodSkuImage extends Model implements Transformable
 {
     use TransformableTrait;
 
-    protected $table = "admin_attribute";
+    protected $table = "audit_good_sku_images";
 
     /**
      * The attributes that are mass assignable.

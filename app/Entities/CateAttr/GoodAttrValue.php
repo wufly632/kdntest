@@ -7,15 +7,15 @@ use Prettus\Repository\Contracts\Transformable;
 use Prettus\Repository\Traits\TransformableTrait;
 
 /**
- * Class Attribute.
+ * Class GoodAttrValue.
  *
  * @package namespace App\Entities\CateAttr;
  */
-class Attribute extends Model implements Transformable
+class GoodAttrValue extends Model implements Transformable
 {
     use TransformableTrait;
 
-    protected $table = "admin_attribute";
+    protected $table = "audit_goods_attr_value";
 
     /**
      * The attributes that are mass assignable.

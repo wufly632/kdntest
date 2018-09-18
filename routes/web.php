@@ -25,5 +25,6 @@ Route::group(['middleware' => ['auth', 'web']], function() {
     //商品模块
     Route::group(['prefix' => 'good', 'namespace' => 'Good'], function() {
         Route::get('/',['as' => 'good.index', 'uses' =>'GoodsController@index']);
+        Route::get('/audit/{id}', ['as' => 'good.audit', 'uses' => 'GoodsController@audit']);
     });
 });
