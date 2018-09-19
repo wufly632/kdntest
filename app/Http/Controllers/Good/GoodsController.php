@@ -3,9 +3,9 @@
 namespace App\Http\Controllers\Good;
 
 use App\Entities\CateAttr\Category;
-use App\Repositories\CateAttr\CategoryAttributeRepositoryEloquent;
+use App\Entities\Good\Good;
 use App\Repositories\Good\GoodRepositoryEloquent;
-use App\Services\ApiResponse;
+use App\Services\Api\ApiResponse;
 use App\Services\CateAttr\CategoryAttributeService;
 use App\Services\Good\GoodService;
 use Illuminate\Http\Request;
@@ -66,11 +66,8 @@ class GoodsController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function audit($id)
+    public function audit(Good $good)
     {
-
-        $good = $this->repository->find($id);
-
         //获取该分类对应的类目属性
         $categoryAttributes = $this->categoryAttributeService->getCategoryAttribute($good->category_id);
 
@@ -94,6 +91,7 @@ class GoodsController extends Controller
             return ApiResponse::failure(g_API_ERROR, '请先选择商品');
         }
         // 同步商品数据
+        $result = $this->goodService->auditPass($request);
         $result = app(GoodRepositoryEloquent::class)->auditPass($request);
         if ($result) {
             return ApiResponse::success('', '审核通过成功');
@@ -122,7 +120,7 @@ class GoodsController extends Controller
     public function auditReturn(Request $request)
     {
         if (! $id = $request->id) {
-            return jsonMessage('请先选择商品！');
+            return ApiResponse::failure(g_API_ERROR, '请先选择商品');
         }
         $result = app(GoodRepositoryEloquent::class)->auditReturn($request);
         if ($result) {

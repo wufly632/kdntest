@@ -6,6 +6,8 @@
  */
 namespace App\Services\Good;
 
+use App\Entities\CateAttr\CategoryAttribute;
+use App\Entities\Good\GoodSkuImage;
 use App\Repositories\Good\GoodRepository;
 use App\Validators\Good\GoodValidator;
 
@@ -85,6 +87,125 @@ class GoodService{
         $category_attributes = CategoryAttribute::where(['category_id' => $category_id, 'is_image' => 1, 'status' => 1])->get();
         $attr_value_ids = array_unique(explode(',', implode(',', array_pluck($category_attributes, 'attr_values'))));
         return $attr_value_ids;
+    }
+
+    /**
+     * 审核通过
+     */
+    public function auditPass($request)
+    {
+        try {
+            DB::beginTransaction();
+            $good = $this->good->find($request->id);
+            if ($good->status != AuditGood::WAIT_AUDIT) {
+                return false;
+            }
+            $good->status = AuditGood::WAIT_EDIT;
+            $good->save();
+            // 同步商品数据
+            $this->syncGoodData($good);
+            DB::commit();
+            return true;
+        } catch (\Exception $e) {
+            DB::rollback();
+            return false;
+        }
+    }
+
+    /**
+     * 同步商品数据到正式表
+     */
+    public function syncGoodData($good)
+    {
+        // 同步goods表
+        $this->syncProducts($good);
+        // 同步good_skus表
+        $this->syncGoodskus($good->id,$good->getSkus);
+        // 同步good_sku_images表
+        $this->syncGoodSkuImages($good->id,$good->getImages);
+        // 同步goods_attr_value表
+        $this->syncGoodAttrValue($good->id,$good->getAttrValue);
+    }
+
+    /**
+     * 同步goods表
+     */
+    private function syncProducts($good)
+    {
+        $online_good = Good::find($good->id);
+        $data = $good->only(AuditGood::$syncField);
+        if ($online_good) {
+            Good::where('id', $good->id)->update($data);
+        } else {
+            $data['created_at'] = Carbon::now()->toDateTimeString();
+            $data['status'] = Good::OFFLINE;
+            Good::insert($data);
+        }
+    }
+
+    /**
+     * 同步goods表
+     */
+    private function syncGoodskus($good_id, $goodSkus)
+    {
+        $goodSkus = $goodSkus->map(function($item) {
+            return $item->only(AuditGoodSku::$syncField);
+        })->toArray();
+        GoodSku::where('good_id', $good_id)->delete();
+        GoodSku::insert($goodSkus);
+    }
+
+    /**
+     * 同步good_sku_images表
+     */
+    private function syncGoodSkuImages($good_id, $goodSkuimages)
+    {
+        $goodSkuimages = $goodSkuimages->map(function ($item) {
+            return $item->only(AuditGoodSkuImage::$syncField);
+        })->toArray();
+        GoodSkuImage::where('good_id', $good_id)->delete();
+        GoodSkuImage::insert($goodSkuimages);
+    }
+
+    /**
+     * 同步good_sku_images表
+     */
+    private function syncGoodAttrValue($good_id, $goodAttrValues)
+    {
+        $goodAttrValues = $goodAttrValues->map(function ($item){
+            return $item->only(AuditGoodAttrValue::$syncField);
+        })->toArray();
+        GoodAttrValue::where('good_id', $good_id)->delete();
+        GoodAttrValue::insert($goodAttrValues);
+    }
+
+    /**
+     * 审核拒绝
+     */
+    public function auditReject($request)
+    {
+        $good = $this->good->find($request->id);
+        if ($good->status != AuditGood::WAIT_AUDIT) {
+            return false;
+        }
+        $good->status = AuditGood::REJECT;
+        if ($good->save()){
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * 退回修改
+     */
+    public function auditReturn($request)
+    {
+        $good = $this->good->find($request->id);
+        $good->status = AuditGood::RETURN;
+        if ($good->save()){
+            return true;
+        }
+        return false;
     }
 
 }
