@@ -9,6 +9,7 @@ namespace App\Services\Good;
 use App\Entities\CateAttr\CategoryAttribute;
 use App\Entities\Good\GoodSkuImage;
 use App\Repositories\Good\GoodRepository;
+use App\Repositories\Product\ProductRepository;
 use App\Validators\Good\GoodValidator;
 
 class GoodService{
@@ -17,6 +18,11 @@ class GoodService{
      * @var GoodRepository
      */
     protected $repository;
+
+    /**
+     * @var ProductRepository
+     */
+    protected $product;
 
     /**
      * @var GoodValidator
@@ -29,10 +35,12 @@ class GoodService{
      * @param GoodRepository $repository
      * @param GoodValidator $validator
      */
-    public function __construct(GoodRepository $repository, GoodValidator $validator)
+    public function __construct(GoodRepository $repository, GoodValidator $validator,
+                                ProductRepository $product)
     {
         $this->repository = $repository;
         $this->validator  = $validator;
+        $this->product = $product;
     }
 
     public function getList($request)
@@ -132,7 +140,7 @@ class GoodService{
      */
     private function syncProducts($good)
     {
-        $online_good = Good::find($good->id);
+        $online_good = $this->product->find($good->id);
         $data = $good->only(AuditGood::$syncField);
         if ($online_good) {
             Good::where('id', $good->id)->update($data);
