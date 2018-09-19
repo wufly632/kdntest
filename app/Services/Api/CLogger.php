@@ -5,7 +5,7 @@
  * Date: 2018/9/18
  * Time: 上午0:50
  */
-namespace App\Services;
+namespace App\Services\Api;
 
 use Illuminate\Support\Facades\Config;
 use Monolog\Handler\StreamHandler;

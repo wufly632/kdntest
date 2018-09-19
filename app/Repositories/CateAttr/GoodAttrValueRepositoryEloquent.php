@@ -34,5 +34,4 @@ class GoodAttrValueRepositoryEloquent extends BaseRepository implements GoodAttr
     {
         $this->pushCriteria(app(RequestCriteria::class));
     }
-    
 }

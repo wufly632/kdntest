@@ -3,20 +3,14 @@
 namespace App\Http\Controllers\Good;
 
 use App\Entities\CateAttr\Category;
-use App\Repositories\CateAttr\CategoryAttributeRepository;
 use App\Repositories\CateAttr\CategoryAttributeRepositoryEloquent;
-use App\Repositories\CateAttr\CategoryRepository;
 use App\Repositories\Good\GoodRepositoryEloquent;
 use App\Services\ApiResponse;
+use App\Services\CateAttr\CategoryAttributeService;
+use App\Services\Good\GoodService;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
-use Prettus\Validator\Contracts\ValidatorInterface;
-use Prettus\Validator\Exceptions\ValidatorException;
-use App\Http\Requests\Good\GoodCreateRequest;
-use App\Http\Requests\Good\GoodUpdateRequest;
-use App\Repositories\Good\GoodRepository;
-use App\Validators\Good\GoodValidator;
 use App\Http\Controllers\Controller;
 
 /**
@@ -27,25 +21,20 @@ use App\Http\Controllers\Controller;
 class GoodsController extends Controller
 {
     /**
-     * @var GoodRepository
+     * @var GoodService
      */
-    protected $repository;
+    protected $goodService;
 
     /**
-     * @var GoodValidator
+     * @var CategoryAttributeService
      */
-    protected $validator;
+    protected $categoryAttributeService;
 
-    /**
-     * GoodsController constructor.
-     *
-     * @param GoodRepository $repository
-     * @param GoodValidator $validator
-     */
-    public function __construct(GoodRepository $repository, GoodValidator $validator)
+
+    public function __construct(GoodService $goodService,CategoryAttributeService $categoryAttributeService)
     {
-        $this->repository = $repository;
-        $this->validator  = $validator;
+        $this->goodService = $goodService;
+        $this->categoryAttributeService = $categoryAttributeService;
     }
 
     /**
@@ -55,11 +44,8 @@ class GoodsController extends Controller
      */
     public function index(Request $request)
     {
-        $this->repository->pushCriteria(app('Prettus\Repository\Criteria\RequestCriteria'));
-        $orderBy = $request->orderBy ?? 'id';
-        $sort = $request->sort ?? 'desc';
-        $length = $request->length ?? 20;
-        $goods = $this->repository->orderBy($orderBy, $sort)->paginate($length);
+        $request->flash();
+        $goods = $this->goodService->getList($request);
 
         if (request()->wantsJson()) {
 
@@ -86,13 +72,13 @@ class GoodsController extends Controller
         $good = $this->repository->find($id);
 
         //获取该分类对应的类目属性
-        $categoryAttributes = app(CategoryAttributeRepositoryEloquent::class)->getCategoryAttribute($good->category_id);
+        $categoryAttributes = $this->categoryAttributeService->getCategoryAttribute($good->category_id);
 
         //获取该类目下对应的图片属性id
-        $picAttributeId = app(CategoryAttributeRepositoryEloquent::class)->getPicAttributeId($good->category_id);
+        $picAttributeId = $this->categoryAttributeService->getPicAttributeId($good->category_id);
         $goodSkus = $good->getSkus;
 
-        $good->good_sku_image = app(GoodRepositoryEloquent::class)->getProductSkuImage($goodSkus, $good->category_id);
+        $good->good_sku_image = $this->goodService->getProductSkuImage($goodSkus, $good->category_id);
 
         // 分类信息
         $cate = Category::find($good->category_id);
