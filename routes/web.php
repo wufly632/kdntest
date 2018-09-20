@@ -37,4 +37,9 @@ Route::group(['middleware' => ['auth', 'web']], function() {
     Route::group(['prefix' => 'coupon', 'namespace' => 'Coupon'], function () {
         Route::get('/', ['as' => 'coupon.index', 'uses' => 'CouponController@index']);
     });
+
+    //用户订单模块
+    Route::group(['prefix' => 'order', 'namespace' => 'Order'], function () {
+        Route::get('/', ['as' => 'order.index', 'uses' => 'OrderController@index']);
+    });
 });
