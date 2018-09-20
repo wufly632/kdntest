@@ -140,7 +140,7 @@
                                 <tr>
                                     <th>商品图片</th>
                                     <th>商品信息</th>
-                                    <th>建议零售价</th>
+                                    <th>采购价</th>
                                     <th>售价</th>
                                     <th>历史销量</th>
                                     <th>库存数量</th>
@@ -149,31 +149,32 @@
                                 </tr>
                                 </thead>
                                 <tbody>
-                                <tr>
-                                    <td class="table-center">
-                                        <span class="mailbox-attachment-icon has-img" style="width: 120px;">
-                                            <img src="{{asset('/images/photo1.png')}}" alt="Attachment">
-                                        </span>
-                                    </td>
-                                    <td class="table-center">
-                                        <span>ID：201808191021310</span><br>
-                                        <span>名称：精品儿童童装</span><br>
-                                        <span>货号：TZ201809123103</span><br>
-                                    </td>
-                                    <td class="table-center">
-                                        <label for="">￥：</label>399
-                                    </td>
-                                    <td class="table-center">
-                                        <label for="">￥：</label>
-                                        99
-                                    </td>
-                                    <td class="table-center">1239</td>
-                                    <td class="table-center">298</td>
-                                    <td class="table-center">等待审核</td>
-                                    <td class="table-center">
-                                        <a href="#">编辑</a>
-                                    </td>
-                                </tr>
+                                @foreach($goods as $good)
+                                    <tr>
+                                        <td class="table-center">
+                                            <span class="mailbox-attachment-icon has-img" style="width: 120px;">
+                                                <img src="{{$good->main_pic}}" alt="" width="60px" height="60px">
+                                            </span>
+                                        </td>
+                                        <td class="table-center">
+                                            <span>ID：{{$good->id}}</span><br>
+                                            <span>名称：{{$good->good_title}}</span><br>
+                                            <span>货号：{{$good->good_code}}</span><br>
+                                        </td>
+                                        <td class="table-center">
+                                            <label for="">￥：</label>{{$good->stock_price}}
+                                        </td>
+                                        <td class="table-center">
+                                            <label for="">￥：</label>{{$good->supply_price}}
+                                        </td>
+                                        <td class="table-center">{{$good->orders}}</td>
+                                        <td class="table-center">{{$good->good_stock}}</td>
+                                        <td class="table-center">{{\App\Entities\Good\Good::$allStatus[$good->status]}}</td>
+                                        <td class="table-center">
+                                            <a href="#">编辑</a>
+                                        </td>
+                                    </tr>
+                                @endforeach
                                 </tbody>
                             </table>
                         </div>
