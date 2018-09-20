@@ -15,6 +15,8 @@ class Promotion extends Model implements Transformable
 {
     use TransformableTrait;
 
+    protected $table = "promotions_activity";
+
     /**
      * The attributes that are mass assignable.
      *

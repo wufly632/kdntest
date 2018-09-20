@@ -27,4 +27,9 @@ Route::group(['middleware' => ['auth', 'web']], function() {
         Route::get('/',['as' => 'good.index', 'uses' =>'GoodsController@index']);
         Route::get('/audit/{good}', ['as' => 'good.audit', 'uses' => 'GoodsController@audit']);
     });
+
+    //促销活动模块
+    Route::group(['prefix' => 'promotion', 'namespace' => 'Promotion'], function () {
+       Route::get('/', ['as' => 'promotion.index', 'uses' => 'PromotionController@index']);
+    });
 });
