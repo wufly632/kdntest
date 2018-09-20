@@ -1,4 +1,10 @@
 <header class="main-header">
+    <style>
+        .table-center {
+            vertical-align: middle!important;
+            text-align: center;
+        }
+    </style>
     <!-- Logo -->
     <a href="../../index2.html" class="logo">
         <!-- mini logo for sidebar mini 50x50 pixels -->
