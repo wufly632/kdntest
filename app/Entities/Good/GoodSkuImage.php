@@ -24,4 +24,7 @@ class GoodSkuImage extends Model implements Transformable
      */
     protected $fillable = [];
 
+    // 需同步的字段
+    public static $syncField = ['id', 'good_id', 'sku_id', 'src', 'sort', 'is_deleted'];
+
 }

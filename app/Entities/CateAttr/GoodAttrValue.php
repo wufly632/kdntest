@@ -24,4 +24,7 @@ class GoodAttrValue extends Model implements Transformable
      */
     protected $fillable = [];
 
+    // 需同步的字段
+    public static $syncField = ['id', 'good_id', 'sku_id', 'attr_id', 'value_ids', 'value_name'];
+
 }

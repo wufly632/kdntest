@@ -24,4 +24,12 @@ class Product extends Model implements Transformable
      */
     protected $fillable = [];
 
+
+    const ONLINE  = 1;   //上架
+    const OFFLINE = 2;   //下架
+
+    public static $allStatus = [
+        self::ONLINE => '上架',
+        self::OFFLINE => '上架',
+    ];
 }

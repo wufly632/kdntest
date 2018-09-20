@@ -7,17 +7,22 @@
 namespace App\Services\Good;
 
 use App\Entities\CateAttr\CategoryAttribute;
+use App\Entities\CateAttr\GoodAttrValue;
+use App\Entities\Good\Good;
+use App\Entities\Good\GoodSku;
 use App\Entities\Good\GoodSkuImage;
+use App\Entities\Product\Product;
 use App\Repositories\Good\GoodRepository;
 use App\Repositories\Product\ProductRepository;
 use App\Validators\Good\GoodValidator;
+use Carbon\Carbon;
 
 class GoodService{
 
     /**
      * @var GoodRepository
      */
-    protected $repository;
+    protected $good;
 
     /**
      * @var ProductRepository
@@ -32,24 +37,29 @@ class GoodService{
     /**
      * GoodsController constructor.
      *
-     * @param GoodRepository $repository
+     * @param GoodRepository $good
      * @param GoodValidator $validator
      */
-    public function __construct(GoodRepository $repository, GoodValidator $validator,
+    public function __construct(GoodRepository $good, GoodValidator $validator,
                                 ProductRepository $product)
     {
-        $this->repository = $repository;
+        $this->good = $good;
         $this->validator  = $validator;
         $this->product = $product;
     }
 
+    public function getGoodModel()
+    {
+        return $this->good->makeModel();
+    }
+
     public function getList($request)
     {
-        $this->repository->pushCriteria(app('Prettus\Repository\Criteria\RequestCriteria'));
+        $this->good->pushCriteria(app('Prettus\Repository\Criteria\RequestCriteria'));
         $orderBy = $request->orderBy ?? 'id';
         $sort = $request->sort ?? 'desc';
         $length = $request->length ?? 20;
-        return $this->repository->orderBy($orderBy, $sort)->paginate($length);
+        return $this->good->orderBy($orderBy, $sort)->paginate($length);
     }
 
     /**
@@ -105,10 +115,10 @@ class GoodService{
         try {
             DB::beginTransaction();
             $good = $this->good->find($request->id);
-            if ($good->status != AuditGood::WAIT_AUDIT) {
+            if ($good->status != Good::WAIT_AUDIT) {
                 return false;
             }
-            $good->status = AuditGood::WAIT_EDIT;
+            $good->status = Good::WAIT_EDIT;
             $good->save();
             // 同步商品数据
             $this->syncGoodData($good);
@@ -141,13 +151,13 @@ class GoodService{
     private function syncProducts($good)
     {
         $online_good = $this->product->find($good->id);
-        $data = $good->only(AuditGood::$syncField);
+        $data = $good->only(Good::$syncField);
         if ($online_good) {
-            Good::where('id', $good->id)->update($data);
+            $this->good->update($data, $good->id);
         } else {
             $data['created_at'] = Carbon::now()->toDateTimeString();
-            $data['status'] = Good::OFFLINE;
-            Good::insert($data);
+            $data['status'] = Product::OFFLINE;
+            $this->good->create($data);
         }
     }
 
@@ -157,7 +167,7 @@ class GoodService{
     private function syncGoodskus($good_id, $goodSkus)
     {
         $goodSkus = $goodSkus->map(function($item) {
-            return $item->only(AuditGoodSku::$syncField);
+            return $item->only(GoodSku::$syncField);
         })->toArray();
         GoodSku::where('good_id', $good_id)->delete();
         GoodSku::insert($goodSkus);
@@ -169,7 +179,7 @@ class GoodService{
     private function syncGoodSkuImages($good_id, $goodSkuimages)
     {
         $goodSkuimages = $goodSkuimages->map(function ($item) {
-            return $item->only(AuditGoodSkuImage::$syncField);
+            return $item->only(GoodSkuImage::$syncField);
         })->toArray();
         GoodSkuImage::where('good_id', $good_id)->delete();
         GoodSkuImage::insert($goodSkuimages);
@@ -181,7 +191,7 @@ class GoodService{
     private function syncGoodAttrValue($good_id, $goodAttrValues)
     {
         $goodAttrValues = $goodAttrValues->map(function ($item){
-            return $item->only(AuditGoodAttrValue::$syncField);
+            return $item->only(GoodAttrValue::$syncField);
         })->toArray();
         GoodAttrValue::where('good_id', $good_id)->delete();
         GoodAttrValue::insert($goodAttrValues);
@@ -193,10 +203,10 @@ class GoodService{
     public function auditReject($request)
     {
         $good = $this->good->find($request->id);
-        if ($good->status != AuditGood::WAIT_AUDIT) {
+        if ($good->status != Good::WAIT_AUDIT) {
             return false;
         }
-        $good->status = AuditGood::REJECT;
+        $good->status = Good::REJECT;
         if ($good->save()){
             return true;
         }
@@ -209,7 +219,7 @@ class GoodService{
     public function auditReturn($request)
     {
         $good = $this->good->find($request->id);
-        $good->status = AuditGood::RETURN;
+        $good->status = Good::RETURN;
         if ($good->save()){
             return true;
         }
