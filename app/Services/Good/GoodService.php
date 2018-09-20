@@ -6,6 +6,9 @@
  */
 namespace App\Services\Good;
 
+use App\Criteria\Good\GoodCodeCriteria;
+use App\Criteria\Good\GoodIdCriteria;
+use App\Criteria\Good\GoodTitleCriteria;
 use App\Entities\CateAttr\CategoryAttribute;
 use App\Entities\CateAttr\GoodAttrValue;
 use App\Entities\Good\Good;
@@ -55,10 +58,12 @@ class GoodService{
 
     public function getList($request)
     {
-        $this->good->pushCriteria(app('Prettus\Repository\Criteria\RequestCriteria'));
         $orderBy = $request->orderBy ?? 'id';
         $sort = $request->sort ?? 'desc';
         $length = $request->length ?? 20;
+        $this->good->pushCriteria(new GoodTitleCriteria($request->good_title));
+        $this->good->pushCriteria(new GoodIdCriteria($request->id));
+        $this->good->pushCriteria(new GoodCodeCriteria($request->good_code));
         return $this->good->orderBy($orderBy, $sort)->paginate($length);
     }
 

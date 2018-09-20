@@ -104,7 +104,7 @@
                                 </tr>
                                 </thead>
                                 <tbody>
-                                @foreach($goods as $good)
+                                @foreach($coupons as $coupon)
                                     <tr>
                                         <td class="table-center text-center">
                                             <div class="mailbox-attachment-icon has-img" style="width: 80px;">
