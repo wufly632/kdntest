@@ -15,6 +15,8 @@ class AttributeValue extends Model implements Transformable
 {
     use TransformableTrait;
 
+    protected $table = 'admin_attribute_value';
+
     /**
      * The attributes that are mass assignable.
      *
