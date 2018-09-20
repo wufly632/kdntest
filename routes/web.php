@@ -32,4 +32,9 @@ Route::group(['middleware' => ['auth', 'web']], function() {
     Route::group(['prefix' => 'promotion', 'namespace' => 'Promotion'], function () {
        Route::get('/', ['as' => 'promotion.index', 'uses' => 'PromotionController@index']);
     });
+
+    //优惠券模块
+    Route::group(['prefix' => 'coupon', 'namespace' => 'Coupon'], function () {
+        Route::get('/', ['as' => 'coupon.index', 'uses' => 'CouponController@index']);
+    });
 });
