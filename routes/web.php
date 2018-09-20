@@ -60,6 +60,9 @@ Route::group(['middleware' => ['auth', 'web']], function() {
     //优惠券模块
     Route::group(['prefix' => 'coupon', 'namespace' => 'Coupon'], function () {
         Route::get('/', ['as' => 'coupon.index', 'uses' => 'CouponController@index']);
+        Route::post('/create', ['as' => 'coupon.create', 'uses' => 'CouponController@create']);
+        Route::post('/update', ['as' => 'coupon.update', 'uses' => 'CouponController@update']);
+        Route::get('/edit/{coupon}', ['as' => 'coupon.edit', 'uses' => 'CouponController@edit']);
     });
 
     //用户订单模块

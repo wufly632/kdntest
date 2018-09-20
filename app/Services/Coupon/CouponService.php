@@ -12,6 +12,14 @@
 namespace App\Services\Coupon;
 
 use App\Repositories\Coupon\CouponRepository;
+use App\Services\Api\ApiResponse;
+use App\Validators\Coupon\CouponValidator;
+use Carbon\Carbon;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Input;
+use Prettus\Validator\Contracts\ValidatorInterface;
+use \Prettus\Validator\Exceptions\ValidatorException;
 
 class CouponService
 {
@@ -21,13 +29,19 @@ class CouponService
     protected $coupon;
 
     /**
+     * @var CouponValidator
+     */
+    protected $couponValidator;
+
+    /**
      * CouponController constructor.
      *
      * @param CouponRepository $coupon
      */
-    public function __construct(CouponRepository $coupon)
+    public function __construct(CouponRepository $coupon, CouponValidator $couponValidator)
     {
         $this->coupon = $coupon;
+        $this->couponValidator = $couponValidator;
     }
 
     /**
@@ -41,5 +55,46 @@ class CouponService
         $sort = $request->sort ?? 'desc';
         $length = $request->length ?? 20;
         return $this->coupon->orderBy($orderBy, $sort)->paginate($length);
+    }
+
+
+    /**
+     * @function 创建优惠券
+     * @param $request
+     * @return mixed
+     */
+    public function store($request)
+    {
+        try {
+            $this->couponValidator->with( $request->all() )->passesOrFail();
+            DB::beginTransaction();
+            $coupon = $request->only(['coupon_name','coupon_price', 'coupon_use_price', 'coupon_number',
+                                      'use_type', 'use_days', 'coupon_use_startdate', 'coupon_use_enddate',
+                                      'coupon_grant_startdate', 'coupon_grant_enddate', 'coupon_purpose',
+                                      'coupon_remark']);
+            $coupon['user_id'] = Auth::id();
+            $coupon['created_at'] = Carbon::now()->toDateTimeString();
+            $this->coupon->create($coupon);
+            DB::commit();
+        } catch (ValidatorException $e) {
+            DB::rollback();
+            return ApiResponse::failure(g_API_ERROR, $e->getMessage());
+        }
+    }
+
+    /**
+     * @function 更新优惠券
+     * @param $request
+     * @return mixed
+     */
+    public function update($request)
+    {
+        try {
+            $this->couponValidator->with( Input::all() )->passesOrFail( ValidatorInterface::RULE_UPDATE );
+            $this->coupon->update( $request->except(['_token']), $request->id );
+            return ApiResponse::success('');
+        } catch (\Exception $e) {
+            return ApiResponse::failure(g_API_ERROR, $e->getMessage());
+        }
     }
 }
