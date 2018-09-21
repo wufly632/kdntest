@@ -48,32 +48,19 @@
                 </a>
                 <ul class="treeview-menu">
                     <li><a href="{{secure_route('good.index')}}"><i class="fa fa-circle-o"></i>商品列表</a></li>
-                    <li><a href="../layout/boxed.html"><i class="fa fa-circle-o"></i> Boxed</a></li>
-                    <li class="active"><a href="../layout/fixed.html"><i class="fa fa-circle-o"></i> Fixed</a></li>
-                    <li><a href="collapsed-sidebar.html"><i class="fa fa-circle-o"></i> Collapsed Sidebar</a></li>
                 </ul>
-            </li>
-            <li>
-                <a href="../widgets.html">
-                    <i class="fa fa-th"></i> <span>Widgets</span>
-                    <span class="pull-right-container">
-              <small class="label pull-right bg-green">new</small>
-            </span>
-                </a>
             </li>
             <li class="treeview">
                 <a href="#">
                     <i class="fa fa-pie-chart"></i>
-                    <span>Charts</span>
+                    <span>营销管理</span>
                     <span class="pull-right-container">
-              <i class="fa fa-angle-left pull-right"></i>
-            </span>
+                      <small class="label pull-right bg-green">new</small>
+                    </span>
                 </a>
                 <ul class="treeview-menu">
-                    <li><a href="../charts/chartjs.html"><i class="fa fa-circle-o"></i> ChartJS</a></li>
-                    <li><a href="../charts/morris.html"><i class="fa fa-circle-o"></i> Morris</a></li>
-                    <li><a href="../charts/flot.html"><i class="fa fa-circle-o"></i> Flot</a></li>
-                    <li><a href="../charts/inline.html"><i class="fa fa-circle-o"></i> Inline charts</a></li>
+                    <li><a href="{{secure_route('promotion.index')}}"><i class="fa fa-circle-o"></i>促销活动</a></li>
+                    <li><a href="{{secure_route('coupon.index')}}"><i class="fa fa-circle-o"></i>优惠券</a></li>
                 </ul>
             </li>
             <li class="treeview">

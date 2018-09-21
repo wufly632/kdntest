@@ -55,6 +55,9 @@ Route::group(['middleware' => ['auth', 'web']], function() {
     //促销活动模块
     Route::group(['prefix' => 'promotion', 'namespace' => 'Promotion'], function () {
        Route::get('/', ['as' => 'promotion.index', 'uses' => 'PromotionController@index']);
+       Route::post('/addPost', ['as' => 'promotion.addPost', 'uses' => 'PromotionController@addPost']);
+       Route::get('/add/{promotion}', ['as' => 'promotion.add', 'uses' => 'PromotionController@add']);
+       Route::post('/create', ['as' => 'promotion.create', 'uses' => 'PromotionController@create']);
     });
 
     //优惠券模块
@@ -68,5 +71,6 @@ Route::group(['middleware' => ['auth', 'web']], function() {
     //用户订单模块
     Route::group(['prefix' => 'order', 'namespace' => 'Order'], function () {
         Route::get('/', ['as' => 'order.index', 'uses' => 'OrderController@index']);
+
     });
 });
