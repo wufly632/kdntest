@@ -93,13 +93,14 @@
                             <table id="example2" class="table table-bordered table-hover text-center">
                                 <thead>
                                 <tr class="text-center">
-                                    <th>商品图片</th>
-                                    <th>商品信息</th>
-                                    <th>采购价</th>
-                                    <th>售价</th>
-                                    <th>历史销量</th>
-                                    <th>库存数量</th>
-                                    <th>商品状态</th>
+                                    <th>ID</th>
+                                    <th>名称</th>
+                                    <th>面额</th>
+                                    <th>使用/发放/总量</th>
+                                    <th>用途</th>
+                                    <th>使用有效期</th>
+                                    <th>发放时间</th>
+                                    <th>券状态</th>
                                     <th>操作</th>
                                 </tr>
                                 </thead>
@@ -107,24 +108,27 @@
                                 @foreach($coupons as $coupon)
                                     <tr>
                                         <td class="table-center text-center">
-                                            <div class="mailbox-attachment-icon has-img" style="width: 80px;">
-                                                <img src="{{$good->main_pic}}" alt="" width="60px" height="60px">
-                                            </div>
+                                            {{$coupon->id}}
                                         </td>
                                         <td class="table-center">
-                                            <span>ID：{{$good->id}}</span><br>
-                                            <span>名称：{{$good->good_title}}</span><br>
-                                            <span>货号：{{$good->good_code}}</span><br>
+                                            {{$coupon->coupon_name}}
                                         </td>
                                         <td class="table-center">
-                                            <label for="">￥：</label>{{$good->stock_price}}
+                                            <label for="">￥：</label>{{$coupon->coupon_price}}
                                         </td>
                                         <td class="table-center">
-                                            <label for="">￥：</label>{{$good->supply_price}}
+                                            <label for="">￥：</label>{{$coupon->supply_price}}
                                         </td>
-                                        <td class="table-center">{{$good->orders}}</td>
-                                        <td class="table-center">{{$good->good_stock}}</td>
-                                        <td class="table-center">{{\App\Entities\Good\Good::$allStatus[$good->status]}}</td>
+                                        <td class="table-center">
+                                            {{$coupon->coupon_use_enddate}}
+                                        </td>
+                                        <td class="table-center">
+                                            {{$coupon->coupon_purpose}}
+                                        </td>
+                                        <td class="table-center">
+                                            {{$coupon->coupon_grant_startdate}}
+                                        </td>
+                                        <td class="table-center">{{$coupon->status}}</td>
                                         <td class="table-center">
                                             <a href="#">编辑</a>
                                         </td>
