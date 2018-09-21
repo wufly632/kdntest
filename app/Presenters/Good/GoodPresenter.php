@@ -21,4 +21,5 @@ class GoodPresenter extends FractalPresenter
     {
         return new GoodTransformer();
     }
+    
 }

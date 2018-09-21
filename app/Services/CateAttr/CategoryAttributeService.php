@@ -42,8 +42,7 @@ class CategoryAttributeService{
     public function getCategoryAttribute($category_id)
     {
         $categoryAttributes = $this->repository->with('attribute')
-            ->where(['category_id' => $category_id, 'status' => 1])
-            ->get()
+            ->findWhere(['category_id' => $category_id, 'status' => 1])
             ->groupBy('attr_type');
         if (! $categoryAttributes) {
             return [];
@@ -58,6 +57,6 @@ class CategoryAttributeService{
      * @return int 属性id
      */
     public function getPicAttributeId($category_id) {
-        return $this->repository->findWhere(['category_id' => $category_id, 'status' => 1, 'is_image' => 1])->attr_id;
+        return $this->repository->findWhere(['category_id' => $category_id, 'status' => 1, 'is_image' => 1])->first()->attr_id;
     }
 }

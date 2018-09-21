@@ -1,0 +1,27 @@
+<?php
+
+namespace App\Entities\Promotion;
+
+use Illuminate\Database\Eloquent\Model;
+use Prettus\Repository\Contracts\Transformable;
+use Prettus\Repository\Traits\TransformableTrait;
+
+/**
+ * Class PromotionGood.
+ *
+ * @package namespace App\Entities\Promotion;
+ */
+class PromotionGood extends Model implements Transformable
+{
+    use TransformableTrait;
+
+    protected $table = 'promotions_activity_goods';
+
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array
+     */
+    protected $fillable = [];
+
+}

@@ -126,7 +126,7 @@
                                         <td class="table-center">{{$good->good_stock}}</td>
                                         <td class="table-center">{{\App\Entities\Good\Good::$allStatus[$good->status]}}</td>
                                         <td class="table-center">
-                                            <a href="#">编辑</a>
+                                            <a href="{{secure_route('good.audit', ['good' => $good->id])}}">编辑</a>
                                         </td>
                                     </tr>
                                 @endforeach

@@ -1,11 +1,8 @@
 @extends('layouts.default')
-@section('content')
+@section('css')
     <style>
         li {
             list-style: none;
-            width: 30px;
-            height: 30px;
-            margin-bottom: 20px;
         }
 
         .w100h100 {
@@ -13,6 +10,9 @@
             height: 100px;
         }
     </style>
+@endsection
+@section('content')
+
     <!-- Content Wrapper. Contains page content -->
     <div class="content-wrapper">
 
@@ -24,16 +24,16 @@
                         <div class="col-xs-1 table-center" style="background-color: #293846;height: 50px;">
                             <label for="" style="color: white;line-height: 50px;">状态：</label>
                         </div>
-                        <div class="col-xs-1 table-center" style="background-color: #e0e3e6;height: 50px;">
+                        <div class="col-xs-2 table-center" style="background-color: #e0e3e6;height: 50px;">
                             <label for="" style="color: #777777;line-height: 50px;">等待编辑：</label>
                         </div>
                         <a href="#">
-                            <div class="col-xs-1 table-center" style="background-color: #e0e3e6;height: 50px;">
+                            <div class="col-xs-2 table-center" style="background-color: #e0e3e6;height: 50px;">
                                 <i class="fa fa-fw fa-mail-reply-all"></i>
                                 <label for="" style="color: #777777;line-height: 50px;">返回到列表页</label>
                             </div>
                         </a>
-                        <div class="col-xs-9 table-center" style="background-color: #e0e3e6;height: 50px;">
+                        <div class="col-xs-7 table-center" style="background-color: #e0e3e6;height: 50px;">
                             <div class="col-xs-3"></div>
                             <div class="col-xs-2">
                                 <button type="button" class="btn btn-block btn-success btn-lg">编辑</button>
@@ -60,13 +60,13 @@
                                 <!-- 第一行 -->
                                 <div class="col-xs-12">
                                     <div class="form-group col-xs-4">
-                                        <label for="inputEmail3" class="col-sm-3 control-label">商品类目：</label>
+                                        <label for="inputEmail3" class="col-sm-4 control-label">商品类目：</label>
 
-                                        <div class="col-sm-9">
+                                        <div class="col-sm-8" style="padding-top: 8px;">
+                                            {{$good->category_path}}
                                             <label for="">婴儿服装</label> --
                                             <label for="">婴儿装</label> --
                                             <label for="">婴儿内衣</label>
-                                            <label for="" style="margin-left: 5%;"><a href="">重新选择</a></label>
                                         </div>
                                     </div>
                                 </div>
@@ -74,9 +74,9 @@
                                 <!-- 第二行 -->
                                 <div class="col-xs-12">
                                     <div class="form-group col-xs-4">
-                                        <label for="inputEmail3" class="col-sm-3 control-label">品牌：</label>
+                                        <label for="inputEmail3" class="col-sm-4 control-label">品牌：</label>
 
-                                        <div class="col-sm-9">
+                                        <div class="col-sm-8">
                                             <input type="text" class="form-control" id="brand" placeholder="">
                                         </div>
                                     </div>
@@ -85,8 +85,8 @@
                                 <!-- 第三行 -->
                                 <div class="col-xs-12">
                                     <div class="form-group col-xs-4">
-                                        <label for="inputPassword3" class="col-sm-3 control-label">货号：</label>
-                                        <div class="col-sm-9">
+                                        <label for="inputPassword3" class="col-sm-4 control-label">货号：</label>
+                                        <div class="col-sm-8">
                                             <input type="text" class="form-control" id="number" placeholder="">
                                         </div>
                                     </div>
@@ -95,8 +95,8 @@
                                 <!-- 第四行 -->
                                 <div class="col-xs-12">
                                     <div class="form-group col-xs-4">
-                                        <label for="inputPassword3" class="col-sm-3 control-label">商品名称：</label>
-                                        <div class="col-sm-9">
+                                        <label for="inputPassword3" class="col-sm-4 control-label">商品名称：</label>
+                                        <div class="col-sm-8">
                                             <input type="text" class="form-control" id="goods_name" placeholder="">
                                         </div>
                                     </div>
