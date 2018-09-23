@@ -15,10 +15,14 @@ use App\Entities\Good\Good;
 use App\Entities\Good\GoodSku;
 use App\Entities\Good\GoodSkuImage;
 use App\Entities\Product\Product;
+use App\Entities\Product\ProductAttrValue;
+use App\Entities\Product\ProductSku;
 use App\Repositories\Good\GoodRepository;
 use App\Repositories\Product\ProductRepository;
 use App\Validators\Good\GoodValidator;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class GoodService{
 
@@ -229,6 +233,35 @@ class GoodService{
             return true;
         }
         return false;
+    }
+
+    /**
+     * @function 商品编辑
+     * @param $request
+     * @return bool
+     */
+    public function editPost($request)
+    {
+        try {
+            DB::beginTransaction();
+            $this->product->update(['good_en_title' => $request->good_en_title], $request->id);
+            $this->good->update(['status' => Good::EDITED], $request->id);
+            //修改自定义属性
+            foreach ($request->attr_id as $attr_id => $en_value) {
+                GoodAttrValue::where(['good_id' => $request->id, 'attr_id' => $attr_id])->update(['value_name' => $en_value]);
+                ProductAttrValue::where(['good_id' => $request->id, 'attr_id' => $attr_id])->update(['value_name' => $en_value]);
+            }
+            //修改sku价格
+            foreach ($request->good_sku['price'] as $sku_id => $price) {
+                ProductSku::where(['id' => $sku_id])->update(['price' => $price]);
+            }
+            DB::commit();
+            return true;
+        } catch (\Exception $e) {
+            Log::error($e->getMessage());
+            DB::rollback();
+            return false;
+        }
     }
 
 }

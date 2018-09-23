@@ -3,6 +3,7 @@
 namespace App\Entities\Good;
 
 use App\Entities\CateAttr\GoodAttrValue;
+use App\Entities\Product\ProductSku;
 use Illuminate\Database\Eloquent\Model;
 use Prettus\Repository\Contracts\Transformable;
 use Prettus\Repository\Traits\TransformableTrait;
@@ -32,5 +33,13 @@ class GoodSku extends Model implements Transformable
     public function skuAttributes()
     {
         return $this->hasMany(GoodAttrValue::class, 'sku_id', 'id');
+    }
+
+    /**
+     * 获取good_sku表
+     */
+    public function productSku()
+    {
+        return $this->hasOne(ProductSku::class, 'id', 'id');
     }
 }

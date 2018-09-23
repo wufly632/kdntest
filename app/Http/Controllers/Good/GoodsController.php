@@ -76,10 +76,11 @@ class GoodsController extends Controller
         $goodSkus = $good->getSkus;
 
         $good->good_sku_image = $this->goodService->getProductSkuImage($goodSkus, $good->category_id);
-
         // 分类信息
         $cate = Category::find($good->category_id);
-        return view('goods.audit', compact('categoryAttributes', 'picAttributeId', 'goodSkus', 'good', 'cate'));
+        // 获取商品类目下的所有非标准属性
+        $notstandardAttr = $this->categoryAttributeService->getNotStandardAttr($good->category_id);
+        return view('goods.audit', compact('categoryAttributes', 'picAttributeId', 'goodSkus', 'good', 'cate', 'notstandardAttr'));
     }
 
     /**
@@ -94,7 +95,7 @@ class GoodsController extends Controller
         $result = $this->goodService->auditPass($request);
         $result = app(GoodRepositoryEloquent::class)->auditPass($request);
         if ($result) {
-            return ApiResponse::success('', '审核通过成功');
+            return ApiResponse::success('审核通过成功');
         }
         return ApiResponse::failure(g_API_ERROR, '审核通过失败，请重试');
     }
@@ -127,6 +128,23 @@ class GoodsController extends Controller
             return jsonMessage('', '退回修改成功');
         }
         return jsonMessage('退回修改失败，请重试');
+    }
+
+    /**
+     * @function 商品编辑
+     * @param Request $request
+     * @return mixed
+     */
+    public function editPost(Request $request)
+    {
+        if (! $id = $request->id) {
+            return ApiResponse::failure(g_API_ERROR, '请选择要修改的商品');
+        }
+        $result = $this->goodService->editPost($request);
+        if ($result) {
+            return ApiResponse::success('编辑成功');
+        }
+        return ApiResponse::failure(g_API_ERROR, '编辑失败');
     }
 
 }

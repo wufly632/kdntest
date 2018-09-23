@@ -38,6 +38,7 @@ class RepositoryServiceProvider extends ServiceProvider
         $this->app->bind(\App\Repositories\Promotion\PromotionGoodRepository::class, \App\Repositories\Promotion\PromotionGoodRepositoryEloquent::class);
         $this->app->bind(\App\Repositories\Product\ProductSkuRepository::class, \App\Repositories\Product\ProductSkuRepositoryEloquent::class);
         $this->app->bind(\App\Repositories\Promotion\PromotionGoodSkuRepository::class, \App\Repositories\Promotion\PromotionGoodSkuRepositoryEloquent::class);
+        $this->app->bind(\App\Repositories\Product\ProductAttrValueRepository::class, \App\Repositories\Product\ProductAttrValueRepositoryEloquent::class);
         //:end-bindings:
     }
 }

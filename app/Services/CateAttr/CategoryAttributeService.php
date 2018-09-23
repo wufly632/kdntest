@@ -6,6 +6,7 @@
  */
 namespace App\Services\CateAttr;
 
+use App\Entities\CateAttr\CategoryAttribute;
 use App\Repositories\CateAttr\CategoryAttributeRepository;
 use App\Validators\CateAttr\CategoryAttributeValidator;
 
@@ -58,5 +59,36 @@ class CategoryAttributeService{
      */
     public function getPicAttributeId($category_id) {
         return $this->repository->findWhere(['category_id' => $category_id, 'status' => 1, 'is_image' => 1])->first()->attr_id;
+    }
+
+    /**
+     * 根据分类ID获取自定义属性
+     *
+     * @param int $id 类目属性id
+     * @return object
+     */
+    public function getCategoryAttributeById(int $id)
+    {
+        return $this->repository->find($id);
+    }
+
+    /**
+     * 获取分类属性
+     *
+     * @param int $categoryId
+     * @return array
+     */
+    public function getNotStandardAttr($category_id)
+    {
+        $categoryAttributes = CategoryAttribute::join('admin_attribute', 'admin_attribute.id', '=', 'admin_goods_category_attribute.attr_id')
+            ->where([
+                'admin_goods_category_attribute.category_id' => $category_id,
+                'admin_goods_category_attribute.status' => 1,
+                'admin_attribute.type' => 2
+            ])->get(['admin_attribute.name', 'admin_goods_category_attribute.attr_id', 'admin_attribute.en_name', 'admin_goods_category_attribute.id']);
+        if (! $categoryAttributes) {
+            return [];
+        }
+        return $categoryAttributes;
     }
 }

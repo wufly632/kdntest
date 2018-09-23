@@ -50,6 +50,10 @@ Route::group(['middleware' => ['auth', 'web']], function() {
     Route::group(['prefix' => 'good', 'namespace' => 'Good'], function() {
         Route::get('/',['as' => 'good.index', 'uses' =>'GoodsController@index']);
         Route::get('/audit/{good}', ['as' => 'good.audit', 'uses' => 'GoodsController@audit']);
+        Route::post('/auditPass', ['as' => 'good.auditPass', 'uses' => 'GoodsController@auditPass']);
+        Route::post('/editPost', ['as' => 'good.edit', 'uses' => 'GoodsController@editPost']);
+        Route::post('/auditReturn', ['as' => 'good.auditReturn', 'uses' => 'GoodsController@auditReturn']);
+        Route::post('/auditReject', ['as' => 'good.auditReject', 'uses' => 'GoodsController@auditReject']);
     });
 
     //促销活动模块
