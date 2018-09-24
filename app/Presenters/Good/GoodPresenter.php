@@ -32,9 +32,9 @@ class GoodPresenter extends FractalPresenter
     public function bindGoodArributesPresenter($category_attributes)
     {
         if ($category_attributes->attribute->type == 1) { //标准化属性
-            if ($category_attributes->check_type == 1) { //单选
+            if ($category_attributes->check_type == 1) { //多选
                 GoodAttributesPresenterFactory::bind('Multiselect');
-            } elseif ($category_attributes->check_type == 2) { //多选
+            } elseif ($category_attributes->check_type == 2) { //单选
                 GoodAttributesPresenterFactory::bind('Singleselect');
             }
         } elseif ($category_attributes->attribute->type == 2) { //非标准属性
@@ -77,18 +77,28 @@ class GoodPresenter extends FractalPresenter
         $sku_attribute_value_name       = [];
         foreach ($skus as $key => $sku) {
             foreach ($sku->skuAttributes as $v) {
+                $tmp[$v->attr_id]['value_name'][$v->value_ids] = $v->getAttrValue->name;
+                $tmp[$v->attr_id]['value_id'][$v->value_ids] = $v->value_ids;
                 $tmp[$v->attr_id]['name'] = $v->getAttibute->name ?? $v->getAttibute->alias_name;
-                $tmp[$v->attr_id]['value_name'] = $v->getAttrValue->name;
-                $tmp[$v->attr_id]['value_id'] = $v->value_ids;
+                $tmp[$v->attr_id]['is_image'] = 1;
             }
         }
+        // dd($tmp);
         foreach ($tmp as $key => $sku_attribute) {
             $sku_th_names .= "<th>".$sku_attribute['name']."</th>";
-            $sku_attribute_name[$sku_attribute['value_id']] = $sku_attribute['value_name'];
-            if (isset($sku_attribute_value_name[$key])) {
-                $sku_attribute_value_name[$key] .= "<div class='key-attribute'>".$sku_attribute['value_name']."</div>";
-            } else {
-                $sku_attribute_value_name[$key] = "<div class='key-attribute'>".$sku_attribute['value_name']."</div>";
+            //显示图片属性
+            if ($sku_attribute['is_image']) {
+                foreach ($sku_attribute['value_name'] as $value_id => $value_name) {
+                    $sku_attribute_name[$value_id] = $value_name;
+                }
+            }
+            //显示关键属性
+            foreach ($sku_attribute['value_name'] as $value_id => $value_name) {
+                if (isset($sku_attribute_value_name[$key])) {
+                    $sku_attribute_value_name[$key] .= "<div class='key-attribute'>".$value_name."</div>";
+                } else {
+                    $sku_attribute_value_name[$key] = "<div class='key-attribute'>".$value_name."</div>";
+                }
             }
         }
         return compact('sku_attribute_name', 'sku_th_names', 'sku_attribute_value_name');

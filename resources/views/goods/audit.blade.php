@@ -190,7 +190,7 @@
                                                         <div class="col-sm-12">
                                                             <input type="text" class="form-control"
                                                                    placeholder="" name="good_sku[price][{{$sku->id}}]"
-                                                                value="{{$sku->productSku->price}}"
+                                                                value="{{$sku->productSku? $sku->productSku->price : 0}}"
                                                             >
                                                         </div>
                                                     </td>
@@ -326,36 +326,6 @@
                                         </div>
                                     @endforeach
                                 @endif
-
-                                <div class="form-group col-xs-12">
-                                    <div class="col-sm-1">
-                                        <label for="inputEmail3" class="col-sm-12 control-label">适用年龄：</label>
-                                    </div>
-                                    <div class="col-sm-8">
-                                        <div class="col-sm-12">
-                                            <div class="col-sm-1">
-                                                <input type="checkbox" name="age">0-1岁
-                                            </div>
-                                            <div class="col-sm-1">
-                                                <input type="checkbox" name="age">1-3岁
-                                            </div>
-                                            <div class="col-sm-1">
-                                                <input type="checkbox" name="age">3-6岁
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="form-group col-xs-12">
-                                    <div class="col-sm-1">
-                                        <label for="inputEmail3" class="col-sm-12 control-label">洗涤说明：</label>
-                                    </div>
-                                    <div class="col-sm-8">
-                                        <input type="text" class="form-control" id="explain" placeholder=""
-                                               name="explain" value="">
-                                    </div>
-                                </div>
-
                             </div>
                         </div>
                         <!-- /.box -->
@@ -374,9 +344,11 @@
 
                                     </div>
                                     <div class="col-sm-8">
-                                        @foreach(json_decode($good->content) as $content)
-                                        <img src="{{$content}}" alt="" width="100%" height="100%">
-                                        @endforeach
+                                        @if($good->content)
+                                            @foreach(json_decode($good->content) as $content)
+                                            <img src="{{$content}}" alt="" width="100%" height="100%">
+                                            @endforeach
+                                        @endif
                                     </div>
                                 </div>
 

@@ -108,7 +108,7 @@ class GoodsController extends Controller
         if (! $id = $request->id) {
             return ApiResponse::failure(g_API_ERROR, '请先选择商品');
         }
-        $result = app(GoodRepositoryEloquent::class)->auditReject($request);
+        $result = $this->goodService->auditReject($request);
         if ($result) {
             return ApiResponse::success('', '审核拒绝成功');
         }
@@ -123,7 +123,7 @@ class GoodsController extends Controller
         if (! $id = $request->id) {
             return ApiResponse::failure(g_API_ERROR, '请先选择商品');
         }
-        $result = app(GoodRepositoryEloquent::class)->auditReturn($request);
+        $result = $this->goodService->auditReturn($request);
         if ($result) {
             return jsonMessage('', '退回修改成功');
         }
