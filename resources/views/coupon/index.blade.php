@@ -85,9 +85,6 @@
                     </div>
                     <!-- /.box -->
                     <div class="box">
-                        <div class="box-header">
-                            <h3 class="box-title">商品数据</h3>
-                        </div>
                         <!-- /.box-header -->
                         <div class="box-body">
                             <table id="example2" class="table table-bordered table-hover text-center">

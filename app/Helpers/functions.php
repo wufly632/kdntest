@@ -25,3 +25,8 @@ function jsonMessage($error, $url='')
 
     return response()->json($json);
 }
+
+function ImgResize($url, $size)
+{
+    return $url.'?x-oss-process=style/'.$size.'-'.$size;
+}

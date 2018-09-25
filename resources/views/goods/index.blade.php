@@ -108,7 +108,7 @@
                                     <tr>
                                         <td class="table-center text-center">
                                             <div class="mailbox-attachment-icon has-img" style="width: 80px;">
-                                                <img src="{{$good->main_pic}}" alt="" width="60px" height="60px">
+                                                <img src="{{ImgResize($good->main_pic,100)}}" alt="" width="60px" height="60px">
                                             </div>
                                         </td>
                                         <td class="table-center">
