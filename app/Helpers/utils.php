@@ -419,7 +419,7 @@ function get_card_type_by_number($number)
 
 function secure_route($route_name,$parameters = [])
 {
-    if(!env('APP_DEBUG')){
+    if(env('OC_HTTPS', false)){
         return http_to_https(route($route_name,$parameters));
     }else{
         return route($route_name,$parameters);
