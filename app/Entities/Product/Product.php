@@ -23,7 +23,7 @@ class Product extends Model implements Transformable
      *
      * @var array
      */
-    protected $fillable = ['id', 'category_id', 'category_path', 'supplier_id', 'good_code', 'brand_name', 'stock_price', 'supply_price',
+    protected $fillable = ['id', 'category_id', 'category_path', 'supplier_id', 'good_code', 'brand_name', 'stock_price','video', 'supply_price',
                            'good_stock', 'orders', 'good_title', 'good_en_title', 'good_summary', 'good_en_summary', 'main_pic', 'pic',
                            'content', 'status', 'created_at', 'shelf_at', 'deleted_at', 'updated_at'];
 

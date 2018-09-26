@@ -340,6 +340,29 @@
 
                     <div class="box box-info">
                         <div class="box-header">
+                            <h3 class="box-title">小视频：</h3>
+                        </div>
+                        <div class="box-body">
+                            <!-- 第一行 -->
+                            <div class="col-lg-12">
+                                <div class="form-group col-xs-12">
+                                    <div class="col-sm-1">
+
+                                    </div>
+                                    <div class="col-sm-8">
+                                        @if($good->video)
+                                            <video src="{{$good->video}}" controls="controls">
+                                        @endif
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                        <!-- /.box -->
+
+                    </div>
+                    <div class="box box-info">
+                        <div class="box-header">
                             <h3 class="box-title">商品描述：</h3>
                         </div>
                         <div class="box-body">
