@@ -221,7 +221,7 @@
                                                             <div class="form-group col-xs-12">
                                                                 <label for="inputEmail3" class="col-sm-2 control-label">title：</label>
                                                                 <div class="col-sm-10">
-                                                                    <input type="text" class="form-control" name="good_en_title" placeholder="" value="{{$good->brand_name}}">
+                                                                    <input type="text" class="form-control" name="good_en_title" placeholder="" value="">
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -230,7 +230,7 @@
                                                                 <div class="form-group col-xs-12">
                                                                     <label for="inputEmail3" class="col-sm-2 control-label">{{$attr->name}}：</label>
                                                                     <div class="col-sm-10">
-                                                                        <input type="text" class="form-control" placeholder="" value="{{$good->brand_name}}" readonly="">
+                                                                        <input type="text" class="form-control" placeholder="" value="{{$good->attr_ids}}" readonly="">
                                                                     </div>
                                                                 </div>
                                                                 <div class="form-group col-xs-12">

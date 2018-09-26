@@ -93,7 +93,6 @@ class GoodsController extends Controller
         }
         // 同步商品数据
         $result = $this->goodService->auditPass($request);
-        $result = app(GoodRepositoryEloquent::class)->auditPass($request);
         if ($result) {
             return ApiResponse::success('审核通过成功');
         }

@@ -78,4 +78,14 @@ class Good extends Model implements Transformable
         return $this->hasMany(GoodAttrValue::class, 'good_id', 'id');
     }
 
+    public function getImages()
+    {
+        return $this->hasMany(GoodSkuImage::class, 'good_id', 'id');
+    }
+
+    public function getAttrValue()
+    {
+        return $this->hasMany(GoodAttrValue::class, 'good_id', 'id');
+    }
+
 }
