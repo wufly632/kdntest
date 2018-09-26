@@ -134,6 +134,7 @@ class GoodService{
             DB::commit();
             return true;
         } catch (\Exception $e) {
+            debug($e->getMessage());
             DB::rollback();
             return false;
         }
@@ -159,15 +160,11 @@ class GoodService{
      */
     private function syncProducts($good)
     {
-        $online_good = $this->product->find($good->id);
         $data = $good->only(Good::$syncField);
-        if ($online_good) {
-            $this->good->update($data, $good->id);
-        } else {
+
             $data['created_at'] = Carbon::now()->toDateTimeString();
             $data['status'] = Product::OFFLINE;
-            $this->good->create($data);
-        }
+            $this->product->create($data);
     }
 
     /**

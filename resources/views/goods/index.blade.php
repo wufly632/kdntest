@@ -126,10 +126,10 @@
                                         <td class="table-center">{{$good->good_stock}}</td>
                                         <td class="table-center">{{\App\Entities\Good\Good::$allStatus[$good->status]}}</td>
                                         <td class="table-center">
-                                            @if(in_array($good->status, [\App\Entities\Good\Good::WAIT_AUDIT, \App\Entities\Good\Good::RETURN]))
+                                            @if(in_array($good->status, [\App\Entities\Good\Good::WAIT_AUDIT]))
                                                 <a href="{{secure_route('good.audit', ['good' => $good->id])}}">审核</a>
                                             @endif
-                                            @if(in_array($good->status, [\App\Entities\Good\Good::WAIT_EDIT]))
+                                            @if(! in_array($good->status, [\App\Entities\Good\Good::WAIT_AUDIT]))
                                                 <a href="{{secure_route('good.audit', ['good' => $good->id])}}">编辑</a>
                                             @endif
                                         </td>

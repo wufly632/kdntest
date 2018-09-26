@@ -28,6 +28,22 @@
 
     <!-- Google Font -->
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
+
+    <!-- jQuery 3 -->
+    <script src="{{asset('assets/admin-lte/bower_components/jquery/dist/jquery.min.js')}}"></script>
+    <!-- Bootstrap 3.3.7 -->
+    <script src="{{asset('assets/admin-lte/bower_components/bootstrap/dist/js/bootstrap.min.js')}}"></script>
+    <!-- SlimScroll -->
+    <script src="{{asset('assets/admin-lte/bower_components/jquery-slimscroll/jquery.slimscroll.min.js')}}"></script>
+    <!-- FastClick -->
+    <script src="{{asset('assets/admin-lte/bower_components/fastclick/lib/fastclick.js')}}"></script>
+    <!-- AdminLTE App -->
+    <script src="{{asset('assets/admin-lte/dist/js/adminlte.min.js')}}"></script>
+    <!-- AdminLTE for demo purposes -->
+    <script src="{{asset('assets/admin-lte/dist/js/demo.js')}}"></script>
+    <!-- toastr -->
+    <script src="{{asset('assets/plugins/toastr/toastr.min.js')}}"></script>
+    @yield('css')
 </head>
 <!-- ADD THE CLASS fixed TO GET A FIXED HEADER AND SIDEBAR LAYOUT -->
 <!-- the fixed layout is not compatible with sidebar-mini -->
@@ -42,21 +58,6 @@
 
 </div>
 <!-- ./wrapper -->
-
-<!-- jQuery 3 -->
-<script src="{{asset('assets/admin-lte/bower_components/jquery/dist/jquery.min.js')}}"></script>
-<!-- Bootstrap 3.3.7 -->
-<script src="{{asset('assets/admin-lte/bower_components/bootstrap/dist/js/bootstrap.min.js')}}"></script>
-<!-- SlimScroll -->
-<script src="{{asset('assets/admin-lte/bower_components/jquery-slimscroll/jquery.slimscroll.min.js')}}"></script>
-<!-- FastClick -->
-<script src="{{asset('assets/admin-lte/bower_components/fastclick/lib/fastclick.js')}}"></script>
-<!-- AdminLTE App -->
-<script src="{{asset('assets/admin-lte/dist/js/adminlte.min.js')}}"></script>
-<!-- AdminLTE for demo purposes -->
-<script src="{{asset('assets/admin-lte/dist/js/demo.js')}}"></script>
-<!-- toastr -->
-<script src="{{asset('assets/plugins/toastr/toastr.min.js')}}"></script>
 </body>
 </html>
 @yield('script')
