@@ -281,7 +281,7 @@
                                             <div class="timeline-body">
                                                 @foreach($sku_images as $sku_image)
                                                     <div class="col-sm-2">
-                                                        <img src="{{ImgResize($sku_image['src'])}}" alt="..."
+                                                        <img src="{{$sku_image['src']}}" alt="..."
                                                              class="margin w100h100">
                                                         {{--<button type="button" class="btn btn-block btn-default btn-xs" disabled>
                                                             已设置为主图
