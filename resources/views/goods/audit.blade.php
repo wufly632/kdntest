@@ -13,6 +13,12 @@
             width:8%;padding-top: 8px;
             float: left;
         }
+        .btn-edit{
+            padding: 0px;
+            font-size: 14px;
+            line-height: 30px;
+            margin-top: 10px;
+        }
     </style>
     @inject('categoryPresenter', "App\Presenters\CateAttr\CategoryPresenter")
     @inject('goodPresenter',"App\Presenters\Good\GoodPresenter")
@@ -43,22 +49,22 @@
                             <div class="col-xs-3"></div>
                             @if(in_array($good->status, \App\Entities\Good\Good::$auditSave))
                             <div class="col-xs-2">
-                                <button type="button" class="btn btn-block btn-success btn-lg" data-toggle="modal" data-target="#modal-default">编辑</button>
+                                <button type="button" class="btn btn-block btn-success btn-lg btn-edit" data-toggle="modal" data-target="#modal-default">编辑</button>
                             </div>
                             @endif
                             @if(in_array($good->status, \App\Entities\Good\Good::$auditPass))
                             <div class="col-xs-2">
-                                <button type="button" class="btn btn-block btn-success btn-lg auditPass">审核通过</button>
+                                <button type="button" class="btn btn-block btn-success btn-lg auditPass btn-edit">审核通过</button>
                             </div>
                             @endif
                             @if(in_array($good->status, \App\Entities\Good\Good::$auditReturn))
                             <div class="col-xs-2">
-                                <button type="button" class="btn btn-block btn-info btn-lg auditReturn">退回修改</button>
+                                <button type="button" class="btn btn-block btn-info btn-lg auditReturn btn-edit">退回修改</button>
                             </div>
                             @endif
                             @if(in_array($good->status, \App\Entities\Good\Good::$auditReject))
                             <div class="col-xs-2">
-                                <button type="button" class="btn btn-block btn-warning btn-lg reject">拒绝</button>
+                                <button type="button" class="btn btn-block btn-warning btn-lg reject btn-edit">拒绝</button>
                             </div>
                             @endif
                         </div>
