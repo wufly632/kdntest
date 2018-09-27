@@ -24,4 +24,15 @@ class Coupon extends Model implements Transformable
      */
     protected $fillable = [];
 
+    //用途
+    const PAGE_GET       = 1;   //页面领取
+    const RETURN_COUPON  = 2;   //满返优惠券
+    const NEW_USER       = 3;   //新人礼包
+
+    public static $allPurpose = [
+        self::PAGE_GET        => '页面领取',
+        self::RETURN_COUPON   => '满返优惠券',
+        self::NEW_USER        => '新人礼包',
+    ];
+
 }

@@ -34,8 +34,8 @@
                             <div class="modal-content">
                                 <div class="modal-body">
                                     <h2 class="text-center">创建店铺券</h2>
-                                    <form action="" method="post" class="form-horizontal">
-
+                                    <form id="coupon-create" method="post" class="form-horizontal">
+                                        {!! csrf_field() !!}
                                         <div class="form-group">
                                             <div class="col-xs-1"></div>
                                             <label class="col-xs-2 control-label">
@@ -44,17 +44,17 @@
                                             <div class="col-xs-6">
                                                 <div class="radio-inline">
                                                     <label>
-                                                        <input type="radio" name="usage" class="" id="method1">页面领取
+                                                        <input type="radio" name="coupon_purpose" class="" id="method1" value="1">页面领取
                                                     </label>
                                                 </div>
                                                 <div class="radio-inline">
                                                     <label>
-                                                        <input type="radio" name="usage" class="" id="method2">制作纸质券
+                                                        <input type="radio" name="coupon_purpose" class="" id="method2" value="2">满返活动
                                                     </label>
                                                 </div>
                                                 <div class="radio-inline">
                                                     <label>
-                                                        <input type="radio" name="usage" class="" id="method3">满返活动
+                                                        <input type="radio" name="coupon_purpose" class="" id="method3" value="3">新人礼包
                                                     </label>
                                                 </div>
                                                 <p class="show-info text-danger"></p>
@@ -69,7 +69,7 @@
                                                 券名称：
                                             </label>
                                             <div class="col-xs-6">
-                                                <input type="text" id="coupon_name" class="form-control">
+                                                <input type="text" id="coupon_name" class="form-control" name="coupon_name">
                                             </div>
                                         </div>
                                         <div class="form-group">
@@ -79,7 +79,7 @@
                                             </label>
                                             <div class="col-xs-6">
                                                 <div class="input-group">
-                                                    <input type="text" id="coupon_price" class="form-control"><span
+                                                    <input type="text" id="coupon_price" class="form-control" name="coupon_price"><span
                                                             class="input-group-addon">元</span>
                                                 </div>
                                             </div>
@@ -111,7 +111,7 @@
                                             </label>
                                             <div class="col-xs-6">
                                                 <div class="input-group">
-                                                    <input type="text" id="coupon_count" class="form-control"><span
+                                                    <input type="text" id="coupon_count" class="form-control" name="coupon_number"><span
                                                             class="input-group-addon">张</span>
                                                 </div>
                                             </div>
@@ -123,7 +123,7 @@
                                             </label>
                                             <div class="col-xs-6">
                                                 <div class="input-group">
-                                                    <input type="text" id="coupon_count" class="form-control"><span
+                                                    <input type="text" id="coupon_count" class="form-control" name="coupon_use_price"><span
                                                             class="input-group-addon">元</span>
                                                 </div>
                                             </div>
@@ -135,14 +135,14 @@
                                             </label>
                                             <div class="col-xs-6">
                                                 <div class="col-xs-6 no-padding">
-                                                    <select name="expire_time" id="expire_time" class="form-control">
+                                                    <select name="use_type" id="expire_time" class="form-control">
                                                         <option value="0">清选择</option>
                                                         <option value="1">固定起止时间</option>
                                                         <option value="2">固定时长</option>
                                                     </select>
                                                 </div>
                                                 <div class="col-xs-6 no-padding">
-                                                    <input type="text" class="form-control">
+                                                    <input type="text" class="form-control" name="use_days_value">
                                                 </div>
                                             </div>
                                         </div>
@@ -153,7 +153,7 @@
                                             </label>
                                             <div class="col-xs-6">
                                                 <input type="text" id="create_take_time" autocomplete="off"
-                                                       class="form-control date_choice">
+                                                       class="form-control date_choice" name="coupon_grant">
                                             </div>
                                         </div>
                                         <div class="form-group">
@@ -162,13 +162,12 @@
                                                 备注：
                                             </label>
                                             <div class="col-xs-6">
-                                                <input type="text" id="coupon_count" class="form-control">
+                                                <input type="text" id="coupon_count" class="form-control" name="coupon_remark">
                                             </div>
                                         </div>
                                         <div>
-                                            <input type="submit" class="btn btn-success col-xs-offset-3" value="创建">
-                                            <input type="button" class="btn btn-danger col-xs-offset-3"
-                                                   id="modal-cancel" value="取消">
+                                            <button type="button" class="btn btn-success col-xs-offset-3 save">创建</button>
+                                            <button type="button" class="btn btn-danger col-xs-offset-3" id="modal-cancel">取消</button>
                                         </div>
                                     </form>
                                 </div>
@@ -276,21 +275,37 @@
                                                 {{$coupon->coupon_name}}
                                             </td>
                                             <td class="table-center">
-                                                <label for="">￥：</label>{{$coupon->coupon_price}}
+                                                <label for="">￥</label>{{$coupon->coupon_price}}
                                             </td>
                                             <td class="table-center">
-                                                <label for="">￥：</label>{{$coupon->supply_price}}
+                                                1/1/{{$coupon->coupon_number}}
                                             </td>
                                             <td class="table-center">
-                                                {{$coupon->coupon_use_enddate}}
+                                                {{\App\Entities\Coupon\Coupon::$allPurpose[$coupon->coupon_purpose]}}
                                             </td>
                                             <td class="table-center">
-                                                {{$coupon->coupon_purpose}}
+                                                @if($coupon->use_type == 2)
+                                                    {{$coupon->coupon_use_startdate}}
+                                                    ~
+                                                    {{$coupon->coupon_use_enddate}}
+                                                @else
+                                                    自领取后{{$coupon->use_days}}天有效
+                                                @endif
                                             </td>
                                             <td class="table-center">
                                                 {{$coupon->coupon_grant_startdate}}
                                             </td>
-                                            <td class="table-center">{{$coupon->status}}</td>
+                                            <td class="table-center">
+                                                @if($coupon->use_type == 2)
+                                                    @if($coupon->coupon_use_enddate < \Carbon\Carbon::now())
+                                                        已过期
+                                                    @elseif($coupon->coupon_use_startdate <= \Carbon\Carbon::now() && $coupon->coupon_use_enddata > \Carbon\Carbon::now())
+                                                        使用中
+                                                    @else
+                                                        未开始
+                                                    @endif
+                                                @endif
+                                            </td>
                                             <td class="table-center">
                                                 <a href="javascript:void(0);" id="coupon_edit">编辑</a>
                                             </td>
@@ -383,11 +398,11 @@
         });
 
         $('#method2').click(function () {
-            $('.show-info').text('制作纸质券可以从列表中导出券码');
+            $('.show-info').text('满返活动券需要在满返活动中进行配置，用户方可在活动中获得返券');
         });
 
         $('#method3').click(function () {
-            $('.show-info').text('满返活动券需要在满返活动中进行配置，用户方可在活动中获得返券');
+            $('.show-info').text('');
         });
         $('#coupon_table').DataTable({
             language: {
@@ -418,11 +433,31 @@
         $('#expire_time').change(function () {
 
         });
-        $('#responsive').modal('show');
+        // $('#responsive').modal('show');
         $('.count_limit').change(function () {
             if ($('.count_limit:checked').val()==='2') {
 
             }
         });
+        $(function () {
+            $('#coupon-create').on('click', '.save', function () {
+                $.ajax({
+                    type:'post',
+                    url:"{{secure_route('coupon.create')}}",
+                    data:$('#coupon-create').serialize(),
+                    success:function(data){
+                        console.log(data);
+                    },
+                    error:function(data){
+                        var json=eval("("+data.responseText+")");
+                        for (i in json.errors.name) {
+                            toastr.error(json.errors.name[i])
+                        }
+                        obj.attr('disabled', false);
+                    },
+                    sync:true
+                });
+            })
+        })
     </script>
 @stop

@@ -66,16 +66,30 @@ class CouponService
     public function store($request)
     {
         try {
-            $this->couponValidator->with( $request->all() )->passesOrFail();
+            dd($request->all());
+            // $this->couponValidator->with( $request->all() )->passesOrFail();
             DB::beginTransaction();
             $coupon = $request->only(['coupon_name','coupon_price', 'coupon_use_price', 'coupon_number',
                                       'use_type', 'use_days', 'coupon_use_startdate', 'coupon_use_enddate',
                                       'coupon_grant_startdate', 'coupon_grant_enddate', 'coupon_purpose',
                                       'coupon_remark']);
+            if ($request->count_limit) {
+                $coupon['coupon_number'] = null;
+            }
+            if ($request->use_type == 1) {
+                $coupon['use_days'] = $request->use_days_value;
+            } else {
+                $coupon['coupon_use_startdate'] = $request->use_days_value;
+                $coupon['coupon_use_startdate'] = $request->use_days_value;
+            }
+            $coupon['coupon_grant_startdate'] = $request->coupon_grant;
+            $coupon['coupon_grant_enddate'] = $request->coupon_grant;
+
             $coupon['user_id'] = Auth::id();
             $coupon['created_at'] = Carbon::now()->toDateTimeString();
             $this->coupon->create($coupon);
             DB::commit();
+            return ApiResponse::success('创建成功');
         } catch (ValidatorException $e) {
             DB::rollback();
             return ApiResponse::failure(g_API_ERROR, $e->getMessage());
