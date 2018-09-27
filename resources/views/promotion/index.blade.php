@@ -1,6 +1,14 @@
 @extends('layouts.default')
-@section('content')
+@section('css')
+    <link rel="stylesheet" href="{{ asset('/assets/css/bootstrap-modal.css') }}">
+    <link rel="stylesheet" href="{{ asset('/assets/css/bootstrap-modal-bs3patch.css') }}">
 
+    <link rel="stylesheet"
+          href="{{ asset('/assets/admin-lte/bower_components/datatables.net-bs/css/dataTables.bootstrap.min.css') }}">
+    <link rel="stylesheet"
+          href="{{ asset('/assets/admin-lte/bower_components/bootstrap-daterangepicker/daterangepicker.css') }}">
+@endsection
+@section('content')
     <div class="content-wrapper">
         <section class="content-header">
             <h1>
@@ -16,70 +24,52 @@
         <section class="content">
             <div class="row">
                 <div class="col-xs-12">
-                    <div class="modal fade" id="modal-default">
+                    <div id="modal-default" class="modal fade" tabindex="-1" data-width="800" style="display: none;">
                         <div class="modal-dialog" style="width:800px">
                             <div class="modal-content">
                                 <div class="modal-body">
                                     <form action="/promotion/add" method="post" class="form-horizontal">
                                         <div class="form-group">
-                                            <label for="" class="col-xs-2 control-label">活动名称</label>
+                                            <label for="" class="col-xs-4 control-label">活动名称</label>
                                             <div class="col-xs-4">
                                                 <input type="text" class="form-control">
                                             </div>
                                         </div>
                                         <div class="form-group">
-                                            <label for="" class="col-xs-2 control-label">活动名称</label>
+                                            <label for="active_time" class="col-xs-4 control-label">活动时间</label>
                                             <div class="col-xs-4">
-                                                <input type="text" class="form-control">
-                                            </div>
-                                            <div class="col-xs-4">
-                                                <input type="text" class="form-control">
+                                                <input type="text" class="form-control create_time" id="active_time">
                                             </div>
                                         </div>
-                                        <input type="submit" class="btn btn-default col-xs-offset-1" value="创建">
-                                        <input type="button" class="btn btn-default col-xs-offset-1" id="modal-cancel"
+                                        <input type="button" class="btn btn-danger col-xs-offset-4" id="modal-cancel"
                                                value="取消">
+                                        <input type="submit" class="btn btn-success col-xs-offset-1" value="创建">
+
                                     </form>
                                 </div>
                             </div>
                         </div>
                     </div>
                     <div class="box">
-                        <form action="" class="form-horizontal">
+                        <form class="form-horizontal" method="get">
                             <div class="box-body">
                                 <div class="col-xs-12">
-                                    <div class="form-group col-xs-4">
-                                        <label for="time_begin" class="col-xs-4 control-label">开始时间：</label>
+                                    <div class="form-group col-xs-3">
+                                        <label for="" class="col-xs-4 control-label">创建时间：</label>
                                         <div class="col-xs-8">
-                                            <input type="text" id="time_begin" class="form-control col-xs-8">
+                                            <input type="text" id="create_time" class="form-control create_time"
+                                                   autocomplete="off">
                                         </div>
                                     </div>
-                                    <div class="form-group col-xs-4">
-                                        <label for="time_end" class="col-xs-4 control-label">结束时间：</label>
-                                        <div class="col-xs-8">
-                                            <input type="text" id="time_end" class="form-control">
-                                        </div>
-
-                                    </div>
-                                    <input type="button" class="btn" data-toggle="modal"
-                                           data-target="#modal-default" value="创建活动">
-                                </div>
-                            </div>
-                        </form>
-                    </div>
-                    <div class="box">
-                        <form action="" class="form-horizontal" method="get">
-                            <div class="box-body">
-                                <div class="col-xs-12">
-                                    <div class="form-group col-xs-4">
+                                    <div class="form-group col-xs-3">
                                         <label for="coupon_name" class="col-xs-4 control-label">活动名称：</label>
-                                        <div class="col-xs-4">
+                                        <div class="col-xs-8">
                                             <input type="text" name="coupon_name" class="form-control">
                                         </div>
                                     </div>
-                                    <div class="form-group col-xs-8">
-                                        <label for="coupon_status" class="col-xs-2 control-label">状态</label>
-                                        <div class="col-xs-4">
+                                    <div class="form-group col-xs-3">
+                                        <label for="coupon_status" class="col-xs-4 control-label">状&nbsp;态</label>
+                                        <div class="col-xs-8">
                                             <select name="coupon_status" id="coupon_status" class="form-control">
                                                 <option value="">全部</option>
                                                 <option value="">未开始</option>
@@ -88,36 +78,14 @@
                                             </select>
                                         </div>
                                     </div>
-                                    <div class="form-group col-xs-4">
-                                        <label for="" class="col-xs-4 control-label">创建时间：</label>
-                                        <div class="col-xs-4">
-                                            <select name="" id="" class="form-control">
-                                                <option value="">请选择</option>
-                                                <option value="seven">最近7天</option>
-                                                <option value="one-month">最近1月</option>
-                                                <option value="half-year">最近半年</option>
-                                                <option value="year">最近1年</option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <div class="form-group col-xs-3">
-                                        <input type="text" class="form-control">
-                                    </div>
-                                    <div class="form-group col-xs-3">
-                                        <input type="text" class="form-control">
-                                    </div>
-                                    <div class="form-group col-xs-2">
-                                        <button class="btn btn-info pull-right">查找</button>
-                                    </div>
+                                    <input type="button" class="btn btn-success" value="查找">
+                                    <input type="button" class="btn btn-success col-xs-offset-1" data-toggle="modal"
+                                           data-target="#modal-default" value="创建活动">
                                 </div>
                             </div>
-                        </form>
-                    </div>
-                    <div class="box">
-                        <div class="box-body">
-                            <div class="col-xs-12">
-                                <table class="table table-hover table-striped table-bordered">
-                                    <thead class="bg-info">
+                            <div class="box-footer">
+                                <table id="promotion_table" class="table table-hover table-striped table-bordered">
+                                    <thead>
                                     <tr>
                                         <td>序号</td>
                                         <td>活动时间</td>
@@ -130,9 +98,27 @@
                                         <td>操作</td>
                                     </tr>
                                     </thead>
+                                    <tbody>
+                                    <tr>
+                                        <td>1</td>
+                                        <td>1970-2099</td>
+                                        <td>啦啦啦</td>
+                                        <td>买一送一</td>
+                                        <td>衣服</td>
+                                        <td>100</td>
+                                        <td>60</td>
+                                        <td>进行中</td>
+                                        <td>
+                                            <div><a href="#">修改</a></div>
+                                            <div><a href="#">完善信息</a></div>
+                                            <div><a href="javascript:void(0);">删除</a></div>
+                                            <div><a href="#">查看详情</a></div>
+                                        </td>
+                                    </tr>
+                                    </tbody>
                                 </table>
                             </div>
-                        </div>
+                        </form>
                     </div>
                 </div>
             </div>
@@ -140,28 +126,86 @@
     </div>
 @stop
 @section('script')
-    <script src="{{ asset('/js/laydate/laydate.js') }}"></script>
+    <script src="{{ asset('/assets/js/bootstrap-modalmanager.js') }}"></script>
+    <script src="{{ asset('/assets/admin-lte/bower_components/moment/min/moment.min.js') }}"></script>
+    <script src="{{ asset('/assets/js/bootstrap-modal.js') }}"></script>
+    <script src="{{ asset('/assets/admin-lte/bower_components/datatables.net/js/jquery.dataTables.min.js') }}"></script>
+    <script src="{{ asset('/assets/admin-lte/bower_components/datatables.net-bs/js/dataTables.bootstrap.min.js') }}"></script>
+    <script src="{{ asset('/assets/admin-lte/bower_components/bootstrap-daterangepicker/daterangepicker.js') }}"></script>
     <script>
-        laydate.render({
-            elem: '#use_time' //指定元素
-            , type: 'datetime'
-        });
-        laydate.render({
-            elem: '#take_time' //指定元素
-            , type: 'datetime'
-        });
-
-        laydate.render({
-            elem: '#time_begin' //指定元素
-            , type: 'datetime'
-        });
-
-        laydate.render({
-            elem: '#time_end' //指定元素
-            , type: 'datetime'
-        });
         $('#modal-cancel').click(function () {
             $("#modal-default").modal('hide');
         });
+        $('#promotion_table').DataTable({
+            language: {
+                paginate: {
+                    first: '首页',
+                    previous: '上一页',
+                    next: '下一页',
+                    last: '末页'
+                },
+                aria: {
+                    paginate: {
+                        first: 'First',
+                        previous: 'Previous',
+                        next: 'Next',
+                        last: 'Last'
+                    }
+                },
+                info: '显示 _START_ 到 _END_ 条，共 _TOTAL_ 条'
+            },
+            'paging': true,
+            'lengthChange': false,
+            'searching': false,
+            'ordering': true,
+            'info': true,
+            'autoWidth': false,
+        });
+        let locale = {
+            "format": 'YYYY-MM-DD hh:mm',
+            "separator": "~",
+            "applyLabel": "确定",
+            "cancelLabel": "取消",
+            "fromLabel": "起始时间",
+            "toLabel": "结束时间'",
+            "customRangeLabel": "自定义",
+            "weekLabel": "W",
+            "daysOfWeek": ["日", "一", "二", "三", "四", "五", "六"],
+            "monthNames": ["一月", "二月", "三月", "四月", "五月", "六月", "七月", "八月", "九月", "十月", "十一月", "十二月"],
+            "firstDay": 1
+        };
+        $('#create_time').daterangepicker({
+            "timePicker": true,
+            "autoApply": true,
+            "timePicker24Hour": true,
+            locale: locale,
+            ranges: {
+                '今日': [moment(), moment()],
+                '昨日': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+                '最近7日': [moment().subtract(6, 'days'), moment()],
+                '最近30日': [moment().subtract(29, 'days'), moment()],
+                '本月': [moment().startOf('month'), moment().endOf('month')],
+                '上月': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
+            },
+        }, function (start, end, label) {
+            console.log('New date range selected: ' + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD') + ' (predefined range: ' + label + ')');
+        });
+        $('#active_time').daterangepicker({
+            "timePicker": true,
+            "autoApply": true,
+            "timePicker24Hour": true,
+            locale: locale,
+            ranges: {
+                '今日': [moment(), moment()],
+                '昨日': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+                '最近7日': [moment().subtract(6, 'days'), moment()],
+                '最近30日': [moment().subtract(29, 'days'), moment()],
+                '本月': [moment().startOf('month'), moment().endOf('month')],
+                '上月': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
+            },
+        }, function (start, end, label) {
+            console.log('New date range selected: ' + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD') + ' (predefined range: ' + label + ')');
+        });
+        $('.modal-content').css({'box-shadow': 'none'});
     </script>
 @endsection
