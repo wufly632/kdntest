@@ -68,7 +68,7 @@
                                             <label for="coupon_name" class="col-xs-2 control-label">
                                                 券名称：
                                             </label>
-                                            <div class="col-xs-6">
+                                            <div class="col-xs-7">
                                                 <input type="text" id="coupon_name" class="form-control" name="coupon_name">
                                             </div>
                                         </div>
@@ -77,7 +77,7 @@
                                             <label for="coupon_price" class="col-xs-2 control-label">
                                                 券面额：
                                             </label>
-                                            <div class="col-xs-6">
+                                            <div class="col-xs-7">
                                                 <div class="input-group">
                                                     <input type="text" id="coupon_price" class="form-control" name="coupon_price"><span
                                                             class="input-group-addon">元</span>
@@ -87,13 +87,63 @@
                                         <div class="form-group">
                                             <div class="col-xs-1"></div>
                                             <label for="coupon_count" class="col-xs-2 control-label">
+                                                有效期：
+                                            </label>
+                                            <div class="col-xs-7">
+                                                <div class="radio-inline">
+                                                    <label>
+                                                        <input type="radio" name="use_type" value="1">固定时长
+                                                    </label>
+                                                </div>
+                                                <div class="radio-inline">
+                                                    <label>
+                                                        <input type="radio" name="use_type" value="2">固定起止时间
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group fixed_day hidden">
+                                            <div class="col-xs-1"></div>
+                                            <label for="coupon_count" class="col-xs-2 control-label">
+                                                时长：
+                                            </label>
+                                            <div class="col-xs-7">
+                                                <div class="input-group">
+                                                    <span class="input-group-addon">自获得起</span>
+                                                    <input type="text" name="use_days" class="form-control">
+                                                    <span class="input-group-addon">天</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group fixed_time hidden">
+                                            <div class="col-xs-1"></div>
+                                            <label for="coupon_count" class="col-xs-2 control-label">
+                                                起止时间：
+                                            </label>
+                                            <div class="col-xs-7">
+                                                <input type="text" autocomplete="off" class="form-control date_choice rangetime" name="coupon_use">
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="col-xs-1"></div>
+                                            <label for="coupon_count" class="col-xs-2 control-label">
+                                                发放时间：
+                                            </label>
+                                            <div class="col-xs-7">
+                                                <input type="text" id="create_take_time" autocomplete="off"
+                                                       class="form-control date_choice rangetime" name="coupon_grant">
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="col-xs-1"></div>
+                                            <label for="coupon_count" class="col-xs-2 control-label">
                                                 是否限量：
                                             </label>
-                                            <div class="col-xs-6">
+                                            <div class="col-xs-7">
                                                 <div class="radio-inline">
                                                     <label>
                                                         <input type="radio" name="count_limit" class="count_limit"
-                                                               id="no_limit_count" checked value="1">不限量
+                                                               id="no_limit_count" value="1">不限量
                                                     </label>
                                                 </div>
                                                 <div class="radio-inline">
@@ -104,12 +154,12 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="form-group hidden">
+                                        <div class="form-group hidden coupon_number">
                                             <div class="col-xs-1"></div>
                                             <label for="coupon_count" class="col-xs-2 control-label">
                                                 发放总量：
                                             </label>
-                                            <div class="col-xs-6">
+                                            <div class="col-xs-7">
                                                 <div class="input-group">
                                                     <input type="text" id="coupon_count" class="form-control" name="coupon_number"><span
                                                             class="input-group-addon">张</span>
@@ -121,53 +171,26 @@
                                             <label for="coupon_count" class="col-xs-2 control-label">
                                                 使用条件：
                                             </label>
-                                            <div class="col-xs-6">
+                                            <div class="col-xs-7">
                                                 <div class="input-group">
                                                     <input type="text" id="coupon_count" class="form-control" name="coupon_use_price"><span
                                                             class="input-group-addon">元</span>
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="form-group">
-                                            <div class="col-xs-1"></div>
-                                            <label for="coupon_count" class="col-xs-2 control-label">
-                                                有效期：
-                                            </label>
-                                            <div class="col-xs-6">
-                                                <div class="col-xs-6 no-padding">
-                                                    <select name="use_type" id="expire_time" class="form-control">
-                                                        <option value="0">清选择</option>
-                                                        <option value="1">固定起止时间</option>
-                                                        <option value="2">固定时长</option>
-                                                    </select>
-                                                </div>
-                                                <div class="col-xs-6 no-padding">
-                                                    <input type="text" class="form-control" name="use_days_value">
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="form-group">
-                                            <div class="col-xs-1"></div>
-                                            <label for="coupon_count" class="col-xs-2 control-label">
-                                                发放时间：
-                                            </label>
-                                            <div class="col-xs-6">
-                                                <input type="text" id="create_take_time" autocomplete="off"
-                                                       class="form-control date_choice" name="coupon_grant">
-                                            </div>
-                                        </div>
+
                                         <div class="form-group">
                                             <div class="col-xs-1"></div>
                                             <label for="coupon_count" class="col-xs-2 control-label">
                                                 备注：
                                             </label>
-                                            <div class="col-xs-6">
+                                            <div class="col-xs-7">
                                                 <input type="text" id="coupon_count" class="form-control" name="coupon_remark">
                                             </div>
                                         </div>
                                         <div>
                                             <button type="button" class="btn btn-success col-xs-offset-3 save">创建</button>
-                                            <button type="button" class="btn btn-danger col-xs-offset-3" id="modal-cancel">取消</button>
+                                            <button type="button" class="btn btn-danger col-xs-offset-4" id="modal-cancel">取消</button>
                                         </div>
                                     </form>
                                 </div>
@@ -228,7 +251,7 @@
                                     <div class="form-group col-xs-3">
                                         <label for="use_time" class="col-sm-4 control-label date_choice">使用时间：</label>
                                         <div class="col-sm-8">
-                                            <input type="text" id="use_time" class="form-control use_time"
+                                            <input type="text" id="use_time" class="form-control use_time rangetime"
                                                    name="use_time" autocomplete="off">
                                         </div>
                                     </div>
@@ -236,7 +259,7 @@
                                     <div class="form-group col-xs-3">
                                         <label for="take_time" class="col-sm-4 control-label date_choice">发放时间：</label>
                                         <div class="col-sm-8">
-                                            <input type="text" id="take_time" class="form-control take_time"
+                                            <input type="text" class="form-control take_time rangetime"
                                                    name="take_time" autocomplete="off">
                                         </div>
                                     </div>
@@ -345,13 +368,6 @@
             clear: "清除",
             weekStart: 0
         };
-        $('#use_time').datepicker({
-            format: 'yyyy-mm-dd',
-            autoclose: true,
-            language: 'zh-cn',
-
-
-        });
         $('#take_time').datepicker({
             format: 'yyyy-mm-dd',
             autoclose: true,
@@ -359,7 +375,7 @@
 
         });
         let locale = {
-            "format": 'YYYY-MM-DD hh:mm',
+            "format": 'YYYY-MM-DD hh:mm:ss',
             "separator": "~",
             "applyLabel": "确定",
             "cancelLabel": "取消",
@@ -371,7 +387,7 @@
             "monthNames": ["一月", "二月", "三月", "四月", "五月", "六月", "七月", "八月", "九月", "十月", "十一月", "十二月"],
             "firstDay": 1
         };
-        $('#create_take_time').daterangepicker({
+        $('.rangetime').daterangepicker({
             "timePicker": true,
             "autoApply": true,
             "timePicker24Hour": true,
@@ -430,23 +446,26 @@
             'autoWidth': false,
         });
         $('.modal-content').css({'box-shadow': 'none'});
-        $('#expire_time').change(function () {
-
-        });
-        // $('#responsive').modal('show');
-        $('.count_limit').change(function () {
-            if ($('.count_limit:checked').val()==='2') {
-
-            }
-        });
         $(function () {
             $('#coupon-create').on('click', '.save', function () {
+                var _index = $(this);
                 $.ajax({
                     type:'post',
                     url:"{{secure_route('coupon.create')}}",
                     data:$('#coupon-create').serialize(),
+                    beforeSend:function() {
+                        _index.attr('disabled', true);
+                        _index.html('创建中...');
+                    },
                     success:function(data){
-                        console.log(data);
+                        if (data.status == 200) {
+                            toastr.success(data.content);
+                            window.location.reload();
+                        } else {
+                            toastr.error(data.msg);
+                            _index.attr('disabled', false);
+                            _index.html('创建');
+                        }
                     },
                     error:function(data){
                         var json=eval("("+data.responseText+")");
@@ -457,7 +476,25 @@
                     },
                     sync:true
                 });
-            })
+            });
+            //有效期类型
+            $('input[name=use_type]').change(function () {
+                if ($(this).val() == 1) {
+                    $('.fixed_day').removeClass('hidden');
+                    $('.fixed_time').addClass('hidden');
+                } else {
+                    $('.fixed_day').addClass('hidden');
+                    $('.fixed_time').removeClass('hidden');
+                }
+            });
+            // 是否限量
+            $('input[name=count_limit]').change(function () {
+                if ($(this).val() == 2) {
+                    $('.coupon_number').removeClass('hidden');
+                } else {
+                    $('.coupon_number').addClass('hidden');
+                }
+            });
         })
     </script>
 @stop

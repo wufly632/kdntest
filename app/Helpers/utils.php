@@ -651,3 +651,18 @@ function makeCouponCode($coupon_id)
 
     return $couponStr;
 }
+
+/**
+ * @function 时间范围转换
+ * @param $date_range
+ * @return array
+ */
+function get_time_range($date_range)
+{
+    if (!$date_range) {
+        return [null, null];
+    }
+    $array = explode('~', $date_range);
+    list($start_at, $end_at) = $array;
+    return [$start_at, $end_at];
+}

@@ -42,8 +42,7 @@ class CouponValidator extends LaravelValidator
     ];
 
     protected $messages = [
-        'required' => ':attribute 必填',
+        'coupon_name.required' => '优惠券名称必填',
     ];
-
 
 }
