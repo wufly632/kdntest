@@ -5,7 +5,28 @@
     <link rel="stylesheet"
           href="{{ asset('/assets/admin-lte/bower_components/datatables.net-bs/css/dataTables.bootstrap.min.css') }}">
     <link rel="stylesheet"
+          href="{{ asset('/assets/admin-lte/bower_components/bootstrap-datepicker/dist/css/bootstrap-datepicker.min.css') }}">
+    <link rel="stylesheet"
           href="{{ asset('/assets/admin-lte/bower_components/bootstrap-daterangepicker/daterangepicker.css') }}">
+    <style>
+        .text-padding-top {
+            padding-top: 6px;
+        }
+
+        .no-padding-left {
+            padding-left: 0;
+        }
+
+        .image-align-center {
+            width: 80px;
+            height: 80px;
+            line-height: 80px;
+        }
+        .justify-align-center {
+            vertical-align: middle !important;
+        }
+
+    </style>
 @endsection
 @extends('layouts.default')
 @section('content')
@@ -44,33 +65,41 @@
                                         </div>
                                         <input type="button" class="btn pull-right" value="查找">
                                     </form>
-                                    <table id="coupon_table" class="table table-hover table-striped table-bordered">
+                                    <table id="select_coupon_table"
+                                           class="table table-hover table-striped table-bordered text-center">
                                         <thead>
                                         <tr>
-                                            <td><input type="checkbox"></td>
-                                            <td>活动时间</td>
-                                            <td>活动详情</td>
-                                            <td>促销详情</td>
-                                            <td>促销范围</td>
-                                            <td>货值</td>
-                                            <td>库存深度</td>
-                                            <td>状态</td>
-                                            <td>操作</td>
+                                            <td class="text-left"><input type="checkbox"></td>
+                                            <td>商品图片</td>
+                                            <td>商品信息</td>
+                                            <td>市场价</td>
+                                            <td>售价</td>
+                                            <td>最近30天销量</td>
+                                            <td>库存数量</td>
                                         </tr>
                                         </thead>
                                         <tbody>
                                         <tr>
                                             <td><input type="checkbox"></td>
-                                            <td>1970-2099</td>
                                             <td>啦啦啦</td>
+                                            <td style="width: 200px;">
+                                                <div>
+                                                    <div class="col-xs-5 text-right">ID：</div>
+                                                    <div class="col-xs-7 text-left">396</div>
+                                                </div>
+                                                <div>
+                                                    <div class="col-xs-5 text-right">名称：</div>
+                                                    <div class="col-xs-7 text-left">test</div>
+                                                </div>
+                                                <div>
+                                                    <div class="col-xs-5 text-right">货号：</div>
+                                                    <div class="col-xs-7 text-left">123</div>
+                                                </div>
+                                            </td>
                                             <td>买一送一</td>
                                             <td>衣服</td>
                                             <td>100</td>
                                             <td>60</td>
-                                            <td>进行中</td>
-                                            <td>
-                                                <div><a href="javascript:void(0);">删除</a></div>
-                                            </td>
                                         </tr>
                                         </tbody>
                                     </table>
@@ -85,25 +114,25 @@
                         </div>
                     </div>
                     <div class="box box-info">
-
                         <form action="" method="post" class="form-horizontal">
+                            {{ csrf_field() }}
                             <div class="box-header">
                                 <div class="form-group">
-                                    <label for="time_limit" class="col-xs-2 control-label">活动时间：</label>
+                                    <label for="activity_time" class="col-xs-2 control-label">活动时间：</label>
                                     <div class="col-xs-2">
-                                        <input type="text" name="time_limit" class="form-control" id="time_limit">
+                                        <input type="text" name="activity_time" class="form-control" id="activity_time">
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <label for="time_prepare" class="col-xs-2 control-label">预热时间：</label>
+                                    <label for="prepare_time" class="col-xs-2 control-label">预热时间：</label>
                                     <div class="col-xs-2">
                                         <div class="input-group">
-                                            <input type="text" name="time_prepare" class="form-control"
-                                                   id="time_prepare">
-                                            <span class="input-group-addon">元</span>
+                                            <input type="text" name="pre_time" class="form-control"
+                                                   id="prepare_time">
+                                            <span class="input-group-addon">天</span>
                                         </div>
                                     </div>
-                                    <div class="col-xs-6 text-danger" style="padding-top: 6px;">
+                                    <div class="col-xs-6 text-danger text-padding-top">
                                         (活动开始前，预热时间内，首页显示活动时间、活动名称及活动简介，可不预热。)
                                     </div>
                                 </div>
@@ -111,55 +140,55 @@
                                     <label for="" class="col-xs-2 control-label">活动名称：</label>
                                     <div class="col-xs-2">
                                         <input type="text" class="form-control" id="promotion_title"
-                                               name="promotion_title">
+                                               name="title">
                                     </div>
                                 </div>
 
                                 <div class="form-group">
-                                    <div for="" class="col-xs-2 text-right">
+                                    <div class="col-xs-2 text-right">
                                         <b>促销方式：</b>
                                     </div>
                                     <div class="col-xs-10">
                                         <div class="col-xs-1">
                                             <label for="method1" id="method-label1" class="label-inline method_radio">
-                                                <input name="promotion_method" class="promotion_method" id="method1"
-                                                       type="radio" value="1" checked>满减
+                                                <input name="activity_type" class="promotion_method" id="method1"
+                                                       type="radio" value="reduce" checked>满减
                                             </label>
                                         </div>
                                         <div class="col-xs-1">
                                             <label for="method2" id="method-label2" class="label-inline method_radio">
-                                                <input name="promotion_method" class="promotion_method" id="method2"
-                                                       type="radio" value="2">满返
+                                                <input name="activity_type" class="promotion_method" id="method2"
+                                                       type="radio" value="return">满返
                                             </label>
                                         </div>
                                         <div class="col-xs-1">
                                             <label for="method3" id="method-label3" class="label-inline method_radio">
-                                                <input name="promotion_method" class="promotion_method" id="method3"
-                                                       type="radio" value="3">多件多折
+                                                <input name="activity_type" class="promotion_method" id="method3"
+                                                       type="radio" value="discount">多件多折
                                             </label>
                                         </div>
                                         <div class="col-xs-1">
                                             <label for="method4" id="method-label4" class="label-inline method_radio">
-                                                <input name="promotion_method" class="promotion_method" id="method4"
-                                                       type="radio" value="4">x元n件
+                                                <input name="activity_type" class="promotion_method" id="method4"
+                                                       type="radio" value="wholesale">x元n件
                                             </label>
                                         </div>
                                         <div class="col-xs-1">
                                             <label for="method5" id="method-label5" class="label-inline method_radio">
-                                                <input name="promotion_method" class="promotion_method" id="method5"
-                                                       type="radio" value="5">买n免一
+                                                <input name="activity_type" class="promotion_method" id="method5"
+                                                       type="radio" value="onefree">买n免一
                                             </label>
                                         </div>
                                         <div class="col-xs-1">
                                             <label for="method6" id="method-label6" class="label-inline method_radio">
-                                                <input name="promotion_method" class="promotion_method" id="method6"
-                                                       type="radio" value="6">限时特价
+                                                <input name="activity_type" class="promotion_method" id="method6"
+                                                       type="radio" value="limit">限时特价
                                             </label>
                                         </div>
                                         <div class="col-xs-1">
                                             <label for="method7" id="method-label7" class="label-inline method_radio">
-                                                <input name="promotion_method" class="promotion_method" id="method7"
-                                                       type="radio" value="7">限量秒杀
+                                                <input name="activity_type" class="promotion_method" id="method7"
+                                                       type="radio" value="quantity">限量秒杀
                                             </label>
                                         </div>
                                     </div>
@@ -180,6 +209,23 @@
                                                 data-target="#modal-default">添加商品
                                         </button>
                                     </div>
+                                    <div class="form-inline" style="padding-top: 20px;padding-bottom: 40px;">
+                                        <div class="col-xs-3 no-padding-left">
+                                            <label for="">商品名称：</label>
+                                            <input type="text" class="form-control" id="">
+                                        </div>
+                                        <div class="col-xs-3">
+                                            <label for="">商品ID：</label>
+                                            <input type="text" class="form-control" id="">
+                                        </div>
+                                        <div class="col-xs-3">
+                                            <label for="">商品货号：</label>
+                                            <input type="text" class="form-control" id="">
+                                        </div>
+                                        <div class="col-xs-1">
+                                            <input type="button" class="btn btn-success" value="查找">
+                                        </div>
+                                    </div>
                                     <table id="coupon_table" class="table table-bordered table-hover text-center">
                                         <thead>
                                         <tr>
@@ -195,46 +241,138 @@
                                         <tbody>
                                         <tr>
                                             <td>图片</td>
-                                            <td>信息</td>
-                                            <td>场价</td>
-                                            <td>售价</td>
-                                            <td>销量</td>
-                                            <td>数量</td>
-                                            <td>操作</td>
+                                            <td style="width: 200px;">
+                                                <div>
+                                                    <div class="col-xs-5 text-right">ID：</div>
+                                                    <div class="col-xs-7 text-left">396</div>
+                                                </div>
+                                                <div>
+                                                    <div class="col-xs-5 text-right">名称：</div>
+                                                    <div class="col-xs-7 text-left">test</div>
+                                                </div>
+                                                <div>
+                                                    <div class="col-xs-5 text-right">货号：</div>
+                                                    <div class="col-xs-7 text-left">123</div>
+                                                </div>
+                                            </td>
+                                            <td>¥20.00起</td>
+                                            <td>¥10.00起</td>
+                                            <td>35900</td>
+                                            <td>20</td>
+                                            <td>
+                                                <div><a href="javascript:void(0);">删除</a></div>
+                                                <div class="set_promotion"><a href="javascript:void(0);">设置优惠</a></div>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="7">
+                                                <table class="table table-bordered text-center">
+                                                    <tr>
+                                                        <td colspan="8" class="row">
+                                                            <div class="goods_image image-align-center col-xs-1 no-padding">
+                                                                <img src="http://localhost/assets/admin-lte//dist/img/user2-160x160.jpg"
+                                                                     width="80px" height="80px" alt=""></div>
+                                                            <div class="col-xs-10 text-left">
+                                                                <div class="good_name text-padding-top row">
+                                                                    <div class="col-xs-1 text-right">名称：</div>
+                                                                    <div class="col-xs-1 text-left">test</div></div>
+                                                                <div class="good_id text-padding-top row" style="vertical-align: middle">
+                                                                    <div class="col-xs-1 text-right text-padding-top">ID：</div>
+                                                                    <div class="col-xs-1 text-left text-padding-top">292</div>
+                                                                    <div class="good_num text-padding-top text-danger col-xs-2">
+                                                                        最近30天销量
+                                                                    </div>
+                                                                    <div class="col-xs-6 col-xs-offset-2">
+                                                                        <div class="col-xs-2 text-padding-top" style="padding-right: 0">每人限购</div>
+                                                                        <div class="col-xs-5">
+                                                                            <div class="input-group">
+                                                                                <select name="" id="" class="form-control">
+                                                                                    <option value="">不限</option>
+                                                                                    <option value="">1</option>
+                                                                                    <option value="">2</option>
+                                                                                    <option value="">3</option>
+                                                                                </select>
+                                                                                <span class="input-group-addon">件</span>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="col-xs-4">
+                                                                            <input type="button" class="btn btn-success" value="一键设置">
+                                                                        </div>
+                                                                    </div>
+
+                                                                </div>
+
+                                                            </div>
+                                                        </td>
+                                                        <td rowspan="4" class="justify-align-center">删除</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>颜色</td>
+                                                        <td>尺寸</td>
+                                                        <td>市场价</td>
+                                                        <td>零售价</td>
+                                                        <td><span class="text-danger">*</span> 秒杀价</td>
+                                                        <td><span class="text-danger">*</span> 秒杀数量</td>
+                                                        <td>库存数量</td>
+                                                        <td>商家编码</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>蓝色</td>
+                                                        <td>28</td>
+                                                        <td>￥120</td>
+                                                        <td>￥23</td>
+                                                        <td class="col-xs-2"><input type="text" class="form-control">
+                                                        </td>
+                                                        <td class="col-xs-2" rowspan="2" style="padding-top: 30px;">
+                                                            <input type="text" class="form-control"></td>
+                                                        <td>2000</td>
+                                                        <td>2000</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>蓝色</td>
+                                                        <td>28</td>
+                                                        <td>￥120</td>
+                                                        <td>￥23</td>
+                                                        <td><input type="text" class="form-control"></td>
+                                                        <td>2000</td>
+                                                        <td>2000</td>
+                                                    </tr>
+                                                </table>
+                                            </td>
                                         </tr>
                                         </tbody>
                                     </table>
                                     <div>
-                                        <input type="button" class="btn btn-info col-xs-offset-1" value="保存">
-                                        <input type="button" class="btn btn-default col-xs-offset-2" value="取消">
+                                        <input type="button" class="btn btn-success col-xs-offset-4" value="保存">
+                                        <input type="button" class="btn btn-danger col-xs-offset-2" value="取消">
                                     </div>
                                 </div>
                             </div>
                         </form>
-
-
                     </div>
-
                 </div>
             </div>
         </section>
     </div>
 @stop
 @section('script')
+    <script src="{{ asset('/assets/admin-lte/bower_components/moment/min/moment.min.js') }}"></script>
+    <script src="{{ asset('/assets/admin-lte/bower_components/bootstrap-daterangepicker/daterangepicker.js') }}"></script>
     <script src="{{ asset('/assets/admin-lte/bower_components/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js') }}"></script>
     <script src="{{ asset('/assets/js/bootstrap-modalmanager.js') }}"></script>
     <script src="{{ asset('/assets/js/bootstrap-modal.js') }}"></script>
     <script src="{{ asset('/assets/admin-lte/bower_components/datatables.net/js/jquery.dataTables.min.js') }}"></script>
     <script src="{{ asset('/assets/admin-lte/bower_components/datatables.net-bs/js/dataTables.bootstrap.min.js') }}"></script>
+    <script src="{{ asset('/assets/js/plugincommon.js') }}"></script>
     <script>
-        $('.detail-box').empty().append('<div class="col-xs-2 control-label">活动期间，选购商品满</div>\n' +
+        $('.detail-box').empty().append('<div class="col-xs-2 text-padding-top">活动期间，选购商品满</div>\n' +
             '                                    <div class="col-xs-2">\n' +
             '                                        <div class="input-group">\n' +
             '                                            <input type="text" class="form-control">\n' +
             '                                            <span class="input-group-addon">元</span>\n' +
             '                                        </div>\n' +
             '                                    </div>\n' +
-            '                                    <div class="col-xs-1 control-label">，立减</div>\n' +
+            '                                    <div class="col-xs-1 text-padding-top">，立减</div>\n' +
             '                                    <div class="col-xs-2">\n' +
             '                                        <div class="input-group">\n' +
             '                                            <input type="text" class="form-control">\n' +
@@ -242,7 +380,7 @@
             '                                        </div>\n' +
             '                                    </div>');
         $('#method-label1').click(function () {
-            $('.detail-box').empty().append('<div class="col-xs-2 control-label">活动期间，选购商品满</div>\n' +
+            $('.detail-box').empty().append('<div class="col-xs-2 text-padding-top">活动期间，选购商品满</div>\n' +
                 '                                    <div class="col-xs-2">\n' +
                 '                                        <div class="input-group">\n' +
                 '                                            <input type="text" class="form-control">\n' +
@@ -259,7 +397,7 @@
 
         });
         $('#method-label2').click(function () {
-            $('.detail-box').empty().append('<div class="col-xs-2 control-label">活动期间，买满</div>\n' +
+            $('.detail-box').empty().append('<div class="col-xs-2 text-padding-top">活动期间，买满</div>\n' +
                 '                                    <div class="col-xs-2">\n' +
                 '                                        <div class="input-group">\n' +
                 '                                            <input type="text" class="form-control">\n' +
@@ -275,7 +413,7 @@
 
         });
         $('#method-label3').click(function () {
-            $('.detail-box').empty().append('<div class="col-xs-2 control-label">\n' +
+            $('.detail-box').empty().append('<div class="col-xs-2 text-padding-top">\n' +
                 '                                        活动期间，选购商品满\n' +
                 '                                    </div>\n' +
                 '                                    <div class="col-xs-2">\n' +
@@ -296,7 +434,7 @@
 
         });
         $('#method-label4').click(function () {
-            $('.detail-box').empty().append('<div class="col-xs-2 control-label">\n' +
+            $('.detail-box').empty().append('<div class="col-xs-2 text-padding-top">\n' +
                 '                                                活动期间\n' +
                 '                                            </div>\n' +
                 '                                            <div class="col-xs-2">\n' +
@@ -318,7 +456,7 @@
 
         });
         $('#method-label5').click(function () {
-            $('.detail-box').empty().append('<div class="col-xs-2 control-label">\n' +
+            $('.detail-box').empty().append('<div class="col-xs-2 text-padding-top">\n' +
                 '                                                活动期间，选购商品满\n' +
                 '                                            </div>\n' +
                 '                                            <div class="col-xs-2">\n' +
@@ -335,7 +473,7 @@
 
         });
         $('#method-label6').click(function () {
-            $('.detail-box').empty().append('<div class="col-xs-3 control-label" style="width: 220px;">\n' +
+            $('.detail-box').empty().append('<div class="col-xs-3 text-padding-top">\n' +
                 '                                                活动期间，购买活动商品统一\n' +
                 '                                            </div>\n' +
                 '                                            <div class="col-xs-2">\n' +
@@ -373,7 +511,7 @@
 
         });
         $('#method-label7').click(function () {
-            $('.detail-box').empty().append('<div class="col-xs-1 control-label" style="width: 190px;">\n' +
+            $('.detail-box').empty().append('<div class="col-xs-2 text-padding-top">\n' +
                 '                                                活动期间，活动商品统一\n' +
                 '                                            </div>\n' +
                 '                                            <div class="col-xs-2 no-padding" style="width: 90px;">\n' +
@@ -417,31 +555,8 @@
                 '                                            </div>');
 
         });
-        $('#coupon_table').DataTable({
-            language: {
-                paginate: {
-                    first: '首页',
-                    previous: '上一页',
-                    next: '下一页',
-                    last: '末页'
-                },
-                aria: {
-                    paginate: {
-                        first: 'First',
-                        previous: 'Previous',
-                        next: 'Next',
-                        last: 'Last'
-                    }
-                },
-                info: '显示 _START_ 到 _END_ 条，共 _TOTAL_ 条'
-            },
-            'paging': true,
-            'lengthChange': false,
-            'searching': false,
-            'ordering': true,
-            'info': true,
-            'autoWidth': false,
-        });
+        addDateRangePicker($('#activity_time'));
+        createDataTable($('#select_coupon_table'));
         $('.modal-content').css({'box-shadow': 'none'});
     </script>
 @endsection
