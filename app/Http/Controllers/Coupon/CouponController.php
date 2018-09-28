@@ -13,6 +13,7 @@ namespace App\Http\Controllers\Coupon;
 
 use App\Entities\Coupon\Coupon;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Coupon\CouponRequest;
 use App\Services\Api\ApiResponse;
 use App\Services\Coupon\CouponService;
 use Illuminate\Http\Request;
@@ -36,7 +37,7 @@ class CouponController extends Controller
     /**
      * 创建优惠券
      */
-    public function create(Request $request)
+    public function create(CouponRequest $request)
     {
         $result = $this->couponService->store($request);
         if ($result['status'] != 200) {

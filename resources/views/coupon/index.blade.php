@@ -41,7 +41,7 @@
                                             <label class="col-xs-2 control-label">
                                                 用途:
                                             </label>
-                                            <div class="col-xs-6">
+                                            <div class="col-xs-7">
                                                 <div class="radio-inline">
                                                     <label>
                                                         <input type="radio" name="coupon_purpose" class="" id="method1" value="1">页面领取
@@ -469,10 +469,9 @@
                     },
                     error:function(data){
                         var json=eval("("+data.responseText+")");
-                        for (i in json.errors.name) {
-                            toastr.error(json.errors.name[i])
-                        }
-                        obj.attr('disabled', false);
+                        toastr.error(json.msg);
+                        _index.attr('disabled', false);
+                        _index.html('创建');
                     },
                     sync:true
                 });
