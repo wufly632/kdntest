@@ -97,9 +97,33 @@ class CouponService
     public function update($request)
     {
         try {
-            $this->coupon->update( $request->except(['_token']), $request->id );
-            return ApiResponse::success('');
+            DB::beginTransaction();
+            $coupon = $request->only(['id','coupon_name','coupon_price', 'coupon_use_price', 'coupon_number',
+                                      'use_type', 'use_days', 'coupon_use_startdate', 'coupon_use_enddate',
+                                      'coupon_grant_startdate', 'coupon_grant_enddate', 'coupon_purpose',
+                                      'coupon_remark']);
+            if ($request->count_limit == 1) {
+                $coupon['coupon_number'] = 0;
+            }
+            if ($request->use_type == 1) {
+                $coupon['use_days'] = $request->use_days;
+            } else {
+                $coupon['use_days'] = 0;
+                $coupon_use_time = get_time_range($request->coupon_use);
+                $coupon['coupon_use_startdate'] = $coupon_use_time[0];
+                $coupon['coupon_use_enddate'] = $coupon_use_time[1];
+            }
+            $coupon_grant_time = get_time_range($request->coupon_grant);
+            $coupon['coupon_grant_startdate'] = $coupon_grant_time[0];
+            $coupon['coupon_grant_enddate'] = $coupon_grant_time[1];
+
+            $coupon['user_id'] = Auth::id();
+            $coupon['updated_at'] = Carbon::now()->toDateTimeString();
+            $this->coupon->update($coupon,$request->id);
+            DB::commit();
+            return ApiResponse::success('修改成功');
         } catch (\Exception $e) {
+            dd($e);
             return ApiResponse::failure(g_API_ERROR, $e->getMessage());
         }
     }

@@ -49,8 +49,11 @@ class CouponController extends Controller
     /**
      * 更新优惠券
      */
-    public function update(Request $request)
+    public function update(CouponRequest $request)
     {
+        if (! $request->id) {
+            return ApiResponse::failure(g_API_ERROR, '请选择要修改的优惠券');
+        }
         $result = $this->couponService->update($request);
         if ($result['status'] != 200) {
             return ApiResponse::failure(g_API_ERROR, $result['msg']);

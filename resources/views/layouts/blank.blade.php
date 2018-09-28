@@ -51,11 +51,7 @@
 <body class="hold-transition skin-blue fixed sidebar-mini">
 <!-- Site wrapper -->
 <div class="wrapper">
-    @include('layouts.left')
-    @include('layouts.header')
     @yield('content')
-    @include('layouts.footer')
-    @include('layouts.tip')
 
 </div>
 <!-- ./wrapper -->

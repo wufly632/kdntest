@@ -330,7 +330,7 @@
                                                 @endif
                                             </td>
                                             <td class="table-center">
-                                                <a href="javascript:void(0);" id="coupon_edit">编辑</a>
+                                                <a href="javascript:editCoupon({{$coupon->id}})">编辑</a>
                                             </td>
                                         </tr>
                                     @endforeach
@@ -405,9 +405,6 @@
         });
         $('#modal-cancel').click(function () {
             $("#responsive").modal('hide');
-        });
-        $('#coupon_edit').click(function () {
-            $('#responsive').modal('show');
         });
         $('#method1').click(function () {
             $('.show-info').text('用户可在店铺主页领取，显示最新提交的3张；或在已设置的活动页面领取');
@@ -494,6 +491,22 @@
                     $('.coupon_number').addClass('hidden');
                 }
             });
-        })
+        });
+        // 优惠券编辑
+        function editCoupon(id) {
+            layer.open({
+                type: 2,
+                skin: 'layui-layer-rim', //加上边框
+                area: ['60%','600px'],
+                fix: false, //不固定
+                shadeClose: true,
+                maxmin: true,
+                shade:0.4,
+                title: ' ',
+                content: "/coupon/edit/"+id,
+                end: function(layero, index){
+                }
+            });
+        }
     </script>
 @stop
