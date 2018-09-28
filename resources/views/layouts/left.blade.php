@@ -5,7 +5,8 @@
         <!-- Sidebar user panel -->
         <div class="user-panel">
             <div class="pull-left image">
-                <img src="{{asset('assets/admin-lte//dist/img/user2-160x160.jpg')}}" class="img-circle" alt="User Image">
+                <img src="{{asset('assets/admin-lte//dist/img/user2-160x160.jpg')}}" class="img-circle"
+                     alt="User Image">
             </div>
             <div class="pull-left info">
                 <p>Alexander Pierce</p>
@@ -34,8 +35,10 @@
             </span>
                 </a>
                 <ul class="treeview-menu">
-                    <li><a href="{{secure_route('category.index')}}"><i class="fa fa-circle-o"></i> 分类管理</a></li>
-                    <li><a href="{{secure_route('attribute.index')}}"><i class="fa fa-circle-o"></i> 属性管理</a></li>
+                    <li><a data-target-url="category" href="{{secure_route('category.index')}}"><i
+                                    class="fa fa-circle-o"></i> 分类管理</a></li>
+                    <li><a data-target-url="attribute" href="{{secure_route('attribute.index')}}"><i
+                                    class="fa fa-circle-o"></i> 属性管理</a></li>
                 </ul>
             </li>
             <li class="treeview active">
@@ -47,7 +50,8 @@
             </span>
                 </a>
                 <ul class="treeview-menu">
-                    <li><a href="{{secure_route('good.index')}}"><i class="fa fa-circle-o"></i>商品列表</a></li>
+                    <li><a data-target-url="good" href="{{secure_route('good.index')}}"><i class="fa fa-circle-o"></i>商品列表</a>
+                    </li>
                 </ul>
             </li>
             <li class="treeview">
@@ -59,11 +63,22 @@
                     </span>
                 </a>
                 <ul class="treeview-menu">
-                    <li><a href="{{secure_route('promotion.index')}}"><i class="fa fa-circle-o"></i>促销活动</a></li>
-                    <li><a href="{{secure_route('coupon.index')}}"><i class="fa fa-circle-o"></i>优惠券</a></li>
+                    <li><a data-target-url="promotion" href="{{secure_route('promotion.index')}}"><i
+                                    class="fa fa-circle-o"></i>促销活动</a></li>
+                    <li><a data-target-url="coupon" href="{{secure_route('coupon.index')}}"><i
+                                    class="fa fa-circle-o"></i>优惠券</a></li>
                 </ul>
             </li>
         </ul>
     </section>
     <!-- /.sidebar -->
 </aside>
+<script>
+    let urlPathname = document.location.pathname;
+    urlPathnameParse = urlPathname.split('/');
+    let urlLink = $('[data-target-url=' + urlPathnameParse[1] + ']');
+    // urlLink.parents('.treeview').removeClass('active').removeClass('menu-open');
+    urlLink.parents('.treeview').siblings().removeClass('active menu-open').removeClass('menu-open');
+    urlLink.parents('.treeview').addClass('active menu-open');
+    urlLink.parent('li').addClass('active');
+</script>
