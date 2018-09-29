@@ -22,6 +22,18 @@ class Coupon extends Model implements Transformable
      *
      * @var array
      */
-    protected $fillable = [];
+    protected $fillable = ['user_id','coupon_name','coupon_price','coupon_use_price','coupon_number','use_type','use_days','coupon_use_startdate',
+        'coupon_use_enddate','coupon_grant_startdate','coupon_grant_enddate','coupon_purpose','coupon_remark','created_at','updated_at'];
+
+    //用途
+    const PAGE_GET       = 1;   //页面领取
+    const RETURN_COUPON  = 2;   //满返优惠券
+    const NEW_USER       = 3;   //新人礼包
+
+    public static $allPurpose = [
+        self::PAGE_GET        => '页面领取',
+        self::RETURN_COUPON   => '满返优惠券',
+        self::NEW_USER        => '新人礼包',
+    ];
 
 }

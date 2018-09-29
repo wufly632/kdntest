@@ -161,10 +161,9 @@ class GoodService{
     private function syncProducts($good)
     {
         $data = $good->only(Good::$syncField);
-
-            $data['created_at'] = Carbon::now()->toDateTimeString();
-            $data['status'] = Product::OFFLINE;
-            $this->product->create($data);
+        $data['created_at'] = Carbon::now()->toDateTimeString();
+        $data['status'] = Product::OFFLINE;
+        $this->product->updateOrCreate(['id' => $data['id']], $data);
     }
 
     /**

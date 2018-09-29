@@ -43,6 +43,7 @@
     <script src="{{asset('assets/admin-lte/dist/js/demo.js')}}"></script>
     <!-- toastr -->
     <script src="{{asset('assets/plugins/toastr/toastr.min.js')}}"></script>
+    <script src="{{asset('assets/plugins/layui/layer.js')}}"></script>
     @yield('css')
 </head>
 <!-- ADD THE CLASS fixed TO GET A FIXED HEADER AND SIDEBAR LAYOUT -->

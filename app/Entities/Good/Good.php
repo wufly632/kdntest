@@ -27,7 +27,7 @@ class Good extends Model implements Transformable
 
     public static $syncField = ['id', 'category_id', 'category_path', 'supplier_id', 'good_code', 'brand_name', 'stock_price',
                                 'supply_price', 'good_stock', 'orders', 'good_en_title', 'good_summary', 'good_en_summary',
-                                'main_pic','pic','content',];
+                                'main_pic','pic','content','video'];
 
 
     const WAIT_SUBMIT    = 1;   //等待提交

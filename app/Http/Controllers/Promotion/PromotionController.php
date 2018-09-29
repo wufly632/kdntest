@@ -25,6 +25,7 @@ class PromotionController extends Controller
     {
         $request->flash();
         $promotions = $this->promotionService->getList();
+        debug($promotions);
         return view('promotion.index', compact('promotions'));
     }
 
@@ -38,7 +39,7 @@ class PromotionController extends Controller
         if (! $request->title) {
             return ApiResponse::failure(g_API_ERROR, '请填写活动名称');
         }
-        if (! $request->start_at | ! $request->end_at) {
+        if (! $request->promotion_time) {
             return ApiResponse::failure(g_API_ERROR, '请完善活动时间');
         }
         $result = $this->promotionService->preCreate($request);
@@ -49,15 +50,17 @@ class PromotionController extends Controller
     }
 
     /**
-     * @function 促销活动添加商品页面
+     * @function 促销活动添加/修改商品页面
      * @param Promotion $promotion
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
-    public function add(Promotion $promotion)
+    public function edit(Promotion $promotion)
     {
         if (! $promotion) {
             redirect(secure_route('promotion.index'));
         }
+        // 获取所有的商品(已上线)
+        // $promotion_goods = $this->
         return view('promotion.add', compact('promotion'));
     }
 

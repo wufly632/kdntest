@@ -87,11 +87,14 @@ class PromotionService
      */
     public function preCreate($request)
     {
-        $data = $request->only(['title', 'start_at', 'end_at']);
+        $time = get_time_range($request->promotion_time);
+        $data['title'] = $request->title;
+        $data['start_at'] = $time[0];
+        $data['end_at'] = $time[1];
         $data['user_id'] = Auth::id();
         $data['created_at'] = Carbon::now()->toDateTimeString();
         if ($promotion = $this->promotion->create($data)) {
-            return ApiResponse::success($promotion->id);
+            return ApiResponse::success($promotion->id, '添加活动成功');
         }
         return ApiResponse::failure(g_API_ERROR, '添加活动失败');
     }
@@ -306,7 +309,7 @@ class PromotionService
                 foreach($activity_goods as $val){
                     $good_id = $val->goods_id;
                     $good_tmp['id'] = $val->id;
-                    if(isset($request->per_num.$good_id)) {
+                    if($request->per_num.$good_id !== null) {
                         $good_tmp['per_num'] = $request->input('per_num'.$good_id);
                         $good_tmp['num'] = $request->input('num'.$good_id) ?? 0;
                         foreach($request->input('sku_id'.$good_id) as $key => $v){

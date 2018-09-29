@@ -21,6 +21,12 @@ Route::get('/captcha', ['as' => 'captcha', 'uses' => 'LoginController@captcha'])
 Route::group(['middleware' => ['auth', 'web']], function() {
     Route::get('/', ['as' => 'home.dashboard', 'uses' => 'LoginController@dashboard']);
 
+    //个人中心
+    Route::group(['prefix' => 'personal', 'namespace' => 'Personal'], function () {
+       Route::get('/index', ['as' => 'personal.index', 'uses' => 'PersonalController@index']);
+       Route::post('/update', ['as' => 'personal.update', 'uses' => 'PersonalController@update']);
+    });
+
     //类目管理
     Route::group(['prefix' => 'category','namespace' => 'CateAttr'], function(){
         Route::get('/', ['as' => 'category.index', 'uses' => 'CategoryController@index']);
@@ -60,7 +66,7 @@ Route::group(['middleware' => ['auth', 'web']], function() {
     Route::group(['prefix' => 'promotion', 'namespace' => 'Promotion'], function () {
        Route::get('/', ['as' => 'promotion.index', 'uses' => 'PromotionController@index']);
        Route::post('/addPost', ['as' => 'promotion.addPost', 'uses' => 'PromotionController@addPost']);
-       Route::get('/add/{promotion}', ['as' => 'promotion.add', 'uses' => 'PromotionController@add']);
+       Route::get('/edit/{promotion}', ['as' => 'promotion.edit', 'uses' => 'PromotionController@add']);
        Route::post('/create', ['as' => 'promotion.create', 'uses' => 'PromotionController@create']);
     });
 
