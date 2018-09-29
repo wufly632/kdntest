@@ -50,15 +50,17 @@ class PromotionController extends Controller
     }
 
     /**
-     * @function 促销活动添加商品页面
+     * @function 促销活动添加/修改商品页面
      * @param Promotion $promotion
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
-    public function add(Promotion $promotion)
+    public function edit(Promotion $promotion)
     {
         if (! $promotion) {
             redirect(secure_route('promotion.index'));
         }
+        // 获取所有的商品(已上线)
+        // $promotion_goods = $this->
         return view('promotion.add', compact('promotion'));
     }
 
