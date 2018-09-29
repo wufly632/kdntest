@@ -21,6 +21,12 @@ Route::get('/captcha', ['as' => 'captcha', 'uses' => 'LoginController@captcha'])
 Route::group(['middleware' => ['auth', 'web']], function() {
     Route::get('/', ['as' => 'home.dashboard', 'uses' => 'LoginController@dashboard']);
 
+    //个人中心
+    Route::group(['prefix' => 'personal', 'namespace' => 'Personal'], function () {
+       Route::get('/index', ['as' => 'personal.index', 'uses' => 'PersonalController@index']);
+       Route::post('/update', ['as' => 'personal.update', 'uses' => 'PersonalController@update']);
+    });
+
     //类目管理
     Route::group(['prefix' => 'category','namespace' => 'CateAttr'], function(){
         Route::get('/', ['as' => 'category.index', 'uses' => 'CategoryController@index']);
