@@ -60,7 +60,7 @@ Route::group(['middleware' => ['auth', 'web']], function() {
     Route::group(['prefix' => 'promotion', 'namespace' => 'Promotion'], function () {
        Route::get('/', ['as' => 'promotion.index', 'uses' => 'PromotionController@index']);
        Route::post('/addPost', ['as' => 'promotion.addPost', 'uses' => 'PromotionController@addPost']);
-       Route::get('/add/{promotion}', ['as' => 'promotion.add', 'uses' => 'PromotionController@add']);
+       Route::get('/edit/{promotion}', ['as' => 'promotion.edit', 'uses' => 'PromotionController@add']);
        Route::post('/create', ['as' => 'promotion.create', 'uses' => 'PromotionController@create']);
     });
 

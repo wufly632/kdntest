@@ -224,7 +224,7 @@
                     success:function(data){
                         if (data.status == 200) {
                             toastr.success(data.msg);
-                            window.location.href = '/promotion/add/'+data.content;
+                            window.location.href = '/promotion/edit/'+data.content;
                         } else {
                             toastr.error(data.msg);
                             _index.attr('disabled', false);
