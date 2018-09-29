@@ -22,6 +22,7 @@
             height: 80px;
             line-height: 80px;
         }
+
         .justify-align-center {
             vertical-align: middle !important;
         }
@@ -226,6 +227,7 @@
                                             <input type="button" class="btn btn-success" value="查找">
                                         </div>
                                     </div>
+                                    <hr>
                                     <table id="coupon_table" class="table table-bordered table-hover text-center">
                                         <thead>
                                         <tr>
@@ -239,7 +241,7 @@
                                         </tr>
                                         </thead>
                                         <tbody>
-                                        <tr>
+                                        <tr class="table-level-one">
                                             <td>图片</td>
                                             <td style="width: 200px;">
                                                 <div>
@@ -264,82 +266,57 @@
                                                 <div class="set_promotion"><a href="javascript:void(0);">设置优惠</a></div>
                                             </td>
                                         </tr>
-                                        <tr>
-                                            <td colspan="7">
-                                                <table class="table table-bordered text-center">
-                                                    <tr>
-                                                        <td colspan="8" class="row">
-                                                            <div class="goods_image image-align-center col-xs-1 no-padding">
-                                                                <img src="http://localhost/assets/admin-lte//dist/img/user2-160x160.jpg"
-                                                                     width="80px" height="80px" alt=""></div>
-                                                            <div class="col-xs-10 text-left">
-                                                                <div class="good_name text-padding-top row">
-                                                                    <div class="col-xs-1 text-right">名称：</div>
-                                                                    <div class="col-xs-1 text-left">test</div></div>
-                                                                <div class="good_id text-padding-top row" style="vertical-align: middle">
-                                                                    <div class="col-xs-1 text-right text-padding-top">ID：</div>
-                                                                    <div class="col-xs-1 text-left text-padding-top">292</div>
-                                                                    <div class="good_num text-padding-top text-danger col-xs-2">
-                                                                        最近30天销量
-                                                                    </div>
-                                                                    <div class="col-xs-6 col-xs-offset-2">
-                                                                        <div class="col-xs-2 text-padding-top" style="padding-right: 0">每人限购</div>
-                                                                        <div class="col-xs-5">
-                                                                            <div class="input-group">
-                                                                                <select name="" id="" class="form-control">
-                                                                                    <option value="">不限</option>
-                                                                                    <option value="">1</option>
-                                                                                    <option value="">2</option>
-                                                                                    <option value="">3</option>
-                                                                                </select>
-                                                                                <span class="input-group-addon">件</span>
-                                                                            </div>
-                                                                        </div>
-                                                                        <div class="col-xs-4">
-                                                                            <input type="button" class="btn btn-success" value="一键设置">
-                                                                        </div>
-                                                                    </div>
-
-                                                                </div>
-
-                                                            </div>
-                                                        </td>
-                                                        <td rowspan="4" class="justify-align-center">删除</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>颜色</td>
-                                                        <td>尺寸</td>
-                                                        <td>市场价</td>
-                                                        <td>零售价</td>
-                                                        <td><span class="text-danger">*</span> 秒杀价</td>
-                                                        <td><span class="text-danger">*</span> 秒杀数量</td>
-                                                        <td>库存数量</td>
-                                                        <td>商家编码</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>蓝色</td>
-                                                        <td>28</td>
-                                                        <td>￥120</td>
-                                                        <td>￥23</td>
-                                                        <td class="col-xs-2"><input type="text" class="form-control">
-                                                        </td>
-                                                        <td class="col-xs-2" rowspan="2" style="padding-top: 30px;">
-                                                            <input type="text" class="form-control"></td>
-                                                        <td>2000</td>
-                                                        <td>2000</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>蓝色</td>
-                                                        <td>28</td>
-                                                        <td>￥120</td>
-                                                        <td>￥23</td>
-                                                        <td><input type="text" class="form-control"></td>
-                                                        <td>2000</td>
-                                                        <td>2000</td>
-                                                    </tr>
-                                                </table>
+                                        <tr class="table-level-one">
+                                            <td>图片</td>
+                                            <td style="width: 200px;">
+                                                <div>
+                                                    <div class="col-xs-5 text-right">ID：</div>
+                                                    <div class="col-xs-7 text-left">396</div>
+                                                </div>
+                                                <div>
+                                                    <div class="col-xs-5 text-right">名称：</div>
+                                                    <div class="col-xs-7 text-left">test</div>
+                                                </div>
+                                                <div>
+                                                    <div class="col-xs-5 text-right">货号：</div>
+                                                    <div class="col-xs-7 text-left">123</div>
+                                                </div>
+                                            </td>
+                                            <td>¥20.00起</td>
+                                            <td>¥10.00起</td>
+                                            <td>35900</td>
+                                            <td>20</td>
+                                            <td>
+                                                <div><a href="javascript:void(0);">删除</a></div>
+                                                <div class="set_promotion"><a href="javascript:void(0);">设置优惠</a></div>
                                             </td>
                                         </tr>
+                                        <tr class="table-level-one">
+                                            <td>图片</td>
+                                            <td style="width: 200px;">
+                                                <div>
+                                                    <div class="col-xs-5 text-right">ID：</div>
+                                                    <div class="col-xs-7 text-left">396</div>
+                                                </div>
+                                                <div>
+                                                    <div class="col-xs-5 text-right">名称：</div>
+                                                    <div class="col-xs-7 text-left">test</div>
+                                                </div>
+                                                <div>
+                                                    <div class="col-xs-5 text-right">货号：</div>
+                                                    <div class="col-xs-7 text-left">123</div>
+                                                </div>
+                                            </td>
+                                            <td>¥20.00起</td>
+                                            <td>¥10.00起</td>
+                                            <td>35900</td>
+                                            <td>20</td>
+                                            <td>
+                                                <div><a href="javascript:void(0);">删除</a></div>
+                                                <div class="set_promotion"><a href="javascript:void(0);">设置优惠</a></div>
+                                            </td>
+                                        </tr>
+
                                         </tbody>
                                     </table>
                                     <div>
@@ -558,5 +535,91 @@
         addDateRangePicker($('#activity_time'));
         createDataTable($('#select_coupon_table'));
         $('.modal-content').css({'box-shadow': 'none'});
+        let tableLevelTwo = '<tr class="table-level-two">\n' +
+            '        <td colspan="7">\n' +
+            '            <table class="table table-bordered text-center">\n' +
+            '            <tr>\n' +
+            '            <td colspan="8" class="row">\n' +
+            '            <div class="goods_image image-align-center col-xs-1 no-padding">\n' +
+            '            <img src="http://localhost/assets/admin-lte//dist/img/user2-160x160.jpg"\n' +
+            '        width="80px" height="80px" alt=""></div>\n' +
+            '            <div class="col-xs-10 text-left">\n' +
+            '            <div class="good_name text-padding-top row">\n' +
+            '            <div class="col-xs-1 text-right">名称：</div>\n' +
+            '        <div class="col-xs-1 text-left">test</div></div>\n' +
+            '        <div class="good_id text-padding-top row" style="vertical-align: middle">\n' +
+            '            <div class="col-xs-1 text-right text-padding-top">ID：</div>\n' +
+            '        <div class="col-xs-1 text-left text-padding-top">292</div>\n' +
+            '            <div class="good_num text-padding-top text-danger col-xs-2">\n' +
+            '            最近30天销量\n' +
+            '            </div>\n' +
+            '            <div class="col-xs-6 col-xs-offset-2">\n' +
+            '            <div class="col-xs-2 text-padding-top" style="padding-right: 0">每人限购</div>\n' +
+            '            <div class="col-xs-5">\n' +
+            '            <div class="input-group">\n' +
+            '            <select name="" id="" class="form-control">\n' +
+            '            <option value="">不限</option>\n' +
+            '            <option value="">1</option>\n' +
+            '            <option value="">2</option>\n' +
+            '            <option value="">3</option>\n' +
+            '            </select>\n' +
+            '            <span class="input-group-addon">件</span>\n' +
+            '            </div>\n' +
+            '            </div>\n' +
+            '            <div class="col-xs-4">\n' +
+            '            <input type="button" class="btn btn-success" value="一键设置">\n' +
+            '            </div>\n' +
+            '            </div>\n' +
+            '\n' +
+            '            </div>\n' +
+            '\n' +
+            '            </div>\n' +
+            '            </td>\n' +
+            '            <td rowspan="4" class="justify-align-center">删除</td>\n' +
+            '            </tr>\n' +
+            '            <tr>\n' +
+            '            <td>颜色</td>\n' +
+            '            <td>尺寸</td>\n' +
+            '            <td>市场价</td>\n' +
+            '            <td>零售价</td>\n' +
+            '            <td><span class="text-danger">*</span> 秒杀价</td>\n' +
+            '        <td><span class="text-danger">*</span> 秒杀数量</td>\n' +
+            '        <td>库存数量</td>\n' +
+            '        <td>商家编码</td>\n' +
+            '        </tr>\n' +
+            '        <tr>\n' +
+            '        <td>蓝色</td>\n' +
+            '        <td>28</td>\n' +
+            '        <td>￥120</td>\n' +
+            '        <td>￥23</td>\n' +
+            '        <td class="col-xs-2"><input type="text" class="form-control">\n' +
+            '            </td>\n' +
+            '            <td class="col-xs-2" rowspan="2" style="padding-top: 30px;">\n' +
+            '            <input type="text" class="form-control"></td>\n' +
+            '            <td>2000</td>\n' +
+            '            <td>2000</td>\n' +
+            '            </tr>\n' +
+            '            <tr>\n' +
+            '            <td>蓝色</td>\n' +
+            '            <td>28</td>\n' +
+            '            <td>￥120</td>\n' +
+            '            <td>￥23</td>\n' +
+            '            <td><input type="text" class="form-control"></td>\n' +
+            '            <td>2000</td>\n' +
+            '            <td>2000</td>\n' +
+            '            </tr>\n' +
+            '            </table>\n' +
+            '            </td>\n' +
+            '            </tr>';
+        let newTable = $(tableLevelTwo);
+        $('.set_promotion').click(function () {
+            let thisParent = $(this).parents('.table-level-one');
+            console.log(thisParent.next().hasClass('table-level-two'));
+            if (thisParent.next().hasClass('table-level-two')) {
+                thisParent.next().remove();
+            } else {
+                $(this).parents('.table-level-one').after(newTable);
+            }
+        });
     </script>
 @endsection
