@@ -26,6 +26,7 @@
         .justify-align-center {
             vertical-align: middle !important;
         }
+        .promotion_type {margin-right: 15px;}
 
     </style>
 @endsection
@@ -119,9 +120,9 @@
                             {{ csrf_field() }}
                             <div class="box-header">
                                 <div class="form-group">
-                                    <label for="activity_time" class="col-xs-2 control-label">活动时间：</label>
+                                    <label for="promotion_time" class="col-xs-2 control-label">活动时间：</label>
                                     <div class="col-xs-2">
-                                        <input type="text" name="activity_time" class="form-control" id="activity_time">
+                                        <input type="text" name="promotion_time" class="form-control" id="promotion_time" value="{{$promotion->start_at.'~'.$promotion->end_at}}">
                                     </div>
                                 </div>
                                 <div class="form-group">
@@ -141,7 +142,7 @@
                                     <label for="" class="col-xs-2 control-label">活动名称：</label>
                                     <div class="col-xs-2">
                                         <input type="text" class="form-control" id="promotion_title"
-                                               name="title">
+                                               name="title" value="{{$promotion->title}}">
                                     </div>
                                 </div>
 
@@ -150,48 +151,48 @@
                                         <b>促销方式：</b>
                                     </div>
                                     <div class="col-xs-10">
-                                        <div class="col-xs-1">
+                                        <span class="promotion_type">
                                             <label for="method1" id="method-label1" class="label-inline method_radio">
                                                 <input name="activity_type" class="promotion_method" id="method1"
                                                        type="radio" value="reduce" checked>满减
                                             </label>
-                                        </div>
-                                        <div class="col-xs-1">
+                                        </span>
+                                        <span class="promotion_type">
                                             <label for="method2" id="method-label2" class="label-inline method_radio">
                                                 <input name="activity_type" class="promotion_method" id="method2"
                                                        type="radio" value="return">满返
                                             </label>
-                                        </div>
-                                        <div class="col-xs-1">
+                                        </span>
+                                        <span class="promotion_type">
                                             <label for="method3" id="method-label3" class="label-inline method_radio">
                                                 <input name="activity_type" class="promotion_method" id="method3"
                                                        type="radio" value="discount">多件多折
                                             </label>
-                                        </div>
-                                        <div class="col-xs-1">
+                                        </span>
+                                        <span class="promotion_type">
                                             <label for="method4" id="method-label4" class="label-inline method_radio">
                                                 <input name="activity_type" class="promotion_method" id="method4"
                                                        type="radio" value="wholesale">x元n件
                                             </label>
-                                        </div>
-                                        <div class="col-xs-1">
+                                        </span>
+                                        <span class="promotion_type">
                                             <label for="method5" id="method-label5" class="label-inline method_radio">
                                                 <input name="activity_type" class="promotion_method" id="method5"
                                                        type="radio" value="onefree">买n免一
                                             </label>
-                                        </div>
-                                        <div class="col-xs-1">
+                                        </span>
+                                        <span class="promotion_type">
                                             <label for="method6" id="method-label6" class="label-inline method_radio">
                                                 <input name="activity_type" class="promotion_method" id="method6"
                                                        type="radio" value="limit">限时特价
                                             </label>
-                                        </div>
-                                        <div class="col-xs-1">
+                                        </span>
+                                        <span class="promotion_type">
                                             <label for="method7" id="method-label7" class="label-inline method_radio">
                                                 <input name="activity_type" class="promotion_method" id="method7"
                                                        type="radio" value="quantity">限量秒杀
                                             </label>
-                                        </div>
+                                        </span>
                                     </div>
                                 </div>
                                 <div class="panel panel-info col-xs-10 col-xs-offset-1">
@@ -532,7 +533,7 @@
                 '                                            </div>');
 
         });
-        addDateRangePicker($('#activity_time'));
+        addDateRangePicker($('#promotion_time'));
         createDataTable($('#select_coupon_table'));
         $('.modal-content').css({'box-shadow': 'none'});
         let tableLevelTwo = '<tr class="table-level-two">\n' +

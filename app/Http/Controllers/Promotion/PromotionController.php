@@ -25,6 +25,7 @@ class PromotionController extends Controller
     {
         $request->flash();
         $promotions = $this->promotionService->getList();
+        debug($promotions);
         return view('promotion.index', compact('promotions'));
     }
 
@@ -38,7 +39,7 @@ class PromotionController extends Controller
         if (! $request->title) {
             return ApiResponse::failure(g_API_ERROR, '请填写活动名称');
         }
-        if (! $request->start_at | ! $request->end_at) {
+        if (! $request->promotion_time) {
             return ApiResponse::failure(g_API_ERROR, '请完善活动时间');
         }
         $result = $this->promotionService->preCreate($request);

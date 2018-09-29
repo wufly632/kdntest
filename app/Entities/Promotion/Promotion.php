@@ -18,10 +18,11 @@ class Promotion extends Model implements Transformable
     protected $table = "promotions_activity";
 
     /**
-     * The attributes that are mass assignable.
+     * The attributes that are not mass assignable.
      *
      * @var array
      */
-    protected $fillable = [];
+
+    protected $guarded = ['id'];
 
 }

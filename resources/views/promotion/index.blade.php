@@ -28,22 +28,23 @@
                         <div class="modal-dialog" style="width:800px">
                             <div class="modal-content">
                                 <div class="modal-body">
-                                    <form action="/promotion/add" method="post" class="form-horizontal">
+                                    <form id="promotion-add" method="post" class="form-horizontal">
+                                        {!! csrf_field() !!}
                                         <div class="form-group">
                                             <label for="" class="col-xs-4 control-label">活动名称</label>
                                             <div class="col-xs-4">
-                                                <input type="text" class="form-control">
+                                                <input type="text" class="form-control" name="title">
                                             </div>
                                         </div>
                                         <div class="form-group">
                                             <label for="active_time" class="col-xs-4 control-label">活动时间</label>
                                             <div class="col-xs-4">
-                                                <input type="text" class="form-control create_time" id="active_time">
+                                                <input type="text" class="form-control create_time" id="active_time" name="promotion_time">
                                             </div>
                                         </div>
                                         <input type="button" class="btn btn-danger col-xs-offset-4" id="modal-cancel"
                                                value="取消">
-                                        <input type="submit" class="btn btn-success col-xs-offset-1" value="创建">
+                                        <input type="button" class="btn btn-success col-xs-offset-1 save" value="创建">
 
                                     </form>
                                 </div>
@@ -99,15 +100,16 @@
                                     </tr>
                                     </thead>
                                     <tbody>
+                                    @foreach($promotions as $promotion)
                                     <tr>
-                                        <td>1</td>
-                                        <td>1970-2099</td>
-                                        <td>啦啦啦</td>
-                                        <td>买一送一</td>
-                                        <td>衣服</td>
-                                        <td>100</td>
-                                        <td>60</td>
-                                        <td>进行中</td>
+                                        <td>{{$promotion->id}}</td>
+                                        <td>{{$promotion->start_at.'~'.$promotion->end_at}}</td>
+                                        <td>{{$promotion->rule_text}}</td>
+                                        <td>{{$promotion->activity_type}}</td>
+                                        <td></td>
+                                        <td>{{$promotion->goods_value}}</td>
+                                        <td>{{$promotion->stock}}</td>
+                                        <td>{{$promotion->status}}</td>
                                         <td>
                                             <div><a href="#">修改</a></div>
                                             <div><a href="#">完善信息</a></div>
@@ -115,6 +117,7 @@
                                             <div><a href="#">查看详情</a></div>
                                         </td>
                                     </tr>
+                                    @endforeach
                                     </tbody>
                                 </table>
                             </div>
@@ -207,5 +210,35 @@
             console.log('New date range selected: ' + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD') + ' (predefined range: ' + label + ')');
         });
         $('.modal-content').css({'box-shadow': 'none'});
+        $(function () {
+            $('#promotion-add').on('click', '.save', function () {
+                var _index = $(this);
+                $.ajax({
+                    type:'post',
+                    url:"{{secure_route('promotion.addPost')}}",
+                    data:$('#promotion-add').serialize(),
+                    beforeSend:function() {
+                        _index.attr('disabled', true);
+                        _index.html('创建中...');
+                    },
+                    success:function(data){
+                        if (data.status == 200) {
+                            toastr.success(data.msg);
+                            window.location.href = '/promotion/add/'+data.content;
+                        } else {
+                            toastr.error(data.msg);
+                            _index.attr('disabled', false);
+                            _index.html('创建');
+                        }
+                    },
+                    error:function(data){
+                        var json=eval("("+data.responseText+")");
+                        toastr.error(json.msg);
+                        _index.attr('disabled', false);
+                        _index.html('创建');
+                    }
+                });
+            })
+        })
     </script>
 @endsection
