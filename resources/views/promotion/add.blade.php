@@ -198,55 +198,68 @@
                                 <div class="panel panel-info col-xs-offset-1 col-xs-10">
                                     <div class="panel-body">
                                         <div class="detail-box row with-border">
-                                            <div class="hidden detail reduce-detail">
-                                                <div class="pull-left text-padding-top">活动期间，买满</div>
-                                                <div class="col-xs-2">
-                                                    <div class="input-group">
-                                                        <input type="text" class="form-control">
-                                                        <span class="input-group-addon">元</span>
+                                            <div class="@if($promotion->activity_type != 'reduce' && $promotion->activity_type) hidden @endif detail reduce-detail">
+                                                <div class="reduce-detail-row">
+                                                    <div class="pull-left text-padding-top">活动期间，买满</div>
+                                                    <div class="col-xs-2">
+                                                        <div class="input-group">
+                                                            <input type="text" class="form-control">
+                                                            <span class="input-group-addon">元</span>
+                                                        </div>
                                                     </div>
-                                                </div>
-                                                <div class="col-xs-1 control-label" style="width: 40px;padding-left: 0;padding-right: 0">，返</div>
-                                                <div class="col-xs-2">
-                                                    <select name="" id="" class="form-control">
-                                                        <option value="">券</option>
-                                                    </select>
+                                                    <div class="pull-left text-padding-top" style="width: 60px;padding-left: 0;padding-right: 0">，立减</div>
+                                                    <div class="col-xs-2">
+                                                        <div class="input-group">
+                                                            <input type="text" class="form-control">
+                                                            <span class="input-group-addon">元</span>
+                                                        </div>
+                                                    </div>
+                                                    <button id="add-reduce-detail" type="button" class="btn btn-primary btn-flat" style="border-radius: 90px;">+</button>
                                                 </div>
                                             </div>
-                                            <div class="hidden detail return-detail">
-                                                <div class="pull-left text-padding-top">活动期间，买满</div>
-                                                <div class="col-xs-2">
-                                                    <div class="input-group">
-                                                        <input type="text" class="form-control">
-                                                        <span class="input-group-addon">元</span>
+                                            <div class="@if($promotion->activity_type != 'return') hidden @endif detail return-detail">
+                                                <div class="return-detail-row">
+                                                    <div class="pull-left text-padding-top">活动期间，买满</div>
+                                                    <div class="col-xs-2">
+                                                        <div class="input-group">
+                                                            <input type="text" class="form-control">
+                                                            <span class="input-group-addon">元</span>
+                                                        </div>
                                                     </div>
-                                                </div>
-                                                <div class="col-xs-1 control-label" style="width: 40px;padding-left: 0;padding-right: 0">，返</div>
-                                                <div class="col-xs-2">
-                                                    <select name="" id="" class="form-control">
-                                                        <option value="">券</option>
-                                                    </select>
-                                                </div></div>
-                                            <div class="hidden detail discount-detail">
-                                                <div class="pull-left text-padding-top">
-                                                    活动期间，选购商品满
-                                                </div>
-                                                <div class="col-xs-2">
-                                                    <div class="input-group">
-                                                        <input type="text" class="form-control">
-                                                        <span class="input-group-addon">件</span>
+                                                    <div class="col-xs-1 control-label" style="width: 40px;padding-left: 0;padding-right: 0">，返</div>
+                                                    <div class="col-xs-2">
+                                                        <select name="" id="" class="form-control">
+                                                            <option value="">券</option>
+                                                        </select>
                                                     </div>
+                                                    <button id="add-return-detail" type="button" class="btn btn-primary btn-flat" style="border-radius: 90px;">+</button>
                                                 </div>
-                                                <div class="col-xs-1 control-label">
-                                                    ，立享
-                                                </div>
-                                                <div class="col-xs-2">
-                                                    <div class="input-group">
-                                                        <input type="text" class="form-control">
-                                                        <span class="input-group-addon">折</span>
+                                            </div>
+                                            <div class="@if($promotion->activity_type != 'discount') hidden @endif detail discount-detail">
+                                                <div class="discount-detail-row">
+                                                    <div class="pull-left text-padding-top">
+                                                        活动期间，选购商品满
                                                     </div>
-                                                </div></div>
-                                            <div class="hidden detail wholesale-detail">
+                                                    <div class="col-xs-2">
+                                                        <div class="input-group">
+                                                            <input type="text" class="form-control">
+                                                            <span class="input-group-addon">件</span>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-xs-1 control-label">
+                                                        ，立享
+                                                    </div>
+                                                    <div class="col-xs-2">
+                                                        <div class="input-group">
+                                                            <input type="text" class="form-control">
+                                                            <span class="input-group-addon">折</span>
+                                                        </div>
+                                                    </div>
+                                                    <button id="add-discount-detail" type="button" class="btn btn-primary btn-flat" style="border-radius: 90px;">+</button>
+                                                </div>
+                                            </div>
+
+                                            <div class="@if($promotion->activity_type != 'wholesale') hidden @endif detail wholesale-detail">
                                                 <div class="pull-left text-padding-top">
                                                     活动期间
                                                 </div>
@@ -266,7 +279,7 @@
                                                     </div>
                                                 </div>
                                                 <div class="col-xs-1 control-label">活动商品</div></div>
-                                            <div class="hidden detail give-detail">
+                                            <div class="@if($promotion->activity_type != 'give') hidden @endif detail give-detail">
                                                 <div class="pull-left text-padding-top">
                                                     活动期间，选购商品满
                                                 </div>
@@ -281,7 +294,7 @@
                                                 <div class="col-xs-3 control-label">
                                                     ，免其中价格最低的一件
                                                 </div></div>
-                                            <div class="hidden detail limit-detail">
+                                            <div class="@if($promotion->activity_type != 'limit') hidden @endif detail limit-detail">
                                                 <div class="pull-left text-padding-top">
                                                     活动期间，购买活动商品统一
                                                 </div>
@@ -318,7 +331,7 @@
                                                     注：可在添加商品时针对每个商品分别设置优惠力度。
                                                 </div>
                                             </div>
-                                            <div class="hidden detail quantity-detail">
+                                            <div class="@if($promotion->activity_type != 'quantity') hidden @endif detail quantity-detail">
                                                 <div class="pull-left text-padding-top">
                                                     活动期间，活动商品统一
                                                 </div>
@@ -509,26 +522,10 @@
         $(function () {
             $('input[name=activity_type]').change(function () {
                 var val = $(this).val();
-                console.log(val);
                 $('.detail-box').find('.detail').addClass('hidden');
                 $('.detail-box').find('.'+val+'-detail').removeClass('hidden');
             });
         });
-        // $('.detail-box').empty().append('<div class="col-xs-2 text-padding-top">活动期间，选购商品满</div>\n' +
-        //     '                                    <div class="col-xs-2">\n' +
-        //     '                                        <div class="input-group">\n' +
-        //     '                                            <input type="text" class="form-control">\n' +
-        //     '                                            <span class="input-group-addon">元</span>\n' +
-        //     '                                        </div>\n' +
-        //     '                                    </div>\n' +
-        //     '                                    <div class="col-xs-1 text-padding-top">，立减</div>\n' +
-        //     '                                    <div class="col-xs-2">\n' +
-        //     '                                        <div class="input-group">\n' +
-        //     '                                            <input type="text" class="form-control">\n' +
-        //     '                                            <span class="input-group-addon">元</span>\n' +
-        //     '                                        </div>\n' +
-        //     '                                    </div>');
-
         addDateRangePicker($('#promotion_time'));
         createDataTable($('#select_coupon_table'));
         $('.modal-content').css({'box-shadow': 'none'});
