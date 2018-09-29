@@ -27,7 +27,7 @@
             vertical-align: middle !important;
         }
         .promotion_type {margin-right: 15px;}
-
+        .box-header .col-xs-1{width: 10%;}
     </style>
 @endsection
 @extends('layouts.default')
@@ -120,13 +120,13 @@
                             {{ csrf_field() }}
                             <div class="box-header">
                                 <div class="form-group">
-                                    <label for="promotion_time" class="col-xs-2 control-label">活动时间：</label>
-                                    <div class="col-xs-2">
+                                    <label for="promotion_time" class="col-xs-1 control-label">活动时间：</label>
+                                    <div class="col-xs-3">
                                         <input type="text" name="promotion_time" class="form-control" id="promotion_time" value="{{$promotion->start_at.'~'.$promotion->end_at}}">
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <label for="prepare_time" class="col-xs-2 control-label">预热时间：</label>
+                                    <label for="prepare_time" class="col-xs-1 control-label">预热时间：</label>
                                     <div class="col-xs-2">
                                         <div class="input-group">
                                             <input type="text" name="pre_time" class="form-control"
@@ -139,7 +139,7 @@
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <label for="" class="col-xs-2 control-label">活动名称：</label>
+                                    <label for="" class="col-xs-1 control-label">活动名称：</label>
                                     <div class="col-xs-2">
                                         <input type="text" class="form-control" id="promotion_title"
                                                name="title" value="{{$promotion->title}}">
@@ -147,7 +147,7 @@
                                 </div>
 
                                 <div class="form-group">
-                                    <div class="col-xs-2 text-right">
+                                    <div class="col-xs-1 text-right">
                                         <b>促销方式：</b>
                                     </div>
                                     <div class="col-xs-10">
@@ -178,7 +178,7 @@
                                         <span class="promotion_type">
                                             <label for="method5" id="method-label5" class="label-inline method_radio">
                                                 <input name="activity_type" class="promotion_method" id="method5"
-                                                       type="radio" value="onefree">买n免一
+                                                       type="radio" value="give">买n免一
                                             </label>
                                         </span>
                                         <span class="promotion_type">
@@ -195,17 +195,180 @@
                                         </span>
                                     </div>
                                 </div>
-                                <div class="panel panel-info col-xs-10 col-xs-offset-1">
+                                <div class="panel panel-info col-xs-offset-1 col-xs-10">
                                     <div class="panel-body">
-                                        <div class="detail-box row col-xs-offset-1 with-border">
+                                        <div class="detail-box row with-border">
+                                            <div class="hidden detail reduce-detail">
+                                                <div class="pull-left text-padding-top">活动期间，买满</div>
+                                                <div class="col-xs-2">
+                                                    <div class="input-group">
+                                                        <input type="text" class="form-control">
+                                                        <span class="input-group-addon">元</span>
+                                                    </div>
+                                                </div>
+                                                <div class="col-xs-1 control-label" style="width: 40px;padding-left: 0;padding-right: 0">，返</div>
+                                                <div class="col-xs-2">
+                                                    <select name="" id="" class="form-control">
+                                                        <option value="">券</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="hidden detail return-detail">
+                                                <div class="pull-left text-padding-top">活动期间，买满</div>
+                                                <div class="col-xs-2">
+                                                    <div class="input-group">
+                                                        <input type="text" class="form-control">
+                                                        <span class="input-group-addon">元</span>
+                                                    </div>
+                                                </div>
+                                                <div class="col-xs-1 control-label" style="width: 40px;padding-left: 0;padding-right: 0">，返</div>
+                                                <div class="col-xs-2">
+                                                    <select name="" id="" class="form-control">
+                                                        <option value="">券</option>
+                                                    </select>
+                                                </div></div>
+                                            <div class="hidden detail discount-detail">
+                                                <div class="pull-left text-padding-top">
+                                                    活动期间，选购商品满
+                                                </div>
+                                                <div class="col-xs-2">
+                                                    <div class="input-group">
+                                                        <input type="text" class="form-control">
+                                                        <span class="input-group-addon">件</span>
+                                                    </div>
+                                                </div>
+                                                <div class="col-xs-1 control-label">
+                                                    ，立享
+                                                </div>
+                                                <div class="col-xs-2">
+                                                    <div class="input-group">
+                                                        <input type="text" class="form-control">
+                                                        <span class="input-group-addon">折</span>
+                                                    </div>
+                                                </div></div>
+                                            <div class="hidden detail wholesale-detail">
+                                                <div class="pull-left text-padding-top">
+                                                    活动期间
+                                                </div>
+                                                <div class="col-xs-2">
+                                                    <div class="input-group">
+                                                        <input type="text" class="form-control">
+                                                        <span class="input-group-addon">元</span>
+                                                    </div>
+                                                </div>
+                                                <div class="col-xs-1 control-label">
+                                                    任选
+                                                </div>
+                                                <div class="col-xs-2">
+                                                    <div class="input-group">
+                                                        <input type="text" class="form-control">
+                                                        <span class="input-group-addon">件</span>
+                                                    </div>
+                                                </div>
+                                                <div class="col-xs-1 control-label">活动商品</div></div>
+                                            <div class="hidden detail give-detail">
+                                                <div class="pull-left text-padding-top">
+                                                    活动期间，选购商品满
+                                                </div>
+                                                <div class="col-xs-2">
+                                                    <div class="input-group">
+                                                        <input type="text" class="form-control">
+                                                        <span class="input-group-addon">
+                                                        件
+                                                    </span>
+                                                    </div>
+                                                </div>
+                                                <div class="col-xs-3 control-label">
+                                                    ，免其中价格最低的一件
+                                                </div></div>
+                                            <div class="hidden detail limit-detail">
+                                                <div class="pull-left text-padding-top">
+                                                    活动期间，购买活动商品统一
+                                                </div>
+                                                <div class="col-xs-2">
+                                                    <select name="" id="" class="form-control">
+                                                        <option value="1">立享</option>
+                                                        <option value="2">立减</option>
+                                                    </select>
+                                                </div>
+                                                <div class="col-xs-2">
+                                                    <div class="input-group">
+                                                        <input type="text" class="form-control">
+                                                        <span class="input-group-addon">元</span>
+                                                    </div>
+                                                </div>
+                                                <div class="col-xs-1 control-label">
+                                                    每人限购
+                                                </div>
+                                                <div class="col-xs-2">
+                                                    <div class="input-group">
+                                                        <select name="" id="" class="form-control">
+                                                            <option value="">不限</option>
+                                                            <option value="">1</option>
+                                                            <option value="">2</option>
+                                                            <option value="">3</option>
+                                                            <option value="">4</option>
+                                                            <option value="">5</option>
+                                                        </select>
+                                                        <span class="input-group-addon">件</span>
+                                                    </div>
+                                                </div>
+                                                <input type="button" class="btn" value="确定">
+                                                <div class="text-info" style="padding: 6px;padding-left: 24px;">
+                                                    注：可在添加商品时针对每个商品分别设置优惠力度。
+                                                </div>
+                                            </div>
+                                            <div class="hidden detail quantity-detail">
+                                                <div class="pull-left text-padding-top">
+                                                    活动期间，活动商品统一
+                                                </div>
+                                                <div class="col-xs-2 no-padding" style="width: 90px;">
+                                                    <select name="" id="" class="form-control">
+                                                        <option value="">价格</option>
+                                                        <option value="">折扣</option>
+                                                    </select>
+                                                </div>
+                                                <div class="col-xs-2 no-padding" style="width: 90px;">
+                                                    <div class="input-group">
+                                                        <input type="text" class="form-control">
+                                                        <span class="input-group-addon">元</span>
+                                                    </div>
+                                                </div>
+                                                <div class="col-xs-1 control-label" style="width: 110px;">， 秒杀库存</div>
+                                                <div class="col-xs-1" style="width: 110px;">
+                                                    <div class="input-group">
+                                                        <input type="text" class="form-control">
+                                                        <span class="input-group-addon">件</span>
+                                                    </div>
+                                                </div>
 
+                                                <div class="col-xs-2 text-danger">
+                                                    (不设置件数即为当前库存均用于秒杀)
+                                                </div>
+                                                <div class="col-xs-1 control-label" style="width: 110px;">每人限购件</div>
+                                                <div class="col-xs-2 no-padding">
+                                                    <select name="" id="" class="form-control" style="width: 90px;">
+                                                        <option value="">不限</option>
+                                                        <option value="">1</option>
+                                                        <option value="">2</option>
+                                                        <option value="">3</option>
+                                                        <option value="">4</option>
+                                                        <option value="">5</option>
+                                                    </select>
+                                                </div>
+
+                                                <div class="col-xs-12">
+                                                    <div class="text-left col-xs-4 text-info" style="padding: 10px 5px;">注：可在添加商品时针对每个商品分别设置优惠力度。</div>
+                                                    <input type="button" class="btn col-xs-offset-6" value="确定">
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
 
                             </div>
                             <div class="box-body">
-                                <div class="col-xs-offset-1 col-xs-10">
+                                <div class="col-xs-12">
                                     <div><span class="h2">活动商品</span>
                                         <button class="btn btn-default pull-right" data-toggle="modal"
                                                 data-target="#modal-default">添加商品
@@ -343,196 +506,29 @@
     <script src="{{ asset('/assets/admin-lte/bower_components/datatables.net-bs/js/dataTables.bootstrap.min.js') }}"></script>
     <script src="{{ asset('/assets/js/plugincommon.js') }}"></script>
     <script>
-        $('.detail-box').empty().append('<div class="col-xs-2 text-padding-top">活动期间，选购商品满</div>\n' +
-            '                                    <div class="col-xs-2">\n' +
-            '                                        <div class="input-group">\n' +
-            '                                            <input type="text" class="form-control">\n' +
-            '                                            <span class="input-group-addon">元</span>\n' +
-            '                                        </div>\n' +
-            '                                    </div>\n' +
-            '                                    <div class="col-xs-1 text-padding-top">，立减</div>\n' +
-            '                                    <div class="col-xs-2">\n' +
-            '                                        <div class="input-group">\n' +
-            '                                            <input type="text" class="form-control">\n' +
-            '                                            <span class="input-group-addon">元</span>\n' +
-            '                                        </div>\n' +
-            '                                    </div>');
-        $('#method-label1').click(function () {
-            $('.detail-box').empty().append('<div class="col-xs-2 text-padding-top">活动期间，选购商品满</div>\n' +
-                '                                    <div class="col-xs-2">\n' +
-                '                                        <div class="input-group">\n' +
-                '                                            <input type="text" class="form-control">\n' +
-                '                                            <span class="input-group-addon">元</span>\n' +
-                '                                        </div>\n' +
-                '                                    </div>\n' +
-                '                                    <div class="col-xs-1 control-label">，立减</div>\n' +
-                '                                    <div class="col-xs-2">\n' +
-                '                                        <div class="input-group">\n' +
-                '                                            <input type="text" class="form-control">\n' +
-                '                                            <span class="input-group-addon">元</span>\n' +
-                '                                        </div>\n' +
-                '                                    </div>');
-
+        $(function () {
+            $('input[name=activity_type]').change(function () {
+                var val = $(this).val();
+                console.log(val);
+                $('.detail-box').find('.detail').addClass('hidden');
+                $('.detail-box').find('.'+val+'-detail').removeClass('hidden');
+            });
         });
-        $('#method-label2').click(function () {
-            $('.detail-box').empty().append('<div class="col-xs-2 text-padding-top">活动期间，买满</div>\n' +
-                '                                    <div class="col-xs-2">\n' +
-                '                                        <div class="input-group">\n' +
-                '                                            <input type="text" class="form-control">\n' +
-                '                                            <span class="input-group-addon">元</span>\n' +
-                '                                        </div>\n' +
-                '                                    </div>\n' +
-                '                                    <div class="col-xs-1 control-label" style="width: 40px;padding-left: 0;padding-right: 0">，返</div>\n' +
-                '                                    <div class="col-xs-2">\n' +
-                '                                        <select name="" id="" class="form-control">\n' +
-                '                                            <option value="">券</option>\n' +
-                '                                        </select>\n' +
-                '                                    </div>');
+        // $('.detail-box').empty().append('<div class="col-xs-2 text-padding-top">活动期间，选购商品满</div>\n' +
+        //     '                                    <div class="col-xs-2">\n' +
+        //     '                                        <div class="input-group">\n' +
+        //     '                                            <input type="text" class="form-control">\n' +
+        //     '                                            <span class="input-group-addon">元</span>\n' +
+        //     '                                        </div>\n' +
+        //     '                                    </div>\n' +
+        //     '                                    <div class="col-xs-1 text-padding-top">，立减</div>\n' +
+        //     '                                    <div class="col-xs-2">\n' +
+        //     '                                        <div class="input-group">\n' +
+        //     '                                            <input type="text" class="form-control">\n' +
+        //     '                                            <span class="input-group-addon">元</span>\n' +
+        //     '                                        </div>\n' +
+        //     '                                    </div>');
 
-        });
-        $('#method-label3').click(function () {
-            $('.detail-box').empty().append('<div class="col-xs-2 text-padding-top">\n' +
-                '                                        活动期间，选购商品满\n' +
-                '                                    </div>\n' +
-                '                                    <div class="col-xs-2">\n' +
-                '                                        <div class="input-group">\n' +
-                '                                            <input type="text" class="form-control">\n' +
-                '                                            <span class="input-group-addon">件</span>\n' +
-                '                                        </div>\n' +
-                '                                    </div>\n' +
-                '                                    <div class="col-xs-1 control-label">\n' +
-                '                                        ，立享\n' +
-                '                                    </div>\n' +
-                '                                    <div class="col-xs-2">\n' +
-                '                                        <div class="input-group">\n' +
-                '                                            <input type="text" class="form-control">\n' +
-                '                                            <span class="input-group-addon">折</span>\n' +
-                '                                        </div>\n' +
-                '                                    </div>');
-
-        });
-        $('#method-label4').click(function () {
-            $('.detail-box').empty().append('<div class="col-xs-2 text-padding-top">\n' +
-                '                                                活动期间\n' +
-                '                                            </div>\n' +
-                '                                            <div class="col-xs-2">\n' +
-                '                                                <div class="input-group">\n' +
-                '                                                    <input type="text" class="form-control">\n' +
-                '                                                    <span class="input-group-addon">元</span>\n' +
-                '                                                </div>\n' +
-                '                                            </div>\n' +
-                '                                            <div class="col-xs-1 control-label">\n' +
-                '                                                任选\n' +
-                '                                            </div>\n' +
-                '                                            <div class="col-xs-2">\n' +
-                '                                                <div class="input-group">\n' +
-                '                                                    <input type="text" class="form-control">\n' +
-                '                                                    <span class="input-group-addon">件</span>\n' +
-                '                                                </div>\n' +
-                '                                            </div>\n' +
-                '                                            <div class="col-xs-1 control-label">活动商品</div>');
-
-        });
-        $('#method-label5').click(function () {
-            $('.detail-box').empty().append('<div class="col-xs-2 text-padding-top">\n' +
-                '                                                活动期间，选购商品满\n' +
-                '                                            </div>\n' +
-                '                                            <div class="col-xs-2">\n' +
-                '                                                <div class="input-group">\n' +
-                '                                                    <input type="text" class="form-control">\n' +
-                '                                                    <span class="input-group-addon">\n' +
-                '                                                        件\n' +
-                '                                                    </span>\n' +
-                '                                                </div>\n' +
-                '                                            </div>\n' +
-                '                                            <div class="col-xs-3 control-label">\n' +
-                '                                                ，免其中价格最低的一件\n' +
-                '                                            </div>');
-
-        });
-        $('#method-label6').click(function () {
-            $('.detail-box').empty().append('<div class="col-xs-3 text-padding-top">\n' +
-                '                                                活动期间，购买活动商品统一\n' +
-                '                                            </div>\n' +
-                '                                            <div class="col-xs-2">\n' +
-                '                                                <select name="" id="" class="form-control">\n' +
-                '                                                    <option value="1">立享</option>\n' +
-                '                                                    <option value="2">立减</option>\n' +
-                '                                                </select>\n' +
-                '                                            </div>\n' +
-                '                                            <div class="col-xs-2">\n' +
-                '                                                <div class="input-group">\n' +
-                '                                                    <input type="text" class="form-control">\n' +
-                '                                                    <span class="input-group-addon">元</span>\n' +
-                '                                                </div>\n' +
-                '                                            </div>\n' +
-                '                                            <div class="col-xs-1 control-label">\n' +
-                '                                                每人限购\n' +
-                '                                            </div>\n' +
-                '                                            <div class="col-xs-2">\n' +
-                '                                                <div class="input-group">\n' +
-                '                                                    <select name="" id="" class="form-control">\n' +
-                '                                                        <option value="">不限</option>\n' +
-                '                                                        <option value="">1</option>\n' +
-                '                                                        <option value="">2</option>\n' +
-                '                                                        <option value="">3</option>\n' +
-                '                                                        <option value="">4</option>\n' +
-                '                                                        <option value="">5</option>\n' +
-                '                                                    </select>\n' +
-                '                                                    <span class="input-group-addon">件</span>\n' +
-                '                                                </div>\n' +
-                '                                            </div>\n' +
-                '                                            <input type="button" class="btn" value="确定">\n' +
-                '                                            <div class="text-info" style="padding: 6px;padding-left: 24px;">\n' +
-                '                                                注：可在添加商品时针对每个商品分别设置优惠力度。\n' +
-                '                                            </div>');
-
-        });
-        $('#method-label7').click(function () {
-            $('.detail-box').empty().append('<div class="col-xs-2 text-padding-top">\n' +
-                '                                                活动期间，活动商品统一\n' +
-                '                                            </div>\n' +
-                '                                            <div class="col-xs-2 no-padding" style="width: 90px;">\n' +
-                '                                                <select name="" id="" class="form-control">\n' +
-                '                                                    <option value="">价格</option>\n' +
-                '                                                    <option value="">折扣</option>\n' +
-                '                                                </select>\n' +
-                '                                            </div>\n' +
-                '                                            <div class="col-xs-2 no-padding" style="width: 90px;">\n' +
-                '                                                <div class="input-group">\n' +
-                '                                                    <input type="text" class="form-control">\n' +
-                '                                                    <span class="input-group-addon">元</span>\n' +
-                '                                                </div>\n' +
-                '                                            </div>\n' +
-                '                                            <div class="col-xs-1 control-label" style="width: 110px;">， 秒杀库存</div>\n' +
-                '                                            <div class="col-xs-1" style="width: 110px;">\n' +
-                '                                                <div class="input-group">\n' +
-                '                                                    <input type="text" class="form-control">\n' +
-                '                                                    <span class="input-group-addon">件</span>\n' +
-                '                                                </div>\n' +
-                '                                            </div>\n' +
-                '\n' +
-                '                                            <div class="col-xs-2 text-danger">\n' +
-                '                                                (不设置件数即为当前库存均用于秒杀)\n' +
-                '                                            </div>\n' +
-                '                                            <div class="col-xs-1 control-label"  style="width: 110px;">每人限购件</div>\n' +
-                '                                            <div class="col-xs-2 no-padding">\n' +
-                '                                                <select name="" id="" class="form-control" style="width: 90px;">\n' +
-                '                                                    <option value="">不限</option>\n' +
-                '                                                    <option value="">1</option>\n' +
-                '                                                    <option value="">2</option>\n' +
-                '                                                    <option value="">3</option>\n' +
-                '                                                    <option value="">4</option>\n' +
-                '                                                    <option value="">5</option>\n' +
-                '                                                </select>\n' +
-                '                                            </div>\n' +
-                '\n' +
-                '                                            <div class="col-xs-12">\n' +
-                '                                                <div class="text-left col-xs-4 text-info" style="padding: 10px 5px;">注：可在添加商品时针对每个商品分别设置优惠力度。</div>\n' +
-                '                                                <input type="button" class="btn col-xs-offset-6" value="确定">\n' +
-                '                                            </div>');
-
-        });
         addDateRangePicker($('#promotion_time'));
         createDataTable($('#select_coupon_table'));
         $('.modal-content').css({'box-shadow': 'none'});
