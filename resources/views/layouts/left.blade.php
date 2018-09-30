@@ -69,6 +69,23 @@
                                     class="fa fa-circle-o"></i>优惠券</a></li>
                 </ul>
             </li>
+            <li class="treeview">
+                <a href="#">
+                    <i class="fa fa-users"></i>
+                    <span>用户管理</span>
+                    <span class="pull-right-container">
+                      <small class="label pull-right bg-green">new</small>
+                    </span>
+                </a>
+                <ul class="treeview-menu">
+                    <li><a data-target-url="users" href="{{secure_route('users.index')}}"><i
+                                    class="fa fa-circle-o"></i>普通用户管理</a></li>
+                    <li><a data-target-url="supplierusers" href="{{secure_route('supplierusers.index')}}"><i
+                                    class="fa fa-circle-o"></i>商家管理</a></li>
+                    <li><a data-target-url="adminusers" href="{{secure_route('adminusers.index')}}"><i
+                                    class="fa fa-circle-o"></i>管理员管理</a></li>
+                </ul>
+            </li>
         </ul>
     </section>
     <!-- /.sidebar -->

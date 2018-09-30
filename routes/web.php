@@ -83,4 +83,13 @@ Route::group(['middleware' => ['auth', 'web']], function() {
         Route::get('/', ['as' => 'order.index', 'uses' => 'OrderController@index']);
 
     });
+
+    //用户管理模块
+    Route::group(['namespace' => 'User'], function () {
+        Route::resources([
+            'users' => 'UserController',
+            'supplierusers' => 'SupplierUserController',
+            'adminusers' => 'AdminUserController'
+        ]);
+    });
 });
