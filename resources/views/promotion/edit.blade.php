@@ -74,35 +74,39 @@
                                             <td class="text-left"><input type="checkbox"></td>
                                             <td>商品图片</td>
                                             <td>商品信息</td>
-                                            <td>市场价</td>
+                                            <td>供货价</td>
                                             <td>售价</td>
                                             <td>最近30天销量</td>
                                             <td>库存数量</td>
                                         </tr>
                                         </thead>
                                         <tbody>
-                                        <tr>
-                                            <td><input type="checkbox"></td>
-                                            <td>啦啦啦</td>
+                                        @foreach($promotion_products as $product)
+                                            <tr>
+                                            <td><input type="checkbox" value="{{$product->id}}"></td>
+                                            <td>
+                                                <img src="{{ImgResize($product->main_pic, 100)}}" alt="" width="100px" height="100px">
+                                            </td>
                                             <td style="width: 200px;">
                                                 <div>
                                                     <div class="col-xs-5 text-right">ID：</div>
-                                                    <div class="col-xs-7 text-left">396</div>
+                                                    <div class="col-xs-7 text-left">{{$product->id}}</div>
                                                 </div>
                                                 <div>
                                                     <div class="col-xs-5 text-right">名称：</div>
-                                                    <div class="col-xs-7 text-left">test</div>
+                                                    <div class="col-xs-7 text-left">{{$product->good_title}}</div>
                                                 </div>
                                                 <div>
                                                     <div class="col-xs-5 text-right">货号：</div>
-                                                    <div class="col-xs-7 text-left">123</div>
+                                                    <div class="col-xs-7 text-left">{{$product->good_code}}</div>
                                                 </div>
                                             </td>
-                                            <td>买一送一</td>
-                                            <td>衣服</td>
-                                            <td>100</td>
-                                            <td>60</td>
+                                            <td>{{$product->supply_price}}</td>
+                                            <td>{{$product->stock_price}}</td>
+                                            <td>{{$product->orders}}</td>
+                                            <td>{{$product->good_stock}}</td>
                                         </tr>
+                                        @endforeach
                                         </tbody>
                                     </table>
                                     <hr>

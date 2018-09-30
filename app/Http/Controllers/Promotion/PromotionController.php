@@ -9,6 +9,7 @@ namespace App\Http\Controllers\Promotion;
 use App\Entities\Promotion\Promotion;
 use App\Http\Controllers\Controller;
 use App\Services\Api\ApiResponse;
+use App\Services\Product\ProductService;
 use App\Services\Promotion\PromotionService;
 use Illuminate\Http\Request;
 
@@ -16,9 +17,12 @@ class PromotionController extends Controller
 {
     protected $promotionService;
 
-    public function __construct(PromotionService $promotionService)
+    protected $productService;
+
+    public function __construct(PromotionService $promotionService, ProductService $productService)
     {
         $this->promotionService = $promotionService;
+        $this->productService = $productService;
     }
 
     public function index(Request $request)
@@ -60,8 +64,8 @@ class PromotionController extends Controller
             redirect(secure_route('promotion.index'));
         }
         // 获取所有的商品(已上线)
-        $promotion_goods = $this->promotionService->getList();
-        return view('promotion.edit', compact('promotion', 'promotion_goods'));
+        $promotion_products = $this->productService->getList();
+        return view('promotion.edit', compact('promotion', 'promotion_products'));
     }
 
     /**
