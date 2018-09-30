@@ -36,4 +36,15 @@ class Coupon extends Model implements Transformable
         self::NEW_USER        => '新人礼包',
     ];
 
+    //状态
+    const BEFORE    = 1; // 未开始
+    const STARTING  = 2; //进行中
+    const AFTER     = 3; //已结束
+
+    public static $allStatus = [
+       self::BEFORE    => '未开始',
+       self::STARTING  => '进行中',
+       self::AFTER     => '已结束'
+    ];
+
 }

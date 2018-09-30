@@ -226,22 +226,22 @@
                                     <div class="form-group col-xs-3">
                                         <label for="coupon_usage" class="col-sm-4 control-label">用途：</label>
                                         <div class="col-sm-8">
-                                            <select name="coupon_usage" id="coupon_usage" class="form-control">
-                                                <option value="1">全部</option>
-                                                <option value="2">页面领取</option>
-                                                <option value="3">制作纸质券</option>
-                                                <option value="4">满返活动</option>
+                                            <select name="coupon_purpose" id="coupon_usage" class="form-control">
+                                                <option value="">全部</option>
+                                                @foreach(\App\Entities\Coupon\Coupon::$allPurpose as $id => $purpose)
+                                                    <option value="{{$id}}">{{$purpose}}</option>
+                                                @endforeach
                                             </select>
                                         </div>
                                     </div>
                                     <div class="form-group col-xs-3">
                                         <label for="coupon_status" class="col-sm-4 control-label">状态：</label>
                                         <div class="col-sm-8">
-                                            <select name="coupon_status" id="coupon_status" class="form-control">
+                                            <select name="status" id="coupon_status" class="form-control">
                                                 <option value="">全部</option>
-                                                <option value="">未开始</option>
-                                                <option value="">使用中</option>
-                                                <option value="">已过期</option>
+                                                @foreach(\App\Entities\Coupon\Coupon::$allStatus as $key => $status)
+                                                    <option value="{{$key}}">{{$status}}</option>
+                                                @endforeach
                                             </select>
                                         </div>
                                     </div>
