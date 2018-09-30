@@ -418,7 +418,7 @@
                                         </tr>
                                         </thead>
                                         <tbody>
-                                            @foreach()
+                                            {{--@foreach()--}}
                                             <tr class="table-level-one">
                                                 <td>图片</td>
                                                 <td style="width: 200px;">
@@ -444,7 +444,7 @@
                                                     <div class="set_promotion"><a href="javascript:void(0);">设置优惠</a></div>
                                                 </td>
                                             </tr>
-                                            @endforeach
+                                            {{--@endforeach--}}
                                         </tbody>
                                     </table>
                                     <div>

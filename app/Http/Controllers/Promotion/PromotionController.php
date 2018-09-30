@@ -61,7 +61,7 @@ class PromotionController extends Controller
         }
         // 获取所有的商品(已上线)
         // $promotion_goods = $this->
-        return view('promotion.add', compact('promotion'));
+        return view('promotion.edit', compact('promotion'));
     }
 
     /**
