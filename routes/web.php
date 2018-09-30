@@ -87,7 +87,7 @@ Route::group(['middleware' => ['auth', 'web']], function() {
     //用户管理模块
     Route::group(['namespace' => 'User'], function () {
         Route::resources([
-            'users' => 'UserController',
+            'users' => 'UsersController',
             'supplierusers' => 'SupplierUserController',
             'adminusers' => 'AdminUserController'
         ]);
