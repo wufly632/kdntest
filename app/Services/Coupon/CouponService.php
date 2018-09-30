@@ -43,10 +43,11 @@ class CouponService
      */
     public function getList()
     {
-        $this->coupon->pushCriteria(app('Prettus\Repository\Criteria\RequestCriteria'));
+        // $this->coupon->pushCriteria(app('Prettus\Repository\Criteria\RequestCriteria'));
         $orderBy = $request->orderBy ?? 'id';
         $sort = $request->sort ?? 'desc';
         $length = $request->length ?? 20;
+
         return $this->coupon->orderBy($orderBy, $sort)->paginate($length);
     }
 
