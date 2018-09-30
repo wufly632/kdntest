@@ -3,16 +3,20 @@
           href="{{ asset('/assets/admin-lte/bower_components/datatables.net-bs/css/dataTables.bootstrap.min.css') }}">
     <style>
         .header-image-block {
-            width: 80px;
+            width: 120px;
         }
 
         .header-image {
-            width: 60px;
-            height: 60px;
+            width: 100px;
+            height: 100px;
         }
 
         .text-vertical td {
             vertical-align: middle !important;
+        }
+
+        .fa-gray {
+            color: gray;
         }
     </style>
 @stop
@@ -67,15 +71,15 @@
                                    id="user_table">
                                 <thead>
                                 <tr>
-                                    <th>用户ID</th>
-                                    <th>用户头像</th>
-                                    <th>用户系统ID</th>
-                                    <th>用户昵称</th>
-                                    <th>用户邮箱</th>
-                                    <th>账户余额</th>
-                                    <th>用户状态</th>
-                                    <th>创建时间</th>
-                                    <th>登陆时间</th>
+                                    <th>用户ID <span class="fa fa-gray fa-sort-numeric-asc pull-right"></span></th>
+                                    <th>用户头像<span class="fa fa-gray fa-unsorted pull-right"></span></th>
+                                    <th>用户系统ID<span class="fa fa-gray fa-unsorted pull-right"></span></th>
+                                    <th>用户昵称<span class="fa fa-gray fa-unsorted pull-right"></span></th>
+                                    <th>用户邮箱<span class="fa fa-gray fa-unsorted pull-right"></span></th>
+                                    <th>账户余额<span class="fa fa-gray fa-unsorted pull-right"></span></th>
+                                    <th>用户状态<span class="fa fa-gray fa-unsorted pull-right"></span></th>
+                                    <th>创建时间<span class="fa fa-gray fa-unsorted pull-right"></span></th>
+                                    <th>登陆时间<span class="fa fa-gray fa-unsorted pull-right"></span></th>
                                     <th>操作</th>
                                 </tr>
                                 </thead>
@@ -111,5 +115,123 @@
     </div>
 @stop
 @section('script')
-
+    <script src="{{ asset('/assets/js/bower_components/vue/dist/vue.min.js') }}"></script>
+    <script>
+        var userTable = new Vue({
+            el: '#user_table',
+            data: {
+                userList: [{
+                    userId: 1,
+                    headImage: 'http://localhost/assets/admin-lte//dist/img/user2-160x160.jpg',
+                    systemId: 1,
+                    alias: 1,
+                    email: 1,
+                    money: 1,
+                    status: 1,
+                    loginTime: 1,
+                    createTime: 1
+                }, {
+                    userId: 1,
+                    headImage: 'http://localhost/assets/admin-lte//dist/img/user2-160x160.jpg',
+                    systemId: 1,
+                    alias: 1,
+                    email: 1,
+                    money: 1,
+                    status: 1,
+                    loginTime: 1,
+                    createTime: 1
+                }, {
+                    userId: 1,
+                    headImage: 'http://localhost/assets/admin-lte//dist/img/user2-160x160.jpg',
+                    systemId: 1,
+                    alias: 1,
+                    email: 1,
+                    money: 1,
+                    status: 1,
+                    loginTime: 1,
+                    createTime: 1
+                }, {
+                    userId: 1,
+                    headImage: 'http://localhost/assets/admin-lte//dist/img/user2-160x160.jpg',
+                    systemId: 1,
+                    alias: 1,
+                    email: 1,
+                    money: 1,
+                    status: 1,
+                    loginTime: 1,
+                    createTime: 1
+                }, {
+                    userId: 1,
+                    headImage: 'http://localhost/assets/admin-lte//dist/img/user2-160x160.jpg',
+                    systemId: 1,
+                    alias: 1,
+                    email: 1,
+                    money: 1,
+                    status: 1,
+                    loginTime: 1,
+                    createTime: 1
+                }, {
+                    userId: 1,
+                    headImage: 'http://localhost/assets/admin-lte//dist/img/user2-160x160.jpg',
+                    systemId: 1,
+                    alias: 1,
+                    email: 1,
+                    money: 1,
+                    status: 1,
+                    loginTime: 1,
+                    createTime: 1
+                }, {
+                    userId: 1,
+                    headImage: 'http://localhost/assets/admin-lte//dist/img/user2-160x160.jpg',
+                    systemId: 1,
+                    alias: 1,
+                    email: 1,
+                    money: 1,
+                    status: 1,
+                    loginTime: 1,
+                    createTime: 1
+                }, {
+                    userId: 1,
+                    headImage: 'http://localhost/assets/admin-lte//dist/img/user2-160x160.jpg',
+                    systemId: 1,
+                    alias: 1,
+                    email: 1,
+                    money: 1,
+                    status: 1,
+                    loginTime: 1,
+                    createTime: 1
+                }, {
+                    userId: 1,
+                    headImage: 'http://localhost/assets/admin-lte//dist/img/user2-160x160.jpg',
+                    systemId: 1,
+                    alias: 1,
+                    email: 1,
+                    money: 1,
+                    status: 1,
+                    loginTime: 1,
+                    createTime: 1
+                }, {
+                    userId: 1,
+                    headImage: 'http://localhost/assets/admin-lte//dist/img/user2-160x160.jpg',
+                    systemId: 1,
+                    alias: 1,
+                    email: 1,
+                    money: 1,
+                    status: 1,
+                    loginTime: 1,
+                    createTime: 1
+                }, {
+                    userId: 1,
+                    headImage: 'http://localhost/assets/admin-lte//dist/img/user2-160x160.jpg',
+                    systemId: 1,
+                    alias: 1,
+                    email: 1,
+                    money: 1,
+                    status: 1,
+                    loginTime: 1,
+                    createTime: 1
+                }]
+            }
+        })
+    </script>
 @endsection
