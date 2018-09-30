@@ -7,7 +7,7 @@
     <link rel="stylesheet"
           href="{{ asset('/assets/admin-lte/bower_components/bootstrap-datepicker/dist/css/bootstrap-datepicker.min.css') }}">
     <link rel="stylesheet"
-          href="{{ asset('/assets/admin-lte/bower_components/bootstrap-daterangepicker/daterangepicker.css') }}">
+          href="{{ asset('/assets/admin-/bower_components/bootstrap-daterangepicker/daterangepicker.css') }}">
     <style>
         .text-padding-top {
             padding-top: 6px;

@@ -32,7 +32,7 @@ function addDateRangePicker(ele) {
     });
 }
 
-function createDataTable(ele) {
+function createDataTable(ele, data) {
     ele.DataTable({
         language: {
             paginate: {
@@ -49,7 +49,7 @@ function createDataTable(ele) {
                     last: 'Last'
                 }
             },
-            info: '显示 _START_ 到 _END_ 条，共 _TOTAL_ 条'
+            info: '显示 _START_ 到 _END_ 条，共 300 条'
         },
         'paging': true,
         'lengthChange': false,
