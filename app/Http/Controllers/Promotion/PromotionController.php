@@ -60,8 +60,8 @@ class PromotionController extends Controller
             redirect(secure_route('promotion.index'));
         }
         // 获取所有的商品(已上线)
-        // $promotion_goods = $this->
-        return view('promotion.edit', compact('promotion'));
+        $promotion_goods = $this->promotionService->getList();
+        return view('promotion.edit', compact('promotion', 'promotion_goods'));
     }
 
     /**
