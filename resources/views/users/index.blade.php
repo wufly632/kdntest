@@ -3,16 +3,20 @@
           href="{{ asset('/assets/admin-lte/bower_components/datatables.net-bs/css/dataTables.bootstrap.min.css') }}">
     <style>
         .header-image-block {
-            width: 80px;
+            width: 120px;
         }
 
         .header-image {
-            width: 60px;
-            height: 60px;
+            width: 100px;
+            height: 100px;
         }
 
         .text-vertical td {
             vertical-align: middle !important;
+        }
+
+        .fa-gray {
+            color: gray;
         }
     </style>
 @stop
@@ -57,7 +61,9 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-xs-2"><input type="button" id="user_search" value="查找"
+                                <div class="col-xs-1"><input type="button" id="user_search" value="查找"
+                                                             class="btn btn-success"></div>
+                                <div class="col-xs-1"><input type="button" id="create_user" value="创建新用户"
                                                              class="btn btn-success"></div>
                             </form>
                         </div>
@@ -67,42 +73,50 @@
                                    id="user_table">
                                 <thead>
                                 <tr>
-                                    <th>用户ID</th>
-                                    <th>用户头像</th>
-                                    <th>用户系统ID</th>
-                                    <th>用户昵称</th>
-                                    <th>用户邮箱</th>
-                                    <th>账户余额</th>
-                                    <th>用户状态</th>
-                                    <th>创建时间</th>
-                                    <th>登陆时间</th>
+                                    <th>用户ID <span class="fa fa-gray fa-sort-numeric-desc pull-right"></span></th>
+                                    <th>用户头像<span class="fa fa-gray fa-unsorted pull-right"></span></th>
+                                    <th>用户系统ID<span class="fa fa-gray fa-unsorted pull-right"></span></th>
+                                    <th>用户昵称<span class="fa fa-gray fa-unsorted pull-right"></span></th>
+                                    <th>用户邮箱<span class="fa fa-gray fa-unsorted pull-right"></span></th>
+                                    <th>账户余额<span class="fa fa-gray fa-unsorted pull-right"></span></th>
+                                    <th>用户状态<span class="fa fa-gray fa-unsorted pull-right"></span></th>
+                                    <th>创建时间<span class="fa fa-gray fa-unsorted pull-right"></span></th>
+                                    <th>登陆时间<span class="fa fa-gray fa-unsorted pull-right"></span></th>
                                     <th>操作</th>
                                 </tr>
                                 </thead>
                                 <tbody>
-                                <tr v-for="(userInfo, index) in userList">
-                                    <td>@{{ userInfo.userId }}</td>
-                                    <td class="header-image-block"><img
-                                                :src="userInfo.headImage"
-                                                alt="" class="header-image">
-                                    </td>
-                                    <td>@{{ userInfo.systemId }}</td>
-                                    <td>@{{ userInfo.alias }}</td>
-                                    <td>@{{ userInfo.email }}</td>
-                                    <td>@{{ userInfo.money }}</td>
-                                    <td>@{{ userInfo.status }}</td>
-                                    <td>@{{ userInfo.loginTime }}</td>
-                                    <td>@{{ userInfo.createTime }}</td>
-                                    <td id="bread-actions" class="no-sort no-click">
-                                        <div class="btn-group">
-                                            <a type="text" class="btn btn-sm btn-warning">查看</a>
-                                            <a type="text" class="btn btn-sm btn-primary">修改</a>
-                                            <a type="text" class="btn btn-sm btn-danger">删除</a>
-                                        </div>
-                                    </td>
-                                </tr>
+                                @foreach($users as $user)
+                                    <tr>
+                                        <td>{{ $user->id }}</td>
+                                        <td class="header-image-block"><img
+                                                    src="{{ $user->cucoe_id }}"
+                                                    alt="" class="header-image">
+                                        </td>
+                                        <td>{{ $user->cucoe_id }}</td>
+                                        <td>{{ $user->user_alias }}</td>
+                                        <td>{{ $user->email }}</td>
+                                        <td>{{ $user->amount_money }}</td>
+                                        <td>{{ $user->status }}</td>
+                                        <td>{{ $user->create_at }}</td>
+                                        <td>{{ $user->last_login_datetime }}</td>
+                                        <td id="bread-actions" class="no-sort no-click">
+                                            <div class="btn-group">
+                                                <a href="{{ secure_route('users.show',['id'=>$user->id]) }}" type="text"
+                                                   class="btn btn-sm btn-warning"><span class="fa fa-eye"></span> 查看</a>
+                                                <a href="{{ secure_route('users.edit',['id'=>$user->id]) }}" type="text"
+                                                   class="btn btn-sm btn-primary"><span class="fa fa-edit"></span> 编辑</a>
+                                                <a href="" data-user-id="{{ $user->id }}" type="text"
+                                                   class="btn btn-sm btn-danger"><span class="fa fa-trash"></span> 删除</a>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                @endforeach
                                 </tbody>
                             </table>
+                            <div class="pull-right">
+                                {{ $users->links() }}
+                            </div>
                         </div>
                     </div>
                 </div>
