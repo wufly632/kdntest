@@ -8,9 +8,11 @@ namespace App\Http\Controllers\Promotion;
 
 use App\Entities\Promotion\Promotion;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Promotion\PromotionAddGoodRequest;
 use App\Services\Api\ApiResponse;
 use App\Services\Product\ProductService;
 use App\Services\Promotion\PromotionService;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 class PromotionController extends Controller
@@ -29,7 +31,6 @@ class PromotionController extends Controller
     {
         $request->flash();
         $promotions = $this->promotionService->getList();
-        debug($promotions);
         return view('promotion.index', compact('promotions'));
     }
 
@@ -63,20 +64,41 @@ class PromotionController extends Controller
         if (! $promotion) {
             redirect(secure_route('promotion.index'));
         }
-        // 获取所有的商品(已上线)
-        $promotion_products = $this->productService->getList();
-        return view('promotion.edit', compact('promotion', 'promotion_products'));
+        //获取促销活动商品
+        $promotion_goods = $this->promotionService->getPromotionActivityGoods($promotion->id);
+        return view('promotion.edit', compact('promotion','promotion_goods'));
     }
 
     /**
-     * @function 促销活动创建商品
+     * @function 保存促销活动
      * @param Request $request
      * @return mixed
      * @throws \Prettus\Validator\Exceptions\ValidatorException
      */
-    public function create(Request $request)
+    public function editPost(Request $request)
     {
         $result = $this->promotionService->create($request);
+        if ($result['status'] == 200) {
+            return ApiResponse::success($result['content']);
+        }
+        return ApiResponse::failure(g_API_ERROR, $result['msg']);
+    }
+
+    public function addGood(Promotion $promotion)
+    {
+        //获取所有可添加的商品(已上线)
+        $promotion_products = $this->productService->getList();
+        return view('promotion.addGoods', compact('promotion','promotion_products'));
+    }
+
+    /**
+     * @function 添加活动商品
+     * @param PromotionAddGoodRequest $request
+     * @return mixed
+     */
+    public function addGoodPost(PromotionAddGoodRequest $request)
+    {
+        $result = $this->promotionService->addGoods($request);
         if ($result['status'] == 200) {
             return ApiResponse::success($result['content']);
         }

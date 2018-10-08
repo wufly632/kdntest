@@ -22,6 +22,6 @@ class PromotionGood extends Model implements Transformable
      *
      * @var array
      */
-    protected $fillable = [];
+    protected $fillable = ['activity_id','goods_id','num','buy_num','per_num','status','created_at','updated_at'];
 
 }

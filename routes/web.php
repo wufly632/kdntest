@@ -64,10 +64,13 @@ Route::group(['middleware' => ['auth', 'web']], function() {
 
     //促销活动模块
     Route::group(['prefix' => 'promotion', 'namespace' => 'Promotion'], function () {
-       Route::get('/', ['as' => 'promotion.index', 'uses' => 'PromotionController@index']);
-       Route::post('/addPost', ['as' => 'promotion.addPost', 'uses' => 'PromotionController@addPost']);
-       Route::get('/edit/{promotion}', ['as' => 'promotion.edit', 'uses' => 'PromotionController@edit']);
-       Route::post('/create', ['as' => 'promotion.create', 'uses' => 'PromotionController@create']);
+        Route::get('/', ['as' => 'promotion.index', 'uses' => 'PromotionController@index']);
+        Route::post('/addPost', ['as' => 'promotion.addPost', 'uses' => 'PromotionController@addPost']);
+        Route::get('/edit/{promotion}', ['as' => 'promotion.edit', 'uses' => 'PromotionController@edit']);
+        Route::post('/editPost', ['as' => 'promotion.editPost', 'uses' => 'PromotionController@editPost']);
+        //添加促销商品
+        Route::get('/addGood', ['as' => 'promotion.add.good', 'uses' => 'PromotionController@addGood']);
+        Route::post('addGoodPost', ['as' => 'promotion.add.goodPost', 'uses' => 'PromotionController@addGoodPost']);
     });
 
     //优惠券模块
