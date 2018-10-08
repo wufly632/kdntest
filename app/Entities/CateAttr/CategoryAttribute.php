@@ -22,7 +22,7 @@ class CategoryAttribute extends Model implements Transformable
      *
      * @var array
      */
-    protected $fillable = [];
+    protected $fillable = ['category_id','attr_type','attr_id','attr_values','is_required','check_type','is_image','is_diy','is_detail','status','created_at'];
 
     /**
      * @function 获取属性值

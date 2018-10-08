@@ -21,6 +21,7 @@ use App\Services\Api\ApiResponse;
 use App\Validators\Promotion\PromotionGoodValidator;
 use App\Validators\Promotion\PromotionValidator;
 use Carbon\Carbon;
+use Clockwork\Request\Log;
 use Dotenv\Exception\ValidationException;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -108,18 +109,18 @@ class PromotionService
     public function create($request)
     {
         try {
-            $this->promotionValidator->with( $request->all() )->passesOrFail();
+            // $this->promotionValidator->with( $request->all() )->passesOrFail();
             $promotion = $this->transform($request);
             DB::beginTransaction();
             $this->promotion->update($promotion['promotion'], $request->id);
-            foreach ($promotion['promotion_goods'] as $promotion_good) {
+            /*foreach ($promotion['promotion_goods'] as $promotion_good) {
                 $this->promotionGood->update($promotion_good, $promotion_good->id);
             }
             if ($promotion['promotion_goods']['promotion_goods_sku']) {
                 $this->promotionGoodSku->create($promotion['promotion_goods']['promotion_goods_sku']);
-            }
+            }*/
             DB::commit();
-            return ApiResponse::success('添加成功');
+            return ApiResponse::success('保存成功');
         } catch (ValidationException $e) {
             DB::rollback();
             return ApiResponse::failure(g_API_ERROR, $e->getMessage());
@@ -128,19 +129,23 @@ class PromotionService
 
     private function transform($request)
     {
-        $promotion['promotion'] = $request->only(['id','title','start_at','end_at','activity_type','is_all','']);
+        $promotion['promotion'] = $request->only(['id','title','activity_type','is_all','pre_time']);
         $promotion['promotion']['stock'] = 0;
+        list($start_time,$end_time) = get_time_range($request->promotion_time);
         if ($request->pre_time) {
             $promotion['promotion']['pre_time'] = $request->pre_time;
-            $start_time = Carbon::parse($request->start_at);
-            $promotion['promotion']['show_at'] = $start_time->subDays($request->pre_time);
+            $start_time = Carbon::parse($start_time);
+            $promotion['promotion']['show_at'] = $start_time->subDays($request->pre_time)->toDateTimeString();
+        } else {
+            $promotion['promotion']['show_at'] = $start_time;
         }
+        $promotion['promotion']['end_at'] = $end_time;
         $activity_goods = $this->promotionGood->findWhere(['activity_id' => $request->id]);
         if (! $activity_goods) {
             throw new CustomException('请添加要参加活动的商品');
         }
         // 获取活动类型
-        $promotion_type = $this->getPromotionType($request);
+        $promotion_type_info = $this->getPromotionType($request);
         // 获取活动的商品信息
         $promotion_goods = $this->getPromotionGoods($request, $activity_goods);
 
@@ -167,7 +172,9 @@ class PromotionService
                 }
             }
         }
-        $promotion['promotion']['goodsValue'] = $goodsValue;
+        $promotion['promotion']['goods_value'] = $goodsValue;
+        $promotion['promotion'] = array_merge($promotion['promotion'], $promotion_type_info);
+        $promotion['promotion_goods'] = [];
         return $promotion;
     }
 
@@ -306,7 +313,7 @@ class PromotionService
                 $pre_num = $request->input($request->activity_type.'_pre_num');
                 break;
             default:
-                foreach($activity_goods as $val){
+                /*foreach($activity_goods as $val){
                     $good_id = $val->goods_id;
                     $good_tmp['id'] = $val->id;
                     if($request->per_num.$good_id !== null) {
@@ -327,9 +334,50 @@ class PromotionService
                     $good_tmp['status'] = 1;
                     $good_ids[] = $good_id;
                     $promotion_goods[] = $good_tmp;
-                }
+                }*/
                 break;
         }
         return compact('promotion_goods', 'promotion_goods_sku', 'good_ids');
+    }
+
+    /**
+     * @function 添加促销商品
+     * @param $request
+     * @return bool
+     */
+    public function addGoods($request)
+    {
+        $good_ids = $request->good_id;
+        try {
+            DB::beginTransaction();
+            foreach (explode(',', $good_ids) as $good) {
+                $tmp['activity_id'] = $request->activity_id;
+                $tmp['goods_id'] = $good;
+                $tmp['status'] = 1;
+                $tmp['created_at'] = Carbon::now()->toDateTimeString();
+                $data[] = $tmp;
+                $this->promotionGood->create($tmp);
+            }
+            DB::commit();
+            return ApiResponse::success('', '添加活动商品成功');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return ApiResponse::failure(g_API_ERROR, '添加活动商品失败，请稍后重试或者联系管理员');
+        }
+    }
+
+    public function getGoodsList($activity_id)
+    {
+
+    }
+
+    public function getPromotionActivityGoods($activity_id)
+    {
+        $result = DB::table('promotions_activity_goods as pag')
+            ->leftJoin('goods as g','g.id','=','pag.goods_id')
+            ->selectRaw('g.*')
+            ->where('pag.activity_id', $activity_id)
+            ->get();
+        return $result;
     }
 }

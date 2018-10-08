@@ -48,80 +48,12 @@
             <div class="row">
                 <div class="col-xs-12">
                     <div id="modal-default" class="modal fade" tabindex="-1" data-width="1200" style="display: none;">
-                        <div class="modal-dialog" style="width: 1000px;">
-                            <div class="modal-content">
-                                <div class="modal-body">
-                                    <h2 class="text-center">添加商品</h2>
-                                    <form action="" class="form-inline">
-                                        <div class="form-group">
-                                            <label for="">商品名称：</label>
-                                            <input type="text" class="form-control" id="">
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="">商品ID：</label>
-                                            <input type="text" class="form-control" id="">
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="">商品货号：</label>
-                                            <input type="text" class="form-control" id="">
-                                        </div>
-                                        <input type="button" class="btn pull-right" value="查找">
-                                    </form>
-                                    <table id="select_coupon_table"
-                                           class="table table-hover table-striped table-bordered text-center">
-                                        <thead>
-                                        <tr>
-                                            <td class="text-left"><input type="checkbox"></td>
-                                            <td>商品图片</td>
-                                            <td>商品信息</td>
-                                            <td>供货价</td>
-                                            <td>售价</td>
-                                            <td>最近30天销量</td>
-                                            <td>库存数量</td>
-                                        </tr>
-                                        </thead>
-                                        <tbody>
-                                        @foreach($promotion_products as $product)
-                                            <tr>
-                                            <td><input type="checkbox" value="{{$product->id}}"></td>
-                                            <td>
-                                                <img src="{{ImgResize($product->main_pic, 100)}}" alt="" width="100px" height="100px">
-                                            </td>
-                                            <td style="width: 200px;">
-                                                <div>
-                                                    <div class="col-xs-5 text-right">ID：</div>
-                                                    <div class="col-xs-7 text-left">{{$product->id}}</div>
-                                                </div>
-                                                <div>
-                                                    <div class="col-xs-5 text-right">名称：</div>
-                                                    <div class="col-xs-7 text-left">{{$product->good_title}}</div>
-                                                </div>
-                                                <div>
-                                                    <div class="col-xs-5 text-right">货号：</div>
-                                                    <div class="col-xs-7 text-left">{{$product->good_code}}</div>
-                                                </div>
-                                            </td>
-                                            <td>{{$product->supply_price}}</td>
-                                            <td>{{$product->stock_price}}</td>
-                                            <td>{{$product->orders}}</td>
-                                            <td>{{$product->good_stock}}</td>
-                                        </tr>
-                                        @endforeach
-                                        </tbody>
-                                    </table>
-                                    <hr>
-                                    <div>
-                                        <input type="button" class="btn btn-success" value="添加店铺所有商品">
-                                        <input type="button" class="btn btn-danger pull-right" value="取消">
-                                        <input type="button" class="btn btn-success pull-right" value="确认添加">
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+
                     </div>
                     <div class="box box-info">
-                        <form action="" method="post" class="form-horizontal">
+                        <form id="promotion-form" method="post" class="form-horizontal">
                             {{ csrf_field() }}
+                            <input type="hidden" name="id" value="{{$promotion->id}}">
                             <div class="box-header">
                                 <div class="form-group">
                                     <label for="promotion_time" class="col-xs-1 control-label">活动时间：</label>
@@ -134,7 +66,7 @@
                                     <div class="col-xs-2">
                                         <div class="input-group">
                                             <input type="text" name="pre_time" class="form-control"
-                                                   id="prepare_time">
+                                                   id="prepare_time" value="{{$promotion->pre_time}}">
                                             <span class="input-group-addon">天</span>
                                         </div>
                                     </div>
@@ -207,14 +139,14 @@
                                                     <div class="pull-left text-padding-top">活动期间，买满</div>
                                                     <div class="col-xs-2">
                                                         <div class="input-group">
-                                                            <input type="text" class="form-control">
+                                                            <input type="text" class="form-control" name="reduce_name[]">
                                                             <span class="input-group-addon">元</span>
                                                         </div>
                                                     </div>
                                                     <div class="pull-left text-padding-top" style="width: 60px;padding-left: 0;padding-right: 0">，立减</div>
                                                     <div class="col-xs-2">
                                                         <div class="input-group">
-                                                            <input type="text" class="form-control">
+                                                            <input type="text" class="form-control" name="reduce_value[]">
                                                             <span class="input-group-addon">元</span>
                                                         </div>
                                                     </div>
@@ -246,7 +178,7 @@
                                                     </div>
                                                     <div class="col-xs-2">
                                                         <div class="input-group">
-                                                            <input type="text" class="form-control">
+                                                            <input type="text" class="form-control" name="discount_name[]">
                                                             <span class="input-group-addon">件</span>
                                                         </div>
                                                     </div>
@@ -255,7 +187,7 @@
                                                     </div>
                                                     <div class="col-xs-2">
                                                         <div class="input-group">
-                                                            <input type="text" class="form-control">
+                                                            <input type="text" class="form-control" name="discount_value[]">
                                                             <span class="input-group-addon">折</span>
                                                         </div>
                                                     </div>
@@ -387,8 +319,7 @@
                             <div class="box-body">
                                 <div class="col-xs-12">
                                     <div><span class="h2">活动商品</span>
-                                        <button class="btn btn-default pull-right" data-toggle="modal"
-                                                data-target="#modal-default">添加商品
+                                        <button type="button" class="btn btn-default pull-right" onclick="addPromotionGoods()">添加商品
                                         </button>
                                     </div>
                                     <div class="form-inline" style="padding-top: 20px;padding-bottom: 40px;">
@@ -414,45 +345,47 @@
                                         <tr>
                                             <td>商品图片</td>
                                             <td>商品信息</td>
-                                            <td>市场价</td>
-                                            <td>售价</td>
+                                            <td>采购价</td>
+                                            <td>供应价</td>
                                             <td>最近30天销量</td>
                                             <td>库存数量</td>
                                             <td>操作</td>
                                         </tr>
                                         </thead>
                                         <tbody>
-                                            {{--@foreach()--}}
+                                            @foreach($promotion_goods as $good)
                                             <tr class="table-level-one">
-                                                <td>图片</td>
+                                                <td>
+                                                    <img src="{{ImgResize($good->main_pic, 100)}}" alt="">
+                                                </td>
                                                 <td style="width: 200px;">
                                                     <div>
                                                         <div class="col-xs-5 text-right">ID：</div>
-                                                        <div class="col-xs-7 text-left">396</div>
+                                                        <div class="col-xs-7 text-left">{{$good->id}}</div>
                                                     </div>
                                                     <div>
                                                         <div class="col-xs-5 text-right">名称：</div>
-                                                        <div class="col-xs-7 text-left">test</div>
+                                                        <div class="col-xs-7 text-left">{{$good->good_title}}</div>
                                                     </div>
                                                     <div>
                                                         <div class="col-xs-5 text-right">货号：</div>
-                                                        <div class="col-xs-7 text-left">123</div>
+                                                        <div class="col-xs-7 text-left">{{$good->good_code}}</div>
                                                     </div>
                                                 </td>
-                                                <td>¥20.00起</td>
-                                                <td>¥10.00起</td>
-                                                <td>35900</td>
-                                                <td>20</td>
+                                                <td>{{$good->stock_price}}起</td>
+                                                <td>¥{{$good->supply_price}}起</td>
+                                                <td>{{$good->orders}}</td>
+                                                <td>{{$good->good_stock}}</td>
                                                 <td>
                                                     <div><a href="javascript:void(0);">删除</a></div>
                                                     <div class="set_promotion"><a href="javascript:void(0);">设置优惠</a></div>
                                                 </td>
                                             </tr>
-                                            {{--@endforeach--}}
+                                            @endforeach
                                         </tbody>
                                     </table>
                                     <div>
-                                        <input type="button" class="btn btn-success col-xs-offset-4" value="保存">
+                                        <input type="button" class="btn btn-success col-xs-offset-4 submit" value="保存">
                                         <input type="button" class="btn btn-danger col-xs-offset-2" value="取消">
                                     </div>
                                 </div>
@@ -569,6 +502,88 @@
             } else {
                 $(this).parents('.table-level-one').after(newTable);
             }
+        });
+        //添加促销商品页面
+        function addPromotionGoods() {
+            $.ajax({
+                type:'get',
+                url:"{{secure_route('promotion.add.good')}}",
+                beforeSend:function() {
+
+                },
+                success:function(data){
+                    $('#modal-default').html(data);
+                    $('#modal-default').modal('show');
+                },
+                error:function(data){
+
+                }
+            })
+        }
+        //添加促销商品
+        $('#modal-default').on('click', '.submit', function () {
+           var _index = $(this);
+           var id = [];
+           $('.good-id').each(function () {
+               if ($(this).is(':checked')) {
+                   id.push($(this).val());
+               }
+           });
+           if (id.length == 0) {
+               toastr.error('请先选择促销商品');
+               return false;
+           }
+            $.ajax({
+                type:'post',
+                url:"{{secure_route('promotion.add.goodPost')}}",
+                data:{'good_id': id.join(','),'_token': "{{csrf_token()}}", 'activity_id': "{{$promotion->id}}"},
+                beforeSend:function() {
+                    _index.attr('disabled', true);
+                    _index.html('添加中...');
+                },
+                success:function(data){
+                    console.log(data);
+                    if (data.status == 200) {
+
+                    } else {
+
+                    }
+                },
+                error:function(data){
+
+                }
+            })
+        });
+        $(function () {
+            $('#promotion-form').on('click', '.submit', function () {
+                var _index = $(this);
+                $.ajax({
+                    type:'post',
+                    url:"{{secure_route('promotion.editPost')}}",
+                    data:$('#promotion-form').serialize(),
+                    beforeSend:function() {
+                        _index.attr('disabled', true);
+                        _index.text('保存中...');
+                    },
+                    success:function(data){
+                        console.log(data);
+                        if (data.status == 200) {
+                            toastr.success(data.content);
+                            window.location.href = "{{secure_route('promotion.index')}}";
+                        } else {
+                            toastr.error(data.msg);
+                            _index.attr('disabled', false);
+                            _index.text('保存');
+                        }
+                    },
+                    error:function(data){
+                        var json=eval("("+data.responseText+")");
+                        toastr.error(json.msg);
+                        _index.attr('disabled', false);
+                        _index.text('保存');
+                    }
+                })
+            });
         });
     </script>
 @endsection
