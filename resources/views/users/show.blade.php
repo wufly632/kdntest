@@ -51,7 +51,7 @@
                             <li class="list-group-item"><h2 class="h4">用户头像</h2>
                                 <p class="text-padding-left">
                                     <img
-                                            src="{{ $user->cucoe_id }}"
+                                            src="{{ $user->logo }}"
                                             alt="" class="header-image">
                                 </p>
                             </li>

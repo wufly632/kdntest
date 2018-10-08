@@ -37,8 +37,9 @@
                         </h1>
                     </div>
                     <div>
-                        <form action="{{ secure_route('users.update',['id'=>$user->id]) }}" class="" method="post">
-                            {{ method_field('put') }}
+                        <form action="@if(isset($user->id)){{ secure_route('users.update',['id'=>$user->id]) }}@else{{ secure_route('users.store') }}@endif"
+                              class="" method="post">
+                            @if(isset($user)){{ method_field('put') }}@endif
                             {{ csrf_field() }}
                             <div class="row block-padding-top">
                                 <div class="col-md-8">
@@ -47,22 +48,22 @@
                                             <div class="form-group">
                                                 <label for="user_alias" class="control-label">用户昵称:</label>
                                                 <input type="text" id="user_alias" name="user_alias"
-                                                       class="form-control" value="{{ $user->user_alias }}">
+                                                       class="form-control" value="@if(isset($user->user_alias)){{ $user->user_alias }}@endif">
                                             </div>
                                             <div class="form-group">
                                                 <label for="email" class="control-label">邮箱:</label>
                                                 <input type="text" id="email" name="email" class="form-control"
-                                                       value="{{ $user->email }}">
+                                                       value="@if(isset($user->email)){{ $user->email }}@endif">
                                             </div>
                                             <div class="form-group">
                                                 <label for="firstname" class="control-label">姓:</label>
                                                 <input type="text" id="firstname" name="firstname" class="form-control"
-                                                       value="{{ $user->firstname }}">
+                                                       value="@if(isset($user->firstname)){{ $user->firstname }}@endif">
                                             </div>
                                             <div class="form-group">
                                                 <label for="lastname" class="control-label">名:</label>
                                                 <input type="text" id="lastname" name="lastname" class="form-control"
-                                                       value="{{ $user->lastname }}">
+                                                       value="@if(isset($user->lastname)){{ $user->lastname }}@endif">
                                             </div>
                                             <div class="form-group">
                                                 <label for="password" class="control-label">密码:</label>
@@ -86,8 +87,8 @@
 
                                             </div>
                                             <div class="form-group">
-                                                <label for="logo"><img width="200px" src="{{ $user->logo }}"
-                                                                       alt=""></label>
+                                                <label for="logo">头像:@if(isset($user->logo))<img width="200px" src="{{ $user->logo }}"
+                                                                                                alt="">@endif</label>
                                                 <input type="file" id="logo" name="logo" class="form-control">
                                             </div>
                                         </div>
