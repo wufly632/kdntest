@@ -26,9 +26,9 @@
                     用户名:
                 </label>
                 <div class="col-xs-7">
-                    @if(isset($user->name)){{ $user->name }}@else <input type="text" id="name" autofocus name="name"
-                                                                         class="form-control"
-                                                                         value="{{ old('name') }}">@endif
+                    <input type="text" id="name" autofocus name="name"
+                           class="form-control"
+                           value="@if(isset($user->name)){{ $user->name }}@endif">
                 </div>
             </div>
             <div class="form-group">
@@ -37,9 +37,9 @@
                     手机号：
                 </label>
                 <div class="col-xs-7">
-                    @if(isset($user->mobile)){{ $user->mobile }}@else <input type="text" id="mobile" name="mobile"
-                                                                             class="form-control"
-                                                                             value="{{ old('mobile') }}">@endif
+                    <input type="text" id="mobile" name="mobile"
+                           class="form-control"
+                           value="@if(isset($user->mobile)){{ $user->mobile }}@endif">
                 </div>
             </div>
             <div class="form-group">
@@ -48,9 +48,9 @@
                     邮箱：
                 </label>
                 <div class="col-xs-7">
-                    @if(isset($user->email)){{ $user->email }}@else <input type="email" id="email" name="email"
-                                                                           class="form-control"
-                                                                           value="{{ old('email') }}">@endif
+                    <input type="email" id="email" name="email"
+                           class="form-control"
+                           value="@if(isset($user->email)){{ $user->email }}@endif">
                 </div>
             </div>
             <div class="form-group">
@@ -82,42 +82,50 @@
     <script src="{{ asset('/assets/js/bower_components/axios/dist/axios.min.js') }}"></script>
     <script>
         var index = parent.layer.getFrameIndex(window.name);
+
         $('#supplier_user_edit').on('click', '.save', function () {
+            var toastrMsg;
             var _index = $(this);
-            var postdata = {
-                _token: '{{ csrf_token() }}',
-                name: $('#name').val(),
-                email: $('#email').val(),
-                mobile: $('#mobile').val(),
-                password: $('#password').val(),
-                password_confirmation: $('#password_confirmation').val()
-            };
-            _index.attr('disable', true);
-            @if(isset($user->id))
-            axios.put("{{ secure_route('supplierusers.update',['id'=>$user->id]) }}", postdata).then(function (response) {
-                if (response.data.status === 200) {
-                    toastr.options.timeOut = 0.5;
-                    toastr.options.onHidden = function () {
-                        parent.layer.close(index);
-                    };
-                    toastr.success('修改成功');
-                } else {
-                    toastr.error(response.data.msg);
+            $.ajax({
+                type: 'post',
+                data: $('#supplier_user_edit').serialize(),
+                url: '123',
+                dataType: 'json',
+                beforeSend: function () {
+                    _index.attr('disabled', true);
+                    _index.html('保存中...');
+                    @if(isset($user->id))
+                        toastrMsg = '修改成功';
+                        this.url = "{{ secure_route('supplierusers.update',['id'=>$user->id]) }}";
+                    this.data._method = 'PUT';
+                    @else
+                        this.url = "{{ secure_route('supplierusers.store') }}";
+                    toastrMsg = '添加成功';
+                    @endif
+                },
+                success: function (res) {
+                    if (res.status === 200) {
+                        toastr.options.timeOut = 0.5;
+                        toastr.options.onHidden = function () {
+                            top.location.reload();
+                        };
+                        toastr.success(toastrMsg);
+                    } else {
+                        toastr.error(res.data.msg);
+                        _index.attr('disabled', false);
+                        _index.html('保存');
+                    }
+                },
+                error: function (error) {
+                    var json = eval("(" + error.responseText + ")");
+                    for (index in json.errors) {
+                        toastr.error(json.errors[index][0]);
+                        break;
+                    }
+                    _index.attr('disabled', false);
+                    _index.html('保存');
                 }
             });
-            @else
-            axios.post("{{ secure_route('supplierusers.store') }}", postdata).then(function (response) {
-                if (response.data.status === 200) {
-                    toastr.options.onHidden = function () {
-                        parent.layer.close(index);
-                    };
-                    toastr.success('修改成功');
-                } else {
-                    toastr.options.timeOut = 0.5;
-                    toastr.error(response.data.msg);
-                }
-            });
-            @endif
         });
         $('.cancel').click(function () {
             parent.layer.close(index);

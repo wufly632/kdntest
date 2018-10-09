@@ -46,9 +46,8 @@ class SupplierUserService
 
     public function createUser($request)
     {
-        $userRequest = $request->only(['name', 'mobile', 'password', 'password_confirmation', 'email']);
         try {
-            $this->supplierUserRepository->create($userRequest);
+            $this->supplierUserRepository->create($request);
             return ApiResponse::success('创建成功');
         } catch (\Exception $e) {
 
@@ -58,9 +57,8 @@ class SupplierUserService
 
     public function updateUser($request, $id)
     {
-        $userRequest = $request->only(['name', 'mobile', 'password', 'password_confirmation', 'email', 'status']);
         try {
-            $this->supplierUserRepository->update($userRequest,$id);
+            $this->supplierUserRepository->update($request, $id);
             return ApiResponse::success('创建成功');
         } catch (\Exception $e) {
 
@@ -68,4 +66,12 @@ class SupplierUserService
         }
     }
 
+    public function delete($id)
+    {
+        if ($this->supplierUserRepository->delete($id)) {
+            return true;
+        } else {
+            return false;
+        }
+    }
 }

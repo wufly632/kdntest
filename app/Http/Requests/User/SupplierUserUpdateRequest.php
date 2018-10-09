@@ -13,7 +13,7 @@ class SupplierUserUpdateRequest extends FormRequest
      */
     public function authorize()
     {
-        return false;
+        return true;
     }
 
     /**
@@ -24,7 +24,21 @@ class SupplierUserUpdateRequest extends FormRequest
     public function rules()
     {
         return [
-            //
+            'name' => 'required',
+            'mobile' => 'required',
+            'email' => 'required|email',
+            'password' => 'confirmed|min:6'
+        ];
+    }
+
+    public function messages()
+    {
+        return [
+            'required' => ':attribute 必须',
+            'numeric' => ':attribute 必须为数字',
+            'email' => ':attribute 必须为邮箱',
+            'in' => ':attribute 不正确',
+            'required_if' => '缺少 :attribute',
         ];
     }
 }

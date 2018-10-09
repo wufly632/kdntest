@@ -159,12 +159,23 @@
             showInfo('商家信息', $(this).attr('data-target-uri'));
         });
         $('.user_delete').click(function () {
+            var _clickEle = $(this);
             layer.confirm('确定删除此用户', {
                 btn: ['删除','取消'] //按钮
             }, function(){
-                axios.delete($(this).attr('data-target-uri')).then(function () {
-                    layer.closeAll();
-                    toastr.success('删除成功');
+                axios.delete(_clickEle.attr('data-target-uri')).then(function (res) {
+                    if (res.status === 200) {
+                        toastr.options.timeOut = 0.5;
+                        toastr.options.onHidden = function () {
+                            location.reload();
+                        };
+                        layer.closeAll();
+                        toastr.success('删除成功');
+                    } else {
+                        toastr.success('删除失败');
+                    }
+                }).catch(function () {
+                    toastr.success('删除失败');
                 });
             }, function(){
 

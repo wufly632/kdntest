@@ -27,8 +27,19 @@ class SupplierUserCreateRequest extends FormRequest
             'name' => 'required',
             'mobile' => 'required',
             'email' => 'required|email',
-            'password' => 'required',
-            'password_confirmation' => 'required|confirmed'
+            'password' => 'required|confirmed',
+            'password_confirmation' => 'required|min:6'
+        ];
+    }
+
+    public function messages()
+    {
+        return [
+            'required' => ':attribute 必须',
+            'numeric' => ':attribute 必须为数字',
+            'email' => ':attribute 必须为邮箱',
+            'in' => ':attribute 不正确',
+            'required_if' => '缺少 :attribute',
         ];
     }
 }
