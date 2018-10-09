@@ -11,12 +11,21 @@ class UserService
     protected $userRepository;
     protected $userValidator;
 
+    /**
+     * UserService constructor.
+     * @param UserRepository $userRepository
+     * @param UserValidator $userValidator
+     */
     public function __construct(UserRepository $userRepository, UserValidator $userValidator)
     {
         $this->userRepository = $userRepository;
         $this->userValidator = $userValidator;
     }
 
+    /**
+     * 获取用户列表
+     * @return mixed
+     */
     public function getUserList()
     {
         $orderBy = $request->orderBy ?? 'id';
@@ -25,8 +34,29 @@ class UserService
         return $this->userRepository->orderBy($orderBy, $sort)->paginate($length);
     }
 
+    /**
+     * 获取用户信息
+     * @param $id
+     * @return mixed
+     */
     public function getUserById($id)
     {
         return $this->userRepository->find($id);
     }
+
+    public function createUser($request)
+    {
+        $this->userValidator->with($request->only(['user_alias', 'email', 'firstname', 'lastname', 'password', 'status']))->passesOrFail();
+    }
+
+    public function transform($request)
+    {
+
+    }
+
+    public function updateUser($request)
+    {
+
+    }
+
 }

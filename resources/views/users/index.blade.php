@@ -63,8 +63,8 @@
                                 </div>
                                 <div class="col-xs-1"><input type="button" id="user_search" value="查找"
                                                              class="btn btn-success"></div>
-                                <div class="col-xs-1"><input type="button" id="create_user" value="创建新用户"
-                                                             class="btn btn-success"></div>
+                                <div class="col-xs-1"><a href="{{ secure_route('users.create') }}"><input type="button" id="create_user" value="创建新用户"
+                                                                        class="btn btn-success"></a></div>
                             </form>
                         </div>
                         <hr>

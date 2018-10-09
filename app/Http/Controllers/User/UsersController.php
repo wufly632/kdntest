@@ -36,6 +36,7 @@ class UsersController extends Controller
     public function create()
     {
         //
+        return view('users.edit');
     }
 
     /**
@@ -97,6 +98,6 @@ class UsersController extends Controller
     public function destroy($id)
     {
         //
-        
+
     }
 }

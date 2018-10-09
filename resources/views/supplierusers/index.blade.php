@@ -3,16 +3,20 @@
           href="{{ asset('/assets/admin-lte/bower_components/datatables.net-bs/css/dataTables.bootstrap.min.css') }}">
     <style>
         .header-image-block {
-            width: 80px;
+            width: 120px;
         }
 
         .header-image {
-            width: 60px;
-            height: 60px;
+            width: 100px;
+            height: 100px;
         }
 
         .text-vertical td {
             vertical-align: middle !important;
+        }
+
+        .fa-gray {
+            color: gray;
         }
     </style>
 @stop
@@ -22,8 +26,8 @@
         <!-- Content Header (Page header) -->
         <section class="content-header">
             <h1>
-                用户列表
-                <small>用户</small>
+                商家列表
+                <small>商家</small>
             </h1>
             <ol class="breadcrumb">
                 <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
@@ -57,7 +61,13 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-xs-2"><input type="button" value="查找" class="btn btn-success"></div>
+                                <div class="col-xs-1"><input type="button" id="user_search" value="查找"
+                                                             class="btn btn-success"></div>
+                                <div class="col-xs-1"><a href="javascript:void(0)" class="user_create" data-target-uri="{{ secure_route('supplierusers.create') }}"><input type="button"
+                                                                                                          id="create_user"
+                                                                                                          value="创建新用户"
+                                                                                                          class="btn btn-success"></a>
+                                </div>
                             </form>
                         </div>
                         <hr>
@@ -66,42 +76,52 @@
                                    id="user_table">
                                 <thead>
                                 <tr>
-                                    <th>用户ID</th>
-                                    <th>用户头像</th>
-                                    <th>用户系统ID</th>
-                                    <th>用户昵称</th>
-                                    <th>用户邮箱</th>
-                                    <th>账户余额</th>
-                                    <th>用户状态</th>
-                                    <th>创建时间</th>
-                                    <th>登陆时间</th>
+                                    <th>商家ID <span class="fa fa-gray fa-sort-numeric-desc pull-right"></span></th>
+                                    <th>商家名称<span class="fa fa-gray fa-unsorted pull-right"></span></th>
+                                    <th>手机号<span class="fa fa-gray fa-unsorted pull-right"></span></th>
+                                    <th>邮箱<span class="fa fa-gray fa-unsorted pull-right"></span></th>
+                                    <th>账户余额<span class="fa fa-gray fa-unsorted pull-right"></span></th>
+                                    <th>状态<span class="fa fa-gray fa-unsorted pull-right"></span></th>
+                                    <th>创建时间<span class="fa fa-gray fa-unsorted pull-right"></span></th>
                                     <th>操作</th>
                                 </tr>
                                 </thead>
                                 <tbody>
-                                <tr v-for="(userInfo, index) in userList">
-                                    <td>@{{ userInfo.userId }}</td>
-                                    <td class="header-image-block"><img
-                                                :src="userInfo.headImage"
-                                                alt="" class="header-image">
-                                    </td>
-                                    <td>@{{ userInfo.systemId }}</td>
-                                    <td>@{{ userInfo.alias }}</td>
-                                    <td>@{{ userInfo.email }}</td>
-                                    <td>@{{ userInfo.money }}</td>
-                                    <td>@{{ userInfo.status }}</td>
-                                    <td>@{{ userInfo.loginTime }}</td>
-                                    <td>@{{ userInfo.createTime }}</td>
-                                    <td id="bread-actions" class="no-sort no-click">
-                                        <div class="btn-group">
-                                            <a type="text" class="btn btn-sm btn-warning">查看</a>
-                                            <a type="text" class="btn btn-sm btn-primary">修改</a>
-                                            <a type="text" class="btn btn-sm btn-danger">删除</a>
-                                        </div>
-                                    </td>
-                                </tr>
+                                @foreach($users as $user)
+                                    <tr>
+                                        <td>{{ $user->id }}</td>
+                                        <td>{{ $user->name }}</td>
+                                        <td>{{ $user->mobile }}</td>
+                                        <td>{{ $user->email }}</td>
+                                        <td>{{ $user->amount_money }}</td>
+                                        <td>{{ $user->status }}</td>
+                                        <td>{{ $user->created_at }}</td>
+                                        <td id="bread-actions" class="no-sort no-click">
+                                            <div class="btn-group">
+                                                <a href="javascript:void(0)"
+                                                   class="btn btn-sm btn-warning user_show"
+                                                   data-target-uri="{{ secure_route('supplierusers.show',['id'=>$user->id]) }}"><span
+                                                            class="fa fa-eye"></span>
+                                                    查看</a>
+                                                <a href="javascript:void(0)"
+                                                   class="btn btn-sm btn-primary user_edit"
+                                                   data-target-uri="{{ secure_route('supplierusers.edit',['id'=>$user->id]) }}"><span
+                                                            class="fa fa-edit"></span>
+                                                    编辑</a>
+                                                <a href="javascript:void(0)"
+                                                   class="btn btn-sm btn-danger user_delete"
+                                                   data-target-uri="{{ secure_route('supplierusers.destroy',['id'=>$user->id]) }}"><span
+                                                            class="fa fa-trash"></span>
+                                                    删除</a>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                @endforeach
                                 </tbody>
                             </table>
+                            <div class="pull-right">
+                                {{ $users->links() }}
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -110,238 +130,57 @@
     </div>
 @stop
 @section('script')
-    <script src="{{ asset('/assets/js/bower_components/vue/dist/vue.min.js') }}"></script>
-    <script src="{{ asset('/assets/admin-lte/bower_components/datatables.net/js/jquery.dataTables.min.js') }}"></script>
-    <script src="{{ asset('/assets/admin-lte/bower_components/datatables.net-bs/js/dataTables.bootstrap.min.js') }}"></script>
-    <script src="{{ asset('/assets/js/plugincommon.js') }}"></script>
-
-
+    <script src="{{ asset('/assets/js/bower_components/axios/dist/axios.min.js') }}"></script>
     <script>
-        var userTable = new Vue({
-            el: '#user_table',
-            data: userList = [{
-                userId: 1,
-                headImage: 'http://localhost/assets/admin-lte//dist/img/user2-160x160.jpg',
-                systemId: 1,
-                alias: 1,
-                email: 1,
-                money: 1,
-                status: 1,
-                loginTime: 1,
-                createTime: 1
-            }, {
-                userId: 1,
-                headImage: 'http://localhost/assets/admin-lte//dist/img/user2-160x160.jpg',
-                systemId: 1,
-                alias: 1,
-                email: 1,
-                money: 1,
-                status: 1,
-                loginTime: 1,
-                createTime: 1
-            }, {
-                userId: 1,
-                headImage: 'http://localhost/assets/admin-lte//dist/img/user2-160x160.jpg',
-                systemId: 1,
-                alias: 1,
-                email: 1,
-                money: 1,
-                status: 1,
-                loginTime: 1,
-                createTime: 1
-            }, {
-                userId: 1,
-                headImage: 'http://localhost/assets/admin-lte//dist/img/user2-160x160.jpg',
-                systemId: 1,
-                alias: 1,
-                email: 1,
-                money: 1,
-                status: 1,
-                loginTime: 1,
-                createTime: 1
-            }, {
-                userId: 1,
-                headImage: 'http://localhost/assets/admin-lte//dist/img/user2-160x160.jpg',
-                systemId: 1,
-                alias: 1,
-                email: 1,
-                money: 1,
-                status: 1,
-                loginTime: 1,
-                createTime: 1
-            }, {
-                userId: 1,
-                headImage: 'http://localhost/assets/admin-lte//dist/img/user2-160x160.jpg',
-                systemId: 1,
-                alias: 1,
-                email: 1,
-                money: 1,
-                status: 1,
-                loginTime: 1,
-                createTime: 1
-            }, {
-                userId: 1,
-                headImage: 'http://localhost/assets/admin-lte//dist/img/user2-160x160.jpg',
-                systemId: 1,
-                alias: 1,
-                email: 1,
-                money: 1,
-                status: 1,
-                loginTime: 1,
-                createTime: 1
-            }, {
-                userId: 1,
-                headImage: 'http://localhost/assets/admin-lte//dist/img/user2-160x160.jpg',
-                systemId: 1,
-                alias: 1,
-                email: 1,
-                money: 1,
-                status: 1,
-                loginTime: 1,
-                createTime: 1
-            }, {
-                userId: 1,
-                headImage: 'http://localhost/assets/admin-lte//dist/img/user2-160x160.jpg',
-                systemId: 1,
-                alias: 1,
-                email: 1,
-                money: 1,
-                status: 1,
-                loginTime: 1,
-                createTime: 1
-            }, {
-                userId: 1,
-                headImage: 'http://localhost/assets/admin-lte//dist/img/user2-160x160.jpg',
-                systemId: 1,
-                alias: 1,
-                email: 1,
-                money: 1,
-                status: 1,
-                loginTime: 1,
-                createTime: 1
-            }, {
-                userId: 1,
-                headImage: 'http://localhost/assets/admin-lte//dist/img/user2-160x160.jpg',
-                systemId: 1,
-                alias: 1,
-                email: 1,
-                money: 1,
-                status: 1,
-                loginTime: 1,
-                createTime: 1
-            }, {
-                userId: 1,
-                headImage: 'http://localhost/assets/admin-lte//dist/img/user2-160x160.jpg',
-                systemId: 1,
-                alias: 1,
-                email: 1,
-                money: 1,
-                status: 1,
-                loginTime: 1,
-                createTime: 1
-            }, {
-                userId: 1,
-                headImage: 'http://localhost/assets/admin-lte//dist/img/user2-160x160.jpg',
-                systemId: 1,
-                alias: 1,
-                email: 1,
-                money: 1,
-                status: 1,
-                loginTime: 1,
-                createTime: 1
-            }, {
-                userId: 1,
-                headImage: 'http://localhost/assets/admin-lte//dist/img/user2-160x160.jpg',
-                systemId: 1,
-                alias: 1,
-                email: 1,
-                money: 1,
-                status: 1,
-                loginTime: 1,
-                createTime: 1
-            }, {
-                userId: 1,
-                headImage: 'http://localhost/assets/admin-lte//dist/img/user2-160x160.jpg',
-                systemId: 1,
-                alias: 1,
-                email: 1,
-                money: 1,
-                status: 1,
-                loginTime: 1,
-                createTime: 1
-            }, {
-                userId: 1,
-                headImage: 'http://localhost/assets/admin-lte//dist/img/user2-160x160.jpg',
-                systemId: 1,
-                alias: 1,
-                email: 1,
-                money: 1,
-                status: 1,
-                loginTime: 1,
-                createTime: 1
-            }, {
-                userId: 1,
-                headImage: 'http://localhost/assets/admin-lte//dist/img/user2-160x160.jpg',
-                systemId: 1,
-                alias: 1,
-                email: 1,
-                money: 1,
-                status: 1,
-                loginTime: 1,
-                createTime: 1
-            }, {
-                userId: 1,
-                headImage: 'http://localhost/assets/admin-lte//dist/img/user2-160x160.jpg',
-                systemId: 1,
-                alias: 1,
-                email: 1,
-                money: 1,
-                status: 1,
-                loginTime: 1,
-                createTime: 1
-            }, {
-                userId: 1,
-                headImage: 'http://localhost/assets/admin-lte//dist/img/user2-160x160.jpg',
-                systemId: 1,
-                alias: 1,
-                email: 1,
-                money: 1,
-                status: 1,
-                loginTime: 1,
-                createTime: 1
-            }, {
-                userId: 1,
-                headImage: 'http://localhost/assets/admin-lte//dist/img/user2-160x160.jpg',
-                systemId: 1,
-                alias: 1,
-                email: 1,
-                money: 1,
-                status: 1,
-                loginTime: 1,
-                createTime: 1
-            }, {
-                userId: 1,
-                headImage: 'http://localhost/assets/admin-lte//dist/img/user2-160x160.jpg',
-                systemId: 1,
-                alias: 1,
-                email: 1,
-                money: 1,
-                status: 1,
-                loginTime: 1,
-                createTime: 1
-            }, {
-                userId: 1,
-                headImage: 'http://localhost/assets/admin-lte//dist/img/user2-160x160.jpg',
-                systemId: 1,
-                alias: 1,
-                email: 1,
-                money: 1,
-                status: 1,
-                loginTime: 1,
-                createTime: 1
-            }]
+        function showInfo(title, content) {
+            layer.open({
+                type: 2,
+                skin: 'layui-layer-rim', //加上边框
+                area: ['60%', '600px'],
+                fix: false, //不固定
+                shadeClose: true,
+                maxmin: true,
+                shade: 0.4,
+                title: title,
+                content: content,
+                end: function (layero, index) {
+
+                }
+            });
+        }
+
+        $('.user_create').click(function () {
+            showInfo('新建商家', $(this).attr('data-target-uri'));
+        });
+        $('.user_show').click(function () {
+            showInfo('商家信息', $(this).attr('data-target-uri'));
+        });
+        $('.user_edit').click(function () {
+            showInfo('商家信息', $(this).attr('data-target-uri'));
+        });
+        $('.user_delete').click(function () {
+            var _clickEle = $(this);
+            layer.confirm('确定删除此用户', {
+                btn: ['删除','取消'] //按钮
+            }, function(){
+                axios.delete(_clickEle.attr('data-target-uri')).then(function (res) {
+                    if (res.status === 200) {
+                        toastr.options.timeOut = 0.5;
+                        toastr.options.onHidden = function () {
+                            location.reload();
+                        };
+                        layer.closeAll();
+                        toastr.success('删除成功');
+                    } else {
+                        toastr.success('删除失败');
+                    }
+                }).catch(function () {
+                    toastr.success('删除失败');
+                });
+            }, function(){
+
+            });
 
         });
-        createDataTable($('#user_table'));
     </script>
 @endsection
