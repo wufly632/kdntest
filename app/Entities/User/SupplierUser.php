@@ -23,6 +23,8 @@ class SupplierUser extends Model implements Transformable
      */
     protected $fillable = ['name', 'mobile', 'email', 'password', 'status'];
 
+    protected $visible = ['id', 'name', 'email', 'amount_money', 'status', 'create_at'];
+
     public function setPasswordAttribute($value)
     {
         $this->attributes['password'] = bcrypt($value);

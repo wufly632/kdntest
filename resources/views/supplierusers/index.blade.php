@@ -42,31 +42,33 @@
                 <div class="col-xs-12">
                     <div class="box box-info">
                         <div class="box-header">
-                            <form action="" class="form-inline" method="get">
+                            <form action="{{ secure_route('supplierusers.index') }}" class="form-inline" method="get">
                                 <div class="col-xs-3 col-xs-offset-1">
                                     <div class="form-group">
                                         <label for="name" class="control-label">用户名:</label>
-                                        <div class="form-group"><input type="text" class="form-control" id="name"></div>
+                                        <div class="form-group"><input type="text" class="form-control" id="name" name="name" value="{{ request()->get('name') }}"></div>
                                     </div>
                                 </div>
                                 <div class="col-xs-3">
                                     <div class="form-group">
                                         <label for="email" class="control-label">用户邮箱:</label></div>
-                                    <div class="form-group"><input type="text" class="form-control" id="email"></div>
+                                    <div class="form-group"><input type="text" class="form-control" id="email" name="email" value="{{ request()->get('email') }}"></div>
                                 </div>
                                 <div class="col-xs-3">
                                     <div class="form-group">
                                         <label for="user_id" class="control-label">用户ID:</label>
-                                        <div class="form-group"><input type="text" class="form-control" id="user_id">
+                                        <div class="form-group"><input type="text" class="form-control" id="user_id" name="user_id" value="{{ request()->get('user_id') }}">
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-xs-1"><input type="button" id="user_search" value="查找"
+                                <div class="col-xs-1"><input type="submit" id="user_search" value="查找"
                                                              class="btn btn-success"></div>
-                                <div class="col-xs-1"><a href="javascript:void(0)" class="user_create" data-target-uri="{{ secure_route('supplierusers.create') }}"><input type="button"
-                                                                                                          id="create_user"
-                                                                                                          value="创建新用户"
-                                                                                                          class="btn btn-success"></a>
+                                <div class="col-xs-1"><a href="javascript:void(0)" class="user_create"
+                                                         data-target-uri="{{ secure_route('supplierusers.create') }}"><input
+                                                type="button"
+                                                id="create_user"
+                                                value="创建新用户"
+                                                class="btn btn-success"></a>
                                 </div>
                             </form>
                         </div>
@@ -161,8 +163,8 @@
         $('.user_delete').click(function () {
             var _clickEle = $(this);
             layer.confirm('确定删除此用户', {
-                btn: ['删除','取消'] //按钮
-            }, function(){
+                btn: ['删除', '取消'] //按钮
+            }, function () {
                 axios.delete(_clickEle.attr('data-target-uri')).then(function (res) {
                     if (res.status === 200) {
                         toastr.options.timeOut = 0.5;
@@ -177,7 +179,7 @@
                 }).catch(function () {
                     toastr.success('删除失败');
                 });
-            }, function(){
+            }, function () {
 
             });
 
