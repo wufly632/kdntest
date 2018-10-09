@@ -56,9 +56,10 @@ class SyncCategory extends Command
 
     public function handleProgress()
     {
-        for ($i=1;$i<3;$i++) {
+        $arr = [4];
+        foreach ($arr as $i) {
             $excel_path = 'storage'.DIRECTORY_SEPARATOR.'excel'.DIRECTORY_SEPARATOR.'import'.DIRECTORY_SEPARATOR.iconv("UTF-8", 'GBK', $i.'-category').'.xlsx';
-            \Excel::load($excel_path, function ($reader) {
+            \Excel::load($excel_path, function ($reader) use ($i) {
                 $reader1 = $reader->getSheet(0);
                 //中文分类
                 $ch    = $reader1->toArray();
@@ -66,9 +67,11 @@ class SyncCategory extends Command
                 $reader2 = $reader->getSheet(1);
                 $en = $reader2->toArray();
                 foreach ($ch as $key => $category) {
+                    $this->info($i.'-'.$key);
                     if ($key == 0) continue;
                     //一级类目
                     $category_one = $category[0];
+                    if (!$category_one) continue;
                     $category_two = $category[1];
                     $category_three = $category[2];
                     if (! $one = Category::where(['name' => $category_one, 'level' => 1])->first()) {

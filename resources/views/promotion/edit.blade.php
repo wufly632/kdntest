@@ -555,6 +555,20 @@
             })
         });
         $(function () {
+            $(".middle-height .icon-add").on("click",function(){
+                $(this).addClass("dis-no");
+                var rowclass=$(this).parent().next(".add-row");
+                rowclass.removeClass("dis-no");
+                // $(".seckill .se-sale").css("height","189px");
+            });
+            $(".middle-height .icon-minus").on("click",function(){
+                var minushtml=$(this).parent();
+                var adclass=$(this).parent().prev(".addcontain").children(".icon-add");
+                $(this).siblings('input').val('');
+                adclass.removeClass("dis-no");
+                minushtml.addClass("dis-no");
+                // $(".seckill .se-sale").css("height","140px");
+            });
             $('#promotion-form').on('click', '.submit', function () {
                 var _index = $(this);
                 $.ajax({

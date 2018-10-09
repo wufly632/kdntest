@@ -58,20 +58,23 @@ class SyncCategoryAttribute extends Command
 
     public function handleProgress()
     {
-        for ($i=1;$i<3;$i++) {
-            $excel_path = 'storage'.DIRECTORY_SEPARATOR.'excel'.DIRECTORY_SEPARATOR.'import'.DIRECTORY_SEPARATOR.iconv("UTF-8", 'GBK', $i.'-category_attribute').'.xlsx';
-            \Excel::load($excel_path, function ($reader) {
+        $arr = [4];
+        foreach ($arr as $i) {
+            $excel_path = 'storage'.DIRECTORY_SEPARATOR.'excel'.DIRECTORY_SEPARATOR.'import'.DIRECTORY_SEPARATOR.iconv("UTF-8", 'GBK', $i.'-category_attribute').'.csv';
+            \Excel::load($excel_path, function ($reader) use ($i) {
                 //中文销售属性
-                $reader1 = $reader->getSheet(0);
+                /*$reader1 = $reader->getSheet(0);
                 $ch    = $reader1->toArray();
-
                 foreach ($ch as $key => $category_attr) {
                     if ($key == 0) continue;
+                    if (!$category_attr[0]) continue;
                     $category_name_one = $category_attr[0];
                     $category_one_ids = Category::where('name', $category_name_one)->pluck('id')->toArray();
                     $category_name_two = $category_attr[1];
                     $category_two_ids = Category::where(['name'=> $category_name_two, 'level' => 2])->whereIn('parent_id', $category_one_ids)->pluck('id')->toArray();
                     $category_name = $category_attr[2];
+                    $this->info(implode(',', $category_two_ids));
+                    $this->info($i.'-'.$key.'-'.$category_name);
                     $category_id = Category::where(['name' => $category_name, 'level' => 3])->whereIn('parent_id', $category_two_ids)->first()->id;
                     $attr_name = $category_attr[3];
                     $attr_id = Attribute::where('name', $attr_name)->first()->id;
@@ -88,18 +91,29 @@ class SyncCategoryAttribute extends Command
                         'status' => 1,
                         'created_at' => Carbon::now()->toDateTimeString()
                     ];
+                    if ($attr_name == '颜色') {
+                        $category_attr_data['is_image'] = 1;
+                    }
                     CategoryAttribute::updateOrCreate(['attr_id' => $attr_id, 'category_id' => $category_id],$category_attr_data);
-                }
+                    $this->info($key.' end');
+                }*/
+
+
+
                 //中文非关键属性
-                $reader1 = $reader->getSheet(1);
+                $reader1 = $reader->getSheet(0);
                 $ch    = $reader1->toArray();
                 foreach ($ch as $key => $category_attr) {
                     if ($key == 0) continue;
+                    $category_attr = explode("\t", $category_attr[0]);
                     $category_name_one = $category_attr[0];
+                    if (!$category_attr[0]) continue;
                     $category_one_ids = Category::where('name', $category_name_one)->pluck('id')->toArray();
                     $category_name_two = $category_attr[1];
                     $category_two_ids = Category::where(['name'=> $category_name_two, 'level' => 2])->whereIn('parent_id', $category_one_ids)->pluck('id')->toArray();
                     $category_name = $category_attr[2];
+                    $this->info(implode(',', $category_two_ids));
+                    $this->info($i.'.'.$key.'-'.$category_name);
                     $category_id = Category::where(['name' => $category_name, 'level' => 3])->whereIn('parent_id', $category_two_ids)->first()->id;
                     $attr_name = $category_attr[3];
                     $attr_id = Attribute::where('name', $attr_name)->first()->id;
@@ -107,7 +121,7 @@ class SyncCategoryAttribute extends Command
                     $attr_values = AttributeValue::whereIn('name', $attr_values_name)->where('attribute_id', $attr_id)->pluck('id')->implode(',');
                     $category_attr_data = [
                         'category_id' => $category_id,
-                        'attr_type' => 4, //销售属性
+                        'attr_type' => 4, //非关键属性
                         'attr_id' => $attr_id,
                         'attr_values' => $attr_values,
                         'is_required' => 1,
@@ -117,7 +131,9 @@ class SyncCategoryAttribute extends Command
                         'created_at' => Carbon::now()->toDateTimeString()
                     ];
                     CategoryAttribute::updateOrCreate(['attr_id' => $attr_id, 'category_id' => $category_id],$category_attr_data);
+                    $this->info($key.' end');
                 }
+
             });
         }
     }
