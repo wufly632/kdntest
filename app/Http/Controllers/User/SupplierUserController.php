@@ -25,10 +25,10 @@ class SupplierUserController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
         //
-        return view('supplierusers.index', ['users' => $this->supplierUserService->getUserList()]);
+        return view('supplierusers.index', ['users' => $this->supplierUserService->getUserList($request)]);
     }
 
     /**
@@ -111,7 +111,7 @@ class SupplierUserController extends Controller
     public function destroy($id)
     {
         //
-        if ($this->supplierUserService->delete($id)) {
+        if ($this->supplierUserService->deleteUser($id)) {
             return ApiResponse::success('删除成功');
         }else{
             return ApiResponse::failure(g_API_ERROR, '删除失败');

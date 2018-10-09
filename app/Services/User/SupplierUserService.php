@@ -5,6 +5,7 @@ namespace App\Services\User;
 use App\Repositories\User\SupplierUserRepository;
 use App\Services\Api\ApiResponse;
 use App\Validators\User\SupplierUserValidator;
+use Illuminate\Pagination\LengthAwarePaginator;
 
 class SupplierUserService
 {
@@ -26,12 +27,32 @@ class SupplierUserService
      * 获取用户列表
      * @return mixed
      */
-    public function getUserList()
+    public function getUserList($request)
     {
         $orderBy = $request->orderBy ?? 'id';
         $sort = $request->sort ?? 'desc';
         $length = $request->length ?? 20;
-        return $this->supplierUserRepository->orderBy($orderBy, $sort)->paginate($length);
+        if ($request->hasAny('name', 'email', 'user_id')) {
+            $option = [];
+
+            if ($request->filled('name')) {
+                $option = array_merge($option, [['name', 'like', '%' . $request->get('name') . '%']]);
+            }
+            if ($request->filled('email')) {
+                $option = array_merge($option, [['email', 'like', '%' . $request->get('email') . '%']]);
+            }
+            if ($request->filled('user_id')) {
+                $option = array_merge($option, ['id' => $request->get('user_id')]);
+            }
+            $total = $this->supplierUserRepository->findWhere($option);
+            $count = count($total);
+            $person = new LengthAwarePaginator($total, $count, 15);
+            $person->withPath('supplierusers');
+            $person->appends($request->all());
+            return $person;
+        } else {
+            return $this->supplierUserRepository->orderBy($orderBy, $sort)->paginate($length);
+        }
     }
 
     /**
@@ -66,7 +87,7 @@ class SupplierUserService
         }
     }
 
-    public function delete($id)
+    public function deleteUser($id)
     {
         if ($this->supplierUserRepository->delete($id)) {
             return true;
