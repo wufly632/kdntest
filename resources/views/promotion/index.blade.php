@@ -111,7 +111,7 @@
                                         <td>{{$promotion->stock}}</td>
                                         <td>{{$promotion->status}}</td>
                                         <td>
-                                            <div><a href="#">修改</a></div>
+                                            <div><a href="{{secure_route('promotion.edit', ['promotion' => $promotion->id])}}">修改</a></div>
                                             <div><a href="#">完善信息</a></div>
                                             <div><a href="javascript:void(0);">删除</a></div>
                                             <div><a href="#">查看详情</a></div>

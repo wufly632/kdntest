@@ -31,7 +31,7 @@
                 </tr>
                 </thead>
                 <tbody>
-                @foreach($promotion_products as $product)
+                @foreach($goods as $product)
                     <tr>
                         <td><input type="checkbox" value="{{$product->id}}" class="good-id"></td>
                         <td>
@@ -61,7 +61,6 @@
             </table>
             <hr>
             <div>
-                <input type="button" class="btn btn-success" value="添加店铺所有商品">
                 <input type="button" class="btn btn-danger pull-right" value="取消">
                 <input type="button" class="btn btn-success pull-right submit" value="确认添加">
             </div>

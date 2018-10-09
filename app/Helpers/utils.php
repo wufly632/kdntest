@@ -666,3 +666,23 @@ function get_time_range($date_range)
     list($start_at, $end_at) = $array;
     return [$start_at, $end_at];
 }
+
+function getPathCate($uri)
+{
+    if (!$uri || empty($uri)) return '';
+    $path = [];
+    $path[$uri][] = "<li><a href='javascript:void(0)'>Home</a></li>";
+    $templates = config('template');
+    foreach ($templates['menus'] as $key => $menus) {
+        if (is_array($menus['menus']) && !empty($menus['menus'])) {
+            foreach ($menus['menus'] as $k => $menu) {
+                if ($menu['link'] == $uri) {
+                    $path[$uri][] = "<li><a href='javascript:void(0)'>" . trans("template." . $menus['title']) . "</a></li>";
+                    $path[$uri][] = "<li><a href={$menu['link']}  class='active'><strong>" . trans("template." . $menu['title']) . "</strong></a></li>";
+                    break 2;
+                }
+            }
+        }
+    }
+    return implode('', $path[$uri]);
+}

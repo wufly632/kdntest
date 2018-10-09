@@ -59,13 +59,13 @@ class PromotionController extends Controller
      * @param Promotion $promotion
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
-    public function edit(Promotion $promotion)
+    public function edit(Promotion $promotion, Request $request)
     {
         if (! $promotion) {
             redirect(secure_route('promotion.index'));
         }
-        //获取促销活动商品
-        $promotion_goods = $this->promotionService->getPromotionActivityGoods($promotion->id);
+        //获取可添加的促销活动商品
+        $promotion_goods = $this->promotionService->getAblePromotionActivityGoods($promotion->id, $request);
         return view('promotion.edit', compact('promotion','promotion_goods'));
     }
 
@@ -98,10 +98,47 @@ class PromotionController extends Controller
      */
     public function addGoodPost(PromotionAddGoodRequest $request)
     {
+        if (! $request->good_id) {
+            return ApiResponse::failure(g_API_ERROR, '请选择要添加的商品');
+        }
+        if (! $request->type) {
+            return ApiResponse::failure(g_API_ERROR, '请先选择活动的类型');
+        }
         $result = $this->promotionService->addGoods($request);
         if ($result['status'] == 200) {
             return ApiResponse::success($result['content']);
         }
         return ApiResponse::failure(g_API_ERROR, $result['msg']);
+    }
+
+    /**
+     * @function 删除活动商品
+     * @param Request $request
+     * @return mixed
+     */
+    public function delGoodPost(Request $request)
+    {
+        if (! $request->good_id || ! $request->activity_id) {
+            return ApiResponse::failure(g_API_ERROR, '缺少参数');
+        }
+        $result = $this->promotionService->delGoods($request);
+        if ($result['status'] == 200) {
+            return ApiResponse::success($result['msg']);
+        }
+        return ApiResponse::failure(g_API_ERROR, $result['msg']);
+    }
+
+    /**
+     * @function 获取促销活动可添加的商品
+     * @param Request $request
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View|mixed
+     */
+    public function getGoods(Request $request)
+    {
+        $result = $this->promotionService->getAblePromotionActivityGoods($request->activity_id, $request);
+        /*if ($request->is_ajax == 1) {
+            return ApiResponse::success($result);
+        }*/
+        return $result;
     }
 }

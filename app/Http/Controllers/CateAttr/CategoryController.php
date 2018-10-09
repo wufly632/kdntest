@@ -17,6 +17,7 @@ class CategoryController extends Controller
     //
     public function index(Request $request)
     {
+        set_time_limit(0);
         $id = $request->get('id');
         $result = Category::all();
         $attributes = Attribute::all();
@@ -60,6 +61,7 @@ class CategoryController extends Controller
         $data['category'] = json_encode($category);
         $data['category_attrs'] = json_encode($category_attrs);
         $data['cate_info'] = json_encode($cate_info);
+        dd($data);
         return view('cateAttr.category', $data);
     }
 

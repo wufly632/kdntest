@@ -47,8 +47,10 @@
         <section class="content">
             <div class="row">
                 <div class="col-xs-12">
-                    <div id="modal-default" class="modal fade" tabindex="-1" data-width="1200" style="display: none;">
-
+                    <div id="myModal-one" class="modal fade" tabindex="-1" data-width="1200" style="display: none;">
+                        <form class="seckill-modal" method="get" onsubmit="return getGoods(this);" action="{{secure_route('promotion.getGoods')}}">
+                            {!! $promotion_goods !!}
+                        </form>
                     </div>
                     <div class="box box-info">
                         <form id="promotion-form" method="post" class="form-horizontal">
@@ -319,7 +321,7 @@
                             <div class="box-body">
                                 <div class="col-xs-12">
                                     <div><span class="h2">活动商品</span>
-                                        <button type="button" class="btn btn-default pull-right" onclick="addPromotionGoods()">添加商品
+                                        <button type="button" class="btn btn-default pull-right" data-toggle="modal" data-target="#myModal-one">添加商品
                                         </button>
                                     </div>
                                     <div class="form-inline" style="padding-top: 20px;padding-bottom: 40px;">
@@ -340,7 +342,7 @@
                                         </div>
                                     </div>
                                     <hr>
-                                    <table id="coupon_table" class="table table-bordered table-hover text-center">
+                                    <table id="promotion_good_table" class="table table-bordered table-hover text-center">
                                         <thead>
                                         <tr>
                                             <td>商品图片</td>
@@ -352,36 +354,8 @@
                                             <td>操作</td>
                                         </tr>
                                         </thead>
-                                        <tbody>
-                                            @foreach($promotion_goods as $good)
-                                            <tr class="table-level-one">
-                                                <td>
-                                                    <img src="{{ImgResize($good->main_pic, 100)}}" alt="">
-                                                </td>
-                                                <td style="width: 200px;">
-                                                    <div>
-                                                        <div class="col-xs-5 text-right">ID：</div>
-                                                        <div class="col-xs-7 text-left">{{$good->id}}</div>
-                                                    </div>
-                                                    <div>
-                                                        <div class="col-xs-5 text-right">名称：</div>
-                                                        <div class="col-xs-7 text-left">{{$good->good_title}}</div>
-                                                    </div>
-                                                    <div>
-                                                        <div class="col-xs-5 text-right">货号：</div>
-                                                        <div class="col-xs-7 text-left">{{$good->good_code}}</div>
-                                                    </div>
-                                                </td>
-                                                <td>{{$good->stock_price}}起</td>
-                                                <td>¥{{$good->supply_price}}起</td>
-                                                <td>{{$good->orders}}</td>
-                                                <td>{{$good->good_stock}}</td>
-                                                <td>
-                                                    <div><a href="javascript:void(0);">删除</a></div>
-                                                    <div class="set_promotion"><a href="javascript:void(0);">设置优惠</a></div>
-                                                </td>
-                                            </tr>
-                                            @endforeach
+                                        <tbody class="tableTbody">
+
                                         </tbody>
                                     </table>
                                     <div>
@@ -503,27 +477,15 @@
                 $(this).parents('.table-level-one').after(newTable);
             }
         });
-        //添加促销商品页面
-        function addPromotionGoods() {
-            $.ajax({
-                type:'get',
-                url:"{{secure_route('promotion.add.good')}}",
-                beforeSend:function() {
 
-                },
-                success:function(data){
-                    $('#modal-default').html(data);
-                    $('#modal-default').modal('show');
-                },
-                error:function(data){
-
-                }
-            })
-        }
         //添加促销商品
-        $('#modal-default').on('click', '.submit', function () {
+        $('#myModal-one').on('click', '.submit', function (event) {
+            var event = event || window.event;
+            event.preventDefault(); // 兼容标准浏览器
+            window.event.returnValue = false; // 兼容IE6~8
            var _index = $(this);
            var id = [];
+           var type = $('input[name=activity_type]:checked').val();
            $('.good-id').each(function () {
                if ($(this).is(':checked')) {
                    id.push($(this).val());
@@ -536,7 +498,7 @@
             $.ajax({
                 type:'post',
                 url:"{{secure_route('promotion.add.goodPost')}}",
-                data:{'good_id': id.join(','),'_token': "{{csrf_token()}}", 'activity_id': "{{$promotion->id}}"},
+                data:{'good_id': id.join(','),'_token': "{{csrf_token()}}", 'activity_id': "{{$promotion->id}}", type:type},
                 beforeSend:function() {
                     _index.attr('disabled', true);
                     _index.html('添加中...');
@@ -544,9 +506,48 @@
                 success:function(data){
                     console.log(data);
                     if (data.status == 200) {
-
+                        if(type == 'quantity' || type == 'limit'){
+                            $('#promotion-activity-type1').append(data.msg);
+                        }else{
+                            var html = '';
+                            var data_content = data.content.goods;
+                            console.log(data_content);
+                            for (var i in data_content) {
+                                html += '<tr class="table-level-one">\n' +
+                                    '                                <td>\n' +
+                                    '                                <img src="'+data_content[i].main_pic+'" alt="" width="100px" height="100px">\n' +
+                                    '                                </td>\n' +
+                                    '                                <td style="width: 200px;">\n' +
+                                    '                                <div>\n' +
+                                    '                                <div class="col-xs-5 text-right">ID：</div>\n' +
+                                    '                            <div class="col-xs-7 text-left">'+data_content[i].id+'</div>\n' +
+                                    '                                </div>\n' +
+                                    '                                <div>\n' +
+                                    '                                <div class="col-xs-5 text-right">名称：</div>\n' +
+                                    '                            <div class="col-xs-7 text-left">'+data_content[i].good_title+'</div>\n' +
+                                    '                                </div>\n' +
+                                    '                                <div>\n' +
+                                    '                                <div class="col-xs-5 text-right">货号：</div>\n' +
+                                    '                            <div class="col-xs-7 text-left">'+data_content[i].good_code+'</div>\n' +
+                                    '                                </div>\n' +
+                                    '                                </td>\n' +
+                                    '                                <td>'+data_content[i].stock_price+'起</td>\n' +
+                                    '                                <td>¥'+data_content[i].supply_price+'起</td>\n' +
+                                    '                                <td>'+data_content[i].orders+'</td>\n' +
+                                    '                                <td>'+data_content[i].good_stock+'</td>\n' +
+                                    '                                <td>\n' +
+                                    '                                <div><a href="javascript:void(0);" class="promotion-goods-delete" data-id="'+data_content[i].id+'">删除</a></div>\n' +
+                                    '                            <div class="set_promotion"><a href="javascript:void(0);">设置优惠</a></div>\n' +
+                                    '                            </td>\n' +
+                                    '                            </tr>';
+                            }
+                            $('#promotion_good_table').find('.tableTbody').append(html);
+                        }
+                        getGoods($('#myModal-one').find('form'));
+                        $('#myModal-one').modal('hide');
                     } else {
-
+                        toastr.error(data.msg);
+                        _index.removeAttr('disabled');
                     }
                 },
                 error:function(data){
@@ -569,7 +570,13 @@
                 minushtml.addClass("dis-no");
                 // $(".seckill .se-sale").css("height","140px");
             });
-            $('#promotion-form').on('click', '.submit', function () {
+            $('#myModal-one').on('click', 'ul li a', function(){
+                var url = $(this).attr('href');
+                if(url.indexOf('http://') == -1) return false;
+                getGoods('', url);
+                return false;
+            });
+            $('#promotion-form').on('click', '.submit', function (event) {
                 var _index = $(this);
                 $.ajax({
                     type:'post',
@@ -598,6 +605,89 @@
                     }
                 })
             });
+            $('#promotion_good_table').on('click', '.promotion-goods-delete', function () {
+                if(confirm("确定要删除活动商品吗？")){
+                    var activity_id = $('input[name=id]').val();
+                    var _this = $(this);
+                    var good_id = _this.data('id');
+                    $.ajax({
+                        type:'post',
+                        data:{activity_id:activity_id, good_id:good_id,_token:"{{csrf_token()}}"},
+                        url:"{{secure_route('promotion.good.delete')}}",
+                        beforeSend: function() {
+                            _this.attr('disabled', true);
+                        },
+                        success:function(data){
+                            if (data.status == 200) {
+                                if(_this.parents('#promotion-activity-type1').length > 0){
+                                    _this.parents('table').remove();
+                                }else{
+                                    var addtable = _this.parents('tr').next().find('.add_Table');
+                                    if(addtable.length > 0){
+                                        addtable.remove();
+                                    }
+                                    _this.parents('tr').remove();
+                                }
+                                getGoods($('#myModal-one').find('form'));
+                                $('#myModal-one').modal('hide');
+                            } else {
+                                toastr.error(data.msg);
+                                _this.removeAttr('disabled');
+                            }
+                            /*var d = JSON.parse(d);
+                            if(d.status){
+                                if(_this.parents('#promotion-activity-type1').length > 0){
+                                    _this.parents('table').remove();
+                                }else{
+                                    var addtable = _this.parents('tr').next().find('.add_Table');
+                                    if(addtable.length > 0){
+                                        addtable.remove();
+                                    }
+                                    _this.parents('tr').remove();
+                                }
+                                getGoods($('#myModal-one').find('form'));
+                                $('#myModal-one').modal('hide');
+                                isAllStoreGoods();
+                            }else{
+                                alert(d.messages);
+                                _this.removeAttr('disabled');
+                            }*/
+                        }
+                    });
+                }
+            })
         });
+        function getGoods(obj, url){
+            if(! url){
+                var _this = $(obj);
+                var data = _this.serialize();
+                data += '&is_ajax=1';
+                var url = _this.attr('action');
+                var activity_id = $('input[name=id]').val();
+                if(! activity_id) {
+                    toastr.error('请重新选择要编辑的活动');
+                    window.location.href = "{{secure_route('promotion.index')}}";
+                }else{
+                    data += '&activity_id='+activity_id;
+                }
+            }else{
+                var data = {};
+            }
+            $.ajax({
+                url : url,
+                type : 'get',
+                data : data,
+                success : function(data){
+                    $('#myModal-one').find('form').html(data);
+                    /*var d = JSON.parse(d);
+                    if(d.status){
+                        $('#myModal-one').find('form').html(d.messages);
+                    }else{
+                        alert(d.messages);
+                    }*/
+                }
+            });
+            return false;
+        }
     </script>
 @endsection

@@ -7,6 +7,7 @@ use App\Entities\CateAttr\AttributeValue;
 use App\Entities\CateAttr\Category;
 use App\Entities\CateAttr\CategoryAttribute;
 use App\Http\Requests\CateAttr\AttributeRequest;
+use App\Services\CateAttr\AttributeService;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
 use App\Http\Controllers\Controller;
@@ -14,10 +15,18 @@ use DB,Log;
 
 class AttributeController extends Controller
 {
+
+    protected $attributeService;
+
+    public function __construct(AttributeService $attributeService)
+    {
+        $this->attributeService = $attributeService;
+    }
+
     public function index()
     {
-        $attribute = $this ->get_all_attribute();
-        return view('CateAttr.attribute', compact('attribute'));
+        $attribute_list = $this->attributeService->getAttributeRepository()->all();
+        return view('CateAttr.attribute',['attribute_list'=>$attribute_list]);
     }
 
     /**

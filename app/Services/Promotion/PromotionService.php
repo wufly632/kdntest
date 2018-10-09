@@ -11,9 +11,15 @@
 
 namespace App\Services\Promotion;
 
+use App\Criteria\Product\ProductCodeCriteria;
+use App\Criteria\Product\ProductIdCriteria;
+use App\Criteria\Product\ProductNotIdCriteria;
+use App\Criteria\Product\ProductTitleCriteria;
 use App\Entities\Coupon\Coupon;
 use App\Entities\Product\ProductSku;
 use App\Exceptions\CustomException;
+use App\Http\Requests\Request;
+use App\Repositories\Product\ProductRepository;
 use App\Repositories\Promotion\PromotionGoodRepository;
 use App\Repositories\Promotion\PromotionGoodSkuRepository;
 use App\Repositories\Promotion\PromotionRepository;
@@ -54,6 +60,11 @@ class PromotionService
     protected $promotionGoodSku;
 
     /**
+     * @var ProductRepository
+     */
+    protected $product;
+
+    /**
      * PromotionController constructor.
      *
      * @param PromotionRepository $good
@@ -61,13 +72,15 @@ class PromotionService
     public function __construct(
         PromotionRepository $promotion, PromotionValidator $promotionValidator,
         PromotionGoodRepository $promotionGood, PromotionGoodValidator $promotionGoodValidator,
-        PromotionGoodSkuRepository $promotionGoodSku
+        PromotionGoodSkuRepository $promotionGoodSku,
+        ProductRepository $product
     )
     {
         $this->promotion = $promotion;
         $this->promotionValidator = $promotionValidator;
         $this->promotionGood = $promotionGood;
         $this->promotionGoodValidator = $promotionGoodValidator;
+        $this->product = $product;
     }
 
     /**
@@ -347,37 +360,95 @@ class PromotionService
      */
     public function addGoods($request)
     {
-        $good_ids = $request->good_id;
+        $good_ids = explode(',', $request->good_id);
         try {
             DB::beginTransaction();
-            foreach (explode(',', $good_ids) as $good) {
+            $good_info = $this->product->findWhereIn('id', $good_ids);
+            foreach ($good_info as $good) {
                 $tmp['activity_id'] = $request->activity_id;
-                $tmp['goods_id'] = $good;
+                $tmp['goods_id'] = $good->id;
                 $tmp['status'] = 1;
                 $tmp['created_at'] = Carbon::now()->toDateTimeString();
                 $data[] = $tmp;
                 $this->promotionGood->create($tmp);
             }
             DB::commit();
-            return ApiResponse::success('', '添加活动商品成功');
+            $goods_sku_str = $this->getGoodsWithSku($good_info, $request->type);
+            return ApiResponse::success($goods_sku_str);
         } catch (\Exception $e) {
             DB::rollBack();
             return ApiResponse::failure(g_API_ERROR, '添加活动商品失败，请稍后重试或者联系管理员');
         }
     }
 
-    public function getGoodsList($activity_id)
+    /**
+     * @function 删除促销商品
+     * @param $request
+     * @return mixed
+     */
+    public function delGoods($request)
     {
-
+        $good_ids = explode(',', $request->good_id);
+        try {
+            DB::beginTransaction();
+            $this->promotionGood->makeModel()->whereIn('goods_id', $good_ids)->where('activity_id', $request->activity_id)->delete();
+            DB::commit();
+            return ApiResponse::success('', '删除活动商品成功');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return ApiResponse::failure(g_API_ERROR, '删除活动商品失败，请稍后重试或者联系管理员');
+        }
     }
 
-    public function getPromotionActivityGoods($activity_id)
+    /**
+     * @function 获取可添加的促销活动商品
+     * @param $activity_id
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
+    public function getAblePromotionActivityGoods($activity_id, $request)
     {
-        $result = DB::table('promotions_activity_goods as pag')
-            ->leftJoin('goods as g','g.id','=','pag.goods_id')
-            ->selectRaw('g.*')
-            ->where('pag.activity_id', $activity_id)
-            ->get();
-        return $result;
+        //获取所有已参加活动的商品
+        $activity_good_ids = $this->promotionGood->findWhere(['activity_id' => $activity_id])->pluck('goods_id')->toArray();
+        //获取所有商品列表
+        $this->product->pushCriteria(new ProductTitleCriteria($request->good_title));
+        $this->product->pushCriteria(new ProductIdCriteria($request->good_id));
+        $this->product->pushCriteria(new ProductCodeCriteria($request->good_code));
+        $this->product->pushCriteria(new ProductNotIdCriteria($activity_good_ids));
+        $goods = $this->product->orderBy('id', 'desc')->paginate(10);
+        $goodStr = view('promotion.addGoods', compact('goods'));
+        return $goodStr;
+    }
+
+    public function getGoodsWithSku($goods, $type){
+        if(empty($goods)) return '';
+        $good_ids = $goods->pluck('id');
+        if (in_array($type, ['limit', 'quantity'])) {
+
+        }
+
+
+
+        $data['goods'] = $goods;
+        $data['type'] = $type;
+        $goodSkuStr = compact('goods', 'type');
+        return $goodSkuStr;
+    }
+
+    /**
+     * @function 获取已添加的促销活动商品
+     * @param $request
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
+    public function getPromotionActivityGoods($request)
+    {
+        //获取所有已参加活动的商品
+        $activity_good_ids = $this->promotionGood->findWhere(['activity_id' => $request->id])->pluck('id')->toArray();
+        //获取所有商品列表
+        $this->product->pushCriteria(new ProductTitleCriteria($request->good_title));
+        $this->product->pushCriteria(new ProductIdCriteria($activity_good_ids));
+        $this->product->pushCriteria(new ProductCodeCriteria($request->good_code));
+        $goods = $this->product->orderBy('id', 'desc')->paginate(10);
+        $goodStr = view('promotion.addGoods', compact('goods'));
+        return $goodStr;
     }
 }

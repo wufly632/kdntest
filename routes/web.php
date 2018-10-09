@@ -69,8 +69,10 @@ Route::group(['middleware' => ['auth', 'web']], function() {
         Route::get('/edit/{promotion}', ['as' => 'promotion.edit', 'uses' => 'PromotionController@edit']);
         Route::post('/editPost', ['as' => 'promotion.editPost', 'uses' => 'PromotionController@editPost']);
         //添加促销商品
+        Route::get('/getGoods', ['as' => 'promotion.getGoods', 'uses' => 'PromotionController@getGoods']);
         Route::get('/addGood', ['as' => 'promotion.add.good', 'uses' => 'PromotionController@addGood']);
-        Route::post('addGoodPost', ['as' => 'promotion.add.goodPost', 'uses' => 'PromotionController@addGoodPost']);
+        Route::post('/addGoodPost', ['as' => 'promotion.add.goodPost', 'uses' => 'PromotionController@addGoodPost']);
+        Route::post('/delGood', ['as' => 'promotion.good.delete', 'uses' => 'PromotionController@delGoodPost']);
     });
 
     //优惠券模块
