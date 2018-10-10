@@ -22,6 +22,27 @@ class Category extends Model implements Transformable
      *
      * @var array
      */
-    protected $fillable = [];
+    protected $fillable = ['name','en_name','level','parent_id','category_path','category_ids','is_final','status','sort','created_at','updated_at'];
 
+    /**
+     * 子类目
+     *
+     * @param void
+     * @var mix
+     */
+    public function subCategories()
+    {
+        return $this->hasMany(Category::class, "parent_id","id");
+    }
+
+    /**
+     * 父类目
+     *
+     * @param void
+     * @var mix
+     */
+    public function parentCategory()
+    {
+        return $this->hasOne(Category::class,"id","parent_id");
+    }
 }

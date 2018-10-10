@@ -30,10 +30,12 @@ Route::group(['middleware' => ['auth', 'web']], function() {
     //类目管理
     Route::group(['prefix' => 'category','namespace' => 'CateAttr'], function(){
         Route::get('/', ['as' => 'category.index', 'uses' => 'CategoryController@index']);
+        Route::get('/detail/{category}', ['as' => 'category.detail', 'uses' => 'CategoryController@detail']);
+        Route::post('/attribute', ['as' => 'category.attribute', 'uses' => 'CategoryController@getCategoryAttributes']);
+        Route::post('/subcategories', ['as' => 'category.subcategories', 'uses' => 'CategoryController@getSubCategories']);
+        //更新或添加
         Route::post('/update', ['as' => 'category.update', 'uses' => 'CategoryController@update']);
-        Route::post('/value', ['as' => 'category.value', 'uses' => 'CategoryController@value']);
-        Route::post('/search', ['as' => 'category.search', 'uses' => 'CategoryController@search']);
-        Route::post('/create', ['as' => 'category.create', 'uses' => 'CategoryController@create']);
+        Route::get('/current_category_info/{category_id}', ['as' => 'category.current_info', 'uses' => 'CategoryController@currentCategoryInfo']);
     });
     //属性管理
     Route::group(['prefix' => 'attribute', 'namespace' => 'CateAttr'], function(){

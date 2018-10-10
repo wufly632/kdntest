@@ -77,4 +77,15 @@ class AttributeService{
         return $attributesLikeName;
     }
 
+    /**
+     * 根据主键获取属性
+     *
+     * @param int $attribute_id 属性id
+     * @return object
+     */
+    public function getAttributeByPk(int $attribute_id)
+    {
+        return $this->getAttributeRepository()->makeModel()->find($attribute_id);
+    }
+
 }

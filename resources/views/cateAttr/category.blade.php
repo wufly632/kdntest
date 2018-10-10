@@ -1,1418 +1,1087 @@
 @extends('layouts.default')
+@section('title')
+    {{trans('common.system_name')}}
+@endsection
+@section('css')
+    <style type="text/css">
+        .content-item {
+            height: 100%;
+            border-right: 1px solid #c3c3c3;
+            padding: 0;
+            overflow: auto;
+        }
+        .input-group {
+            position: relative;
+            display: table;
+            border-collapse: separate;
+        }
+        .content-item .form-control {
+            height: 40px;
+        }
+        .dropdown-menu {
+            border: medium none;
+            border-radius: 3px;
+            box-shadow: 0 0 3px rgba(86, 96, 117, 0.7);
+            display: none;
+            float: left;
+            font-size: 12px;
+            left: 0;
+            list-style: none outside none;
+            padding: 0;
+            position: absolute;
+            text-shadow: none;
+            top: 100%;
+            z-index: 1000;
+        }
+        .content-item .input-group-addon {
+            border-right: 0;
+        }
+        .content-item li {
+            line-height: 40px;
+        }
+        .category-list li {
+            cursor: pointer;
+        }
+        .category-list li {
+            display: block;
+        }
+        .level-one {
+            padding-left: 10px;
+            border-bottom: 1px solid #e9e9e9;
+        }
+        .level-one .category-name {
+            font-size: 16px;
+        }
+        .category-name {
+            margin-right: 5px;
+        }
+        .category-num {
+            color: #d1d1d1;
+        }
+        .ul-tree .fa {
+            font-size: 20px;
+            margin-right: 10px;
+            margin-top: 10px;
+            color: #636363;
+        }
+    </style>
+@endsection
+
 @section('content')
-    <!-- Content Wrapper. Contains page content -->
     <div class="content-wrapper">
-        <div class="admin-text">
-            <div class="jvdou-min admin-pol">
-                <div class="search">
-                    <h6>分类搜索：</h6>
-                    <form  class="search-from clearfix" onsubmit="return category_search($(this));">
-                        <input type="text" value="" placeholder="请输入您要搜索的分类" onsubmit="return category_search($(this));"/>
-                        <button type="submit">搜索</button>
-                        <ul id="category_search_list">
+        <!-- Content Header (Page header) -->
+        <section class="content-header">
+            <h1>
+                类目属性
+                <small>类目管理</small>
+            </h1>
+            <ol class="breadcrumb">
+                <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
+                <li><a href="#">Layout</a></li>
+                <li class="active">Fixed</li>
+            </ol>
+        </section>
 
-                        </ul>
-                    </form>
-                    <button type="button" class="found" data-target="#found" data-toggle="modal">创建类目</button>
+        <!-- Main content -->
+        <section class="content">
+            <div class="box box-default color-palette-box">
+                <div class="box-header with-border text-right">
+                    <button type="button" id="addCategoryButton" class="btn btn-success col-xs-offset-9">新增类目</button>
                 </div>
-                <div class="equal clearfix">
-                    <div class="equal-x3">
-                        <ul id="category_level0">
+                <div class="box-body">
+                    <div class="row" style="height: 650px;border: 1px solid #C3C3C4;padding: 0;">
+                        <div class="col-xs-3 content-item category-list">
+                            <div class="input-group">
+                                <input type="text" class="form-control" placeholder="输入要选择的分类" id="search-text" name="searchValue" value="" maxlength="200" onkeyup="autocomple()"><ul id="autocomplete" class="dropdown-menu" style="display: none;"></ul>
+                                <span class="input-group-addon"><i class="fa fa-search"></i></span>
+                            </div>
+                            <ul class="ul-tree">
+                                @foreach($categories as $category)
+                                    <li>
+                                        <div class="level-one" data-category_id="{{$category->id}}" data-sub_categorys_num="{{count($category->subCategories)}}">
+                                            <span class="category-name">{{$category->name}}</span>
+                                            <span class="category-num">({{count($category->subCategories)}})</span>
+                                            <span class="pull-right-container"><i class="fa fa-angle-left pull-right"></i></span>
+                                        </div>
+                                        {{--@if(count($category->subCategories)>0)
+                                            <ul class="ul-tree ul-two">
+                                                @foreach($category->subCategories as $subCategory)
+                                                    <li>
+                                                        <div class="level-two" data-category_id="{{$subCategory->id}}" data-sub_categorys_num="{{count($subCategory->subCategories)}}">
+                                                            <span class="category-name">{{$subCategory->name}}</span>
+                                                            <span class="category-num">({{count($subCategory->subCategories)}})</span>
+                                                            <span class="pull-right-container"><i class="fa fa-angle-left pull-right"></i>
+                                            </span>
+                                                        </div>
+                                                        @if(count($subCategory->subCategories)>0)
+                                                            <ul class="ul-tree ul-three">
+                                                                @foreach($subCategory->subCategories as $sub_subCategory)
+                                                                    <li>
+                                                                        <div class="level-three" data-category_id="{{$sub_subCategory->id}}" data-sub_categorys_num="{{count($sub_subCategory->subCategories)}}">
+                                                                            <span class="category-name">{{$sub_subCategory->name}}</span>
+                                                                            <span class="category-num">({{count($sub_subCategory->subCategories)}})</span>
+                                                                        </div>
+                                                                    </li>
+                                                                @endforeach
+                                                            </ul>
+                                                        @endif
+                                                    </li>
+                                                @endforeach
+                                            </ul>
+                                        @endif--}}
+                                    </li>
+                                @endforeach
+                            </ul>
+                        </div>
 
-                        </ul>
-                    </div>
-                    <div class="equal-x3">
-                        <ul id="category_level1">
-
-                        </ul>
-                    </div>
-                    <div class="equal-x3">
-                        <ul id="category_level2">
-
-                        </ul>
-                    </div>
-                </div>
-                <p class="location">
-                    当前选择：<a id="category_nav_path"></a>
-                </p>
-                <div class="mose-type show-2 clearfix">
-                    <div class="type-details mose-one">
-                        <div class="type-head clearfix">
-                            <h3>类目详情</h3>
-                            <div class="type-option">
-                                <a href="javascript:;" class="modify" >修改</a>
-                            </div>
-                        </div>
-                        <div class="type-exhibition">
-                            <div class="exn-log clearfix">
-                                <h6>类目名称：</h6>
-                                <div class="exn-right">
-                                    <p id="detail_title"></p>
-                                </div>
-                            </div>
-                            <div class="exn-log clearfix">
-                                <h6>类目路径：</h6>
-                                <div class="exn-right">
-                                    <p id="detail_path"></p>
-                                </div>
-                            </div>
-                            <div class="exn-log clearfix">
-                                <h6>类目层级：</h6>
-                                <div class="exn-right">
-                                    <p id="detail_level">三级类目（叶子类目）</p>
-                                </div>
-                            </div>
-                            <div class="exn-log clearfix">
-                                <h6>排序值：</h6>
-                                <div class="exn-right">
-                                    <p id="detail_sort">98</p>
-                                </div>
-                            </div>
-                            <div class="exn-log clearfix">
-                                <h6>启用状态：</h6>
-                                <div class="exn-right">
-                                    <p id="detail_status">启动</p>
-                                </div>
-                            </div>
-                            <div id="category_attribute_show"></div>
-                        </div>
-                    </div>
-                    <div class="type-details mose-two">
-                        <div class="type-head clearfix">
-                            <h3>属性详情</h3>
-                            <div class="type-option">
-                                <a href="javascript:;" class="modify">修改</a>
-                                <a href="javascript:;" class="return">返回</a>
-                            </div>
-                        </div>
-                        <div class="type-exhibition">
-                            <div class="exn-log clearfix">
-                                <h6>属性名称：</h6>
-                                <div class="exn-right">
-                                    <p class="value_name">内存</p>
-                                </div>
-                            </div>
-                            <div class="exn-log clearfix">
-                                <h6>属性别名：</h6>
-                                <div class="exn-right">
-                                    <p class="value_alias_name">手机内存大小</p>
-                                </div>
-                            </div>
-                            <div class="exn-log clearfix">
-                                <h6>属性值类型：</h6>
-                                <div class="exn-right">
-                                    <p class="value_type">标准化文本</p>
-                                </div>
-                            </div>
-                            <div id="category_value">
-                                <div class="exn-log clearfix">
-                                    <h6>属性值：</h6>
-                                    <div class="exn-right">
-                                        <p>8G</p>
-                                        <p>16G</p>
-                                        <p>32G</p>
-                                        <p>64G</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="type-details mose-three" style="display: none">
-                        {!! csrf_field() !!}
-                        <div class="type-head clearfix">
-                            <h3>属性详情</h3>
-                            <div class="type-option">
-                                <a href="javascript:;" class="keep">保存</a>
-                                <a href="javascript:;" class="return">返回</a>
-                            </div>
-                        </div>
-                        <div class="exn-log clearfix">
-                            <h6>属性名称：</h6>
-                            <div class="exn-right">
-                                <p class="value_name">内存</p>
-                            </div>
-                        </div>
-                        <div class="exn-log clearfix">
-                            <h6>属性别名：</h6>
-                            <div class="exn-right">
-                                <p class="value_alias_name">手机内存大小</p>
-                            </div>
-                        </div>
-                        <div class="exn-log clearfix">
-                            <h6>属性值类型：</h6>
-                            <div class="exn-right">
-                                <p class="value_type">自定义文本</p>
-                            </div>
-                        </div>
-                        <div id="category_value_update">
-
-                        </div>
-                    </div>
-                    <div class="type-details mose-four">
-                        <div class="type-head clearfix">
-                            <h3>类目详情</h3>
-                            <div class="type-option">
-                                <a href="javascript:;" id="cate_update" class="keep">保存</a>
-                                <a href="javascript:;" class="return">返回</a>
-                            </div>
-                        </div>
-                        <input type="hidden" value="" name="id" id="cate_update_id">
-                        <div class="exn-log clearfix">
-                            <h6>类目名称：</h6>
-                            <div class="exn-right">
-                                <input id="cate_update_name" name="name" type="text" class="green" value="" >
-                            </div>
-                        </div>
-                        <div class="exn-log clearfix">
-                            <h6>类目路径：</h6>
-                            <div class="exn-right">
-                                <p id="cate_update_path">玩具教育 > 学童玩具</p>
-                            </div>
-                        </div>
-                        <div class="exn-log clearfix">
-                            <h6>类目层级：</h6>
-                            <div class="exn-right">
-                                <p id="cate_update_level">三级类目（叶子类目）</p>
-                            </div>
-                        </div>
-                        <div class="exn-log clearfix">
-                            <h6>排序值：</h6>
-                            <div class="exn-right">
-                                <input id="cate_update_sort" type="text" name="sort" class="green" value="99" >
-                            </div>
-                        </div>
-                        <div class="exn-log clearfix">
-                            <h6>启用状态：</h6>
-                            <div class="exn-right clearfix">
-                                <label>
-                                    <input id="cate_update_status1" value="1" type="radio" name="status_update"/>
-                                    <span>启用</span>
-                                </label>
-                                <label>
-                                    <input id="cate_update_status2" value="2" type="radio" name="status_update"/>
-                                    <span>不启用</span>
-                                </label>
-                            </div>
-                        </div>
-                        <div id="category_attribute">
-
-                        </div>
-                    </div>
-                    <div class="type-details mose-five">
-                        <div class="type-head clearfix">
-                            <h3>添加销售属性</h3>
-                            <div class="type-option">
-                                <a href="javascript:;" class="keep">保存</a>
-                                <a href="javascript:;" class="return">返回</a>
-                            </div>
-                        </div>
-                        <div class="type-add clearfix">
-                            <div class="add-need" id="attribute">
-                                <div class="add-input">
-                                    <input type="text" name="name" class="green">
-                                    <i class="iconfont">&#xe600;</i>
-                                </div>
-                                <ul id="attr_list" class="add-product">
-
-                                </ul>
-                            </div>
-                            <div class="add-need" id="attribute_value">
-                                <div class="add-input">
-                                    <input type="text" name="name" class="green">
-                                    <i class="iconfont">&#xe600;</i>
-                                    <input type="hidden" name="attr_id" value="">
-                                </div>
-                                <ul id="attr_value_list" class="add-product">
-
-                                </ul>
-                            </div>
-                        </div>
-                        <div class="exn-npm">
-
-                        </div>
-                    </div>
-                    <div class="type-details mose-six">
-                        <div class="type-head clearfix">
-                            <h3>配置属性值</h3>
-                            <div class="type-option">
-                                <a href="javascript:;" class="keep">保存</a>
-                                <a href="javascript:;" class="return">返回</a>
-                            </div>
-                        </div>
-                        <div class="mate-mb">
-                            <div class="type-mate">
-                                <input type="text" class="green" name="name">
-                                <i class="iconfont">&#xe600;</i>
-                                <input type="hidden" name="attr_id" value="">
-                            </div>
-                            <ul>
+                        {{--类目详情--}}
+                        <div id="category_detail_container" class="col-xs-3 content-item" v-cloak>
+                            <h2 class="con-item-title">
+                                <span>类目详情</span>
+                                <i class="fa fa-trash-o pull-right delete-property" onclick="deleteCategory()" v-show="select_categroy_name"></i>
+                                <i class="fa fa-pencil pull-right" id="editCategoryButton" v-show="select_categroy_name"></i>
+                            </h2>
+                            <ul class="con-message" v-show="select_categroy_name">
+                                <li>
+                                    <span class="mess-name">类目名称:</span><span class="mess-key">@{{ select_categroy_name }}</span>
+                                </li>
+                                <li>
+                                    <span class="mess-name">英文名称:</span><span class="mess-key">@{{ select_categroy_en_name }}</span>
+                                </li>
+                                <li>
+                                    <span class="mess-name">排序值:</span><span class="mess-key">@{{ select_categroy_sort }}</span>
+                                </li>
+                                <li>
+                                    <span class="mess-name">叶子类目:</span><span class="mess-key">@{{ select_categroy_is_final }}</span>
+                                </li>
 
                             </ul>
                         </div>
+
+                        {{--属性配置--}}
+                        <div class="col-xs-3 content-item" id="category_attribute_container">
+                            <h2 class="con-item-title">
+                                <span>属性配置</span>
+                            </h2>
+                            <ul class="con-message property" v-show="is_select_category">
+                                <li>
+                                    <span class="mess-name">基础属性:</span>
+                                    <ul class="product-attr">
+                                        <li>
+                                            <span>商品标题</span>
+                                        </li>
+                                        <li>
+                                            <span>商品卖点</span>
+                                        </li>
+                                        <li>
+                                            <span>商品主图</span>
+                                        </li>
+                                    </ul>
+                                </li>
+                                <li>
+                                    <span class="mess-name">关键属性 :</span>
+                                    <ul id="category_attribute_1" class="category_attribute_ul product-attr">
+                                        <li v-show="is_last_category"><button class="add" data-type="1">+ 添加</button></li>
+                                    </ul>
+                                </li>
+                                <li>
+                                    <span class="mess-name">销售属性 :</span>
+                                    <ul id="category_attribute_2" class="category_attribute_ul product-attr">
+                                        <li v-show="is_last_category">
+                                            <button class="add" data-type="2">+ 添加</button>
+                                        </li>
+                                    </ul>
+                                </li>
+                                <li>
+                                    <span class="mess-name">非关键属性:</span>
+                                    <ul id="category_attribute_3" class="category_attribute_ul product-attr">
+                                        <li v-show="is_last_category">
+                                            <button class="add" data-type="3">+ 添加</button>
+                                        </li>
+                                    </ul>
+                                </li>
+                            </ul>
+                        </div>
+                        <div id="attribute_detail_container" class="col-xs-3 content-item">
+                            <h2 class="con-item-title">
+                                <span>属性详情</span>
+                                <i class="fa fa-pencil pull-right" id="editAttributeButton" v-show="select_attribute_id"></i>
+                            </h2>
+                            <ul class="con-message">
+                                <li v-for="attribute_item in attribute_items">
+                                    <span class="mess-name">@{{ attribute_item.name }}:</span><span class="mess-key">@{{ attribute_item.value }}</span>
+                                </li>
+                            </ul>
+                        </div>
+
+                    </div>
+                    <!-- /.row -->
+                </div>
+                <!-- /.box-body -->
+            </div>
+            <!-- /.row -->
+        </section>
+        <!-- /.content -->
+
+        <!-- 添加/编辑类目弹窗-->
+        <div class="modal fade" id="updateCategoryContainer"  data-backdrop="static" tabindex="-1" aria-hidden="true" role="dialog" aria-labelledby="myModalLabel">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title" id="myModalLabel">增加/修改类目</h4>
+                    </div>
+                    <div class="modal-body">
+                        <form>
+                            {!! csrf_field() !!}
+                            <div class="modal-body">
+                                <div class="form-group">
+                                    <div class="col-xs-1"></div>
+                                    <label for="name" class="col-xs-2 control-label">
+                                        父级类目：
+                                    </label>
+                                    <div class="col-xs-7">
+                                        <select name="first_level_category" id='firstCategoryLevel' class="form-control">
+                                            <option value="-1">一级类目</option>
+                                            @foreach($categories as $category)
+                                                <option value="{{$category->id}}">{{$category->name}}</option>
+                                            @endforeach
+                                        </select>
+                                        <select name="second_level_category" id= 'secondCategoryLevel' class="form-control">
+                                            <option value="-1">二级类目</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="col-xs-1"></div>
+                                    <label for="name" class="col-xs-2 control-label">
+                                        类目名称：
+                                    </label>
+                                    <div class="col-xs-7">
+                                        <input name="name" type="text" class="form-control">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="col-xs-1"></div>
+                                    <label for="name" class="col-xs-2 control-label">
+                                        英文名称：
+                                    </label>
+                                    <div class="col-xs-7">
+                                        <input name="en_name" type="text" class="form-control">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="col-xs-1"></div>
+                                    <label for="name" class="col-xs-2 control-label">
+                                        排序值：
+                                    </label>
+                                    <div class="col-xs-7">
+                                        <input name="sort" value="0" type="text" class="form-control">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="col-xs-1"></div>
+                                    <label for="name" class="col-xs-2 control-label">
+                                        叶子类目：
+                                    </label>
+                                    <div class="col-xs-7">
+                                        <input name="is_final" value="0" type="radio" checked>否
+                                        <input name="is_final" value="1" type="radio">是
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                                    <button type="button" class="btn btn-primary" id="saveUpdateCategoryInfoButton">保存</button>
+                                </div>
+                            </div>
+                        </form>
                     </div>
                 </div>
             </div>
         </div>
 
-        <div id="found" class="forios modal hide fade"  tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-            <h3>创建类目</h3>
-            <form class="forios-log" onsubmit="return category_submit(this);">
-                {!! csrf_field() !!}
-                <div class="category clearfix">
-                    <h6>类目名称：</h6>
-                    <div class="iu-input">
-                        <input type="text" name="name" class="green"/>
-                        <label class="error"></label>
-                    </div>
-                </div>
-                <div class="category clearfix">
-                    <h6>英文名称：</h6>
-                    <div class="iu-input">
-                        <input type="text" name="en_name" class="green"/>
-                        <label class="error"></label>
-                    </div>
-                </div>
-                <div class="category clearfix">
-                    <h6>类目路径：</h6>
-                    <div class="iu-select">
-                        <select class="green" name="laval1" id="level_select1">
-                            <option value="0" selected>选择一级类目</option>
-                            <label class="error"></label>
-                        </select>
-                    </div>
-                    <div class="iu-select">
-                        <select class="green" name="laval2" id="level_select2">
-                            <option value="0" selected>选择二级类目</option>
-                            <label class="error"></label>
-                        </select>
-                    </div>
-                </div>
-                <div class="category clearfix">
-                    <h6>排序值：</h6>
-                    <div class="iu-input">
-                        <input type="text" name="sort" class="green min" value="99"/>
-                        <label class="error"></label>
-                    </div>
-                </div>
-                <div class="select">
-                    <button type="submit" class="submit">确定创建</button>
-                    <button class="cancel" data-dismiss="modal" aria-hidden="true">取消</button>
-                </div>
-            </form>
-        </div>
     </div>
-    <!-- /.content-wrapper -->
-@stop
+@endsection
 @section('script')
+    <script src="{{asset('assets/js/vue.js')}}" type="text/javascript"></script>
     <script>
-        $(function(){
-            var select_str = '<option value="0">选择一级类目</option>';
-            var category = JSON.parse(sessionStorage.getItem('category'));
-            for(var i in category[0]){
-                select_str += '<option value="'+category[0][i]['id']+'">'+category[0][i]['name']+'</option>';
-                $('#level_select1').html(select_str);
-            }
-            var cate_info = <?php echo $cate_info;?>;
-            if( cate_info.length > 0 || (typeof cate_info.length == 'undefined') ){
-                var cate_ids = cate_info['category_ids'];
-                var cate_id_arr = cate_ids.split(',');
-                switch (cate_id_arr.length){
-                    case 1:
-                        set_category_init(cate_info['id']);
-                        break;
-                    case 2:
-                        set_category_init(cate_id_arr[1], cate_info['id']);
-                        break;
-                    case 3:
-                        set_category_init(cate_id_arr[1], cate_id_arr[2], cate_info['id']);
-                        break;
-                }
-            }else{
-                set_category_init();
-            }
-            $('.equal-x3').on('click', 'li',function(){
-                $('.mose-one').show().siblings().hide();
-                $('.mose-type').addClass('show-2').removeClass('show-1 show-4 show-3 show-5');
-                $(this).addClass('active').siblings().removeClass('active');
-                var level = parseInt($(this).attr('cate_level'));
-                var id = $(this).attr('category_id');
-                if(level < 3) set_category(level, id);
-                sessionStorage.setItem('category_active', JSON.stringify(category[(level-1)][id]));
-                category_detail(category[(level-1)][id]);
-            });
-            $('#level_select1').on('change', function(){
-                var id = $(this).val();
-                set_select(id);
-            });
-            var home = new jvdou.prop();
-            $('#cate_update').on('click', function(){
-                if(empty($(this).attr('disabled'))){
-                    category_update_submit();
-                }
-            });
+        //点击添加属性时点击的按钮所在dom
+        var add_sel = '';
+        var select_category_id = undefined;
 
-            $('#category_attribute').on('click', 'button', function(){
-                if($(this).hasClass('close')){
-                    var attr_id = $(this).attr('data-attr');
-                    var attr_type = $(this).attr('data-type');
-                    var category_attribute = JSON.parse(sessionStorage.getItem('category_attr_values'));
-                    for(var i in category_attribute){
-                        if( empty(category_attribute[i]) ) continue;
-                        if(category_attribute[i]['attr_id'] == attr_id && category_attribute[i]['attr_type'] == attr_type){
-                            if(empty(category_attribute[i]['id'])){
-                                if(typeof category_attribute == 'object') {
-                                    delete category_attribute[i];
-                                }else{
-                                    category_attribute.splice(i, 1);
-                                }
-                            }else{
-                                category_attribute[i]['is_delete'] = 1;
-                            }
-                        }
+        //reload
+        function reload(){
+            location.reload();
+        }
+
+        //分类详情的vue
+        var category_detail_vue = new Vue({
+            el: '#category_detail_container',
+            data: {
+                select_categroy_name: '',
+                select_categroy_en_name: '',
+                select_categroy_sort: '',
+                select_category_is_final: 0,
+            }
+        })
+
+        //属性详情vue
+        var attribute_detail_container_vue = new Vue({
+            el: '#attribute_detail_container',
+            data: {
+                attribute_items:[],
+                select_attribute_id:'',
+                select_attribute_name:'',
+                select_attribute_type:''
+            }
+        })
+
+        //配置属性栏vue
+        var category_attribute_container_vue = new Vue({
+            el: '#category_attribute_container',
+            data: {
+                is_select_category:false,
+                is_last_category:false
+            },
+            computed: {
+                is_select_category: function () {
+                    return !(select_category_id == undefined);
+                },
+            }
+        })
+
+        //属性值vue
+        var attribue_value_container_vue = new Vue({
+            el: '#attribue_value_container',
+            data: {
+                backup_attribute_values:[],
+                attribute_values:[],
+                attribue_value_container_picked:[],
+            },
+            methods:{
+            }
+        })
+
+        //属性名vue
+        var attribue_name_container_vue
+            = new Vue({
+            el: '#attribue_name_container',
+            data: {
+                type:'',
+                backup_attributes:[],
+                attributes:[],
+                attribue_picked_id:'',
+                attribue_picked_name:'',
+            },
+            methods:{
+                changeSelectValue:function (el) {
+                    layer.load(1);
+                    if(el == undefined){
+                        this.attribue_picked_name = attribute_detail_container_vue.select_attribute_name;
+                    }else{
+                        this.attribue_picked_name = $(el.target).data('name');
                     }
-                    if(attr_type == '3'){
-                        var attr_list = $('#category_attribute_type'+attr_type).find('button.close');
-                        var attr_add = $('#category_attribute_type'+attr_type).find('div.add-state');
-                        if(attr_list.length <= 3 && attr_add['length'] == 0){
-                            var str = '<div class="add-state" type="3">+</div>';
-                            $('#category_attribute_type'+attr_type).append(str);
-                        }
+                    if(attribue_name_container_vue.type == 2 && this.attribue_picked_name){
+                        configure_attribute_detail_container_vue.is_photo_attr = true;
+                    } else {
+                        configure_attribute_detail_container_vue.is_photo_attr = false;
                     }
-                    sessionStorage.setItem('category_attr_values', JSON.stringify(category_attribute));
-                }else{
-                    var str = '<input id="cate_update_is_final" type="hidden" value="1" name="is_final"><div class="exn-log clearfix"><h6>基础信息：</h6> <div class="exn-right"> <p>商品标题</p> <p>详情描述</p> </div> </div><div class="exn-log clearfix"><h6>关键属性：</h6><div class="exn-right" id="category_attribute_type2"><p>品牌</p><div class="add-state" type="2">+</div></div></div><div class="exn-log clearfix"><h6>销售属性：</h6><div class="exn-right" id="category_attribute_type3"><div class="add-state" type="3">+</div></div></div><div class="exn-log clearfix"><h6>非关键属性：</h6><div class="exn-right" id="category_attribute_type4"><div class="add-state" type="4">+</div></div></div>';
-                    $('#category_attribute_count').show();
-                    $('#category_attribute').html(str);
-                }
-            });
-            $('#attribute').on('click', 'i', function(){
-                var name = $('#attribute').find('input[name=name]').val();
-                if( name != ''){
+                    console.log(this.attribue_picked_name);
+                    attribue_value_container_vue.attribute_values = [];
+                    attribue_value_container_vue.backup_attribute_values = [];
+                    attribue_value_container_vue.attribue_value_container_picked = [];
                     $.ajax({
-                        type:'post',
-                        url:"{{route('attribute.search')}}",
-                        data:{name:name,_token:"{{csrf_token()}}"},
-                        success:function(data){
-                            if(data.status == true){
-                                show_attribute(data.messages);
-                            }else{
-                                toastr.error(data.messaegs);
+                        url:"/category/"+select_category_id+"/attribute/"+this.attribue_picked_id+'/detail',
+                        type:'GET',
+                        success: function (response) {
+                            if (response.status == 200) {
+                                attribue_value_container_vue.attribute_values = response.content.attribute_values;
+                                attribue_value_container_vue.backup_attribute_values = attribue_value_container_vue.attribute_values;
+                                configure_attribute_detail_container_vue.attribute_items = response.content.attribute_items;
+                                attribue_value_container_vue.attribue_value_container_picked=response.content.attribute_exist_values_id; //如果属性分类值已经有,勾选上
+                                configure_attribute_detail_container_vue.checked = response.content.is_pic_attribute ? response.content.is_pic_attribute : 0;
+                                configure_attribute_detail_container_vue.custom_checked = response.content.is_custom_attribute ? response.content.is_custom_attribute : 0;
+                                configure_attribute_detail_container_vue.is_custom_text = response.content.is_custom_text;
                             }
-                        },
-                        sync:true
+                        },complete: function () {
+                            layer.closeAll('loading');
+                        },error: function (xmlHttpRequest, textStatus, errorThrown) {
+                            toastr.warning('错误码: '+xmlHttpRequest.status);
+                        }
                     });
-                }else{
-                    alert('请输入要查询的属性关键字！');
                 }
-            });
+            }
+        })
 
-            $('#attribute_value').on('click', 'i', function(){
-                attr_value_search($('#attribute_value'), $('#attr_value_list'));
-            });
-            $('.mose-six').on('click', 'i', function(){
-                attr_value_search($('.mose-six'), $('.mose-six').find('ul'));
-            });
-            $('.mose-three').on('click', 'button.close', function(){
-                var id = $(this).attr('data-id');
-                var values = $('.mose-three').find('input[name=attr_values]').val();
-                var values_arr = values.split(',');
-                for(var i in values_arr){
-                    if( id == values_arr[i]){
-                        values_arr.splice(i, 1);
+        //配置属性vue
+        var configure_attribute_detail_container_vue = new Vue({
+            el: '#configure_attribute_detail_container',
+            data: {
+                is_photo_attr:false,
+                checked:false,
+                custom_checked:false,
+                attribute_items:[],
+                is_custom_text:0
+            }
+        })
+
+        //菜单级联点击事件
+        $(".ul-tree>li>div").on("click",function(){
+            $(this).siblings(".ul-tree").slideToggle();
+            $(this).find(".fa").toggleClass("fa-angle-down");
+            $(".ul-tree>li>div").removeClass("tree-active");
+            $(this).addClass("tree-active");
+            select_category_id = $(this).data('category_id'); //当前选中的cateogory_id
+            sub_categorys_num = $(this).data('sub_categorys_num');
+            category_attribute_container_vue.is_select_category = true;
+            category_attribute_container_vue.is_last_category = sub_categorys_num>0?false:true;
+            refreshCategoryDetailInfo(select_category_id);
+            refreshCategoryAttributes(select_category_id);
+        });
+
+        $(function(){
+            $("<ul id='autocomplete' class='dropdown-menu'></ul>").hide().insertAfter("#search-text");
+            $("#autocomplete").hide();
+        });
+        function autocomple(){
+            $("#autocomplete").empty();
+            $.ajax({
+                url:"searchCategory",
+                type:"get",
+                data:"name="+$("#search-text").val(),
+                dataType:"json",
+                success:function(response){
+                    if (response.status == 200) {
+                        $("#autocomplete").empty();
+                        $("#autocomplete").hide();
+                        var data = response.content.categories;
+                        var str = "";
+                        $.each(data,function(n,obj){
+                            $("#autocomplete").show();
+                            str = "<li><a href='#' data-id='"+n+"'>"+obj+"</a><li>";
+                            $("#autocomplete").append(str);
+                            $("#autocomplete li a").click(function(){
+                                //点击列表初始化类目列表，只显示一级类目，并且去掉所有选中效果
+                                $(".ul-tree>li>div").removeClass("tree-active");
+                                $(".ul-two").hide();
+                                $(".ul-three").hide();
+                                //当点击哪个列表时就把它的值load到输入框中
+                                $("#search-text").val($(this).text());
+                                $("#search-text").data('category_id', $(this).data('id'));
+                                $("#autocomplete").empty();
+                                $("#autocomplete").hide();
+                                //模拟点击
+                                //alert(n);
+                                var clickObject = $(".ul-tree>li").find("div[data-category_id='"+$(this).data('id')+"']");
+                                var clickAttr = clickObject.attr('class');console.log(clickAttr);
+                                if(clickAttr == 'level-one'){
+                                    clickObject.trigger("click");
+                                } else if (clickAttr == 'level-two') {
+                                    clickObject.parent().parent().siblings("div[class='level-one']").trigger("click");
+                                    clickObject.trigger("click");
+                                } else if (clickAttr == 'level-three') {
+                                    clickObject.parent().parent().parent().parent().siblings("div[class='level-one']").trigger("click");
+                                    clickObject.parent().parent().siblings("div[class='level-two']").trigger("click");
+                                    clickObject.trigger("click");
+                                }
+
+                            });
+                        });
                     }
+
+                },
+                error:function(textStatus){
+
                 }
-                $('.mose-three').find('input[name=attr_values]').val(values_arr.join(','));
             });
-            $('.mose-three').on('click', '.keep', function(){
-                if(empty($(this).attr('disabled'))) attribute_update_submit($(this), $('.mose-three').find('input').serialize());
+        }
+
+        //根据分类id获取下级类目
+        $("#firstCategoryLevel").change(function(){
+            var category_id = $(this).children('option:selected').val();
+            if(category_id < 0){
+                $("#secondCategoryLevel").empty();
+                $("#secondCategoryLevel").prepend("<option value='-1'>{{trans('Category::category.select_second_category')}}</option>"); //为Select插入一个Option(第一个位置)
+                return;
+            }
+            $.ajax({
+                url:"{{secure_route('category.subcategories')}}",
+                data:{'category_id':category_id,_token: "{{csrf_token()}}"},
+                type:'POST',
+                success: function (response) {
+                    if (response.status == 200) {
+                        $("#secondCategoryLevel").empty();
+                        $("#secondCategoryLevel").prepend("<option value='-1'>二级类目</option>"); //为Select插入一个Option(第一个位置)
+                        for(var i = 0;i<response.content.length;i++){
+                            var html = "<option value="+response.content[i].id+">"+response.content[i].name+"</option>";
+                            $("#secondCategoryLevel").append(html); //为Select追加一个Option(下拉项)
+                        }
+                    }
+                },
+                complete: function () {
+                },error: function (xmlHttpRequest, textStatus, errorThrown) {
+                    toastr.warning('错误码: '+xmlHttpRequest.status);
+                }
             });
         });
 
-        var jvdou = {};
-        jvdou.prop = function(){
-            this.initialize.apply(this, arguments);
-        };
-        jvdou.prop.prototype = {
-            //初始化
-            initialize:function(){
-                this.event();
-            },
-            //事件
-            event:function(){
-                var inputTimeout;
-                $('.search').on('keyup','.search-from input',function(event){
-                    var input = $(this);
-                    clearInterval(inputTimeout);
-                    inputTimeout = setTimeout(function(){
-                        if(input.val()){
-                            $('.search-from ul').addClass('hover');
-                            input = input.parents('form');
-                            category_search(input);
-                        }else{
-                            $('.search-from ul').removeClass('hover');
-                        }
-                    },500);
-                    event.stopPropagation();
-                });
-                //下拉列表被点击时
-                $('.search').on('click','.search-from li',function(event){
-                    var input = $(this).text();
-                    var id = $(this).attr('data-id');
-                    var ids = $(this).attr('data-path');
-                    var id_arr = ids.split(',');
-                    var category = JSON.parse(sessionStorage.getItem('category'));
-                    switch (id_arr.length){
-                        case 1:
-                            set_category_init(id);
-                            category_detail(category[0][id]);
-                            break;
-                        case 2:
-                            set_category_init(id_arr[1], id);
-                            category_detail(category[1][id]);
-                            break;
-                        case 3:
-                            set_category_init(id_arr[1], id_arr[2], id);
-                            category_detail(category[2][id]);
-                            break;
-                    }
-                    $('.search-from input').val(input);
-                    $('.search-from ul').removeClass('hover');
-                    event.stopPropagation();
-                });
-                //搜索筛选取消
-                $(document).on('click',function(event){
-                    var $target = $(event.target);
-                    if(!$target.is('.search-from,.search-from *')) {
-                        $('.search-from ul').removeClass('hover');
-                    };
-                    event.stopPropagation();
-                });
-                //非关键属性
-                $('.mose-one').on('click','.exn-right a',function(event){
-                    $(this).addClass('active').parents('p').siblings().find('a').removeClass('active');
-                    $(this).addClass('active').parents('div.exn-log').siblings().find('a').removeClass('active');
-                    var id = $(this).parent().attr('data-id');
-                    var attr_id = $(this).parent().attr('data-attr');
-                    var attr_value = $(this).parent().attr('data-value');
+        //添加新类目
+        $("#addCategoryButton").on("click",function () {
+            resetUpdateCategoryContainer();
+            $('#updateCategoryContainer').modal('show');
+        });
 
-                    category_attribute_detail(id, attr_id, attr_value);
-                    $('.mose-two').show();
-                    $('.mose-two .modify').attr('data-id', id).attr('data-attr', attr_id).attr('data-value', attr_value).show();
-                    $('.mose-type').addClass('show-1').removeClass('show-2 show-3 show-4 show-5');
-                    event.stopPropagation();
-                });
-                //属性修改
-                $('.mose-two').on('click','.modify',function(event){
-                    $('.mose-type').addClass('show-2').removeClass('show-1 show-3 show-4 show-5');
-                    var id = $(this).attr('data-id');
-                    var attr_id = $(this).attr('data-attr');
-                    var attr_value = $(this).attr('data-value');
-                    attribute_update(id, attr_id, attr_value);
-                    $('.mose-six').find('input[name=attr_id]').val(attr_id);
-                    $('.mose-two').hide();
-                    $('.mose-three').show();
-                    event.stopPropagation();
-                });
-                //属性详情-返回
-                $('.mose-two').on('click','.return',function(event){
-                    $('.mose-two').hide();
-                    $('.mose-type').addClass('show-2').removeClass('show-1 show-3 show-4 show-5');
-                    event.stopPropagation();
-                });
-                //修改返回
-                $('.mose-three').on('click','.return',function(event){
-                    $('.mose-two').show();
-                    $('.mose-one').show();
-                    $('.mose-three').hide();
-                    $('.mose-six').hide();
-                    $('.mose-type').addClass('show-2').removeClass('show-1 show-3 show-4 show-5');
-                    event.stopPropagation();
-                });
-                //类目修改
-                $('.mose-one').on('click','.modify',function(event){
-                    if(category_update()){
-                        return false;
-                    }
-                    $('.mose-type').addClass('show-4').removeClass('show-1 show-2 show-3 show-5');
-                    $('.mose-four').show().siblings().hide();
-                    event.stopPropagation();
-                });
-                //类目修改 - 返回
-                $('.mose-four').on('click','.return',function(event){
-                    $('.mose-one').show().siblings().hide();
-                    $('.mose-type').addClass('show-2').removeClass('show-1 show-3 show-4 show-5');
-                    event.stopPropagation();
-                });
-                //类目修改 - 添加
-                $('.mose-four').on('click','.add-state',function(event){
-                    var title = '';
-                    var inputs = '<input type="hidden" name="attr_values" value=""><input type="hidden" name="attr_id" value="">';
-                    var attr_type = $(this).attr('type');
-                    switch(attr_type){
-                        case '2':
-                            title = '添加关键属性';
-                            inputs += '<input type="hidden" name="attr_type" value="2"><div class="exn-log clearfix"><h6>是否必填：</h6><div class="exn-right clearfix"><label><input type="radio" name="is_required" value="1" checked/><span>必填</span></label> <label><input type="radio" name="is_required" value="2"/><span>非必填</span></label></div></div><div class="exn-log clearfix"><h6>单选/多选：</h6><div class="exn-right clearfix"><label><input type="radio" name="check_type" value="2" checked/><span>单选</span></label><label><input type="radio" name="check_type" value="1"/><span>多选</span></label></div></div>';
-                            break;
-                        case '3':
-                            title = '添加销售属性';
-                            inputs += '<input type="hidden" name="attr_type" value="3"><div class="exn-log clearfix"><h6>是否必填：</h6><div class="exn-right clearfix"><label><input type="radio" name="is_required" value="1" checked/><span>必填</span></label> </div></div><div class="exn-log clearfix"><h6>单选/多选：</h6><div class="exn-right clearfix"><label><input type="radio" name="check_type" value="1" checked/><span>多选</span></label></div></div><div class="exn-log clearfix"><h6>是否图片属性：</h6><div class="exn-right clearfix"><label><input type="radio" name="is_image" value="1"/><span>是</span></label><label><input type="radio" name="is_image" value="2" checked /><span>否</span></label></div></div><div class="exn-log clearfix"><h6>是否支持自定义：</h6><div class="exn-right clearfix"><label><input type="radio" name="is_diy" value="1" /><span>支持</span></label><label><input type="radio" name="is_diy" value="2" checked /><span>不支持</span></label></div></div>';
-                            break;
-                        case '4':
-                            title = '添加非关键属性';
-                            inputs += '<input type="hidden" name="attr_type" value="4"><div class="exn-log clearfix"><h6>单选/多选：</h6><div class="exn-right clearfix"><label><input type="radio" name="check_type" value="2" checked/><span>单选</span></label><label><input type="radio" name="check_type" value="1"/><span>多选</span></label></div></div><div class="exn-log clearfix"><h6>是否必填：</h6><div class="exn-right clearfix"><label><input type="radio" name="is_required" value="1" checked/><span>必填</span></label> <label><input type="radio" name="is_required" value="2"/><span>非必填</span></label></div></div><div class="exn-log clearfix"><h6>是否详情显示：</h6><div class="exn-right clearfix"><label><input type="radio" name="is_detail" checked value="2"/><span>不显示</span></label><label><input type="radio" name="is_detail" value="1"/><span>显示</span></label></div></div>';
-                            break;
-
-                    }
-                    $('.mose-five').find('h3').html(title);
-                    $('.mose-five .exn-npm').html(inputs);
-                    show_attribute('', attr_type);
-                    $('.mose-five').show();
-                    $('.mose-type').addClass('show-4').removeClass('show-1 show-2 show-3 show-5');
-                    attr_value_init();
-                    event.stopPropagation();
-                });
-                //添加属性 - 返回
-                $('.mose-five').on('click','.return',function(event){
-                    $('.mose-five').hide();
-                    $('.mose-type').addClass('show-4').removeClass('show-1 show-2 show-3 show-5');
-                    attr_value_init();
-                    event.stopPropagation();
-                });
-                //添加属性 - 保存
-                $('.mose-five').on('click','.keep',function(event){
-                    if(attr_value_save()){
-                        return;
-                    }
-                    attr_value_init();
-                    $('.mose-five').hide();
-                    $('.mose-type').addClass('show-4').removeClass('show-1 show-2 show-3 show-5');
-                    event.stopPropagation();
-                });
-                //非关键属性 - 添加
-                $('.mose-three').on('click','.add-state',function(event){
-                    $('.mose-six').show();
-                    $('.mose-one').hide();
-                    $('.mose-type').addClass('show-5').removeClass('show-1 show-2 show-3 show-4');
-                    var attr_id = $(this).attr('data-attr');
-                    show_attribute_value(attr_id, $('.mose-six ul'));
-                    attr_value_init();
-                    event.stopPropagation();
-                });
-                //添加属性详情 - 返回
-                $('.mose-six').on('click','.return',function(event){
-                    $('.mose-six').hide();
-                    $('.mose-one').show();
-                    $('.mose-type').addClass('show-2').removeClass('show-1 show-3 show-4 show-5');
-                    event.stopPropagation();
-                });
-                //添加属性详情 - 保存
-                $('.mose-six').on('click','.keep',function(event){
-                    attr_value_update();
-                    $('.mose-one').show();
-                    $('.mose-six').hide();
-                    $('.mose-type').addClass('show-2').removeClass('show-1 show-3 show-4 show-5');
-                    event.stopPropagation();
-                });
-                $('#attr_list').on('click', 'li', function(){
-                    var id = $(this).attr('data-id');
-                    $(this).addClass('active').siblings().removeClass('active');
-                    show_attribute_value(id);
-                    attr_value_add_init(id);
-                });
-                $('#attr_value_list').on('click', 'li', function(){
-                    $(this).toggleClass('active');
-                    attr_value_add();
-                });
-                $('.mose-six').on('click', 'li', function(){
-                    $(this).toggleClass('active');
-                });
-            }
-        };
-        sessionStorage.setItem('category', JSON.stringify(<?php echo $category;?>));
-        sessionStorage.setItem('category_active', '');
-        sessionStorage.setItem('category_attribute', JSON.stringify(<?php echo $category_attrs;?>));
-
-        function attr_value_search(input, output){
-            var name = $(input).find('input[name=name]').val();
-            var id = $(input).find('input[name=attr_id]').val();
-            if( !empty(name) ){
-                if( !empty(id) ){
-                    $.ajax({
-                        type:'post',
-                        url:"{{route('attrvalue.search')}}",
-                        data:{name:name, id:id,_token:"{{csrf_token()}}"},
-                        success:function(data){
-                            if(data.status == true){
-                                var str = '';
-                                var attribute_value = data.messages;
-                                for(var i in attribute_value){
-                                    str += '<li data-id="'+attribute_value[i]['id']+'">'+attribute_value[i]['name']+'</li>';
-                                }
-                                $(output).html(str);
-                            }else{
-                                toastr.error(data.messages);
-                            }
-                        },
-                        sync:true
-                    });
-                }else{
-                    toastr.error('请输入要查询的属性值关键字！');
-                }
-            }else{
-                toastr.error('请选择属性');
-            }
-        }
-        function set_category_init(level0, level1, level2){
-            $('#category_level1').html('');
-            $('#category_level2').html('');
-            sessionStorage.setItem('category_attr_values', '');
-            var category = JSON.parse(sessionStorage.getItem('category'));
-            var level_str = '';
-            var active = '';
-            var is_set_first = false;
-            if(typeof level0 == 'undefined') is_set_first = true;
-            for(var i in category[0]) {
-                if(is_set_first){
-                    sessionStorage.setItem('category_active', JSON.stringify(category[0][i]));
-                    category_detail(category[0][i]);
-                    is_set_first = false;
-                }
-                active = ( level0 == category[0][i]['id'] ) ? 'active' : '';
-                level_str += '<li class="'+active+'" cate_level="1" category_id="' + category[0][i]['id'] + '">' + category[0][i]['name'] + '</li>';
-            }
-            $('#category_level0').html(level_str);
-            if(typeof level1 != 'undefined'){
-                set_category(1, level0, level1);
-                category_detail(category[1][level1]);
-                if(typeof level2 != 'undefined'){
-                    set_category(2, level1, level2);
-                    category_detail(category[2][level2]);
-                }else{
-                    set_category(2, level1);
-                    category_detail(category[1][level1]);
-                }
-            }
-        }
-
-        function attr_value_init(){
-            $('#attr_value_list').html('');
-            $('#attribute_value').find('input[name=attr_id]').val('');
-            $('.mose-five .exn-npm').find('input[name=attr_id]').val('');
-        }
-
-        function attr_value_add_init(id){
-            $('#attribute_value').find('input[name=attr_id]').val(id);
-            $('.mose-five .exn-npm').find('input[name=attr_id]').val(id);
-            $('.mose-five .exn-npm').find('input[name=attr_values]').val('');
-        }
-        function set_category(level, parent_id, id){
-            var category = JSON.parse(sessionStorage.getItem('category'));
-            var level = parseInt(level);
-            var tmp = category[level][parent_id];
-            var str = '';
-            var active = '';
-            for(var i in tmp){
-                active = ( id == tmp[i]['id'] ) ? 'active' : '';
-                str += '<li cate_level="'+(level + 1)+'" class="'+active+'" category_id="'+tmp[i]['id']+'">'+tmp[i]['name']+'</li>'
-            }
-            if(typeof $('#category_level'+(level+1)) != 'undefined')$('#category_level'+(level+1)).html('');
-            $('#category_level'+level).html(str);
-        }
-
-        function set_select(parent_id){
-            var category = JSON.parse(sessionStorage.getItem('category'));
-            var val = parseInt(parent_id);
-            var data = category[1][val];
-            var str = '<option value="0">选择二级类目</option>';
-            for(var i in data){
-                str += '<option value="'+data[i]['id']+'">'+data[i]['name']+'</option>';
-            }
-            $('#level_select2').html(str);
-        }
-
-        function category_submit(obj){
-            $.ajax({
-                type:'post',
-                url:"{{route('category.create')}}",
-                data:$(obj).serialize(),
-                success:function(data){
-                    if(data.status == true){
-                        toastr.success(data.messages);
-                        /*$(obj).find('input').val('').removeClass('error');
-                        $(obj).find('label').html('');*/
-                        window.location.href = "{{route('category.index')}}";
-                    }else{
-                        var err_data = error_to_array(data.messages);
-                        if(typeof err_data.name != 'undefined') $(obj).find('input[name=name]').addClass('error').next().html(err_data.name);
-                        if(typeof err_data.laval1 != 'undefined') $(obj).find('input[name=laval1]').addClass('error').next().html(err_data.laval1);
-                        if(typeof err_data.laval2 != 'undefined') $(obj).find('input[name=laval2]').addClass('error').next().html(err_data.laval2);
-                        if(typeof err_data.sort != 'undefined') $(obj).find('input[name=sort]').addClass('error').next().html(err_data.sort);
-                    }
-                },
-                error:function(data){
-                    var json=eval("("+data.responseText+")");
-                    for (i in json.errors.name) {
-                        toastr.error(json.errors.name[i])
-                    }
-                },
-                sync:true
-            });
-            return false;
-        }
-
-        function category_detail(data){
-            $('#detail_title').html(data.name);
-            var level = '';
-            switch(data.level){
-                case 1:
-                    level = '一级类目';
-                    break;
-                case 2:
-                    level = '二级类目';
-                    break;
-                case 3:
-                    level = '三级类目';
-                    break;
-            }
-            var category_path = get_category_path(data);
-            $('#detail_path').html(category_path);
-            $('#category_nav_path').html(category_path);
-            if(data.is_final == 1) level += '（叶子类目）';
-            $('#detail_level').html(level);
-            $('#detail_sort').html(data.sort);
-            if(data.status == 1){
-                $('#detail_status').html('启用');
-            }else{
-                $('#detail_status').html('未启用');
-            }
-            if(data.is_final == 1) {
-                $('#category_detail_count').show();
-            }else{
-                $('#category_detail_count').hide();
-            }
-            if(data['is_final'] == '1' || data['is_final'] == 1){
-                category_attribute_init(data['id']);
-            }else{
-                category_attribute_init();
-            }
-            sessionStorage.setItem('category_active', JSON.stringify(data));
-        }
-
-        function category_update(){
-            var data = JSON.parse(sessionStorage.getItem('category_active'));
-            if(typeof data.id == 'undefined'){
-                alert('请选择类目！');
-                return true;
-            }
-            $('#cate_update_id').val(data.id);
-            $('#cate_update_name').val(data.name);
-            $('#cate_update_path').html(get_category_path(data));
-            var level = '';
-            switch(data.level){
-                case '1':
-                    level = '一级类目';
-                    break;
-                case '2':
-                    level = '二级类目';
-                    break;
-                case '3':
-                    level = '三级类目';
-                    break;
-            }
-            if(data.is_final == '1') level += '（叶子类目）';
-            $('#cate_update_level').html(level);
-            $('#cate_update_sort').val(data.sort);
-            $('#cate_update_status'+data.status).attr('checked', 'checked');
-            if(data['is_final'] == '1' || data['is_final'] == 1){
-                category_attribute_update(data['id']);
-                $('#category_attribute_count').show();
-            }else{
-                $('#category_attribute').html('<div class="adds"><button>设置为叶子类目</button></div>');
-                $('#category_attribute_count').hide();
-            }
-            return false;
-        }
-        function category_update_submit(){
-            $('#cate_update').attr('disabled', true);
-            var data = {id:0, name:'', sort:0, status:0, attribute:''};
-            data.id = $('#cate_update_id').val();
-            data.name = $('#cate_update_name').val();
-            data.sort = $('#cate_update_sort').val();
-            data.status = $('.mose-four').find('input[name=status_update]').val();
-            data.attribute = sessionStorage.getItem('category_attr_values');
-            data.final = $('#cate_update_is_final').val();
-            data._token = "{{csrf_token()}}";
-            var id = data.id;
-            $.ajax({
-                type:'post',
-                url:"{{route('category.update')}}",
-                data:data,
-                success:function(data){
-                    if(data.status == true){
-                        toastr.success(data.messages);
-                        sessionStorage.removeItem('category_attr_values');
-                        window.location.href="{{route('category.index')}}"+'?id='+id;
-                    }else{
-                        toastr.error(data.messages);
-                        sessionStorage.removeItem('category_attr_values');
-                        window.location.href="{{route('category.index')}}"+'?id='+id
-                    }
-                },
-                error:function(){
-                    var json=eval("("+data.responseText+")");
-                    for (i in json.errors.name) {
-                        toastr.error(json.errors.name[i])
-                    }
-                    $('#cate_update').attr('disabled', false);
-                },
-                sync:true
-            });
-            return false;
-        }
-        function category_attribute_init(id){
-            if(typeof id == 'undefined'){
-                $('#category_attribute_show').html('');
-                return false;
-            }
-            var attribute = get_attributes_by_id(id);
-            sessionStorage.setItem('category_attr_values', JSON.stringify(attribute));
-            var str = '';
-            if(typeof attribute.length == 'undefined'){
-                str += '<div class="exn-log clearfix"><h6>基础信息：</h6> <div class="exn-right"> <p>商品标题</p> <p>详情描述</p> </div> </div>';
-                var str2 = '<div class="exn-log clearfix"><h6>关键属性：</h6> <div class="exn-right"><p>品牌</p>';
-                var str3 = '<div class="exn-log clearfix"><h6>销售属性：</h6> <div class="exn-right" >';
-                var str4 = '<div class="exn-log clearfix"><h6>非关键属性：</h6> <div class="exn-right" >';
-                for(var i in attribute){
-                    switch (attribute[i]['attr_type']) {
-                        case 2:
-                            str2 += '<p data-id="'+attribute[i]['id']+'" data-attr="'+attribute[i]['attr_id']+'" data-value="'+attribute[i]['attr_values']+'"><a href="javascript:;">'+attribute[i]['attr_title']+'</a></p>';
-                            break;
-                        case 3:
-                            str3 += '<p data-id="'+attribute[i]['id']+'" data-attr="'+attribute[i]['attr_id']+'" data-value="'+attribute[i]['attr_values']+'"><a href="javascript:;">'+attribute[i]['attr_title']+'</a></p>';
-                            break;
-                        case 4:
-                            str4 += '<p data-id="'+attribute[i]['id']+'" data-attr="'+attribute[i]['attr_id']+'" data-value="'+attribute[i]['attr_values']+'"><a href="javascript:;">'+attribute[i]['attr_title']+'</a></p>';
-                            break;
-                    }
-                }
-                str2 += '</div></div>';
-                str3 += '</div></div>';
-                str4 += '</div></div>';
-                str += str2 + str3 + str4;
-            }else{
-                str += '<div class="exn-log clearfix"><h6>基础信息：</h6> <div class="exn-right"> <p>商品标题</p> <p>详情描述</p> </div> </div><div class="exn-log clearfix"><h6>关键属性：</h6><div class="exn-right" ></div></div><div class="exn-log clearfix"><h6>销售属性：</h6><div class="exn-right"></div></div><div class="exn-log clearfix"><h6>非关键属性：</h6><div class="exn-right"></div></div>';
-            }
-            $('#category_attribute_show').html(str);
-        }
-
-        function category_attribute_update(id){
-            var attribute = get_attributes_by_id(id);
-            var str = '';
-            if(typeof attribute.length == 'undefined'){
-                str += '<div class="exn-log clearfix"><h6>基础信息：</h6> <div class="exn-right"> <p>商品标题</p> <p>详情描述</p> </div> </div>';
-                var str2 = '<div class="exn-log clearfix"><h6>关键属性：</h6> <div class="exn-right" id="category_attribute_type2"><p>品牌</p>';
-                var str3 = '<div class="exn-log clearfix"><h6>销售属性：</h6> <div class="exn-right" id="category_attribute_type3">';
-                var str4 = '<div class="exn-log clearfix"><h6>非关键属性：</h6> <div class="exn-right" id="category_attribute_type4">';
-                var count = 0;
-                for(var i in attribute){
-                    switch (attribute[i]['attr_type']) {
-                        case 2:
-                            str2 += '<div class="alert fade clearfix in"><button type="button" class="close" data-dismiss="alert" data-type="'+attribute[i]['attr_type']+'" data-attr="'+attribute[i]['attr_id']+'" data-id="'+attribute[i]['id']+'">×</button><div class="exn">'+attribute[i]['attr_title']+'</div></div>';
-                            break;
-                        case 3:
-                            str3 += '<div class="alert fade clearfix in"><button type="button" class="close" data-dismiss="alert" data-type="'+attribute[i]['attr_type']+'" data-attr="'+attribute[i]['attr_id']+'" data-id="'+attribute[i]['id']+'">×</button><div class="exn">'+attribute[i]['attr_title']+'</div></div>';
-                            count += 1;
-                            break;
-                        case 4:
-                            str4 += '<div class="alert fade clearfix in"><button type="button" class="close" data-dismiss="alert" data-type="'+attribute[i]['attr_type']+'" data-attr="'+attribute[i]['attr_id']+'" data-id="'+attribute[i]['id']+'">×</button><div class="exn">'+attribute[i]['attr_title']+'</div></div>';
-                            break;
-                    }
-                }
-                str2 += '<div class="add-state" type="2">+</div></div></div>';
-                if(count < 3) {
-                    str3 += '<div class="add-state" type="3">+</div></div></div>';
-                }else{
-                    str3 += '</div></div>';
-                }
-                str4 += '<div class="add-state" type="4">+</div></div></div>';
-                str += str2 + str3 + str4;
-            }else{
-                str += '<div class="exn-log clearfix"><h6>基础信息：</h6> <div class="exn-right"> <p>商品标题</p> <p>详情描述</p> </div> </div><div class="exn-log clearfix"><h6>关键属性：</h6><div class="exn-right" id="category_attribute_type2"><p>品牌</p><div class="add-state" type="2">+</div></div></div><div class="exn-log clearfix"><h6>销售属性：</h6><div class="exn-right" id="category_attribute_type3"><div class="add-state" type="3">+</div></div></div><div class="exn-log clearfix"><h6>非关键属性：</h6><div class="exn-right" id="category_attribute_type4"><div class="add-state" type="4">+</div></div></div>';
-
-            }
-            $('#category_attribute').html(str);
-        }
-
-        function category_attribute_detail(id, attr_id, attr_value){
-            var category_attr_values = JSON.parse(sessionStorage.getItem('category_attr_values'));
-            var category_value = category_attr_values[id];
-            $('.mose-two').find('.value_name').html(category_value['attr_title']);
-            $('.mose-two').find('.value_alias_name').html(category_value['attr_alias_title']);
-            switch (category_value['attr0_type']) {
-                case 1:
-                    var tmp = '标准化属性';
-                    break;
-                case 2:
-                    var tmp = '非标准化属性';
-                    break;
-            }
-            $('.mose-two').find('.value_type').html(tmp);
-            var str = '';
-            var tmp = '';
-            if(!empty(category_value['is_required'])){
-                if(category_value['is_required'] == 1){
-                    tmp = '是'
-                }else{
-                    tmp = '否';
-                }
-                str += '<div class="exn-log clearfix"> <h6>是否必填：</h6> <div class="exn-right"> <p>'+tmp+'</p> </div> </div>';
-            }
-            if(!empty(category_value['check_type'])){
-                if(category_value['check_type'] == 1){
-                    tmp = '多选';
-                }else{
-                    tmp = '单选';
-                }
-                str += '<div class="exn-log clearfix"> <h6>单选/多选：</h6> <div class="exn-right"><p>'+tmp+'</p></div></div>';
-            }
-            if(!empty(category_value['is_image'])){
-                if(category_value['is_image'] == 1){
-                    tmp = '是';
-                }else{
-                    tmp = '否';
-                }
-                str += '<div class="exn-log clearfix"> <h6>是否图片属性：</h6> <div class="exn-right"> <p>'+tmp+'</p> </div> </div>';
-            }
-            if(!empty(category_value['is_diy'])){
-                if(category_value['is_diy'] == 1){
-                    tmp = '是';
-                }else{
-                    tmp = '否';
-                }
-                str += '<div class="exn-log clearfix"> <h6>是否支持自定义：</h6> <div class="exn-right"> <p>'+tmp+'</p> </div> </div>';
-            }
-            if(!empty(category_value['is_detail'])){
-                if(category_value['is_detail'] == 1){
-                    tmp = '是';
-                }else{
-                    tmp = '否';
-                }
-                str += '<div class="exn-log clearfix"> <h6>是否详情显示：</h6> <div class="exn-right"> <p>'+tmp+'</p> </div> </div>';
-            }
-            str += '<div class="exn-log clearfix"> <h6>属性值：</h6> <div class="exn-right">';
-            var attribute = JSON.parse(sessionStorage.getItem('attribute_all'));
-            attribute = JSON.parse(attribute);
-            if(empty(attribute)){
-                $.ajax({
-                    type:'post',
-                    url:"{{route('attrvalue.detail')}}",
-                    data:{id:attr_value,_token:"{{csrf_token()}}"},
-                    success:function(data){
-                        console.log(data);
-                        if(data.status == true){
-                            for(var i in data.messages){
-                                str += '<p>'+data.messages[i]['name']+'</p>';
-                            }
-                            str += '</div> </div>';
-                            sessionStorage.setItem('category_attribute_detail', JSON.stringify(data.messages));
-                            $('#category_value').html(str);
-                        }else{
-                            toastr.error(data.messages);
-                        }
-                    },
-                    sync:true
-                });
-            }else{
-                var value_arr = attr_value.split(',');
-                for(var i in value_arr){
-                    if(value_arr[i] != '0') str += '<p>'+attribute[attr_id][value_arr[i]]['name']+'</p>';
-                }
-                str += '</div> </div>';
-            }
-            $('#category_value').html(str);
-        }
-
-        function attribute_update(id, attr_id, attr_value){
-            var category_attr_values = JSON.parse(sessionStorage.getItem('category_attr_values'));
-            var category_value = category_attr_values[id];
-            $('.mose-three').find('.value_name').html(category_value['attr_title']);
-            $('.mose-three').find('.value_alias_name').html(category_value['attr_alias_title']);
-            switch (category_value['attr0_type']) {
-                case 1:
-                    var tmp = '标准化属性';
-                    break;
-                case 2:
-                    var tmp = '非标准化属性';
-                    break;
-            }
-            $('.mose-three').find('.value_type').html(tmp);
-            var str = '<input type="hidden" name="id" value="'+id+'"><input type="hidden" name="attr_values" value="'+attr_value+'">';
-            if(!empty(category_value['is_required'])){
-                str += '<div class="exn-log clearfix"> <h6>是否必填：</h6> <div class="exn-right clearfix"> ';
-                if(category_value['is_required'] == '1'){
-                    str += '<label> <input type="radio" name="is_required" value="1" checked /> <span>必填</span> </label> <label> <input type="radio" name="is_required" value="2" /> <span>非必填</span> </label> ';
-                }else{
-                    str += '<label> <input type="radio" name="is_required" value="1" /> <span>必填</span> </label> <label> <input type="radio" name="is_required" value="2" checked /> <span>非必填</span> </label> ';
-                }
-                str += '</div> </div>';
-            }
-            if(!empty(category_value['check_type'])){
-                str += '<div class="exn-log clearfix"> <h6>单选/多选：</h6> <div class="exn-right clearfix"> ';
-                if(category_value['check_type'] == '1'){
-                    str += '<label> <input type="radio" name="check_type" value="1" checked /> <span>多选</span> </label> <label> <input type="radio" name="check_type" value="2" /> <span>单选</span> </label> ';
-                }else{
-                    str += '<label> <input type="radio" name="check_type" value="1" /> <span>多选</span> </label> <label> <input type="radio" name="check_type" value="2" checked /> <span>单选</span> </label> ';
-                }
-                str += '</div> </div>';
-            }
-            if(!empty(category_value['is_image'])){
-                str += '<div class="exn-log clearfix"> <h6>是否图片属性：</h6> <div class="exn-right clearfix"> ';
-                if(category_value['is_image'] == '1'){
-                    str += '<label> <input type="radio" name="is_image" value="1" checked /> <span>是</span> </label> <label> <input type="radio" name="is_image" value="2" /> <span>否</span> </label> ';
-                }else{
-                    str += '<label> <input type="radio" name="is_image" value="1" /> <span>是</span> </label> <label> <input type="radio" name="is_image" value="2" checked /> <span>否</span> </label> ';
-                }
-                str += '</div> </div>';
-            }
-            if(!empty(category_value['is_diy'])){
-                str += '<div class="exn-log clearfix"> <h6>是否支持自定义：</h6> <div class="exn-right clearfix"> ';
-                if(category_value['is_diy'] == '1'){
-                    str += '<label> <input type="radio" name="is_diy" value="1" checked /> <span>是</span> </label> <label> <input type="radio" name="is_diy" value="2" /> <span>否</span> </label> ';
-                }else{
-                    str += '<label> <input type="radio" name="is_diy" value="1" /> <span>是</span> </label> <label> <input type="radio" name="is_diy" value="2" checked /> <span>否</span> </label> ';
-                }
-                str += '</div> </div>';
-            }
-            if(!empty(category_value['is_detail'])){
-                str += '<div class="exn-log clearfix"> <h6>是否详情显示：</h6> <div class="exn-right clearfix"> ';
-                if(category_value['is_detail'] == '1'){
-                    str += '<label> <input type="radio" name="is_detail" value="1" checked /> <span>是</span> </label> <label> <input type="radio" name="is_detail" value="2" /> <span>否</span> </label> ';
-                }else{
-                    str += '<label> <input type="radio" name="is_detail" value="1" /> <span>是</span> </label> <label> <input type="radio" name="is_detail" value="2" checked /> <span>否</span> </label> ';
-                }
-                str += '</div> </div>';
-            }
-            str += '<div class="exn-log clearfix"> <h6>属性值：</h6> <div class="exn-right" id="category_value_update_detail">';
-            var attribute = JSON.parse(sessionStorage.getItem('attribute_all'));
-            attribute = JSON.parse(attribute);
-            if(empty(attribute)){
-                var attr_values = sessionStorage.getItem('category_attribute_detail');
-                attr_values = JSON.parse(attr_values);
-                if(empty(attr_values)){
-                    $.ajax({
-                        type:'post',
-                        url:"{{route('attrvalue.detail')}}",
-                        data:{id:attr_value},
-                        success:function(data){
-                            data = JSON.parse(data);
-                            if(data.status == true){
-                                for(var i in data.messages){
-                                    str += '<div class="alert fade clearfix in"> <button type="button" class="close" data-dismiss="alert" data-id="'+data.messages[i]['id']+'">×</button> <div class="exn">'+data.messages[i]['name']+'</div></div>';
-                                }
-                                str += '<div class="add-state" data-attr="'+attr_id+'">+</div></div> </div>';
-                                sessionStorage.setItem('category_attribute_detail', JSON.stringify(data.messages));
-                                $('#category_value_update').html(str);
-                            }else{
-                                alert(data.messages);
-                            }
-                        },
-                        sync:true
-                    });
-                }else{
-                    for(var i in attr_values){
-                        str += '<div class="alert fade clearfix in"> <button type="button" class="close" data-dismiss="alert" data-id="'+attr_values[i]['id']+'">×</button> <div class="exn">'+attr_values[i]['name']+'</div></div>';
-                    }
-                    str += '<div class="add-state" data-attr="'+attr_id+'">+</div></div> </div>';
-                }
-            }else{
-                var value_arr = attr_value.split(',');
-                for(var i in value_arr){
-                    str += '<div class="alert fade clearfix in"> <button type="button" class="close" data-dismiss="alert" data-id="'+attribute[attr_id][value_arr[i]]['id']+'">×</button> <div class="exn">'+attribute[attr_id][value_arr[i]]['name']+'</div></div>';
-                }
-                str += '<div class="add-state" data-attr="'+attr_id+'">+</div></div> </div>';
-            }
-            $('#category_value_update').html(str);
-        }
-
-        function attribute_update_submit(obj, data){
-            obj.attr('disabled', true);
-            $.ajax({
-                type:'post',
-                url:"{{route('category.value')}}",
-                data:data,
-                success:function(data){
-                    if(data.status == true){
-                        toastr.success(data.messages);
-                        window.location.href = "{{route('category.index')}}";
-                    }else{
-                        toastr.error(data.messages);
-                    }
-                },
-                sync:true
-            });
-        }
-
-        function get_attributes_by_id(id){
-            var attributes = JSON.parse(sessionStorage.getItem('category_attribute'));
-            if(typeof attributes[id] != 'undefined'){
-                sessionStorage.setItem('category_attr_values', JSON.stringify(attributes[id]));
-                return attributes[id];
-            }else{
-                return [];
-            }
-        }
-
-        function show_attribute(data, type){
-            if(empty(data)){
-                var attribute = get_all_attribute();
-                if(attribute){
-                    attribute = ( typeof attribute == 'string' ) ? JSON.parse(attribute) : attribute;
-                    var str = '';
-                    for(var i in attribute[0]){
-                        type = parseInt(type);
-                        if(type == 3) {
-                            if(attribute[0][i]['attr_type'] != 2) str += '<li data-id="'+attribute[0][i]['id']+'">'+attribute[0][i]['name']+'</li>';
-                        }else{
-                            str += '<li data-id="'+attribute[0][i]['id']+'">'+attribute[0][i]['name']+'</li>';
-                        }
-                    }
-                }else{
-                    return;
-                }
-            }else{
-                var str = '';
-                for(var i in data){
-                    str += '<li data-id="'+data[i]['id']+'">'+data[i]['name']+'</li>';
-                }
-            }
-            $('#attr_list').html(str);
-        }
-        function show_attribute_value(id, obj){
-            if(typeof obj != 'undefined'){
-                var attribute = get_all_attribute(id, obj);
-            }else{
-                var attribute = get_all_attribute();
-            }
-            attribute = ( typeof attribute == 'string' ) ? JSON.parse(attribute) : attribute;
-            var attribute_value = attribute[id];
-            var type = $('.mose-five .exn-npm').find('input[name=attr_type]').val();
-            if(type == 4 || type == 2){
-                var attribute_active = attribute[0][id];
-                var inputs = '<input type="hidden" name="attr_values" value=""><input type="hidden" name="attr_id" value="">';
-                if(attribute_active.attr_type == 2){
-                    inputs += '<input type="hidden" name="attr_type" value="'+type+'"><div class="exn-log clearfix"><h6>是否必填：</h6><div class="exn-right clearfix"><label><input type="radio" name="is_required" value="1" checked/><span>必填</span></label> <label><input type="radio" name="is_required" value="2"/><span>非必填</span></label></div></div>';
-                }else{
-                    if(type == 2){
-                        inputs += '<input type="hidden" name="attr_type" value="2"><div class="exn-log clearfix"><h6>是否必填：</h6><div class="exn-right clearfix"><label><input type="radio" name="is_required" value="1" checked/><span>必填</span></label> <label><input type="radio" name="is_required" value="2"/><span>非必填</span></label></div></div><div class="exn-log clearfix"><h6>单选/多选：</h6><div class="exn-right clearfix"><label><input type="radio" name="check_type" value="2" checked/><span>单选</span></label><label><input type="radio" name="check_type" value="1"/><span>多选</span></label></div></div>';
-                    }else{
-                        inputs += '<input type="hidden" name="attr_type" value="4"><div class="exn-log clearfix"><h6>单选/多选：</h6><div class="exn-right clearfix"><label><input type="radio" name="check_type" value="2" checked/><span>单选</span></label><label><input type="radio" name="check_type" value="1"/><span>多选</span></label></div></div><div class="exn-log clearfix"><h6>是否必填：</h6><div class="exn-right clearfix"><label><input type="radio" name="is_required" value="1" checked/><span>必填</span></label> <label><input type="radio" name="is_required" value="2"/><span>非必填</span></label></div></div><div class="exn-log clearfix"><h6>是否详情显示：</h6><div class="exn-right clearfix"><label><input type="radio" name="is_detail" checked value="2"/><span>不显示</span></label><label><input type="radio" name="is_detail" value="1"/><span>显示</span></label></div></div>';
-                    }
-                }
-            }
-            $('.mose-five .exn-npm').html(inputs);
-            var str = '';
-            for(var i in attribute_value){
-                str += '<li data-id="'+attribute_value[i]['id']+'">'+attribute_value[i]['name']+'</li>';
-            }
-            if(typeof obj == 'undefined') {
-                $('#attr_value_list').html(str);
-            }else{
-                obj.html(str);
-            }
-        }
-        function get_all_attribute(id, obj){
-            var attribute = JSON.parse(sessionStorage.getItem('attribute_all'));
-            if(empty(attribute)){
-                $.ajax({
-                    type:'get',
-                    url:"{{route('attribute.all')}}",
-                    data:{},
-                    success:function(data){
-                        if(data.status == true){
-                            attribute = data.messages;
-                            sessionStorage.setItem('attribute_all', JSON.stringify(attribute));
-                            if(typeof id != 'undefined'){
-                                show_attribute_value(id, obj);
-                            }else{
-                                show_attribute(JSON.parse(attribute)[0]);
-                            }
-                        }else{
-                            toastr.error('网络错误，请稍后重试');
-                        }
-                    },
-                    sync:true
-                });
-            }
-            return attribute;
-        }
-        function attr_value_add(){
-            var attr_value_lists = $('#attr_value_list li');
-            var length = attr_value_lists.length;
-            var values_arr = [];
-            for(var i=0; i<length; i++){
-                if($(attr_value_lists[i]).hasClass('active')){
-                    values_arr.push($(attr_value_lists[i]).attr('data-id'));
-                }
-            }
-            var values_str = values_arr.join(',');
-            $('.mose-five .exn-npm').find('input[name=attr_values]').val(values_str);
-        }
-        function attr_value_save(){
-            var category_attr_values = sessionStorage.getItem('category_attr_values');
-            var name = $('#attr_list li.active').text();
-            var obj = $('.mose-five .exn-npm');
-            var data = {};
-            data.attr_id = obj.find('input[name=attr_id]').val();
-            var attribute = get_all_attribute();
-            if(attribute){
-                attribute = ( typeof attribute == 'string' ) ? JSON.parse(attribute) : attribute;
-                var attribute_active = attribute[0][data.attr_id];
-            }else{
+        //点击编辑类目
+        $("#editCategoryButton").on("click",function () {
+            category_id = select_category_id;
+            if(category_id == undefined){
+                toastr.warning('请选择一个分类',0);
                 return;
             }
-            if(attribute_active.attr_type == 2 && empty(obj.find('input[name=attr_values]').val())){
-                obj.find('input[name=attr_values]').val('0');
-            }
-            data.attr_values = obj.find('input[name=attr_values]').val();
-            data.attr_type = obj.find('input[name=attr_type]').val();
-            data.is_required = obj.find('input[name=is_required]:checked').val();
-            data.check_type = obj.find('input[name=check_type]:checked').val();
-            data.is_image = obj.find('input[name=is_image]:checked').val();
-            data.is_diy = obj.find('input[name=is_diy]:checked').val();
-            data.is_detail = obj.find('input[name=is_detail]:checked').val();
-            if(data.attr_values == ''){
-                alert('请选择属性值！');return true;
-            }
-            if(empty(category_attr_values)){
-                category_attr_values = [data];
-            }else{
-                category_attr_values = JSON.parse(category_attr_values);
-                if(typeof category_attr_values == 'object'){
-                    var arr = [];
-                    for(var i in category_attr_values){
-                        arr[i] = category_attr_values[i];
-                    }
-                    category_attr_values = arr;
-                }
-                var hasImage = false;
-                if(data.attr_type == 3){
-                    for(var k in category_attr_values){
-                        if(parseInt(category_attr_values[k].is_image) == 1) hasImage = true;
-                    }
-                    if(hasImage && parseInt(data.is_image) == 1){
-                        alert('图片销售属性只能有一个');
-                        return true;
-                    }
-                }
-                category_attr_values.push(data);
-            }
-            sessionStorage.setItem('category_attr_values', JSON.stringify(category_attr_values));
-            var str = '<div class="alert fade in"><button type="button" class="close" data-type="'+data.attr_type+'" data-attr="'+data.attr_id+'" data-dismiss="alert">×</button><div class="exn">'+name+'</div></div>';
-            $('#category_attribute_type'+data.attr_type).prepend(str);
-            if(data.attr_type == '3'){
-                var attr_list = $('#category_attribute_type'+data.attr_type).find('button.close');
-                if(attr_list.length >= 3){
-                    $('#category_attribute_type'+data.attr_type).find('div.add-state').remove();
-                }
-            }
-            return false;
-        }
-        function error_to_array(err_str){
-            var err_obj = {};
-            if(err_str.indexOf('@@@') != -1){
-                var err_tmp = err_str.split('@@@');
-                for(var i=0; i<err_tmp.length; i++){
-                    var err_sec_tmp = err_tmp[i].split('###');
-                    err_obj[err_sec_tmp[0]] = err_sec_tmp[1];
-                }
-            }else{
-                var err_sec_tmp = err_str.split('###');
-                err_obj[err_sec_tmp[0]] = err_sec_tmp[1];
-            }
-            return err_obj;
-        }
 
-        function empty(obj){
-            if( (typeof obj == 'undefined') || (obj == 'undefined') || (obj == '') || (obj == null) || (obj == 'null') || (obj == 0) || (obj == '0') ){
-                return true;
-            }else{
-                return false;
-            }
-        }
+            //选定的类信息赋值到输入框
+            $("#updateCategoryContainer").find("input[name=name]").val(category_detail_vue.select_categroy_name);
+            $("#updateCategoryContainer").find("input[name=en_name]").val(category_detail_vue.select_categroy_en_name);
+            $("#updateCategoryContainer").find("input[name=sort]").val(category_detail_vue.select_categroy_sort);
+            $("#updateCategoryContainer").find("input[name=is_final][value="+category_detail_vue.select_categroy_is_final+"]").attr("checked",true);
 
-        function attr_value_update(){
-            var attr_value_lists = $('.mose-six li');
-            var length = attr_value_lists.length;
-            var values_arr = [];
-            var str = '';
-            var values_old = $('#category_value_update').find('input[name=attr_values]').val();
-            var old_arr = values_old.split(',');
-            for(var i=0; i<length; i++){
-                if($(attr_value_lists[i]).hasClass('active')){
-                    var id = $(attr_value_lists[i]).attr('data-id');
-                    if($.inArray(id, old_arr) == -1){
-                        values_arr.push(id);
-                        str += '<div class="alert fade clearfix in"><button type="button" class="close" data-dismiss="alert" data-id="'+id+'">×</button><div class="exn">'+$(attr_value_lists[i]).text()+'</div></div>';
-                    }
-                }
-            }
-            for(var i in old_arr){
-                if(!empty(old_arr[i])) values_arr.push(old_arr[i]);
-            }
-            var values_str = values_arr.join(',');
-            $('#category_value_update').find('input[name=attr_values]').val(values_str);
-            $('#category_value_update_detail').prepend(str);
-        }
+            $("#saveUpdateCategoryInfoButton").data('category_id',category_id);
 
-        function getQueryString(name, url) {
-            var reg = new RegExp('(^|&)' + name + '=([^&]*)(&|$)', 'i');
-            var r = url.match(reg);
-            if (r != null) {
-                return unescape(r[2]);
-            }
-            return null;
-        }
-
-        function get_category_path(data){
-            var category = JSON.parse(sessionStorage.getItem('category'));
-            var category_path = '';
-            switch(data.level){
-                case 1:
-                    category_path = data.name;
-                    break;
-                case 2:
-                    var parent_cate = category[data.level - 2][data.parent_id];
-                    category_path = parent_cate.name+'>'+data.name;
-                    break;
-                case 3:
-                    var parent_cate = category[data.level - 2][data.parent_id];
-                    var grand_cate = category[data.level - 3][parent_cate.parent_id];
-                    category_path = grand_cate.name+'>'+parent_cate.name+'>'+data.name;
-                    break;
-            }
-            return category_path;
-        }
-
-        function category_search(input){
-            var title =  input.find('input').val();
-            if(empty(title)) return false;
+            //请求分类信息
+            //显示编辑
             $.ajax({
-                type:'post',
-                url:"{{route('category.search')}}",
-                data:{title:title,_token:"{{csrf_token()}}"},
-                success:function(data){
-                    if(data.status == true){
-                        var category = data.messages;
-                        var str = '';
-                        for(var i in category){
-                            str += '<li data-id="'+category[i]['id']+'" data-path="'+category[i]['category_ids']+'">'+get_category_path(category[i])+'</li>';
+                url:"/category/current_category_info/"+category_id,
+                type:'GET',
+                success: function (response) {
+                    if (response.status == 200) {
+                        $("#firstCategoryLevel").val(response.content.current_first_level_category.id);   //设置Select的Text值为jQuery的项选中
+
+
+                        //console.log(response.content.current_first_level_category.amoeba_operator_id);
+
+                        //$("#updateCategoryContainer").find("#amoeba_operator_id").val(response.content.current_first_level_category.amoeba_operator_id);//设置归属小组值.
+                        $("#secondCategoryLevel").empty();
+                        $("#secondCategoryLevel").prepend("<option value='-1'>二级类目</option>"); //为Select插入一个Option(第一个位置)
+                        //分类详情
+                        if(response.content.second_level_categories != undefined){
+                            for(var i = 0;i<response.content.second_level_categories.length;i++){
+                                var html = "<option value="+response.content.second_level_categories[i].id+">"+response.content.second_level_categories[i].name+"</option>";
+                                $("#secondCategoryLevel").append(html); //为Select追加一个Option(下拉项)
+                            }
+                            $("#secondCategoryLevel").val(response.content.current_second_level_category.id);   //设置Select的Text值为jQuery的项选中
                         }
-                        $('.search-from ul').html(str).addClass('hover');
                     }
                 },
-                sync:true
+                complete: function () {
+                },error: function (xmlHttpRequest, textStatus, errorThrown) {
+                    toastr.warning('错误码: '+xmlHttpRequest.status);
+                }
             });
-            return false;
+            $('#updateCategoryContainer').modal('show');
+        })
+
+        //保存类目信息
+        $("#saveUpdateCategoryInfoButton").on("click",function () {
+            first_level_category = $("#firstCategoryLevel").val();
+            second_level_category = $("#secondCategoryLevel").val();
+            name = $("#updateCategoryContainer").find("input[name=name]").val();
+            en_name = $("#updateCategoryContainer").find("input[name=en_name]").val();
+            sort = $("#updateCategoryContainer").find("input[name=sort]").val();
+            is_final = $("#updateCategoryContainer").find("input[name=is_final]").val();
+            category_id = $("#saveUpdateCategoryInfoButton").data('category_id');
+
+            if(category_id != undefined && first_level_category < 0){
+                toastr.warning("{{trans('Category::category.please_select_a_category')}}",0);
+                return;
+            }
+            if(name.length < 1){
+                toastr.warning("{{trans('Category::category.please_enter_category_name')}}",0);
+                return;
+            }
+            if(sort.length < 1){
+                toastr.warning("{{trans('Category::category.please_enter_a_sort_value')}}",0);
+                return;
+            }
+            if(category_id == undefined){
+                category_id = '';
+            }
+            $.ajax({
+                url:"{{secure_route('category.update')}}",
+                data:{
+                    "category_id":category_id,
+                    "first_level_category":first_level_category,
+                    "second_level_category":second_level_category,
+                    "name":name,
+                    "en_name":en_name,
+                    "sort":sort,
+                    "is_final": is_final,
+                    "_token":"{{csrf_token()}}",
+                },
+                type:'POST',
+                success: function (response) {
+                    if (response.status == 200) {
+                        toastr.success(response.msg);
+                        $('#updateCategoryContainer').modal('hide');
+                        reload();
+                    }else {
+                        toastr.warning('错误码: '+response.status+','+response.msg);
+                    }
+                },
+                complete: function () {
+                },error: function (xmlHttpRequest, textStatus, errorThrown) {
+                    toastr.warning('错误码: '+xmlHttpRequest.status);
+                }
+            });
+        });
+
+        //删除类目
+        function deleteCategory()
+        {
+            category_id = select_category_id;
+            if(category_id == undefined){
+                toastr.warning("{{trans('Category::category.please_select_category')}}",0);
+                return;
+            }
+            configure = {
+                title: "Warning",
+                text: "删除"+category_detail_vue.select_categroy_name+"类目会导致此类目下所有商品同步清空，且无法恢复，确认要删除此类目吗？",
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#444444",
+                confirmButtonText: "{{trans('Category::category.delete')}}",
+                cancelButtonText: "{{trans('Category::category.cancel')}}",
+                closeOnConfirm: false,
+                closeOnCancel: true
+            };
+            swal(configure,function (isConfirm) {
+                if (isConfirm) {
+                    $.ajax({
+                        url:"/category/"+category_id+'/delete',
+                        type:'GET',
+                        success: function (response) {
+                            if (response.status == 200) {
+                                swal("删除成功!", "", "success");
+                                reload();
+                            }else{
+                                toastr.warning('错误码: '+response.status+','+response.msg);
+                            }
+                        },
+                        complete: function () {
+                        },error: function (xmlHttpRequest, textStatus, errorThrown) {
+                            toastr.warning('错误码: '+xmlHttpRequest.status);
+                        }
+                    });
+                }
+            });
         }
+
+        //重置编辑/新增类目页面
+        function resetUpdateCategoryContainer() {
+            $("#firstCategoryLevel").val(-1);
+            $("#secondCategoryLevel").empty();
+            $("#secondCategoryLevel").prepend("<option value='-1'>二级类目</option>"); //为Select插入一个Option(第一个位置)
+            $("#updateCategoryContainer").find("input[name=name]").val('');
+            $("#updateCategoryContainer").find("input[name=sort]").val('');
+            $("#updateCategoryContainer").find("input[name=is_final]").val('0');
+            $("#saveUpdateCategoryInfoButton").removeData('category_id');
+        }
+
+        //刷新类目详细信息
+        function refreshCategoryDetailInfo(category_id) {
+            $.ajax({
+                url:"/category/detail/"+category_id,
+                type:'GET',
+                success: function (response) {
+                    if (response.status == 200) {
+                        category = JSON.parse(response.content);
+                        category_detail_vue.select_categroy_name = category.name;
+                        category_detail_vue.select_categroy_en_name = category.en_name;
+                        category_detail_vue.select_categroy_sort = category.sort;
+                        category_detail_vue.select_categroy_is_final = category.is_final;
+                    }
+                },
+                complete: function () {
+                },error: function (xmlHttpRequest, textStatus, errorThrown) {
+                    toastr.warning('错误码: '+xmlHttpRequest.status);
+                }
+            });
+        }
+
+        //刷新分类属性
+        function refreshCategoryAttributes(category_id) {
+            $.ajax({
+                url:"{{secure_route('category.attribute')}}",
+                data:{
+                    'category_id':category_id,
+                    '_token': "{{csrf_token()}}"
+                },
+                type:'POST',
+                success: function (response) {
+                    //目前类型就
+                    $('.category_attribute_ul').children('li .attribute_class').remove();
+                    attribute_detail_container_vue.attribute_items = [];
+                    attribute_detail_container_vue.select_attribute_id = '';
+                    attribute_detail_container_vue.select_attribute_type = '';
+                    attribute_detail_container_vue.select_attribute_name = '';
+                    if (response.status == 200) {
+                        for(var type in response.content){
+                            var attributes = response.content[type];
+                            for(var index = 0; index < attributes.length; index++){
+                                addOneAttribute('category_attribute_'+type,attributes[index].id,attributes[index].name,attributes[index].type);
+                            }
+                        }
+                    }else{
+                        toastr.warning('错误码: '+response.status+','+response.msg);
+                    }
+                },
+                complete: function () {
+                },error: function (xmlHttpRequest, textStatus, errorThrown) {
+                    toastr.warning('错误码: '+xmlHttpRequest.status);
+                }
+            });
+        }
+
+        $("#search_attribute_input").on('input',function(){
+            var input_val = $(this).val();
+            attribue_value_container_vue.attribute_values = [];
+            attribue_value_container_vue.attribue_value_container_picked = [];
+            attribue_name_container_vue.attribue_picked_id = '';
+            attribue_name_container_vue.attributes = $.grep(attribue_name_container_vue.backup_attributes,function(attribute){
+                return (attribute.name.indexOf(input_val) >=0)
+            });
+        });
+
+        $("#search_attribute_value_input").on('input',function(){
+            var input_val = $(this).val();
+            attribue_value_container_vue.attribue_value_container_picked = [];
+            attribue_value_container_vue.attribute_values = $.grep(attribue_value_container_vue.backup_attribute_values,function(attribute_value){
+                return (attribute_value.name.indexOf(input_val) >=0)
+            });
+        });
+
+        //点击属性,刷新属性右边的信息
+        function clickOneAttribute()
+        {
+            $(".attribute_class").find("span").removeClass("active");
+            $(this).addClass("active");
+            category_id = select_category_id;
+            attribute_id = $(this).data('attribute_id');
+            if(category_id == undefined || attribute_id == undefined)return;
+            attribute_detail_container_vue.select_attribute_id = $(this).data('attribute_id');
+            attribute_detail_container_vue.select_attribute_type = $(this).data('attribute_type');
+            attribute_detail_container_vue.select_attribute_name = $(this).data('attribute_name');
+            layer.load(1);
+            $.ajax({
+                url:"/category/"+category_id+"/attribute/"+attribute_detail_container_vue.select_attribute_id+'/detail',
+                type:'GET',
+                success: function (response) {
+                    if (response.status == 200) {
+                        attribute_detail_container_vue.attribute_items = response.content.attribute_items;
+                    }else{
+                        attribute_detail_container_vue.attribute_items = [];
+                    }
+                },
+                complete: function () {
+                    layer.closeAll('loading');
+                },error: function (xmlHttpRequest, textStatus, errorThrown) {
+                    toastr.warning('错误码: '+xmlHttpRequest.status);
+                }
+            });
+        }
+
+        //点击添加属性
+        $('.category_attribute_ul li button.add').on("click",function () {
+            configureAttributes($(this).data('type'),'');
+        })
+
+        //点击编辑类目属性
+        $("#editAttributeButton").on("click",function () {
+            configureAttributes(attribute_detail_container_vue.select_attribute_type,attribute_detail_container_vue.select_attribute_id);
+        })
+
+        //添加一个属性
+        function addOneAttribute(sel,id,value,type) {
+            var itemSpan = $("<span>").html(value);
+            var itemDeleteBtn = $("<i>").addClass("fa fa-trash-o delete-property");
+            var item = $("<li>").addClass('attribute_class').append(itemSpan).append(itemDeleteBtn);
+            itemSpan.data('attribute_id',id);
+            itemSpan.data('attribute_type',type);
+            itemSpan.data('attribute_name',value);
+            item.data('attribute_id',id);
+            $("#"+sel).prepend(item);
+            itemSpan.click(clickOneAttribute);
+            itemDeleteBtn.data('attribute_type',type);
+            itemDeleteBtn.click(deleteOneAttribute);
+            return item;
+        }
+
+        //删除一个属性
+        function deleteOneAttribute() {
+            attribute_id = $(this).parent().data('attribute_id');
+            attribute_type = $(this).data('attribute_type');
+            category_id = select_category_id;
+            will_delete_dom = $(this).parent();
+            $.ajax({
+                url:"/category/attribute/deleteRule",
+                data:{
+                    'category_id':category_id,
+                    'attribute_id':attribute_id,
+                    'attribute_type':attribute_type,
+                },
+                type:'POST',
+                success: function (response) {
+                    if(response.status == 200){
+                        swal({
+                            title: "",
+                            text: response.content,
+                            type: "warning",
+                            showCancelButton: true,
+                            confirmButtonColor: "#444444",
+                            confirmButtonText: "删除",
+                            cancelButtonText: "取消",
+                            closeOnConfirm: false,
+                            closeOnCancel: true
+                        },function(){
+                            $.ajax({
+                                url:"/category/attribute/delete",
+                                data:{
+                                    'category_id':category_id,
+                                    'attribute_id':attribute_id,
+                                },
+                                type:'POST',
+                                success:function(response){
+                                    if(response.status == 200){
+                                        will_delete_dom.remove();
+                                        attribute_detail_container_vue.attribute_items =[];
+                                        swal("删除成功", "success");
+                                    } else {
+                                        swal("警告", response.msg, "error");
+                                    }
+                                },
+                                complete: function () {
+
+                                },
+                                error: function (xmlHttpRequest, textStatus, errorThrown) {
+                                    toastr.warning('错误码: '+xmlHttpRequest.status);
+                                }
+                            })
+                        });
+                    } else {
+                        swal("警告", response.msg, "error");
+                    }
+                },
+                complete: function () {
+
+                },error: function (xmlHttpRequest, textStatus, errorThrown) {
+                    swal("错误", '错误码: '+xmlHttpRequest.status, "error");
+                }
+            });
+            // swal({
+            //     title: "警 告",
+            //     text: "确定删除["+$(this).siblings('span').html()+"]属性吗",
+            //     type: "warning",
+            //     showCancelButton: true,
+            //     confirmButtonColor: "#444444",
+            //     confirmButtonText: "删除",
+            //     cancelButtonText: "取消",
+            // },function (isConfirm) {
+            //     if (isConfirm) {
+            //         $.ajax({
+            //             url:"/category/attribute/delete",
+            //             type:'POST',
+            //             data:{
+            //                 'category_id':category_id,
+            //                 'attribute_id':attribute_id,
+            //             },
+            //             success: function (response) {
+            //                 if (response.status == 200) {
+            //                     will_delete_dom.remove();
+            //                     attribute_detail_container_vue.attribute_items =[];
+            //                     toastr('删除成功!',1);
+            //                 }else{
+            //                     toastr('错误码: '+response.status+','+response.msg);
+            //                 }
+            //             },
+            //             complete: function () {
+            //             },error: function (xmlHttpRequest, textStatus, errorThrown) {
+            //                 toastr('错误码: '+xmlHttpRequest.status);
+            //             }
+            //         });
+            //     }
+            // });
+        }
+
+        //配置属性
+        function configureAttributes(type,attribute_id) {
+            //configure_attribute_detail_container_vue.is_photo_attr=(type==2)?true:false;
+            //显示前重置这个页面
+            attribue_value_container_vue.attribute_values = [];
+            attribue_value_container_vue.attribue_value_container_picked = [];
+            attribue_name_container_vue.attribue_picked_id = '';
+            attribue_name_container_vue.attribue_picked_name = '';
+            attribue_name_container_vue.attributes = [];
+            attribue_name_container_vue.backup_attributes = [];
+            attribue_name_container_vue.type = '';
+            $('#configure_attribue_container').modal('show');
+            attribue_name_container_vue.type = type; //保存添加的属性类别
+            layer.load(1);
+            //获取所有的属性名
+            $.ajax({
+                url:"/attribute/all",
+                type:'GET',
+                success: function (response) {
+                    if (response.status == 200) {
+                        attribue_name_container_vue.backup_attributes = response.content;
+                        attribue_name_container_vue.attributes = response.content;
+                        attribue_name_container_vue.attribue_picked_id = attribute_id;
+                        if(attribute_id && attribute_id.toString().length > 0){
+                            attribue_name_container_vue.changeSelectValue(undefined);
+                        }
+                    }else{
+                        attribue_name_container_vue.attributes = [];
+                        attribue_name_container_vue.backup_attributes = [];
+                    }
+                },
+                complete: function () {
+                    layer.closeAll('loading');
+                },error: function (xmlHttpRequest, textStatus, errorThrown) {
+                    toastr.warning('错误码: '+xmlHttpRequest.status);
+                }
+            });
+        }
+
+        //添加属性完成提交
+        $("#configure_attribue_container_submit").on("click",function () {
+            if(attribue_name_container_vue.attribue_picked_id.length<1){
+                toastr.warning('请选择属性名');
+                return;
+            }
+            if(configure_attribute_detail_container_vue.is_custom_text == 0){
+                if(attribue_value_container_vue.attribue_value_container_picked.length<1){
+                    toastr.warning('请选择属性值');
+                    return;
+                }
+            }
+
+            category_id = select_category_id;
+            type = attribue_name_container_vue.type;
+            is_pic_attribute = $("input[name='is_photo_attr']:checked").val();
+            is_custom_attribute = $("input[name='is_custom_attribute']:checked").val();
+            layer.load(1);
+            console.log(attribue_name_container_vue.attribue_picked_name);
+            $.ajax({
+                url:"/category/attribute/update",
+                type:'POST',
+                data:{
+                    'type':type,
+                    'category_id':category_id,
+                    'attribute_id':attribue_name_container_vue.attribue_picked_id,
+                    'values_id':attribue_value_container_vue.attribue_value_container_picked,
+                    'is_pic_attribute':is_pic_attribute,
+                    'is_custom_attribute':is_custom_attribute,
+                },
+                success: function (response) {
+                    if (response.status == 200) {
+                        $('#configure_attribue_container').modal('hide');
+                        //判断是否已经存在了
+                        var is_exist = false;
+                        $('#category_attribute_'+type+' li.attribute_class span').each(function(){
+                            console.log($(this).html());
+                            console.log('click'+' ====='+attribue_name_container_vue.attribue_picked_name);
+
+                            if($(this).html() == attribue_name_container_vue.attribue_picked_name){
+                                is_exist = true;
+                                console.log('clickddd');
+                                $(this).click();
+                            }
+                        });
+                        console.log(is_exist);
+                        if(!is_exist){
+                            item = addOneAttribute('category_attribute_'+type,attribue_name_container_vue.attribue_picked_id,attribue_name_container_vue.attribue_picked_name,type);
+                            $(item).children('span').eq(0).click();
+                        }
+                        toastr.success('处理成功!');
+                    }else{
+                        toastr.warning('错误码: '+response.status+','+response.msg);
+                    }
+                },
+                complete: function () {
+                    layer.closeAll('loading');
+                },error: function (xmlHttpRequest, textStatus, errorThrown) {
+                    toastr.warning('错误码: '+xmlHttpRequest.status);
+                }
+            });
+        })
+        // 全选
+        $(".select-all").on("click",function(){
+            var array= new Array();
+            var values = attribue_value_container_vue.attribute_values;
+            for(var i=0;i<values.length;i++){
+                array.push(values[i].id);
+            }
+            attribue_value_container_vue.attribue_value_container_picked=array;
+        });
+
+        $(function(){
+            //  点击静止滚屏
+            $("body").on("click",".category_attribute_ul .add",function(){
+                $("#configure_attribue_container").css({
+                    overflow:"hidden",
+                    height:"100%"
+                });
+            });
+            $(document).keyup(function(e){
+                if(e.which == '27'){
+                    $("body").css({
+                        position:"static",
+                        height:"100%",
+                        overflow:"hidden"
+                    });
+                    $("#configure_attribue_container").css({
+                        overflow:"static",
+                        height:"100%"
+                    });
+                }
+            })
+        });
+
+        $("input[name='is_photo_attr'][value='1']").on("click", function(){
+            $.ajax({
+                url:"/category/existCategoryPicAttribute",
+                data:{category_id: select_category_id,attribute_id:attribue_name_container_vue.attribue_picked_id},
+                type:'GET',
+                success: function (response) {
+                    if(response.status != 200){
+                        swal({
+                                title: "",
+                                text: response.msg,
+                                type: "warning",
+                                showCancelButton: true,
+                                confirmButtonColor: "#444444",
+                                confirmButtonText: "确认",
+                                cancelButtonText: "取消",
+                                closeOnConfirm: true,
+                                closeOnCancel: true
+                            },
+                            function (isConfirm) {
+                                if (isConfirm) {
+                                    $("input[name='is_photo_attr'][value='1']").prop('checked',true);
+                                    $("input[name='is_photo_attr'][value='0']").prop('checked',false);
+                                } else {
+                                    $("input[name='is_photo_attr'][value='1']").prop('checked',false);
+                                    $("input[name='is_photo_attr'][value='0']").prop('checked',true);
+                                }
+                            });
+                    }
+                },
+                complete: function () {
+
+                },error: function (xmlHttpRequest, textStatus, errorThrown) {
+                    swal("错误", '错误码: '+xmlHttpRequest.status, "error");
+                }
+            });
+        })
+
     </script>
+
 @endsection

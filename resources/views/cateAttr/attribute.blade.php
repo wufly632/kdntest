@@ -477,7 +477,6 @@ $defaultSelectAttribute = count($attribute_list)>0?$attribute_list[0]:0;
                 success: function (response) {
                     if (response.status == 200) {
                         attribute = response.content;
-                        console.log(attribute);
                         updateDetailView(attribute);
                         //更新属性值列表
                         attributes_values_data.items = attribute.attribute_values;
@@ -524,7 +523,6 @@ $defaultSelectAttribute = count($attribute_list)>0?$attribute_list[0]:0;
         function monitoringMenuClick() {
             //菜单级联点击事件
             $(".ul-tree>li>div").on("click",function(){
-                console.log(111);
                 $(this).siblings(".ul-tree").slideToggle();
                 $(this).find(".fa").toggleClass("fa-angle-down");
                 $(".ul-tree>li>div").removeClass("tree-active");
@@ -629,7 +627,7 @@ $defaultSelectAttribute = count($attribute_list)>0?$attribute_list[0]:0;
                 url:"{{secure_route('attrvalue.delete')}}",
                 data:{id: attribute_value_id, name:attribute_value_name,_token:"{{csrf_token()}}"},
                 type:'POST',
-                success: function (response) {console.log(response)
+                success: function (response) {
                     if(response.status == 200){
 
                     } else {
