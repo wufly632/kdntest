@@ -2,57 +2,71 @@
 
 namespace App\Http\Controllers\CateAttr;
 
-use App\Entities\CateAttr\AttributeValue;
-use App\Http\Requests\CateAttr\AttrvalueRequest;
+use App\Services\Api\ApiResponse;
+use App\Services\CateAttr\AttrValueService;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
 
 class AttrvalueController extends Controller
 {
-    /**
-     * 创建属性值
-     */
-    public function create(AttrvalueRequest $request)
+
+    protected $attrValueService;
+
+    protected $users = [
+        'wufly@cucoe.com',
+        'wfxykzd@163.com'
+    ];
+
+    public function __construct(AttrValueService $attrValueService)
     {
-        if (AttributeValue::insert($request->except('_token'))) {
-            return jsonMessage('', '添加成功！');
+        $this->attrValueService = $attrValueService;
+    }
+
+    /**
+     * @function 属性值增加或删除
+     * @param Request $request
+     * @return mixed
+     */
+    public function updateOrInsert(Request $request)
+    {
+        if(!in_array(Auth::user()->email, $this->users)){
+            return ApiResponse::failure(g_API_ERROR, '权限受限!');
         }
-        return jsonMessage('添加失败！');
-    }
-
-    /**
-     * 更新属性值
-     */
-    public function update(AttrvalueRequest $request)
-    {
-        $id = $request->id;
-        if (AttributeValue::where('id', $id)->update($request->except(['id', '_token']))) {
-            return jsonMessage('','更新成功');
+        $model = $this->attrValueService->getAttributeValueRepository()->makeModel();
+        if($request->id){
+            $model = $model->where('id', '!=', $request->id);
         }
-        return jsonMessage('更新失败');
+        if($model->where('attribute_id', $request->attribute_id)->where('name', $request->name)->first()){
+            return ApiResponse::failure(g_API_ERROR, '属性值名称有重复');
+        }
+        if($model->where('attribute_id', $request->attribute_id)->where('en_name', $request->en_name)->first()){
+            return ApiResponse::failure(g_API_ERROR, '属性值英文名称有重复');
+        }
+        $attribute_value = $this->attrValueService->getAttributeValueRepository()->updateOrCreate(['id' => $request->id], $request->all());
+        if(!$attribute_value){
+            return ApiResponse::failure(g_API_ERROR, '操作失败');
+        }
+        $attribute =  $this->attrValueService->getAttributeRepository()->find($attribute_value->attribute_id);
+        $attribute_values = $attribute->attribute_values;
+        if ($attribute_value->wasRecentlyCreated){
+            return ApiResponse::success($attribute_values, "成功添加属性值:".$attribute_value->name);
+        } else {
+            return ApiResponse::success($attribute_values, "成功修改属性值:".$attribute_value->name);
+        }
     }
 
     /**
-     * 搜索
+     * @function 删除属性值
+     * @param Request $request
+     * @return mixed
      */
-    public function search(Request $request)
+    public function delete(Request $request)
     {
-        $name = $request->name;
-        $id   = $request->id;
-        if (! $name) return jsonMessage('请输入要搜索的属性名称');
-        if (! $id) return jsonMessage('请选择属性');
-        $result = AttributeValue::where([['attribute_id', $id], ['name', $name]])->get();
-        return jsonMessage('', $result);
-    }
-
-    /**
-     * 属性值详情
-     */
-    public function detail(Request $request)
-    {
-        $id = $request->id;
-        if (! $id) return jsonMessage('请选择要查询的属性');
-        $result = AttributeValue::whereIn('id', explode(',' ,$id))->get();
-        return jsonMessage('', $result);
+        $attrvalue_id = $request->id;
+        if(!$attrvalue_id){
+            return ApiResponse::failure(g_API_ERROR,'参数缺失!');
+        }
+        return ApiResponse::failure(g_API_ERROR, '属性值不允许删除，请联系技术人员');
     }
 }

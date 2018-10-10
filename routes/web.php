@@ -38,18 +38,14 @@ Route::group(['middleware' => ['auth', 'web']], function() {
     //属性管理
     Route::group(['prefix' => 'attribute', 'namespace' => 'CateAttr'], function(){
         Route::get('/', ['as' => 'attribute.index', 'uses' => 'AttributeController@index']);
-        Route::post('/search', ['as' => 'attribute.search', 'uses' => 'AttributeController@search']);
-        Route::post('/create', ['as' => 'attribute.create', 'uses' => 'AttributeController@create']);
-        Route::post('/update', ['as' => 'attribute.update', 'uses' => 'AttributeController@update']);
-        Route::post('/attr', ['as' => 'attribute.attr', 'uses' => 'AttributeController@attr']);
+        Route::get('/detail/{attribute}', ['as' => 'attribute.detail', 'uses' => 'AttributeController@detail']);
+        Route::post('/updateOrInsert', ['as' => 'attribute.update_or_insert', 'uses' => 'AttributeController@updateOrInsert']);
+        Route::get('/search', ['as' => 'attribute.search', 'uses' => 'AttributeController@search']);
         Route::post('/delete', ['as' => 'attribute.delete', 'uses' => 'AttributeController@delete']);
-        Route::get('/all', ['as' => 'attribute.all', 'uses' => 'AttributeController@all']);
     });
     Route::group(['prefix' => 'attrvalue', 'namespace' => 'CateAttr'], function(){
-        Route::post('/detail', ['as' => 'attrvalue.detail', 'uses' => 'AttrvalueController@detail']);
-        Route::post('/create', ['as' => 'attrvalue.create', 'uses' => 'AttrvalueController@create']);
-        Route::post('/update', ['as' => 'attrvalue.update', 'uses' => 'AttrvalueController@update']);
-        Route::post('/search', ['as' => 'attrvalue.search', 'uses' => 'AttrvalueController@search']);
+        Route::post('updateOrInsert', ['as' => 'attrvalue.update_or_insert', 'uses' => 'AttrValueController@updateOrInsert']);
+        Route::post('/delete', ['as' => 'attrvalue.delete', 'uses' => 'AttrValueController@delete']);
     });
 
     //商品模块

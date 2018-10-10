@@ -22,6 +22,6 @@ class AttributeValue extends Model implements Transformable
      *
      * @var array
      */
-    protected $fillable = [];
+    protected $fillable = ['attribute_id','name','en_name','value','sort','created_at','updated_at'];
 
 }

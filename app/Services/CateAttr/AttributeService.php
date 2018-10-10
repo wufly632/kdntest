@@ -7,6 +7,7 @@
 namespace App\Services\CateAttr;
 
 use App\Entities\CateAttr\CategoryAttribute;
+use App\Presenters\CateAttr\CategoryPresenter;
 use App\Repositories\CateAttr\AttributeRepository;
 use App\Repositories\CateAttr\CategoryAttributeRepository;
 use App\Validators\CateAttr\CategoryAttributeValidator;
@@ -38,6 +39,42 @@ class AttributeService{
     public function getAttributeRepository()
     {
         return $this->attribute;
+    }
+
+    /**
+     * 根据属性对应的分类数组，重新组合
+     *
+     * @param array $attribute_categories_array
+     * @return array
+     */
+    public function getAttributeCategories($attribute_categories_array)
+    {
+        $categories = [];
+        foreach ($attribute_categories_array as $attribute_categories){
+            $category = $attribute_categories->category;
+            $category->name = app(CategoryPresenter::class)->getCatePathName($category->category_ids);
+            array_push($categories, $category);
+        }
+        return $categories;
+    }
+
+    /**
+     * 搜索属性
+     *
+     * @param void
+     * @return mixed
+     */
+    public function getAttributesByLikeName($name)
+    {
+        $name = strtolower($name);
+        $attributes = $this->attribute->all();
+        $attributesLikeName = [];
+        foreach ($attributes as $attribute) {
+            if(str_contains(strtolower($attribute->name), $name)){
+                $attributesLikeName[$attribute->id] = $attribute->name;
+            }
+        }
+        return $attributesLikeName;
     }
 
 }

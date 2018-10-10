@@ -33,4 +33,13 @@ class CategoryAttribute extends Model implements Transformable
         return $this->hasOne(Attribute::class, "id", "attr_id")->orderBy('sort','asc');
     }
 
+    /**
+     * @function 获取分类
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     */
+    public function category()
+    {
+        return $this->hasOne(Category::class, 'id', 'category_id');
+    }
+
 }
