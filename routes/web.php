@@ -18,17 +18,17 @@ Route::post('/loginPost', ['as' => 'login.post', 'uses' => 'LoginController@post
 Route::get('/captcha', ['as' => 'captcha', 'uses' => 'LoginController@captcha']);
 
 
-Route::group(['middleware' => ['auth', 'web']], function() {
+Route::group(['middleware' => ['auth', 'web']], function () {
     Route::get('/', ['as' => 'home.dashboard', 'uses' => 'LoginController@dashboard']);
 
     //个人中心
     Route::group(['prefix' => 'personal', 'namespace' => 'Personal'], function () {
-       Route::get('/index', ['as' => 'personal.index', 'uses' => 'PersonalController@index']);
-       Route::post('/update', ['as' => 'personal.update', 'uses' => 'PersonalController@update']);
+        Route::get('/index', ['as' => 'personal.index', 'uses' => 'PersonalController@index']);
+        Route::post('/update', ['as' => 'personal.update', 'uses' => 'PersonalController@update']);
     });
 
     //类目管理
-    Route::group(['prefix' => 'category','namespace' => 'CateAttr'], function(){
+    Route::group(['prefix' => 'category', 'namespace' => 'CateAttr'], function () {
         Route::get('/', ['as' => 'category.index', 'uses' => 'CategoryController@index']);
         Route::get('/detail/{category}', ['as' => 'category.detail', 'uses' => 'CategoryController@detail']);
         Route::post('/attribute', ['as' => 'category.attribute', 'uses' => 'CategoryController@getCategoryAttributes']);
@@ -38,21 +38,21 @@ Route::group(['middleware' => ['auth', 'web']], function() {
         Route::get('/current_category_info/{category_id}', ['as' => 'category.current_info', 'uses' => 'CategoryController@currentCategoryInfo']);
     });
     //属性管理
-    Route::group(['prefix' => 'attribute', 'namespace' => 'CateAttr'], function(){
+    Route::group(['prefix' => 'attribute', 'namespace' => 'CateAttr'], function () {
         Route::get('/', ['as' => 'attribute.index', 'uses' => 'AttributeController@index']);
         Route::get('/detail/{attribute}', ['as' => 'attribute.detail', 'uses' => 'AttributeController@detail']);
         Route::post('/updateOrInsert', ['as' => 'attribute.update_or_insert', 'uses' => 'AttributeController@updateOrInsert']);
         Route::get('/search', ['as' => 'attribute.search', 'uses' => 'AttributeController@search']);
         Route::post('/delete', ['as' => 'attribute.delete', 'uses' => 'AttributeController@delete']);
     });
-    Route::group(['prefix' => 'attrvalue', 'namespace' => 'CateAttr'], function(){
+    Route::group(['prefix' => 'attrvalue', 'namespace' => 'CateAttr'], function () {
         Route::post('updateOrInsert', ['as' => 'attrvalue.update_or_insert', 'uses' => 'AttrValueController@updateOrInsert']);
         Route::post('/delete', ['as' => 'attrvalue.delete', 'uses' => 'AttrValueController@delete']);
     });
 
     //商品模块
-    Route::group(['prefix' => 'good', 'namespace' => 'Good'], function() {
-        Route::get('/',['as' => 'good.index', 'uses' =>'GoodsController@index']);
+    Route::group(['prefix' => 'good', 'namespace' => 'Good'], function () {
+        Route::get('/', ['as' => 'good.index', 'uses' => 'GoodsController@index']);
         Route::get('/audit/{good}', ['as' => 'good.audit', 'uses' => 'GoodsController@audit']);
         Route::post('/auditPass', ['as' => 'good.auditPass', 'uses' => 'GoodsController@auditPass']);
         Route::post('/editPost', ['as' => 'good.edit', 'uses' => 'GoodsController@editPost']);
@@ -82,9 +82,8 @@ Route::group(['middleware' => ['auth', 'web']], function() {
     });
 
     //用户订单模块
-    Route::group(['prefix' => 'order', 'namespace' => 'Order'], function () {
-        Route::get('/', ['as' => 'order.index', 'uses' => 'OrderController@index']);
-
+    Route::group(['namespace' => 'Order'], function () {
+        Route::resources(['orders' => 'OrderController']);
     });
 
     //用户管理模块

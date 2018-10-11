@@ -86,6 +86,18 @@
                                     class="fa fa-circle-o"></i>管理员管理</a></li>
                 </ul>
             </li>
+            <li class="treeview">
+                <a href="#">
+                    <i class="fa fa-th-list"></i>
+                    <span>订单管理</span>
+                </a>
+                <ul class="treeview-menu">
+                    <li><a data-target-url="orders" href="{{secure_route('orders.index')}}"><i
+                                    class="fa fa-circle-o"></i>订单列表</a></li>
+                    <li><a data-target-url="waitdeliver" href="{{secure_route('orders.index')}}"><i
+                                    class="fa fa-circle-o"></i>未发货</a></li>
+                </ul>
+            </li>
         </ul>
     </section>
     <!-- /.sidebar -->

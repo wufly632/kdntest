@@ -7,15 +7,15 @@ use Prettus\Repository\Contracts\Transformable;
 use Prettus\Repository\Traits\TransformableTrait;
 
 /**
- * Class Order.
+ * Class OrderGood.
  *
  * @package namespace App\Entities\Order;
  */
-class Order extends Model implements Transformable
+class OrderGood extends Model implements Transformable
 {
     use TransformableTrait;
 
-    protected $table = 'customer_order';
+    protected $table = 'customer_order_goods';
 
     /**
      * The attributes that are mass assignable.
@@ -24,10 +24,8 @@ class Order extends Model implements Transformable
      */
     protected $fillable = [];
 
-    public function customerOrderGood()
+    public function good()
     {
-        return $this->hasMany('App\Entities\Order\OrderGood','order_id','order_id');
+        return $this->hasOne('App\Entities\Good\Good', 'id', 'good_id');
     }
-
-
 }
