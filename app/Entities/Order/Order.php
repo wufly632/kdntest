@@ -24,4 +24,18 @@ class Order extends Model implements Transformable
      */
     protected $fillable = [];
 
+    public function customerOrderGood()
+    {
+        return $this->hasMany('App\Entities\Order\OrderGood', 'order_id', 'order_id');
+    }
+
+    public function customerAddress()
+    {
+        return $this->hasOne('App\Entities\Customer\CustomerAddress', 'id', 'address_id');
+    }
+
+    public function customerOrderPayment()
+    {
+        return $this->hasOne('App\Entities\Order\OrderPayment', 'order_id', 'order_id');
+    }
 }

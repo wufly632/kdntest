@@ -26,7 +26,7 @@ function addDateRangePicker(ele) {
             '最近30日': [moment().subtract(29, 'days'), moment()],
             '本月': [moment().startOf('month'), moment().endOf('month')],
             '上月': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
-        },
+        }
     }, function (start, end, label) {
         console.log('New date range selected: ' + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD') + ' (predefined range: ' + label + ')');
     });
@@ -56,7 +56,7 @@ function createDataTable(ele, data) {
         'searching': false,
         'ordering': true,
         'info': true,
-        'autoWidth': false,
+        'autoWidth': false
     });
 }
 
@@ -74,6 +74,6 @@ function createDatePicker(ele) {
     ele.datepicker({
         format: 'yyyy-mm-dd',
         autoclose: true,
-        language: 'zh-cn',
+        language: 'zh-cn'
     });
 }
