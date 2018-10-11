@@ -61,6 +61,8 @@ class OrderController extends Controller
     public function show($id)
     {
         //
+        return view('orders.show', ['order' => $this->orderService->getOrderInfo($id)]);
+
     }
 
     /**

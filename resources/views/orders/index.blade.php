@@ -3,22 +3,28 @@
         #vertical-middle tr td {
             vertical-align: middle;
         }
-        .good-image{
+
+        .good-image {
             float: left;
         }
-        .good-image>img{
+
+        .good-image > img {
             width: 80px;
             height: 80px;
         }
-        .good-info{
+
+        .good-info {
             float: left;
             padding-left: 5px;
         }
-        .good-info>p{
+
+        .good-info > p {
             padding: 4px;
         }
 
     </style>
+    <link rel="stylesheet"
+          href="{{ asset('/assets/admin-lte/bower_components/bootstrap-daterangepicker/daterangepicker.css') }}">
 @stop
 @extends('layouts.default')
 @section('content')
@@ -96,9 +102,9 @@
                                     </div>
                                 </div>
                                 <div class="form-group col-sm-4">
-                                    <label for="" class="control-label col-sm-4 text-right">创建时间:</label>
+                                    <label for="created_at" class="control-label col-sm-4 text-right">创建时间:</label>
                                     <div class="col-sm-8">
-                                        <input type="text" name="good_id" id="good-id" class="input-sm form-control">
+                                        <input type="text" name="created_at" id="created_at" class="input-sm form-control">
                                     </div>
                                 </div>
                                 <div class="form-group col-sm-4 text-right">
@@ -142,7 +148,8 @@
                                         <tr>
                                             <td>
                                                 @php( $goodinfo =$order->good)
-                                                <p class="good-image"><img src="{{ $goodinfo->main_pic }}" title="商品图片" alt="商品图片"></p>
+                                                <p class="good-image"><img src="{{ $goodinfo->main_pic }}" title="商品图片"
+                                                                           alt="商品图片"></p>
                                                 <div class="good-info text-left">
                                                     <p>{{ $goodinfo->good_title }}</p>
                                                     <p>{{ $goodinfo->good_code }}</p>
@@ -160,7 +167,7 @@
                                             <td>{{ $orders->StatusWords[$orderlist->status] }}</td>
                                             @if($loop->index=($loop->first))
                                                 <td rowspan="{{ $loop->count }}">
-                                                    <a href="{{ secure_route('orders.show',['id'=>$orderlist->id]) }}">查看详情</a>
+                                                    <a href="{{ secure_route('orders.show',['id'=>$orderlist->order_id]) }}">查看详情</a>
                                                 </td>
                                             @endif
 
@@ -172,7 +179,6 @@
                             <div class="pull-right">
                                 {{ $orders->links() }}
                             </div>
-
                         </div>
                     </div>
                 </div>
@@ -181,5 +187,10 @@
     </div>
 @stop
 @section('script')
-
+    <script src="{{ asset('/assets/admin-lte/bower_components/moment/min/moment.min.js') }}"></script>
+    <script src="{{ asset('/assets/admin-lte/bower_components/bootstrap-daterangepicker/daterangepicker.js') }}"></script>
+    <script src="{{ asset('/assets/js/plugincommon.js') }}"></script>
+    <script>
+        addDateRangePicker($('#created_at'));
+    </script>
 @endsection

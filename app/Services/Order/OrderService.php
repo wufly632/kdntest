@@ -11,6 +11,7 @@
 
 namespace App\Services\Order;
 
+use App\Repositories\Order\OrderGoodRepository;
 use App\Repositories\Order\OrderRepository;
 
 class OrderService
@@ -19,16 +20,18 @@ class OrderService
      * @var OrderRepository
      */
     protected $order;
+    protected $orderGoodRepository;
 
     /**
      * OrderController constructor.
      *
      * @param OrderRepository $order
+     * @param OrderGoodRepository $orderGoodRepository
      */
-
-    public function __construct(OrderRepository $order)
+    public function __construct(OrderRepository $order, OrderGoodRepository $orderGoodRepository)
     {
         $this->order = $order;
+        $this->orderGoodRepository = $orderGoodRepository;
     }
 
     /**
@@ -71,5 +74,10 @@ class OrderService
             'APP',
             '门店'
         ];
+    }
+
+    public function getOrderInfo($id)
+    {
+        return $this->order->findByField('order_id', $id)->first();
     }
 }
