@@ -25,10 +25,10 @@ class Attribute extends Model implements Transformable
     protected $fillable = ['name','alias_name','en_name','type','sort','status','created_at','updated_at'];
 
     /**标准类型*/
-    const TYPE_STANDARD = "0";
+    const TYPE_STANDARD = "1";
 
     /**自定义文本*/
-    const TYPE_CUSTOM = "1";
+    const TYPE_CUSTOM = "2";
 
 
     /**
@@ -38,6 +38,8 @@ class Attribute extends Model implements Transformable
         self::TYPE_STANDARD => '标准化文本',
         self::TYPE_CUSTOM   => '自定义文本',
     );
+
+
 
     /**
      * @function 属性值

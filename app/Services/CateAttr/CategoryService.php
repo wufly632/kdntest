@@ -6,6 +6,7 @@
  */
 namespace App\Services\CateAttr;
 
+use App\Entities\CateAttr\Attribute;
 use App\Repositories\CateAttr\CategoryAttributeRepository;
 use App\Repositories\CateAttr\CategoryRepository;
 use App\Services\Api\ApiResponse;
@@ -65,7 +66,6 @@ class CategoryService{
      */
     public function getCategoryAttributes(int $category_id, $type = '')
     {
-        $category_id = 3;
         $collections = $this->getCategoryAttributeModel()->where('category_id', $category_id)->where('status', '1');
         if ($type && !empty($type)) {
             $collections = $collections->where('attr_type', $type);
@@ -136,7 +136,6 @@ class CategoryService{
             } else {
                 $data['create_at'] = Carbon::now()->toDateTimeString();
             }
-            $data['category_ids'] = '111';
             $category = $this->category->updateOrCreate(['id' => $category_id], $data);
             //生成类目ID路径
             $category_ids = $this->generateCategoryIds($category->id);
@@ -144,6 +143,7 @@ class CategoryService{
             DB::commit();
             return ApiResponse::success('操作成功');
         } catch (\Exception $e) {
+            echo $e->getMessage();die;
             DB::rollBack();
             return ApiResponse::failure(g_API_ERROR, '操作失败');
         }
@@ -194,10 +194,10 @@ class CategoryService{
         if (! $category) {
             return $category_ids;
         }
-        $parent_category = $this->category->find($category->parent_id);
-        if (! $parent_category) {
+        if ($category->level == 1) {
             $category_ids = '0,'.$category_id;
         } else {
+            $parent_category = $this->category->find($category->parent_id);
             $category_ids = $parent_category->category_ids.','.$category_id;
         }
         return $category_ids;
@@ -226,6 +226,70 @@ class CategoryService{
             $result['second_level_categories'] = $current_category_first_level->subCategories->toArray();
         }
         return $result;
+    }
 
+    /**
+     * 获取类目属性详情
+     *
+     * @param int $category_id 分类id
+     * @param int $attribute_id 属性id
+     * @return json
+     */
+    public function getCategoryAttributeDetail(int $category_id, int $attribute_id)
+    {
+        //获取类目属性
+        $attribute = app(AttributeService::class)->getAttributeByPk($attribute_id);
+        //获取类目属性对应的所有属性值
+        $attribute_values = app(AttrValueService::class)->getAttributeValuesByAttributeId($attribute_id, 'sort', 'desc', true);
+
+        //获取属性对应的属性值名称
+        $category_attributes = $this->categoryAttribute->findWhere(['category_id' => $category_id, 'attr_id' => $attribute_id, 'status' => 1])->first();
+        //组合数据
+        $items = $category_attributes ? $category_attributes->formatExport() : [];
+        // dd($category_attributes);
+        $values = app(AttrValueService::class)->attribute_value_names($category_attributes);
+        $items[] = ['name' => '属性名', 'value' => $attribute->name];
+        $items[] = ['name' => '属性英文名', 'value' => $attribute->en_name];
+        $items[] = ['name' => '属性值类型', 'value' => Attribute::$alltypes[$attribute->type]];
+        $items[] = ['name' => '属性值', 'value' => implode(', ', array_pluck($values, 'name'))];
+        $data['attribute_items'] = $items;
+        $data['attribute_exist_values_id'] = array_pluck($values, 'id');
+        $data['attribute_values'] = $attribute_values;
+        $data['is_image'] = $values ? $values[0]['is_image'] : 2;
+        $data['is_diy'] = $values ? $values[0]['is_diy'] : 2;
+        $data['is_custom_text'] = $attribute->type;
+        return $data;
+    }
+
+    /**
+     * 更新类目属性
+     *
+     * @param Request $request
+     * @return json
+     */
+    public function updateCategoryAttribute($request)
+    {
+        $attribute = app(AttributeService::class)->getAttributeByPk($request->attribute_id);
+        try {
+            DB::beginTransaction();
+            $data = [
+                'category_id' => $request->category_id,
+                'attr_type' => $request->type,
+                'attr_id'   => $request->attribute_id,
+                'attr_values' => implode(',', $request->values_id),
+                'is_required' => $request->is_required,
+                'check_type'  => $request->check_type,
+                'is_image'    => $request->is_image,
+                'is_diy'      => $request->is_diy,
+                'is_detail'   => $request->is_detail,
+                'created_at'  => Carbon::now()->toDateTimeString(),
+            ];
+            $this->categoryAttribute->updateOrCreate(['category_id' => $request->category_id, 'attr_id' => $request->attribute_id],$data);
+            DB::commit();
+            return ApiResponse::success('', '操作成功!');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return ApiResponse::failure(g_API_ERROR, $e->getMessage());
+        }
     }
 }

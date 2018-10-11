@@ -44,6 +44,60 @@ class AttrValueService{
         return $this->attribute;
     }
 
+    /**
+     * 根据属性id获取该属性对应的所有属性值
+     *
+     * @param int $attribute_id 属性id
+     * @return object
+     */
+    public function getAttributeValuesByAttributeId(int $attribute_id, $sortBy = '', $sort = '', $toArray = true)
+    {
+        if($sortBy && in_array($sort, ['asc', 'desc'])){
+            $this->attrvalue = $this->attrvalue->scopeQuery(function($query)use($sortBy, $sort){
+                return $query->orderBy($sortBy, $sort);
+            });
+        }
+        $attribute_values = $this->attrvalue->findWhere(['attribute_id' => $attribute_id]);
+        return $this->transfer($attribute_values, $toArray);
+    }
 
+    /**
+     * 返回属性对应的相关信息
+     *
+     * @param array $category_attributes 类目属性
+     * @return mix
+     */
+    public function attribute_value_names($category_attributes)
+    {
+        if(!$category_attributes){
+            return [];
+        }
+        $attribute_value_ids = explode(',', $category_attributes->attr_values);
+        $attribute_values = $this->attrvalue->findWhereIn('id', $attribute_value_ids);
+        $arr = [];
+        foreach ($attribute_values as $key => $value) {
+            $data = [];
+            $data['name'] = $value->name;
+            $data['id'] = $value->id;
+            $data['is_image'] = $category_attributes->is_image;
+            $data['is_diy'] = $category_attributes->is_diy;
+            $arr[] = $data;
+        }
 
+        return $arr;
+    }
+
+    /**
+     * 转换数据格式
+     *
+     * @param object $object
+     * @return object|array
+     */
+    public function transfer($object, $toArray = true)
+    {
+        if(($toArray === true) && $object){
+            return $object->toArray();
+        }
+        return $object;
+    }
 }

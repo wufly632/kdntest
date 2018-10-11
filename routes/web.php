@@ -36,6 +36,9 @@ Route::group(['middleware' => ['auth', 'web']], function() {
         //更新或添加
         Route::post('/update', ['as' => 'category.update', 'uses' => 'CategoryController@update']);
         Route::get('/current_category_info/{category_id}', ['as' => 'category.current_info', 'uses' => 'CategoryController@currentCategoryInfo']);
+        Route::get('/{category_id}/attribute/{attribute_id}/detail',['as' => 'category.category.attribute','uses' => 'CategoryController@getCategoryAttributeDetail']);
+        Route::post('/attribute/update', ['as' => 'category.attribute.update', 'uses' => 'CategoryController@updateCategoryAttribute']);
+        Route::get('/existCategoryPicAttribute', ['as' => 'category.exist.picAttribute', 'uses' => 'CategoryController@existCategoryPicAttribute']);
     });
     //属性管理
     Route::group(['prefix' => 'attribute', 'namespace' => 'CateAttr'], function(){
@@ -44,6 +47,7 @@ Route::group(['middleware' => ['auth', 'web']], function() {
         Route::post('/updateOrInsert', ['as' => 'attribute.update_or_insert', 'uses' => 'AttributeController@updateOrInsert']);
         Route::get('/search', ['as' => 'attribute.search', 'uses' => 'AttributeController@search']);
         Route::post('/delete', ['as' => 'attribute.delete', 'uses' => 'AttributeController@delete']);
+        Route::get('/all', ['as' => 'attribute.all', 'uses' => 'AttributeController@getAllAttributes']);
     });
     Route::group(['prefix' => 'attrvalue', 'namespace' => 'CateAttr'], function(){
         Route::post('updateOrInsert', ['as' => 'attrvalue.update_or_insert', 'uses' => 'AttrValueController@updateOrInsert']);

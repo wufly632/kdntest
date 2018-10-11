@@ -10,6 +10,24 @@
             padding: 0;
             overflow: auto;
         }
+        .con-item-title {
+            line-height: 42px;
+            font-size: 18px;
+            margin: 0;
+            padding-left: 20px;
+        }
+        .con-item-title span {
+            font-weight: 600;
+        }
+        .con-item-title .fa {
+            margin-right: 10px;
+            margin-top: 10px;
+        }
+        .level-two {
+            padding-left: 20px;
+            color: #4d4d4d;
+            border-bottom: 1px solid #e9e9e9;
+        }
         .input-group {
             position: relative;
             display: table;
@@ -52,6 +70,11 @@
         .level-one .category-name {
             font-size: 16px;
         }
+        .level-three {
+            padding-left: 30px;
+            color: #6e6e6e;
+            border-bottom: 1px solid #e9e9e9;
+        }
         .category-name {
             margin-right: 5px;
         }
@@ -63,6 +86,28 @@
             margin-right: 10px;
             margin-top: 10px;
             color: #636363;
+        }
+        .ul-two, .ul-three {
+            display: none;
+        }
+        .con-message li {
+            padding-left: 20px;
+            line-height: 35px;
+        }
+        .mess-name {
+            display: inline-block;
+            color: #7d7d7d;
+            padding-right: 10px;
+            vertical-align: top;
+        }
+        .add {
+            width: 70px;
+            height: 24px;
+            line-height: 23px;
+            background: #555;
+            color: #fff;
+            border: none;
+            border-radius: 2px;
         }
     </style>
 @endsection
@@ -97,29 +142,31 @@
                             </div>
                             <ul class="ul-tree">
                                 @foreach($categories as $category)
+                                    <?php $category_two_level = $category->subCategories;?>
                                     <li>
-                                        <div class="level-one" data-category_id="{{$category->id}}" data-sub_categorys_num="{{count($category->subCategories)}}">
+                                        <div class="level-one" data-category_id="{{$category->id}}" data-sub_categorys_num="{{count($category_two_level)}}">
                                             <span class="category-name">{{$category->name}}</span>
-                                            <span class="category-num">({{count($category->subCategories)}})</span>
+                                            <span class="category-num">({{count($category_two_level)}})</span>
                                             <span class="pull-right-container"><i class="fa fa-angle-left pull-right"></i></span>
                                         </div>
-                                        {{--@if(count($category->subCategories)>0)
+                                        @if(count($category_two_level)>0)
+
                                             <ul class="ul-tree ul-two">
-                                                @foreach($category->subCategories as $subCategory)
+                                                @foreach($category_two_level as $subCategory)
+                                                    <?php $category_three_level = $subCategory->subCategories;?>
                                                     <li>
-                                                        <div class="level-two" data-category_id="{{$subCategory->id}}" data-sub_categorys_num="{{count($subCategory->subCategories)}}">
+                                                        <div class="level-two" data-category_id="{{$subCategory->id}}" data-sub_categorys_num="{{count($category_three_level)}}">
                                                             <span class="category-name">{{$subCategory->name}}</span>
-                                                            <span class="category-num">({{count($subCategory->subCategories)}})</span>
-                                                            <span class="pull-right-container"><i class="fa fa-angle-left pull-right"></i>
-                                            </span>
+                                                            <span class="category-num">({{count($category_three_level)}})</span>
+                                                            <span class="pull-right-container"><i class="fa fa-angle-left pull-right"></i></span>
                                                         </div>
-                                                        @if(count($subCategory->subCategories)>0)
+                                                        @if(count($category_three_level)>0)
                                                             <ul class="ul-tree ul-three">
-                                                                @foreach($subCategory->subCategories as $sub_subCategory)
+                                                                @foreach($category_three_level as $sub_subCategory)
                                                                     <li>
-                                                                        <div class="level-three" data-category_id="{{$sub_subCategory->id}}" data-sub_categorys_num="{{count($sub_subCategory->subCategories)}}">
+                                                                        <div class="level-three" data-category_id="{{$sub_subCategory->id}}" data-sub_categorys_num="0">
                                                                             <span class="category-name">{{$sub_subCategory->name}}</span>
-                                                                            <span class="category-num">({{count($sub_subCategory->subCategories)}})</span>
+                                                                            <span class="category-num">(0)</span>
                                                                         </div>
                                                                     </li>
                                                                 @endforeach
@@ -128,7 +175,7 @@
                                                     </li>
                                                 @endforeach
                                             </ul>
-                                        @endif--}}
+                                        @endif
                                     </li>
                                 @endforeach
                             </ul>
@@ -180,23 +227,23 @@
                                 </li>
                                 <li>
                                     <span class="mess-name">关键属性 :</span>
-                                    <ul id="category_attribute_1" class="category_attribute_ul product-attr">
-                                        <li v-show="is_last_category"><button class="add" data-type="1">+ 添加</button></li>
+                                    <ul id="category_attribute_2" class="category_attribute_ul product-attr">
+                                        <li v-show="is_last_category"><button class="add" data-type="2">+ 添加</button></li>
                                     </ul>
                                 </li>
                                 <li>
                                     <span class="mess-name">销售属性 :</span>
-                                    <ul id="category_attribute_2" class="category_attribute_ul product-attr">
+                                    <ul id="category_attribute_3" class="category_attribute_ul product-attr">
                                         <li v-show="is_last_category">
-                                            <button class="add" data-type="2">+ 添加</button>
+                                            <button class="add" data-type="3">+ 添加</button>
                                         </li>
                                     </ul>
                                 </li>
                                 <li>
-                                    <span class="mess-name">非关键属性:</span>
-                                    <ul id="category_attribute_3" class="category_attribute_ul product-attr">
+                                    <span class="mess-name">非销售属性:</span>
+                                    <ul id="category_attribute_4" class="category_attribute_ul product-attr">
                                         <li v-show="is_last_category">
-                                            <button class="add" data-type="3">+ 添加</button>
+                                            <button class="add" data-type="4">+ 添加</button>
                                         </li>
                                     </ul>
                                 </li>
@@ -235,7 +282,7 @@
                         <form>
                             {!! csrf_field() !!}
                             <div class="modal-body">
-                                <div class="form-group">
+                                <div class="form-group" style="height: 60px;">
                                     <div class="col-xs-1"></div>
                                     <label for="name" class="col-xs-2 control-label">
                                         父级类目：
@@ -252,7 +299,7 @@
                                         </select>
                                     </div>
                                 </div>
-                                <div class="form-group">
+                                <div class="form-group" style="height: 30px;">
                                     <div class="col-xs-1"></div>
                                     <label for="name" class="col-xs-2 control-label">
                                         类目名称：
@@ -261,7 +308,7 @@
                                         <input name="name" type="text" class="form-control">
                                     </div>
                                 </div>
-                                <div class="form-group">
+                                <div class="form-group" style="height: 30px;">
                                     <div class="col-xs-1"></div>
                                     <label for="name" class="col-xs-2 control-label">
                                         英文名称：
@@ -270,7 +317,7 @@
                                         <input name="en_name" type="text" class="form-control">
                                     </div>
                                 </div>
-                                <div class="form-group">
+                                <div class="form-group" style="height: 30px;">
                                     <div class="col-xs-1"></div>
                                     <label for="name" class="col-xs-2 control-label">
                                         排序值：
@@ -279,7 +326,7 @@
                                         <input name="sort" value="0" type="text" class="form-control">
                                     </div>
                                 </div>
-                                <div class="form-group">
+                                <div class="form-group" style="height: 30px;">
                                     <div class="col-xs-1"></div>
                                     <label for="name" class="col-xs-2 control-label">
                                         叶子类目：
@@ -299,7 +346,115 @@
                 </div>
             </div>
         </div>
+        <!-- 添加属性弹窗-->
+        <div class="modal fade " id="configure_attribue_container" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title" id="myModalLabel">属性配置</h4>
+                    </div>
+                    <div class="modal-body clearfix">
+                        <div class="col-sm-4 prop-property choice-style" id="prop-list-style">
+                            <div class="input-group">
+                                <input type="text" class="form-control" id="search_attribute_input">
+                                <span class="input-group-addon"><i class="fa fa-search"></i></span>
+                            </div>
+                            <div id="attribue_name_container" class="ul-popup">
+                                <div class="radio select-input" v-for="attribute in attributes">
+                                    <label><input type="radio" name="optionsRadios" @click="changeSelectValue($event)" v-bind:value="attribute.id" v-bind:data-name="attribute.name" v-model="attribue_picked_id">@if(App::isLocale('en'))@{{attribute.en_name}}@else@{{attribute.name}}@endif</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-4 prop-property choice-style" id="prop-add-style">
+                            <div class="input-group">
+                                <input type="text" class="form-control" id="search_attribute_value_input">
+                                <span class="input-group-addon"><i class="fa fa-search"></i></span>
+                            </div>
+                            <div class="select-all-box"><button class="select-all" data-selected="0">全选</button></div>
+                            <div id="attribue_value_container" class="ul-popup add-pro-color">
+                                <div class="select-input checkbox"  v-for="attribute_value in attribute_values">
+                                    <label><input type="checkbox" v-bind:value="attribute_value.id" v-model="attribue_value_container_picked">
+                                        @if(App::isLocale('en'))@{{ attribute_value.en_name }}@else@{{ attribute_value.name }}@endif
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="configure_attribute_detail_container" class="col-sm-4 prop-property">
+                            <div>
+                                <h4>属性详情1</h4>
+                                <ul class="con-message">
+                                    <li v-for="attribute_item in attribute_items">
+                                        <span class="mess-name">@{{ attribute_item.name }}:</span><span class="mess-key">@{{ attribute_item.value }}</span>
+                                    </li>
+                                </ul>
+                                <div class="form-group" v-if="attr_type = 3">
+                                    <div class="" style="margin-left: 10px">是否图片属性:</div>
+                                    <label  class="property-radio">
+                                        <input type="radio" name="is_image" value="2"  v-model="is_image">
+                                        否
+                                    </label>
+                                    <label class="property-radio">
+                                        <input type="radio" name="is_image" value="1"  v-model="is_image">
+                                        是
+                                    </label>
+                                </div>
+                                <div class="form-group" v-if="attr_type = 3">
+                                    <div class="" style="margin-left: 10px">是否支持自定义:</div>
+                                    <label  class="property-radio">
+                                        <input type="radio" name="is_diy" value="2"  v-model="is_diy">
+                                        不支持
+                                    </label>
+                                    <label class="property-radio">
+                                        <input type="radio" name="is_diy" value="1"  v-model="is_diy">
+                                        支持
+                                    </label>
+                                </div>
+                                <div class="form-group">
+                                    <div class="" style="margin-left: 10px">是否必填:</div>
+                                    <label  class="property-radio">
+                                        <input type="radio" name="is_required" value="2"  v-model="is_required">
+                                        必填
+                                    </label>
+                                    <label class="property-radio">
+                                        <input type="radio" name="is_required" value="1"  v-model="is_required">
+                                        非必填
+                                    </label>
+                                </div>
+                                <div class="form-group">
+                                    <div class="" style="margin-left: 10px">单选/多选:</div>
+                                    <label  class="property-radio">
+                                        <input type="radio" name="check_type" value="2" v-model="check_type">
+                                        单选
+                                    </label>
+                                    <label class="property-radio">
+                                        <input type="radio" name="check_type" value="1" v-model="check_type">
+                                        多选
+                                    </label>
+                                </div>
+                                <div class="form-group">
+                                    <div class="" style="margin-left: 10px">是否详情显示:</div>
+                                    <label  class="property-radio">
+                                        <input type="radio" name="is_detail" value="2" v-model="is_detail">
+                                        不显示
+                                    </label>
+                                    <label class="property-radio">
+                                        <input type="radio" name="is_detail" value="1" v-model="is_detail">
+                                        显示
+                                    </label>
+                                </div>
+                            </div>
 
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                        <button id="configure_attribue_container_submit" type="button" class="btn btn-primary">保存</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Modal end-->
     </div>
 @endsection
 @section('script')
@@ -321,7 +476,7 @@
                 select_categroy_name: '',
                 select_categroy_en_name: '',
                 select_categroy_sort: '',
-                select_category_is_final: 0,
+                select_categroy_is_final: 0,
             }
         })
 
@@ -395,12 +550,13 @@
                         type:'GET',
                         success: function (response) {
                             if (response.status == 200) {
+                                console.log(600,response.content);
                                 attribue_value_container_vue.attribute_values = response.content.attribute_values;
                                 attribue_value_container_vue.backup_attribute_values = attribue_value_container_vue.attribute_values;
                                 configure_attribute_detail_container_vue.attribute_items = response.content.attribute_items;
                                 attribue_value_container_vue.attribue_value_container_picked=response.content.attribute_exist_values_id; //如果属性分类值已经有,勾选上
-                                configure_attribute_detail_container_vue.checked = response.content.is_pic_attribute ? response.content.is_pic_attribute : 0;
-                                configure_attribute_detail_container_vue.custom_checked = response.content.is_custom_attribute ? response.content.is_custom_attribute : 0;
+                                configure_attribute_detail_container_vue.is_image = response.content.is_image ? response.content.is_image : 0;
+                                configure_attribute_detail_container_vue.is_diy = response.content.is_diy ? response.content.is_diy : 0;
                                 configure_attribute_detail_container_vue.is_custom_text = response.content.is_custom_text;
                             }
                         },complete: function () {
@@ -416,6 +572,21 @@
         //配置属性vue
         var configure_attribute_detail_container_vue = new Vue({
             el: '#configure_attribute_detail_container',
+            data: {
+                attribute_items:[],
+                is_custom_text:0,
+                attr_type:3,
+                check_type:1,
+                is_required:2,
+                is_image:2,
+                is_diy:2,
+                is_detail:2,
+            }
+        })
+
+        //配置属性vue
+        var edit_attribute_detail_container_vue = new Vue({
+            el: '#edit_attribute_detail_container_vue',
             data: {
                 is_photo_attr:false,
                 checked:false,
@@ -913,7 +1084,6 @@
 
         //配置属性
         function configureAttributes(type,attribute_id) {
-            //configure_attribute_detail_container_vue.is_photo_attr=(type==2)?true:false;
             //显示前重置这个页面
             attribue_value_container_vue.attribute_values = [];
             attribue_value_container_vue.attribue_value_container_picked = [];
@@ -923,12 +1093,14 @@
             attribue_name_container_vue.backup_attributes = [];
             attribue_name_container_vue.type = '';
             $('#configure_attribue_container').modal('show');
+
+
             attribue_name_container_vue.type = type; //保存添加的属性类别
             layer.load(1);
-            //获取所有的属性名
+            //获取所有的属性名(已配置除外)
             $.ajax({
-                url:"/attribute/all",
-                type:'GET',
+                url:"{{secure_route('attribute.all')}}",
+                type:'get',
                 success: function (response) {
                     if (response.status == 200) {
                         attribue_name_container_vue.backup_attributes = response.content;
@@ -965,20 +1137,27 @@
 
             category_id = select_category_id;
             type = attribue_name_container_vue.type;
-            is_pic_attribute = $("input[name='is_photo_attr']:checked").val();
-            is_custom_attribute = $("input[name='is_custom_attribute']:checked").val();
+            is_required = $("input[name='is_required']:checked").val();
+            check_type = $("input[name='check_type']:checked").val();
+            is_image = $("input[name='is_image']:checked").val();
+            is_diy = $("input[name='is_diy']:checked").val();
+            is_detail = $("input[name='is_detail']:checked").val();
             layer.load(1);
             console.log(attribue_name_container_vue.attribue_picked_name);
             $.ajax({
-                url:"/category/attribute/update",
+                url:"{{secure_route('category.attribute.update')}}",
                 type:'POST',
                 data:{
                     'type':type,
                     'category_id':category_id,
                     'attribute_id':attribue_name_container_vue.attribue_picked_id,
                     'values_id':attribue_value_container_vue.attribue_value_container_picked,
-                    'is_pic_attribute':is_pic_attribute,
-                    'is_custom_attribute':is_custom_attribute,
+                    'is_required':is_required,
+                    'is_image':is_image,
+                    'is_diy':is_diy,
+                    'is_detail':is_detail,
+                    'check_type':check_type,
+                    '_token': "{{csrf_token()}}"
                 },
                 success: function (response) {
                     if (response.status == 200) {
@@ -1026,8 +1205,8 @@
             //  点击静止滚屏
             $("body").on("click",".category_attribute_ul .add",function(){
                 $("#configure_attribue_container").css({
-                    overflow:"hidden",
-                    height:"100%"
+                    // overflow:"hidden",
+                    // height:"100%"
                 });
             });
             $(document).keyup(function(e){
@@ -1045,7 +1224,7 @@
             })
         });
 
-        $("input[name='is_photo_attr'][value='1']").on("click", function(){
+        $("input[name='is_image'][value='1']").on("click", function(){
             $.ajax({
                 url:"/category/existCategoryPicAttribute",
                 data:{category_id: select_category_id,attribute_id:attribue_name_container_vue.attribue_picked_id},
@@ -1062,14 +1241,13 @@
                                 cancelButtonText: "取消",
                                 closeOnConfirm: true,
                                 closeOnCancel: true
-                            },
-                            function (isConfirm) {
+                            }, function (isConfirm) {
                                 if (isConfirm) {
-                                    $("input[name='is_photo_attr'][value='1']").prop('checked',true);
-                                    $("input[name='is_photo_attr'][value='0']").prop('checked',false);
+                                    $("input[name='is_image'][value='1']").prop('checked',true);
+                                    $("input[name='is_image'][value='2']").prop('checked',false);
                                 } else {
-                                    $("input[name='is_photo_attr'][value='1']").prop('checked',false);
-                                    $("input[name='is_photo_attr'][value='0']").prop('checked',true);
+                                    $("input[name='is_image'][value='1']").prop('checked',false);
+                                    $("input[name='is_image'][value='2']").prop('checked',true);
                                 }
                             });
                     }

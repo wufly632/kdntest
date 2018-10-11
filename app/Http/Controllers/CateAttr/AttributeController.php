@@ -102,4 +102,18 @@ class AttributeController extends Controller
         }
         return ApiResponse::failure(g_API_ERROR, '属性不允许删除，请联系技术人员');
     }
+
+    /**
+     * 获取所有属性
+     *
+     * @param void
+     * @return json
+     */
+    public function getAllAttributes()
+    {
+        $attributes = $this->attributeService->getAttributeRepository()->scopeQuery(function($query){
+            return $query->orderBy('sort', 'desc');
+        })->all()->toArray();
+        return ApiResponse::success($attributes);
+    }
 }

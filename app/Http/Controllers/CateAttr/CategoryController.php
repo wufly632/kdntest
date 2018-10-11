@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Services\Api\ApiResponse;
 use App\Services\CateAttr\CategoryService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class CategoryController extends Controller
 {
@@ -16,8 +17,9 @@ class CategoryController extends Controller
      */
     protected $categoryService;
 
-    private $users = [
-
+    protected $users = [
+        'wufly@cucoe.com',
+        'wfxykzd@163.com'
     ];
 
     /**
@@ -125,5 +127,53 @@ class CategoryController extends Controller
         }else{
             return ApiResponse::success([]);
         }
+    }
+
+    /**
+     * 获取类目属性详情
+     *
+     * @param int $category_id 分类id
+     * @param int $attribute_id 属性id
+     * @return json
+     */
+    public function getCategoryAttributeDetail($category_id, $attribute_id)
+    {
+        if(!$attribute_id || !$category_id){
+            return ApiResponse::failure(g_API_ERROR, '参数缺失!');
+        }
+        $data = $this->categoryService->getCategoryAttributeDetail($category_id, $attribute_id);
+        return  ApiResponse::success($data);
+    }
+
+    /**
+     * 更新类目属性
+     *
+     * @param Request $request
+     * @return json
+     */
+    public function updateCategoryAttribute(Request $request)
+    {
+        if(!in_array(Auth::user()->email, $this->users)){
+            return ApiResponse::failure(g_API_ERROR, '权限受限!');
+        }
+        return $this->categoryService->updateCategoryAttribute($request);
+    }
+
+    /**
+     * 检测类目图片属性是否存在
+     *
+     * @param Request $request
+     * @return json
+     */
+    public function existCategoryPicAttribute(Request $request)
+    {
+        $category_id = $request->category_id;
+        $attribute_id = $request->attribute_id;
+        $categoryAttributeModel = $this->categoryService->getCategoryAttributeModel();
+        $category_attribute = $categoryAttributeModel->where(['category_id' => $category_id, 'status' => 1, 'is_image' => 1])->first();
+        if($category_attribute && $category_attribute->attribute_id != $attribute_id){
+            return ApiResponse::failure(g_API_ERROR, '该分类已经存在相应的图片属性，是否重新定义该分类图片属性？');
+        }
+        return ApiResponse::success('');
     }
 }
