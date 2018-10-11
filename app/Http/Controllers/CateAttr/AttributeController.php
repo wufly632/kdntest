@@ -32,7 +32,7 @@ class AttributeController extends Controller
     public function index()
     {
         $attribute_list = $this->attributeService->getAttributeRepository()->all();
-        return view('CateAttr.attribute',['attribute_list'=>$attribute_list]);
+        return view('cateAttr.attribute',['attribute_list'=>$attribute_list]);
     }
 
     /**
