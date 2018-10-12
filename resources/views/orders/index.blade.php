@@ -47,30 +47,30 @@
                 <div class="col-xs-12">
                     <div class="box box-info">
                         <div class="box-header">
-                            <form action="javascript:viod(0)" method="get" class="form-horizontal clearfix">
+                            <form action="{{ secure_route('orders.index') }}" method="get" class="form-horizontal clearfix">
                                 <div class="form-group col-sm-4">
                                     <label for="order-id" class="control-label col-sm-4 text-right">订单号:</label>
                                     <div class="col-sm-8">
-                                        <input type="text" name="order_id" id="order-id" class="input-sm form-control">
+                                        <input type="text" name="order_id" id="order-id" class="input-sm form-control" value="{{ old('order_id') }}">
                                     </div>
                                 </div>
                                 <div class="form-group col-sm-4">
                                     <label for="good-name" class="control-label col-sm-4 text-right">商品名称:</label>
                                     <div class="col-sm-8">
                                         <input type="text" name="good_name" id="good-name"
-                                               class="input-sm form-control">
+                                               class="input-sm form-control" value="{{ old('good_name') }}">
                                     </div>
                                 </div>
                                 <div class="form-group col-sm-4">
                                     <label for="good-id" class="control-label col-sm-4 text-right">商品ID:</label>
                                     <div class="col-sm-8">
-                                        <input type="text" name="good_id" id="good-id" class="input-sm form-control">
+                                        <input type="text" name="good_id" id="good-id" class="input-sm form-control" value="{{ old('good_id') }}">
                                     </div>
                                 </div>
                                 <div class="form-group col-sm-4">
-                                    <label for="good-id" class="control-label col-sm-4 text-right">货号:</label>
+                                    <label for="good_code" class="control-label col-sm-4 text-right">货号:</label>
                                     <div class="col-sm-8">
-                                        <input type="text" name="good_id" id="good-id" class="input-sm form-control">
+                                        <input type="text" name="good_code" id="good_code" class="input-sm form-control" value="{{ old('good_code') }}">
                                     </div>
                                 </div>
                                 <div class="form-group col-sm-4">
@@ -104,11 +104,11 @@
                                 <div class="form-group col-sm-4">
                                     <label for="created_at" class="control-label col-sm-4 text-right">创建时间:</label>
                                     <div class="col-sm-8">
-                                        <input type="text" name="created_at" id="created_at" class="input-sm form-control">
+                                        <input type="text" name="created_at" id="created_at" autocomplete="off" class="input-sm form-control" value="{{ old('created_at') }}">
                                     </div>
                                 </div>
                                 <div class="form-group col-sm-4 text-right">
-                                    <input type="button" value="查找" class="btn btn-sm btn-primary">
+                                    <input type="submit" value="查找" class="btn btn-sm btn-primary">
                                 </div>
                             </form>
                         </div>
@@ -192,5 +192,7 @@
     <script src="{{ asset('/assets/js/plugincommon.js') }}"></script>
     <script>
         addDateRangePicker($('#created_at'));
+        $('#from-type').val('{{ old('from_type') }}');
+        $('#order-status').val('{{ old('status') }}')
     </script>
 @endsection

@@ -11,8 +11,10 @@
 
 namespace App\Services\Order;
 
+use App\Repositories\Good\GoodRepository;
 use App\Repositories\Order\OrderGoodRepository;
 use App\Repositories\Order\OrderRepository;
+use Illuminate\Pagination\LengthAwarePaginator;
 
 class OrderService
 {
@@ -21,6 +23,7 @@ class OrderService
      */
     protected $order;
     protected $orderGoodRepository;
+    protected $goodRepository;
 
     /**
      * OrderController constructor.
@@ -28,23 +31,63 @@ class OrderService
      * @param OrderRepository $order
      * @param OrderGoodRepository $orderGoodRepository
      */
-    public function __construct(OrderRepository $order, OrderGoodRepository $orderGoodRepository)
+    public function __construct(OrderRepository $order, OrderGoodRepository $orderGoodRepository, GoodRepository $goodRepository)
     {
         $this->order = $order;
         $this->orderGoodRepository = $orderGoodRepository;
+        $this->goodRepository = $goodRepository;
     }
 
     /**
      * @function 获取用户订单列表
      * @return mixed
      */
-    public function getList()
+    public function getList($option, $whereoption, $request)
     {
-//        $this->order->pushCriteria(app('Prettus\Repository\Criteria\RequestCriteria'));
         $orderBy = $request->orderBy ?? 'id';
         $sort = $request->sort ?? 'desc';
         $length = $request->length ?? 20;
-        $orders = $this->order->model()::with('customerOrderGood')->orderBy($orderBy, $sort)->paginate($length);
+        $searchOrderIds = [];
+        if ($whereoption) {
+            $searchGoods = $this->goodRepository->findWhere($whereoption, ['id']);
+            if ($request->filled('good_name')) {
+                $searchGoodsId = [];
+                foreach ($searchGoods as $searchGood) {
+                    array_push($searchGoodsId, $searchGood->id);
+                }
+                $searchOrderGoods = $this->orderGoodRepository->findWhereIn('good_id', $searchGoodsId, ['order_id']);
+            } else {
+                $searchGoods = $searchGoods->first()->toArray();
+                $searchGoodsId = $searchGoods['id'];
+                $searchOrderGoods = $this->orderGoodRepository->findByField('good_id', $searchGoodsId, ['order_id']);
+            }
+
+            foreach ($searchOrderGoods as $searchOrderGood) {
+                array_push($searchOrderIds, $searchOrderGood['order_id']);
+            }
+            if (count($searchOrderIds) == 1) {
+                $option = array_merge($option, ['order_id' => $searchOrderIds[0]]);
+            } else {
+                $option = array_merge($option, [['order_id', 'in', $searchOrderIds]]);
+            }
+        }
+        if ($option) {
+            if (count($searchOrderIds) == 1) {
+                $option = array_merge($option, ['order_id' => $searchOrderIds[0]]);
+                $orders = $this->order->orderBy($orderBy, $sort)->findWhere($option);
+            } elseif (count($searchOrderIds) == 0) {
+                $orders = $this->order->orderBy($orderBy, $sort)->findWhere($option);
+            } else {
+                $orders = $this->order->orderBy($orderBy, $sort)->findWhereIn('order_id', $searchOrderIds);
+            }
+            $orderCount = count($orders);
+            $orders = new LengthAwarePaginator($orders, $orderCount, $length);
+            $orders->withPath('orders');
+            $orders->appends($request->all());
+
+        } else {
+            $orders = $this->order->orderBy($orderBy, $sort)->paginate($length);
+        }
         $orders->StatusWords = $this->getStatusWords();
         $orders->OriginWords = $this->getOriginWords();
         return $orders;
