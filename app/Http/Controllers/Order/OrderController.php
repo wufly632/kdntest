@@ -26,8 +26,37 @@ class OrderController extends Controller
 
     public function index(Request $request)
     {
+        $option = [];
+        $whereoption = [];
+        if ($request->hasAny('order_id', 'good_name', 'good_code', 'from_type', 'status', 'good_id', 'created_at')) {
+            if ($request->filled('order_id')) {
+                $option = array_merge($option, ['order_id' => $request->input('order_id')]);
+            }
+            if ($request->filled('good_name')) {
+                $whereoption = array_merge($whereoption, [['good_title', 'like', '%' . $request->input('good_name') . '%']]);
+            }
+            if ($request->filled('good_code')) {
+                $whereoption = array_merge($whereoption, ['good_code' => $request->input('good_code')]);
+            }
+            if ($request->filled('from_type') && !empty($request->get('from_type'))) {
+                $option = array_merge($option, ['from_type' => $request->input('from_type')]);
+            }
+            if ($request->filled('status') && !empty($request->get('status'))) {
+                $option = array_merge($option, ['status' => $request->input('status')]);
+            }
+            if ($request->filled('good_id')) {
+                $whereoption = array_merge($whereoption, ['id' => $request->input('good_id')]);
+            }
+            if ($request->filled('created_at')) {
+                $createAt = explode('~', $request->query('created_at'));
+                $option = array_merge($option, [
+                    ['created_at', '>=', $createAt[0]],
+                    ['created_at', '<=', $createAt[1]]
+                ]);
+            }
+        }
         $request->flash();
-        $orders = $this->orderService->getList();
+        $orders = $this->orderService->getList($option, $whereoption, $request);
         return view('orders.index', compact('orders'));
     }
 
