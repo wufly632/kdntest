@@ -355,7 +355,7 @@
                         <h4 class="modal-title" id="myModalLabel">属性配置</h4>
                     </div>
                     <div class="modal-body clearfix">
-                        <div class="col-sm-4 prop-property choice-style" id="prop-list-style">
+                        <div class="col-sm-4 prop-property choice-style" id="prop-list-style" style="max-height: 650px;overflow-y: auto;">
                             <div class="input-group">
                                 <input type="text" class="form-control" id="search_attribute_input">
                                 <span class="input-group-addon"><i class="fa fa-search"></i></span>
@@ -366,7 +366,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-sm-4 prop-property choice-style" id="prop-add-style">
+                        <div class="col-sm-4 prop-property choice-style" id="prop-add-style" style="max-height: 650px;overflow-y: auto;">
                             <div class="input-group">
                                 <input type="text" class="form-control" id="search_attribute_value_input">
                                 <span class="input-group-addon"><i class="fa fa-search"></i></span>
@@ -380,15 +380,10 @@
                                 </div>
                             </div>
                         </div>
-                        <div id="configure_attribute_detail_container" class="col-sm-4 prop-property">
+                        <div id="configure_attribute_detail_container" class="col-sm-4 prop-property" style="max-height: 650px;overflow-y: auto;">
                             <div>
-                                <h4>属性详情1</h4>
-                                <ul class="con-message">
-                                    <li v-for="attribute_item in attribute_items">
-                                        <span class="mess-name">@{{ attribute_item.name }}:</span><span class="mess-key">@{{ attribute_item.value }}</span>
-                                    </li>
-                                </ul>
-                                <div class="form-group" v-if="attr_type = 3">
+                                <h4>属性详情</h4>
+                                <div class="form-group" v-show="attr_type == 3">
                                     <div class="" style="margin-left: 10px">是否图片属性:</div>
                                     <label  class="property-radio">
                                         <input type="radio" name="is_image" value="2"  v-model="is_image">
@@ -399,7 +394,7 @@
                                         是
                                     </label>
                                 </div>
-                                <div class="form-group" v-if="attr_type = 3">
+                                <div class="form-group" v-show="attr_type == 3">
                                     <div class="" style="margin-left: 10px">是否支持自定义:</div>
                                     <label  class="property-radio">
                                         <input type="radio" name="is_diy" value="2"  v-model="is_diy">
@@ -432,7 +427,7 @@
                                         多选
                                     </label>
                                 </div>
-                                <div class="form-group">
+                                <div class="form-group" v-show="attr_type == 4">
                                     <div class="" style="margin-left: 10px">是否详情显示:</div>
                                     <label  class="property-radio">
                                         <input type="radio" name="is_detail" value="2" v-model="is_detail">
@@ -443,6 +438,12 @@
                                         显示
                                     </label>
                                 </div>
+
+                                <ul class="con-message">
+                                    <li v-for="attribute_item in attribute_items">
+                                        <span class="mess-name">@{{ attribute_item.name }}:</span><span class="mess-key">@{{ attribute_item.value }}</span>
+                                    </li>
+                                </ul>
                             </div>
 
                         </div>
@@ -536,12 +537,8 @@
                     }else{
                         this.attribue_picked_name = $(el.target).data('name');
                     }
-                    if(attribue_name_container_vue.type == 2 && this.attribue_picked_name){
-                        configure_attribute_detail_container_vue.is_photo_attr = true;
-                    } else {
-                        configure_attribute_detail_container_vue.is_photo_attr = false;
-                    }
-                    console.log(this.attribue_picked_name);
+                    configure_attribute_detail_container_vue.attr_type = attribue_name_container_vue.type;
+
                     attribue_value_container_vue.attribute_values = [];
                     attribue_value_container_vue.backup_attribute_values = [];
                     attribue_value_container_vue.attribue_value_container_picked = [];
@@ -558,6 +555,9 @@
                                 configure_attribute_detail_container_vue.is_image = response.content.is_image ? response.content.is_image : 0;
                                 configure_attribute_detail_container_vue.is_diy = response.content.is_diy ? response.content.is_diy : 0;
                                 configure_attribute_detail_container_vue.is_custom_text = response.content.is_custom_text;
+                                configure_attribute_detail_container_vue.check_type = response.content.check_type;
+                                configure_attribute_detail_container_vue.is_required = response.content.is_required;
+                                configure_attribute_detail_container_vue.is_detail = response.content.is_detail;
                             }
                         },complete: function () {
                             layer.closeAll('loading');
@@ -575,26 +575,14 @@
             data: {
                 attribute_items:[],
                 is_custom_text:0,
-                attr_type:3,
-                check_type:1,
-                is_required:2,
-                is_image:2,
-                is_diy:2,
-                is_detail:2,
+                attr_type:'',
+                check_type:'',
+                is_required:'',
+                is_image:'',
+                is_diy:'',
+                is_detail:'',
             }
-        })
-
-        //配置属性vue
-        var edit_attribute_detail_container_vue = new Vue({
-            el: '#edit_attribute_detail_container_vue',
-            data: {
-                is_photo_attr:false,
-                checked:false,
-                custom_checked:false,
-                attribute_items:[],
-                is_custom_text:0
-            }
-        })
+        });
 
         //菜单级联点击事件
         $(".ul-tree>li>div").on("click",function(){
@@ -898,7 +886,8 @@
                         for(var type in response.content){
                             var attributes = response.content[type];
                             for(var index = 0; index < attributes.length; index++){
-                                addOneAttribute('category_attribute_'+type,attributes[index].id,attributes[index].name,attributes[index].type);
+                                console.log(attributes[index].attr_type);
+                                addOneAttribute('category_attribute_'+type,attributes[index].id,attributes[index].name,attributes[index].attr_type);
                             }
                         }
                     }else{
@@ -940,6 +929,7 @@
             if(category_id == undefined || attribute_id == undefined)return;
             attribute_detail_container_vue.select_attribute_id = $(this).data('attribute_id');
             attribute_detail_container_vue.select_attribute_type = $(this).data('attribute_type');
+            console.log(attribute_detail_container_vue.select_attribute_type);
             attribute_detail_container_vue.select_attribute_name = $(this).data('attribute_name');
             layer.load(1);
             $.ajax({
@@ -967,6 +957,7 @@
 
         //点击编辑类目属性
         $("#editAttributeButton").on("click",function () {
+            console.log(attribute_detail_container_vue.select_attribute_type);
             configureAttributes(attribute_detail_container_vue.select_attribute_type,attribute_detail_container_vue.select_attribute_id);
         })
 
@@ -1047,39 +1038,6 @@
                     swal("错误", '错误码: '+xmlHttpRequest.status, "error");
                 }
             });
-            // swal({
-            //     title: "警 告",
-            //     text: "确定删除["+$(this).siblings('span').html()+"]属性吗",
-            //     type: "warning",
-            //     showCancelButton: true,
-            //     confirmButtonColor: "#444444",
-            //     confirmButtonText: "删除",
-            //     cancelButtonText: "取消",
-            // },function (isConfirm) {
-            //     if (isConfirm) {
-            //         $.ajax({
-            //             url:"/category/attribute/delete",
-            //             type:'POST',
-            //             data:{
-            //                 'category_id':category_id,
-            //                 'attribute_id':attribute_id,
-            //             },
-            //             success: function (response) {
-            //                 if (response.status == 200) {
-            //                     will_delete_dom.remove();
-            //                     attribute_detail_container_vue.attribute_items =[];
-            //                     toastr('删除成功!',1);
-            //                 }else{
-            //                     toastr('错误码: '+response.status+','+response.msg);
-            //                 }
-            //             },
-            //             complete: function () {
-            //             },error: function (xmlHttpRequest, textStatus, errorThrown) {
-            //                 toastr('错误码: '+xmlHttpRequest.status);
-            //             }
-            //         });
-            //     }
-            // });
         }
 
         //配置属性
@@ -1096,6 +1054,7 @@
 
 
             attribue_name_container_vue.type = type; //保存添加的属性类别
+            configure_attribute_detail_container_vue.attr_type = type;//区分属性类型
             layer.load(1);
             //获取所有的属性名(已配置除外)
             $.ajax({
