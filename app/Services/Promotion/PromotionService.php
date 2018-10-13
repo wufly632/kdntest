@@ -219,7 +219,7 @@ class PromotionService
                 $data['consume'] = $consume = floatval($request->return_price);
                 $data['rule_type'] = $request->return_name;
                 // 查找返还的优惠券
-                $price_sum = Coupon::whereIn('id', implode(',', $request->return_ids))->sum('coupon_price');
+                $price_sum = Coupon::whereIn('id', $request->return_ids)->sum('coupon_price');
 
                 $data['rule'] = json_encode(['ids' => implode(',', $request->return_ids), 'value' => $price_sum]);
                 $data['rule_text'] = '消费满'.$consume.'元，返价值'.$price_sum.'元现金券';
