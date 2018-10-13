@@ -47,7 +47,7 @@
             top: 50px;
             height: 30px;
             width: 30px;
-            border-radius: 15px
+            border-radius: 15px;
         }
 
         .progress-wrapper {
@@ -57,9 +57,9 @@
         }
 
         .progress-fa {
-            padding-left: 5px;
-            font-size: 23px;
+            font-size: 20px;
             line-height: 30px;
+            text-align: center;
         }
 
         .progress-one {
@@ -82,6 +82,22 @@
             text-align: center;
             vertical-align: middle;
         }
+
+        #table_count > tbody > tr > td {
+            border-top: none;
+        }
+
+        .box-wrapper {
+            margin-left: -120px;
+        }
+
+        .box-body {
+            margin-top: 50px;
+        }
+
+        .text-gray-self {
+            color: #d2d6de;
+        }
     </style>
 @stop
 @extends('layouts.default')
@@ -103,66 +119,77 @@
         <section class="content">
             <div class="row">
                 <div class="col-xs-12">
-                    <div class="box box-info">
-                        <div class="box-header">
+                    <div class="box box-info ">
+                        <div class="box-header box-wrapper">
                             <div class="center-block progress-wrapper">
                                 <div class="progress" style="height: 6px;">
-                                    <span class="progress-bar progress-bar-success"
-                                          style="width: 33%;"></span>
+                                    <span class="progress-bar progress-bar-success"></span>
                                 </div>
                                 <div class="progress-one progress-block">
-                                    <div class="text-gray text-center progress-text-top">laji
+                                    <div class="text-gray-self text-center progress-text-top">待付款
                                     </div>
-                                    <span class="bg-success progress-circle"><span
-                                                class="fa fa-fighter-jet progress-fa"></span></span>
-                                    <div class="text-gray text-center progress-text-bottom">2015-04-03
+                                    <span class="bg-success progress-circle fa fa-home progress-fa"
+                                          data-status="1"></span>
+                                    <div class="text-gray-self text-center progress-text-bottom">2015-04-03
                                         13:25:22
                                     </div>
                                 </div>
                                 <div class="progress-two progress-block">
-                                    <div class="text-gray text-center progress-text-top">laji
+                                    <div class="text-gray-self text-center progress-text-top">待发货
                                     </div>
-                                    <span class="bg-success progress-circle"></span>
-                                    <div class="text-gray text-center progress-text-bottom" style="">2015-04-03
+                                    <span class="bg-success progress-circle" data-status="3"></span>
+                                    <div class="text-gray-self text-center progress-text-bottom" style="">2015-04-03
                                         13:25:22
                                     </div>
                                 </div>
                                 <div class="progress-three progress-block">
-                                    <div class="text-gray text-center progress-text-top">laji
+                                    <div class="text-gray-self text-center progress-text-top">待收货
                                     </div>
-                                    <span class="bg-success progress-circle"></span>
-                                    <div class="text-gray text-center progress-text-bottom">2015-04-03
+                                    <span class="bg-success progress-circle" data-status="4"></span>
+                                    <div class="text-gray-self text-center progress-text-bottom">2015-04-03
                                         13:25:22
                                     </div>
                                 </div>
                                 <div class="progress-four progress-block">
-                                    <div class="text-gray text-center progress-text-top">laji
+                                    <div class="text-gray-self text-center progress-text-top">交易完成
                                     </div>
-                                    <span class="bg-success progress-circle"></span>
-                                    <div class="text-gray text-center progress-text-bottom">2015-04-03
+                                    <span class="bg-success progress-circle" data-status="5"></span>
+                                    <div class="text-gray-self text-center progress-text-bottom">2015-04-03
                                         13:25:22
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <div class="box-body">
-                            <div class="container">
-                                <div class="col-sm-4">
-                                    <div class="panel panel-info">
-                                        <div class="panel-heading">
-                                            订单信息：
-                                        </div>
-                                        <div class="panel-body">
-                                            <div class="col-sm-4">
-                                                <div>收货地址：</div>
-                                                <div>订单编号：</div>
-                                                <div>买家留言：</div>
+                        <div class="box-body box-wrapper">
+                            <div class="container order-panel">
+                                <div class="">
+                                    <div class="col-sm-4">
+                                        <div class="panel panel-info" style="height: 263px;">
+                                            <div class="panel-heading">
+                                                订单信息：
                                             </div>
-                                            <div class="col-sm-8">
+                                            <div class="panel-body">
                                                 @php($addressObject = $order->customerAddress)
-                                                <div>{{ $addressObject->country.$addressObject->state.$addressObject->city.$addressObject->street_address }}</div>
-                                                <div>{{ $order->message }}</div>
-                                                <div>{{ $order->order_id }}</div>
+                                                <table style="height: 200px;width: 100%">
+                                                    <tr>
+                                                        <td style="width: 80px;">收货地址：</td>
+                                                        <td style="word-break: break-word">
+                                                            {{ $addressObject->country.$addressObject->state.$addressObject->city.$addressObject->street_address }}
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>订单编号：</td>
+
+                                                        <td style="word-break: break-word">{{ $order->order_id }}</td>
+
+                                                    </tr>
+                                                    <tr>
+                                                        <td>买家留言：</td>
+                                                        <td style="word-break: break-word">
+                                                            {{ $order->message }}
+                                                        </td>
+                                                    </tr>
+                                                </table>
                                             </div>
                                         </div>
                                     </div>
@@ -170,13 +197,36 @@
                                 <div class="col-sm-8">
                                     <div class="panel panel-info">
                                         <div class="panel-body">
-                                            <div>订单状态：</div>
+                                            <div class="col-sm-2">
+                                                <div class="h5">订单状态：</div>
+                                                @if($order->status==6)
+                                                    <div class="text-danger">交易取消取消</div>
+                                                @endif
+                                            </div>
+                                            <div class="col-sm-10"
+                                                 style="height: 230px;overflow-y: auto;padding-top: 20px;padding-left: -10px;">
+                                                @if(in_array($order->status,[4,5]))
+                                                    <ul class="timeline" id="track-info">
+                                                        <li v-for="(item, index) in trackIinfo">
+                                                            <i class="fa fa-rocket bg-blue"></i>
+
+                                                            <div class="timeline-item">
+                                                            <span class="time"><i
+                                                                        class="fa fa-clock-o"></i> @{{ item.Date }}</span>
+
+                                                                <h3 class="timeline-header">@{{ item.StatusDescription
+                                                                    }}</h3>
+                                                            </div>
+                                                        </li>
+                                                    </ul>
+                                                @endif
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="col-sm-12">
-                                    <div class="panel">
-                                        <div class="panel-body">
+                                    <div class="panel panel-info">
+                                        <div class="panel-body" style="padding: 0">
                                             <table class="table table-bordered" id="good_table">
                                                 <tbody>
                                                 @foreach($order->customerOrderGood as $good)
@@ -196,9 +246,17 @@
                                                                 </p>
                                                             </div>
                                                         </td>
-                                                        <td>{{ $good->unit_price }}</td>
-                                                        <td>{{ $good->num }}</td>
-                                                        <td>{{ $good->total_price }}</td>
+                                                        @if($loop->index==($loop->first))
+                                                            <td rowspan="{{ $loop->count }}">
+                                                                {{ $order->final_price }}
+                                                            </td>
+                                                            <td rowspan="{{ $loop->count }}">
+                                                                {{ $order->fare }}
+                                                            </td>
+                                                            <td rowspan="{{ $loop->count }}">
+                                                                {{ $order->StatusWords[$order->status] }}
+                                                            </td>
+                                                        @endif
                                                     </tr>
                                                 @endforeach
                                                 </tbody>
@@ -209,21 +267,26 @@
                                 <div class="col-sm-12">
                                     <div class="panel text-right">
                                         <div class="panel-body">
-                                            <table class="table pull-right">
-                                                <tr>
-                                                    @php($orderpayment = $order->customerOrderPayment)
-                                                    <td class="">共 <span class="text-danger">{{ count($order->customerOrderGood) }}</span>件商品 商品金额:</td>
-                                                    <td class="text-danger">￥200</td>
-                                                </tr>
-                                                <tr>
-                                                    <td class="">活动优惠:</td>
-                                                    <td class="text-danger">￥{{ $order->code_price }}</td>
-                                                </tr>
-                                                <tr>
-                                                    <td class="">总金额(未含运费):</td>
-                                                    <td class="text-danger">￥{{ $orderpayment->amount }}</td>
-                                                </tr>
-                                            </table>
+                                            <div class="col-sm-4 pull-right">
+                                                <table class="table" id="table_count">
+                                                    <tr>
+                                                        @php($orderpayment = $order->customerOrderPayment)
+                                                        <td class="">共 <span
+                                                                    class="text-danger">{{ count($order->customerOrderGood) }}</span>件商品
+                                                            商品金额:
+                                                        </td>
+                                                        <td class="text-danger">{{ $order->total_price }}</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="">活动优惠:</td>
+                                                        <td class="text-danger">￥{{ $order->prefer_price }}</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="">总金额(未含运费):</td>
+                                                        <td class="text-danger">￥{{ $order->final_price }}</td>
+                                                    </tr>
+                                                </table>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -236,6 +299,61 @@
     </div>
 @stop
 @section('script')
+    <script src="{{asset('/assets/js/bower_components/axios/dist/axios.min.js')}}"></script>
+    <script src="{{asset('/assets/js/bower_components/vue/dist/vue.min.js')}}"></script>
+
     <script>
+        var progressBar = $('.progress-bar');
+        var dataStatus = $('[data-status="1"]');
+
+        @if($order->status!=6)
+        @switch($order->status)
+        @case(1)
+        progressBar.css('width', '0%');
+        @break
+                @case(3)
+            dataStatus = $('[data-status="3"]');
+        dataStatus.addClass('fa fa-rocket progress-fa');
+        progressBar.css('width', '33%');
+        console.log(dataStatus.prev());
+
+        @break
+                @case(4)
+            dataStatus = $('[data-status="4"]');
+        dataStatus.addClass('fa fa-rocket progress-fa');
+        progressBar.css('width', '68%');
+        @break
+                @case(5)
+            dataStatus = $('[data-status="5"]');
+        dataStatus.addClass('fa fa-rocket progress-fa');
+        progressBar.css('width', '100%');
+        @break
+        @default
+
+        dataStatus.addClass('fa fa-rocket progress-fa');
+        progressBar.css('width', '0%');
+        @break
+        @endswitch
+        dataStatus.prev().css('color', '#000');
+        dataStatus.next().css('color', '#000');
+        @else
+        dataStatus.css('color', '#fff');
+                @endif
+                @if(in_array($order->status,[4,5]))
+        var trackIinfo = new Vue({
+                el: '#track-info',
+                data: {
+                    trackIinfo: []
+                },
+                created: function () {
+                    _index = this;
+                    axios.get('{{ secure_route('trackingmore.getstream',['shipper_code'=>$order->shipper_code,'waybill_id'=>$order->waybill_id]) }}').then(function (res) {
+                        _index.trackIinfo = res.data.origin_info.trackinfo;
+                        console.log(_index.trackIinfo);
+                    });
+
+                }
+            });
+        @endif
     </script>
 @endsection

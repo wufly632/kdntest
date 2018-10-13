@@ -77,3 +77,20 @@ function createDatePicker(ele) {
         language: 'zh-cn'
     });
 }
+
+function showInfo(title, content) {
+    layer.open({
+        type: 2,
+        skin: 'layui-layer-rim', //加上边框
+        area: ['60%', '400px'],
+        fix: true, //不固定
+        shadeClose: true,
+        maxmin: true,
+        shade: 0.4,
+        title: title,
+        content: content,
+        end: function (layero, index) {
+
+        }
+    });
+}

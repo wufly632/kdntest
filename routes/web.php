@@ -87,7 +87,17 @@ Route::group(['middleware' => ['auth', 'web']], function () {
 
     //用户订单模块
     Route::group(['namespace' => 'Order'], function () {
+        Route::get('/orders/send/{id}','OrderController@send')->name('orders.send');
+        Route::post('/orders/sendconfirm/{id}','OrderController@sendConfirm')->name('orders.sendconfirm');
+        Route::post('/orders/orders.cancel/{id}','OrderController@orderCancel')->name('orders.cancel');
         Route::resources(['orders' => 'OrderController']);
+    });
+    //物流信息
+    Route::group(['namespace' => 'TrackingMore'], function () {
+        Route::get('/trackingmore/getcarriers','TrackingMoreController@getCarriers')->name('trackingmore.getcarriers');
+        Route::get('/trackingmore/getstream','TrackingMoreController@getStream')->name('trackingmore.getstream');///{shipper_code}/{waybill_id}
+        Route::get('/trackingmore/createtracking/{shipper_code}/{waybill_id}','TrackingMoreController@createTracking')->name('trackingmore.createtracking');
+        Route::get('/trackingmore/detectcarrier/{waybill_id}','TrackingMoreController@detectCarrier')->name('trackingmore.detectcarrier');
     });
 
     //用户管理模块
