@@ -33,7 +33,7 @@ class CategoryAttribute extends Model implements Transformable
     public function formatExport()
     {
         $items = [];
-        $items[] = ['name' => '是否必填', 'value' => $this->is_required?'是':'否'];
+        $items[] = ['name' => '是否必填', 'value' => $this->is_required ==1?'是':'否'];
         $items[] = ['name' => '单选/多选', 'value' => $this->check_type==1 ? '多选':'单选'];
         $items[] = ['name' => '图片属性', 'value' => $this->is_image==1 ? '是':'否'];
         $items[] = ['name' => '自定义属性', 'value' => $this->is_diy==1 ? '是':'否'];

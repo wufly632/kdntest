@@ -58,84 +58,62 @@ class SyncCategoryAttribute extends Command
 
     public function handleProgress()
     {
-        $arr = [4];
+        $arr = [
+            /*'服饰.xlsx',
+            '居家百货属性.xlsx',*/
+            '汽车配饰属性.xlsx',
+        ];
         foreach ($arr as $i) {
-            $excel_path = 'storage'.DIRECTORY_SEPARATOR.'excel'.DIRECTORY_SEPARATOR.'import'.DIRECTORY_SEPARATOR.iconv("UTF-8", 'GBK', $i.'-category_attribute').'.csv';
+            $excel_path = 'storage'.DIRECTORY_SEPARATOR.'excel'.DIRECTORY_SEPARATOR.'import/attribute'.DIRECTORY_SEPARATOR.$i;
             \Excel::load($excel_path, function ($reader) use ($i) {
-                //中文销售属性
-                /*$reader1 = $reader->getSheet(0);
+                // 中文属性
+                $reader1 = $reader->getSheet(0);
                 $ch    = $reader1->toArray();
-                foreach ($ch as $key => $category_attr) {
+                foreach ($ch as $key => $item) {
                     if ($key == 0) continue;
-                    if (!$category_attr[0]) continue;
-                    $category_name_one = $category_attr[0];
+                    if (! $item[0]) continue;
+                    $this->info($i.'-'.$key);
+                    //类目
+                    $category_name_one = $item[0];
                     $category_one_ids = Category::where('name', $category_name_one)->pluck('id')->toArray();
-                    $category_name_two = $category_attr[1];
+                    $category_name_two = $item[1];
                     $category_two_ids = Category::where(['name'=> $category_name_two, 'level' => 2])->whereIn('parent_id', $category_one_ids)->pluck('id')->toArray();
-                    $category_name = $category_attr[2];
-                    $this->info(implode(',', $category_two_ids));
-                    $this->info($i.'-'.$key.'-'.$category_name);
-                    $category_id = Category::where(['name' => $category_name, 'level' => 3])->whereIn('parent_id', $category_two_ids)->first()->id;
-                    $attr_name = $category_attr[3];
+                    $category_name_three = $item[2];
+                    $category_id = Category::where(['name' => $category_name_three, 'level' => 3])->whereIn('parent_id', $category_two_ids)->first()->id;
+                    //属性名
+                    $attr_name = $item[5];
                     $attr_id = Attribute::where('name', $attr_name)->first()->id;
-                    $attr_values_name = array_filter(array_slice($category_attr, 4));
-                    $attr_values = AttributeValue::whereIn('name', $attr_values_name)->where('attribute_id', $attr_id)->pluck('id')->implode(',');
+                    $type = $item[4] == 3 ? 2 : 1;//(非)标准属性
+                    if ($type == 2) {
+                        $attr_values = '';
+                    } else {
+                        $attr_values_name = array_filter(array_slice($item, 7));
+                        $attr_values = AttributeValue::whereIn('name', $attr_values_name)->where('attribute_id', $attr_id)->pluck('id')->implode(',');
+                    }
+                    //属性类型
+                    $attr_type = $item[3];
+                    $check_type = $item[4] == 2 ? 1 : 2;//单选/多选
                     $category_attr_data = [
                         'category_id' => $category_id,
-                        'attr_type' => 3, //销售属性
+                        'attr_type' => $attr_type,
                         'attr_id' => $attr_id,
                         'attr_values' => $attr_values,
                         'is_required' => 1,
-                        'check_type'  => 1,//暂定多选
+                        'check_type'  => $check_type,
                         'is_diy' => 2,
                         'status' => 1,
                         'created_at' => Carbon::now()->toDateTimeString()
                     ];
-                    if ($attr_name == '颜色') {
+                    if ($attr_type == 3 && $attr_name == '颜色') {
                         $category_attr_data['is_image'] = 1;
                     }
                     CategoryAttribute::updateOrCreate(['attr_id' => $attr_id, 'category_id' => $category_id],$category_attr_data);
-                    $this->info($key.' end');
-                }*/
-
-
-
-                //中文非关键属性
-                $reader1 = $reader->getSheet(0);
-                $ch    = $reader1->toArray();
-                foreach ($ch as $key => $category_attr) {
-                    if ($key == 0) continue;
-                    $category_attr = explode("\t", $category_attr[0]);
-                    $category_name_one = $category_attr[0];
-                    if (!$category_attr[0]) continue;
-                    $category_one_ids = Category::where('name', $category_name_one)->pluck('id')->toArray();
-                    $category_name_two = $category_attr[1];
-                    $category_two_ids = Category::where(['name'=> $category_name_two, 'level' => 2])->whereIn('parent_id', $category_one_ids)->pluck('id')->toArray();
-                    $category_name = $category_attr[2];
-                    $this->info(implode(',', $category_two_ids));
-                    $this->info($i.'.'.$key.'-'.$category_name);
-                    $category_id = Category::where(['name' => $category_name, 'level' => 3])->whereIn('parent_id', $category_two_ids)->first()->id;
-                    $attr_name = $category_attr[3];
-                    $attr_id = Attribute::where('name', $attr_name)->first()->id;
-                    $attr_values_name = array_filter(array_slice($category_attr, 4));
-                    $attr_values = AttributeValue::whereIn('name', $attr_values_name)->where('attribute_id', $attr_id)->pluck('id')->implode(',');
-                    $category_attr_data = [
-                        'category_id' => $category_id,
-                        'attr_type' => 4, //非关键属性
-                        'attr_id' => $attr_id,
-                        'attr_values' => $attr_values,
-                        'is_required' => 1,
-                        'check_type'  => 1,//暂定多选
-                        'is_diy' => 2,
-                        'status' => 1,
-                        'created_at' => Carbon::now()->toDateTimeString()
-                    ];
-                    CategoryAttribute::updateOrCreate(['attr_id' => $attr_id, 'category_id' => $category_id],$category_attr_data);
-                    $this->info($key.' end');
+                    $this->info($attr_name.'完成');
                 }
-
             });
+            $this->info($i.'-finish!');
         }
+        $this->info('finish!');
     }
 
 }

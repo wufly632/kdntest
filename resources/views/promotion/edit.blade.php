@@ -28,6 +28,54 @@
         }
         .promotion_type {margin-right: 15px;}
         .box-header .col-xs-1{width: 10%;}
+        .dis-no{display: none;}
+        .addcontain{height: 35px;}
+        .add-row{margin-top: 10px;}
+        #myModal-four .add-coupon-title{
+            margin: 30px 0;
+            font-size: 20px;
+            font-weight: 500;
+        }
+        #myModal-four table{
+            width: 80%;
+            margin-left: 10%;
+        }
+        #myModal-four table tr{
+            height: 50px;
+        }
+        #myModal-four table td{
+            vertical-align: middle;
+        }
+        #myModal-four .lastRow{
+            margin-top: 30px;
+            text-align: right;
+            margin-right: 10%;
+            margin-bottom: 30px;
+        }
+        .acTable{
+            margin-top: 10px;
+            text-align: center;
+        }
+        .acTable th{
+            text-align: center;
+        }
+        .acTable .ac-id{
+            width: 10%;
+        }
+        .acTable .ac-name{
+            width: 15%;
+        }
+        .acTable .ac-position{
+            width: 10%;
+        }
+        .acTable .ac-valid{
+            width: 30%;
+        }
+        .acTable .ac-time{
+            width: 30%;
+        }
+        .acTable,.acTable tr th, .acTable tr td { border:1px solid #E4E4E4;
+            padding: 5px;}
     </style>
 @endsection
 @extends('layouts.default')
@@ -50,6 +98,12 @@
                     <div id="myModal-one" class="modal fade" tabindex="-1" data-width="1200" style="display: none;">
                         <form class="seckill-modal" method="get" onsubmit="return getGoods(this);" action="{{secure_route('promotion.getGoods')}}">
                             {!! $promotion_goods !!}
+                        </form>
+                    </div>
+                    <!-- Modal4-->
+                    <div id="myModal-four" class="modal fade" tabindex="-1" data-width="1200" style="display: none;">
+                        <form class="seckill-modal" onsubmit="return coupon.add(this);" >
+                            <?php echo $coupon_list;?>
                         </form>
                     </div>
                     <div class="box box-info">
@@ -137,7 +191,7 @@
                                     <div class="panel-body">
                                         <div class="detail-box row with-border">
                                             <div class="@if($promotion->activity_type != 'reduce' && $promotion->activity_type) hidden @endif detail reduce-detail">
-                                                <div class="reduce-detail-row">
+                                                <div class="reduce-detail-row addcontain">
                                                     <div class="pull-left text-padding-top">活动期间，买满</div>
                                                     <div class="col-xs-2">
                                                         <div class="input-group">
@@ -152,7 +206,24 @@
                                                             <span class="input-group-addon">元</span>
                                                         </div>
                                                     </div>
-                                                    <button id="add-reduce-detail" type="button" class="btn btn-primary btn-flat" style="border-radius: 90px;">+</button>
+                                                    <button id="add-reduce-detail" type="button" class="btn btn-primary btn-flat icon-add" style="border-radius: 90px;">+</button>
+                                                </div>
+                                                <div class="reduce-detail-row add-row dis-no">
+                                                    <div class="pull-left text-padding-top">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;满</div>
+                                                    <div class="col-xs-2">
+                                                        <div class="input-group">
+                                                            <input type="text" class="form-control" name="reduce_name[]">
+                                                            <span class="input-group-addon">元</span>
+                                                        </div>
+                                                    </div>
+                                                    <div class="pull-left text-padding-top" style="width: 60px;padding-left: 0;padding-right: 0">，立减</div>
+                                                    <div class="col-xs-2">
+                                                        <div class="input-group">
+                                                            <input type="text" class="form-control" name="reduce_value[]">
+                                                            <span class="input-group-addon">元</span>
+                                                        </div>
+                                                    </div>
+                                                    <button id="add-reduce-detail" type="button" class="btn btn-primary btn-flat icon-minus" style="border-radius: 90px;">-</button>
                                                 </div>
                                             </div>
                                             <div class="@if($promotion->activity_type != 'return') hidden @endif detail return-detail">
@@ -163,6 +234,7 @@
                                                             <input type="text" class="form-control">
                                                             <span class="input-group-addon">元</span>
                                                         </div>
+                                                        <input type="hidden" class="price fl" name="return-sum" id="coupon-price-sum" value=""/>
                                                     </div>
                                                     <div class="col-xs-1 control-label" style="width: 40px;padding-left: 0;padding-right: 0">，返</div>
                                                     <div class="col-xs-2">
@@ -170,11 +242,29 @@
                                                             <option value="">券</option>
                                                         </select>
                                                     </div>
-                                                    <button id="add-return-detail" type="button" class="btn btn-primary btn-flat" style="border-radius: 90px;">+</button>
+                                                    <button type="button" class="btn btn-primary" style="border-radius: 90px;"  data-toggle="modal" data-target="#myModal-four">+</button>
+                                                    <span class="span-tex" id="return-price_sum"></span>
+                                                </div>
+                                                <div class="clearfix" id="return-detail">
+                                                    <table class="acTable">
+                                                        <thead>
+                                                        <tr>
+                                                            <th class="ac-id">ID</th>
+                                                            <th class="ac-name">名称</th>
+                                                            <th class="ac-position">面额</th>
+                                                            <th class="ac-valid">使用有效期</th>
+                                                            <th class="ac-time">发放时间</th>
+                                                            <th class="ac-operate">操作</th>
+                                                        </tr>
+                                                        </thead>
+                                                        <tbody>
+
+                                                        </tbody>
+                                                    </table>
                                                 </div>
                                             </div>
                                             <div class="@if($promotion->activity_type != 'discount') hidden @endif detail discount-detail">
-                                                <div class="discount-detail-row">
+                                                <div class="discount-detail-row addcontain">
                                                     <div class="pull-left text-padding-top">
                                                         活动期间，选购商品满
                                                     </div>
@@ -193,7 +283,28 @@
                                                             <span class="input-group-addon">折</span>
                                                         </div>
                                                     </div>
-                                                    <button id="add-discount-detail" type="button" class="btn btn-primary btn-flat" style="border-radius: 90px;">+</button>
+                                                    <button id="add-discount-detail" type="button" class="btn btn-primary btn-flat icon-add" style="border-radius: 90px;">+</button>
+                                                </div>
+                                                <div class="discount-detail-row add-row dis-no">
+                                                    <div class="pull-left text-padding-top">
+                                                        　　　　　　　　　满
+                                                    </div>
+                                                    <div class="col-xs-2">
+                                                        <div class="input-group">
+                                                            <input type="text" class="form-control" name="discount_name[]">
+                                                            <span class="input-group-addon">件</span>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-xs-1 control-label">
+                                                        ，立享
+                                                    </div>
+                                                    <div class="col-xs-2">
+                                                        <div class="input-group">
+                                                            <input type="text" class="form-control" name="discount_value[]">
+                                                            <span class="input-group-addon">折</span>
+                                                        </div>
+                                                    </div>
+                                                    <button id="add-discount-detail" type="button" class="btn btn-primary btn-flat icon-minus" style="border-radius: 90px;">-</button>
                                                 </div>
                                             </div>
 
@@ -203,7 +314,7 @@
                                                 </div>
                                                 <div class="col-xs-2">
                                                     <div class="input-group">
-                                                        <input type="text" class="form-control">
+                                                        <input type="text" class="form-control" name="wholesale_name[]">
                                                         <span class="input-group-addon">元</span>
                                                     </div>
                                                 </div>
@@ -212,7 +323,7 @@
                                                 </div>
                                                 <div class="col-xs-2">
                                                     <div class="input-group">
-                                                        <input type="text" class="form-control">
+                                                        <input type="text" class="form-control" name="wholesale_value[]">
                                                         <span class="input-group-addon">件</span>
                                                     </div>
                                                 </div>
@@ -237,34 +348,32 @@
                                                     活动期间，购买活动商品统一
                                                 </div>
                                                 <div class="col-xs-2">
-                                                    <select name="" id="" class="form-control">
-                                                        <option value="1">立享</option>
-                                                        <option value="2">立减</option>
+                                                    <select name="limit_type" class="form-control active-select">
+                                                        <option value="1">立减</option>
+                                                        <option value="2">立享</option>
                                                     </select>
                                                 </div>
                                                 <div class="col-xs-2">
                                                     <div class="input-group">
-                                                        <input type="text" class="form-control">
-                                                        <span class="input-group-addon">元</span>
+                                                        <input type="text" class="form-control" name="limit_num">
+                                                        <span class="input-group-addon limit-type-html">元</span>
                                                     </div>
                                                 </div>
                                                 <div class="col-xs-1 control-label">
                                                     每人限购
                                                 </div>
-                                                <div class="col-xs-2">
+                                                <div class="col-xs-1">
                                                     <div class="input-group">
-                                                        <select name="" id="" class="form-control">
+                                                        <select name="limit_per_num" class="form-control">
                                                             <option value="">不限</option>
                                                             <option value="">1</option>
                                                             <option value="">2</option>
                                                             <option value="">3</option>
-                                                            <option value="">4</option>
                                                             <option value="">5</option>
                                                         </select>
-                                                        <span class="input-group-addon">件</span>
                                                     </div>
                                                 </div>
-                                                <input type="button" class="btn" value="确定">
+                                                <button type="button" class="btn btn-primary" onclick="setGoodInfo(this)">确定</button>
                                                 <div class="text-info" style="padding: 6px;padding-left: 24px;">
                                                     注：可在添加商品时针对每个商品分别设置优惠力度。
                                                 </div>
@@ -391,83 +500,7 @@
         addDateRangePicker($('#promotion_time'));
         createDataTable($('#select_coupon_table'));
         $('.modal-content').css({'box-shadow': 'none'});
-        let tableLevelTwo = '<tr class="table-level-two">\n' +
-            '        <td colspan="7">\n' +
-            '            <table class="table table-bordered text-center">\n' +
-            '            <tr>\n' +
-            '            <td colspan="8" class="row">\n' +
-            '            <div class="goods_image image-align-center col-xs-1 no-padding">\n' +
-            '            <img src="http://localhost/assets/admin-lte//dist/img/user2-160x160.jpg"\n' +
-            '        width="80px" height="80px" alt=""></div>\n' +
-            '            <div class="col-xs-10 text-left">\n' +
-            '            <div class="good_name text-padding-top row">\n' +
-            '            <div class="col-xs-1 text-right">名称：</div>\n' +
-            '        <div class="col-xs-1 text-left">test</div></div>\n' +
-            '        <div class="good_id text-padding-top row" style="vertical-align: middle">\n' +
-            '            <div class="col-xs-1 text-right text-padding-top">ID：</div>\n' +
-            '        <div class="col-xs-1 text-left text-padding-top">292</div>\n' +
-            '            <div class="good_num text-padding-top text-danger col-xs-2">\n' +
-            '            最近30天销量\n' +
-            '            </div>\n' +
-            '            <div class="col-xs-6 col-xs-offset-2">\n' +
-            '            <div class="col-xs-2 text-padding-top" style="padding-right: 0">每人限购</div>\n' +
-            '            <div class="col-xs-5">\n' +
-            '            <div class="input-group">\n' +
-            '            <select name="" id="" class="form-control">\n' +
-            '            <option value="">不限</option>\n' +
-            '            <option value="">1</option>\n' +
-            '            <option value="">2</option>\n' +
-            '            <option value="">3</option>\n' +
-            '            </select>\n' +
-            '            <span class="input-group-addon">件</span>\n' +
-            '            </div>\n' +
-            '            </div>\n' +
-            '            <div class="col-xs-4">\n' +
-            '            <input type="button" class="btn btn-success" value="一键设置">\n' +
-            '            </div>\n' +
-            '            </div>\n' +
-            '\n' +
-            '            </div>\n' +
-            '\n' +
-            '            </div>\n' +
-            '            </td>\n' +
-            '            <td rowspan="4" class="justify-align-center">删除</td>\n' +
-            '            </tr>\n' +
-            '            <tr>\n' +
-            '            <td>颜色</td>\n' +
-            '            <td>尺寸</td>\n' +
-            '            <td>市场价</td>\n' +
-            '            <td>零售价</td>\n' +
-            '            <td><span class="text-danger">*</span> 秒杀价</td>\n' +
-            '        <td><span class="text-danger">*</span> 秒杀数量</td>\n' +
-            '        <td>库存数量</td>\n' +
-            '        <td>商家编码</td>\n' +
-            '        </tr>\n' +
-            '        <tr>\n' +
-            '        <td>蓝色</td>\n' +
-            '        <td>28</td>\n' +
-            '        <td>￥120</td>\n' +
-            '        <td>￥23</td>\n' +
-            '        <td class="col-xs-2"><input type="text" class="form-control">\n' +
-            '            </td>\n' +
-            '            <td class="col-xs-2" rowspan="2" style="padding-top: 30px;">\n' +
-            '            <input type="text" class="form-control"></td>\n' +
-            '            <td>2000</td>\n' +
-            '            <td>2000</td>\n' +
-            '            </tr>\n' +
-            '            <tr>\n' +
-            '            <td>蓝色</td>\n' +
-            '            <td>28</td>\n' +
-            '            <td>￥120</td>\n' +
-            '            <td>￥23</td>\n' +
-            '            <td><input type="text" class="form-control"></td>\n' +
-            '            <td>2000</td>\n' +
-            '            <td>2000</td>\n' +
-            '            </tr>\n' +
-            '            </table>\n' +
-            '            </td>\n' +
-            '            </tr>';
-        let newTable = $(tableLevelTwo);
+
         $('.set_promotion').click(function () {
             let thisParent = $(this).parents('.table-level-one');
             console.log(thisParent.next().hasClass('table-level-two'));
@@ -556,16 +589,16 @@
             })
         });
         $(function () {
-            $(".middle-height .icon-add").on("click",function(){
+            $(".detail-box").on("click",'.icon-add', function(){
                 $(this).addClass("dis-no");
                 var rowclass=$(this).parent().next(".add-row");
                 rowclass.removeClass("dis-no");
                 // $(".seckill .se-sale").css("height","189px");
             });
-            $(".middle-height .icon-minus").on("click",function(){
+            $(".detail-box").on("click", '.icon-minus', function(){
                 var minushtml=$(this).parent();
                 var adclass=$(this).parent().prev(".addcontain").children(".icon-add");
-                $(this).siblings('input').val('');
+                $(this).parent('.add-row').find('input').val('');
                 adclass.removeClass("dis-no");
                 minushtml.addClass("dis-no");
                 // $(".seckill .se-sale").css("height","140px");
@@ -655,7 +688,18 @@
                         }
                     });
                 }
-            })
+            });
+
+            //立减/立享
+            $(".limit-detail").on("change", '.active-select', function(){
+                var value=$(this).val();
+                if(value==1){
+                    $(".limit-type-html").text("元");
+                }else if(value==2){
+                    $(".limit-type-html").text("折");
+                }
+
+            });
         });
         function getGoods(obj, url){
             if(! url){
@@ -689,5 +733,137 @@
             });
             return false;
         }
+
+        function setGoodInfo(obj){
+            var _this = $(obj);
+            var type = $('input[name=activity_type]:checked').val();
+            var perNum = $('input[name=limit_per_num]').val();
+            if(type == 'limit'){
+                var activity_type = $('select[name='+type+'_type]').val();
+                var num = $('input[name='+type+'_num]').val();
+                if( parseInt(activity_type) == 1){
+                    if(!/^\d+(\.\d{0,2})?$/.test(num)){
+                        toastr.warning('价格格式错误，请重新修改');
+                        return false;
+                    }
+                    /*$('.promotion-price').each(function(){
+                        var tmpPrice = $(this).parent().prev().data('price');
+                        var price = parseFloat(tmpPrice) - parseFloat(num);
+                        if(price <= 0) price = 0.01;
+                        $(this).val(price);
+                    });*/
+                }else if(parseInt(activity_type) == 2){
+                    if(!/^\d(\.\d?)?$/.test(num)){
+                        toastr.warning('折扣格式错误，请重新修改');
+                        return false;
+                    }
+                   /* $('.promotion-price').each(function(){
+                        var tmpPrice = $(this).parent().prev().data('price');
+                        var price = Math.round(parseFloat(tmpPrice) * parseFloat(num) * 100) /1000;
+                        if(price <= 0) price = 0.01;
+                        $(this).val(price);
+                    });*/
+                }
+            }else if(type == 'quantity'){
+                var activity_type = $('select[name='+type+'-type]').val();
+                var price = $('input[name=quantity-price'+activity_type+']').val();
+                var num = $('input[name='+type+'-num]').val();
+                if(parseInt(activity_type) == 1){
+                    if(!/^\d+(\.\d{0,2})?$/.test(price)){
+                        alert('价格格式错误，请重新修改');
+                        return false;
+                    }
+                    if(!empty(num) && !/^\d+$/.test(num)){
+                        alert('活动商品数量只能为整数');
+                        return false;
+                    }
+                    $('.promotion-price').each(function(){
+                        $(this).val(price);
+                    });
+                    $('.promotion-num').each(function(){
+                        var maxNum = $(this).parents('table').data('stock');
+                        var tmp = (empty(num) || num > maxNum) ? maxNum : num;
+                        $(this).val(tmp);
+                    });
+                }else if(parseInt(activity_type) == 2){
+                    if(!/^\d(\.\d?)?$/.test(price)){
+                        alert('折扣格式错误，请重新修改');
+                        return false;
+                    }
+                    if(!empty(num) && !/^\d+$/.test(num)){
+                        alert('活动商品数量只能为整数');
+                        return false;
+                    }
+                    $('.promotion-price').each(function(){
+                        var tmpPrice = $(this).parent().prev().data('price');
+                        $(this).val(Math.round(parseFloat(tmpPrice) * parseFloat(price) * 100) /1000);
+                    });
+                    $('.promotion-num').each(function(){
+                        var maxNum = $(this).parents('table').data('stock');
+                        var tmp = (empty(num) || num > maxNum) ? maxNum : num;
+                        $(this).val(tmp);
+                    });
+                }
+            }
+        }
+        var coupon = {
+            add:function(obj){
+                var event = event || window.event;
+                event.preventDefault(); // 兼容标准浏览器
+                window.event.returnValue = false; // 兼容IE6~8
+                var _this = $(obj);
+                var str = '';
+                var ids = [];
+                var price = '';
+                var return_coupons = this.coupons;
+                _this.find('input[name=coupon-ids]').each(function(i, item){
+                    console.log(1);
+                    var that = $(item);
+                    if(that.prop('checked')){
+                        console.log(2);
+                        if($.inArray(that.val(), return_coupons) != -1) {
+                            return true;
+                        }else{
+                            return_coupons.push(that.val());
+                        }
+                        ids.push(that.val());
+                        str += '<tr><input type="hidden" name="return_ids[]" value="'+that.val()+'">';
+                        that.parents('td').siblings().each(function(ii, iitem){
+                            str += iitem.outerHTML;
+                        });
+                        str += '<td class="ac-delete" data-id="'+that.val()+'" onClick="coupon.del(this);" data-price="'+that.data('price')+'">删除</td></tr>';
+                        price += parseFloat(that.data('price'));
+                    }
+                });
+                this.coupons = return_coupons;
+                this.sum = price;
+                $('#coupon-price-sum').val(price);
+                $('#myModal-four').modal('hide');
+                $('#return-detail').removeClass('dis-no').find('tbody').append(str);
+                var tr=$('#return-detail .acTable').find("tr").length
+                console.log(tr)
+                var height=(tr+1)*43+50
+                $('.seckill .se-sale').css('height',height+'px');
+                $('#return-price_sum').html('(总价值￥'+price+'元)');
+            },
+            del:function(obj){
+                var tr=$(obj).parents("table").find('tr').length;
+                console.log(tr)
+                var height=tr*43+50
+                var id = $(obj).data('id');
+                var price = $(obj).data('price');
+                var return_coupons = this.coupons;
+                price = this.sum - parseFloat(price);
+                return_coupons.splice($.inArray(''+id, return_coupons), 1);
+                this.coupons = return_coupons;
+                $(obj).parents('tr').remove();
+                $('.seckill .se-sale').css('height',height+'px');
+                $('#return-price_sum').html('(总价值￥'+price+'元)');
+                $('#coupon-price-sum').val(price);
+                this.sum = price;
+            },
+            coupons:[],
+            sum:0
+        };
     </script>
 @endsection

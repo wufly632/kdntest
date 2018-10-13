@@ -10,6 +10,7 @@ use App\Entities\Promotion\Promotion;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Promotion\PromotionAddGoodRequest;
 use App\Services\Api\ApiResponse;
+use App\Services\Coupon\CouponService;
 use App\Services\Product\ProductService;
 use App\Services\Promotion\PromotionService;
 use Carbon\Carbon;
@@ -66,7 +67,9 @@ class PromotionController extends Controller
         }
         //获取可添加的促销活动商品
         $promotion_goods = $this->promotionService->getAblePromotionActivityGoods($promotion->id, $request);
-        return view('promotion.edit', compact('promotion','promotion_goods'));
+        //获取优惠券
+        $coupon_list = app(CouponService::class)->getPromotionCoupons();
+        return view('promotion.edit', compact('promotion','promotion_goods', 'coupon_list'));
     }
 
     /**

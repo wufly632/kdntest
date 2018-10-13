@@ -81,6 +81,9 @@ class AttrValueService{
             $data['id'] = $value->id;
             $data['is_image'] = $category_attributes->is_image;
             $data['is_diy'] = $category_attributes->is_diy;
+            $data['check_type'] = $category_attributes->check_type;
+            $data['is_detail'] = $category_attributes->is_detail;
+            $data['is_required'] = $category_attributes->is_required;
             $arr[] = $data;
         }
 

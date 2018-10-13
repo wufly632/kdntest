@@ -11,6 +11,8 @@
 
 namespace App\Services\Coupon;
 
+use App\Criteria\Coupon\CouponPurposeCriteria;
+use App\Entities\Coupon\Coupon;
 use App\Repositories\Coupon\CouponRepository;
 use App\Services\Api\ApiResponse;
 use App\Validators\Coupon\CouponValidator;
@@ -124,8 +126,21 @@ class CouponService
             DB::commit();
             return ApiResponse::success('修改成功');
         } catch (\Exception $e) {
-            dd($e);
+            DB::rollBack();
             return ApiResponse::failure(g_API_ERROR, $e->getMessage());
         }
+    }
+
+    public function getPromotionCoupons()
+    {
+        $orderBy = $request->orderBy ?? 'id';
+        $sort = $request->sort ?? 'desc';
+        $length = $request->length ?? 20;
+
+        $this->coupon->pushCriteria(new CouponPurposeCriteria(Coupon::RETURN_COUPON));
+
+        $coupons = $this->coupon->orderBy($orderBy, $sort)->paginate($length);
+        $couponStr = view('promotion.addCoupons', compact('coupons'));
+        return $couponStr;
     }
 }
