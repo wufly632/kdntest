@@ -57,13 +57,17 @@ class SyncCategory extends Command
     public function handleProgress()
     {
         $arr = [
-            '服装服饰类目',
-            '美妆个护',
-            '箱包配饰',
-            '孕婴童',
+            /*'服装服饰类目.xlsx',
+            '美妆个护.xlsx',
+            '箱包配饰.xlsx',
+            '孕婴童.xlsx',*/
+            '户外运动.xlsx',
+            '居家百货.xlsx',
+            '汽车配件.xlsx',
+            '手机数码.xlsx'
         ];
         foreach ($arr as $i) {
-            $excel_path = 'storage'.DIRECTORY_SEPARATOR.'excel'.DIRECTORY_SEPARATOR.'import/category'.DIRECTORY_SEPARATOR.$i.'.xlsx';
+            $excel_path = 'storage'.DIRECTORY_SEPARATOR.'excel'.DIRECTORY_SEPARATOR.'import/category'.DIRECTORY_SEPARATOR.$i;
             \Excel::load($excel_path, function ($reader) use ($i) {
                 $reader1 = $reader->getSheet(0);
                 //中文分类

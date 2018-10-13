@@ -28,6 +28,9 @@
         }
         .promotion_type {margin-right: 15px;}
         .box-header .col-xs-1{width: 10%;}
+        .dis-no{display: none;}
+        .addcontain{height: 35px;}
+        .add-row{margin-top: 10px;}
     </style>
 @endsection
 @extends('layouts.default')
@@ -137,7 +140,7 @@
                                     <div class="panel-body">
                                         <div class="detail-box row with-border">
                                             <div class="@if($promotion->activity_type != 'reduce' && $promotion->activity_type) hidden @endif detail reduce-detail">
-                                                <div class="reduce-detail-row">
+                                                <div class="reduce-detail-row addcontain">
                                                     <div class="pull-left text-padding-top">活动期间，买满</div>
                                                     <div class="col-xs-2">
                                                         <div class="input-group">
@@ -152,7 +155,24 @@
                                                             <span class="input-group-addon">元</span>
                                                         </div>
                                                     </div>
-                                                    <button id="add-reduce-detail" type="button" class="btn btn-primary btn-flat" style="border-radius: 90px;">+</button>
+                                                    <button id="add-reduce-detail" type="button" class="btn btn-primary btn-flat icon-add" style="border-radius: 90px;">+</button>
+                                                </div>
+                                                <div class="reduce-detail-row add-row dis-no">
+                                                    <div class="pull-left text-padding-top">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;满</div>
+                                                    <div class="col-xs-2">
+                                                        <div class="input-group">
+                                                            <input type="text" class="form-control" name="reduce_name[]">
+                                                            <span class="input-group-addon">元</span>
+                                                        </div>
+                                                    </div>
+                                                    <div class="pull-left text-padding-top" style="width: 60px;padding-left: 0;padding-right: 0">，立减</div>
+                                                    <div class="col-xs-2">
+                                                        <div class="input-group">
+                                                            <input type="text" class="form-control" name="reduce_value[]">
+                                                            <span class="input-group-addon">元</span>
+                                                        </div>
+                                                    </div>
+                                                    <button id="add-reduce-detail" type="button" class="btn btn-primary btn-flat icon-minus" style="border-radius: 90px;">-</button>
                                                 </div>
                                             </div>
                                             <div class="@if($promotion->activity_type != 'return') hidden @endif detail return-detail">
@@ -170,11 +190,11 @@
                                                             <option value="">券</option>
                                                         </select>
                                                     </div>
-                                                    <button id="add-return-detail" type="button" class="btn btn-primary btn-flat" style="border-radius: 90px;">+</button>
+                                                    <button id="add-return-detail" type="button" class="btn btn-primary btn-flat icon-add" style="border-radius: 90px;">+</button>
                                                 </div>
                                             </div>
                                             <div class="@if($promotion->activity_type != 'discount') hidden @endif detail discount-detail">
-                                                <div class="discount-detail-row">
+                                                <div class="discount-detail-row addcontain">
                                                     <div class="pull-left text-padding-top">
                                                         活动期间，选购商品满
                                                     </div>
@@ -193,7 +213,28 @@
                                                             <span class="input-group-addon">折</span>
                                                         </div>
                                                     </div>
-                                                    <button id="add-discount-detail" type="button" class="btn btn-primary btn-flat" style="border-radius: 90px;">+</button>
+                                                    <button id="add-discount-detail" type="button" class="btn btn-primary btn-flat icon-add" style="border-radius: 90px;">+</button>
+                                                </div>
+                                                <div class="discount-detail-row add-row dis-no">
+                                                    <div class="pull-left text-padding-top">
+                                                        　　　　　　　　　满
+                                                    </div>
+                                                    <div class="col-xs-2">
+                                                        <div class="input-group">
+                                                            <input type="text" class="form-control" name="discount_name[]">
+                                                            <span class="input-group-addon">件</span>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-xs-1 control-label">
+                                                        ，立享
+                                                    </div>
+                                                    <div class="col-xs-2">
+                                                        <div class="input-group">
+                                                            <input type="text" class="form-control" name="discount_value[]">
+                                                            <span class="input-group-addon">折</span>
+                                                        </div>
+                                                    </div>
+                                                    <button id="add-discount-detail" type="button" class="btn btn-primary btn-flat icon-minus" style="border-radius: 90px;">-</button>
                                                 </div>
                                             </div>
 
@@ -203,7 +244,7 @@
                                                 </div>
                                                 <div class="col-xs-2">
                                                     <div class="input-group">
-                                                        <input type="text" class="form-control">
+                                                        <input type="text" class="form-control" name="wholesale_name[]">
                                                         <span class="input-group-addon">元</span>
                                                     </div>
                                                 </div>
@@ -212,7 +253,7 @@
                                                 </div>
                                                 <div class="col-xs-2">
                                                     <div class="input-group">
-                                                        <input type="text" class="form-control">
+                                                        <input type="text" class="form-control" name="wholesale_value[]">
                                                         <span class="input-group-addon">件</span>
                                                     </div>
                                                 </div>
@@ -556,16 +597,16 @@
             })
         });
         $(function () {
-            $(".middle-height .icon-add").on("click",function(){
+            $(".detail-box").on("click",'.icon-add', function(){
                 $(this).addClass("dis-no");
                 var rowclass=$(this).parent().next(".add-row");
                 rowclass.removeClass("dis-no");
                 // $(".seckill .se-sale").css("height","189px");
             });
-            $(".middle-height .icon-minus").on("click",function(){
+            $(".detail-box").on("click", '.icon-minus', function(){
                 var minushtml=$(this).parent();
                 var adclass=$(this).parent().prev(".addcontain").children(".icon-add");
-                $(this).siblings('input').val('');
+                $(this).parent('.add-row').find('input').val('');
                 adclass.removeClass("dis-no");
                 minushtml.addClass("dis-no");
                 // $(".seckill .se-sale").css("height","140px");

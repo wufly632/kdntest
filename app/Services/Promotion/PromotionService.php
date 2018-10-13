@@ -122,7 +122,6 @@ class PromotionService
     public function create($request)
     {
         try {
-            // $this->promotionValidator->with( $request->all() )->passesOrFail();
             $promotion = $this->transform($request);
             DB::beginTransaction();
             $this->promotion->update($promotion['promotion'], $request->id);
@@ -161,9 +160,7 @@ class PromotionService
         $promotion_type_info = $this->getPromotionType($request);
         // 获取活动的商品信息
         $promotion_goods = $this->getPromotionGoods($request, $activity_goods);
-
         $sku_info = ProductSku::whereIn('good_id', $promotion_goods['good_ids'])->get();
-
         $promotion['promotion']['style'] = count($activity_goods);//活动-款式(商品总数)
         if ($request->activity_type == 'quantity') {
             // 货值（商品最高sku供货价*秒杀数量）
@@ -286,7 +283,6 @@ class PromotionService
     {
         $stock = 0;
         $pre_num = 0;
-
         // 商品信息
         $promotion_goods = [];
         // 商品sku信息
@@ -326,10 +322,10 @@ class PromotionService
                 $pre_num = $request->input($request->activity_type.'_pre_num');
                 break;
             default:
-                /*foreach($activity_goods as $val){
+                foreach($activity_goods as $val){
                     $good_id = $val->goods_id;
                     $good_tmp['id'] = $val->id;
-                    if($request->per_num.$good_id !== null) {
+                    if($request->input('per_num'.$good_id) !== null) {
                         $good_tmp['per_num'] = $request->input('per_num'.$good_id);
                         $good_tmp['num'] = $request->input('num'.$good_id) ?? 0;
                         foreach($request->input('sku_id'.$good_id) as $key => $v){
@@ -343,11 +339,14 @@ class PromotionService
                             $sku_tmp['created_at'] = Carbon::now()->toDateTimeString();
                             $promotion_goods_sku[] = $sku_tmp;
                         }
+                    } else {
+                        $good_tmp['per_num'] = 0;
+                        $good_tmp['num'] = 0;
                     }
                     $good_tmp['status'] = 1;
                     $good_ids[] = $good_id;
                     $promotion_goods[] = $good_tmp;
-                }*/
+                }
                 break;
         }
         return compact('promotion_goods', 'promotion_goods_sku', 'good_ids');

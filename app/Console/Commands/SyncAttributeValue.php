@@ -57,85 +57,62 @@ class SyncAttributeValue extends Command
 
     public function handleProgress()
     {
-        $arr = [4];
+        $arr = [
+            /*'服饰.xlsx',
+            '居家百货属性.xlsx',*/
+            '汽车配饰属性.xlsx',
+        ];
         foreach ($arr as $i) {
-            $excel_path = 'storage'.DIRECTORY_SEPARATOR.'excel'.DIRECTORY_SEPARATOR.'import'.DIRECTORY_SEPARATOR.iconv("UTF-8", 'GBK', $i.'-attribute').'.csv';
+            $excel_path = 'storage'.DIRECTORY_SEPARATOR.'excel'.DIRECTORY_SEPARATOR.'import/attribute'.DIRECTORY_SEPARATOR.$i;
             \Excel::load($excel_path, function ($reader) use ($i) {
                 $reader1 = $reader->getSheet(0);
                 //中文属性和属性值
                 $ch    = $reader1->toArray();
-                for ($v=1;$v<=1387;$v++) {
-                    $this->info($i.'-'.$v);
-                    if (! $ch[$v][0]) continue;
-                    //属性
-                    if ($attribute = Attribute::where('name', $ch[$v][3])->first()) {
+                //英文属性和属性值
+                $reader2 = $reader->getSheet(1);
+                $en      = $reader2->toArray();
+
+                foreach ($ch as $key => $item) {
+                    if ($key == 0) continue;
+                    if (! $item[0]) continue;
+                    $this->info($i.'-'.$key);
+                    // 属性
+                    $attr_name = $item[5];
+                    if ($attribute = Attribute::where('name', $attr_name)->first()) {
                         $attribute_id = $attribute->id;
                     } else {
+
+                        $type = $item[4] == 3 ? 2 : 1;
                         $attribute_data = [
-                            'name' => $ch[$v][3],
-                            'alias_name' => $ch[$v][3],
-                            'en_name' => $ch[$v+1400][3],
-                            'type' => 1, //标准化文本
+                            'name' => $attr_name,
+                            'alias_name' => $item[6],
+                            'en_name' => $en[$key][5],
+                            'type' => $type, //标准化文本
                             'status' => 1,
                             'created_at' => Carbon::now()->toDateTimeString()
                         ];
                         $attribute_id = Attribute::insertGetId($attribute_data);
                     }
-                    //属性值
-                    foreach (array_slice($ch[$v], 4) as $k => $value) {
-                        if ( !$value) continue;
-                        if ( !$attr_value = AttributeValue::where(['attribute_id' => $attribute_id, 'name' => $value])->first()) {
+                    // 属性值
+                    foreach ($item as $k => $va) {
+                        if ($k < 7) continue;
+                        if (! $va) continue;
+                        if ( !$attr_value = AttributeValue::where(['attribute_id' => $attribute_id, 'name' => $va])->first()) {
                             $attr_data = [
                                 'attribute_id' => $attribute_id,
-                                'name'         => $value,
-                                'en_name'      => $ch[$v + 1400][$k + 4],
+                                'name'         => $va,
+                                'en_name'      => $en[$key][$k],
                                 'created_at'   => Carbon::now()->toDateTimeString()
                             ];
                             AttributeValue::insertGetId($attr_data);
                         }
                     }
-                    $this->info('end');
+                    $this->info($attr_name.'完成');
                 }
-
-                /*//英文属性和属性值
-                $reader2 = $reader->getSheet(1);
-                $en = $reader2->toArray();
-                foreach ($ch as $key => $attribute_info) {
-                    $this->info($i.'-'.$key);
-                    if ($key == 0) continue;
-                    if (! $attribute_info[0]) continue;
-                    //属性
-                    if ($attribute = Attribute::where('name', $attribute_info[3])->first()) {
-                        $attribute_id = $attribute->id;
-                    } else {
-                        $attribute_data = [
-                            'name' => $attribute_info[3],
-                            'alias_name' => $attribute_info[3],
-                            'en_name' => $en[$key][3],
-                            'type' => 1, //标准化文本
-                            'status' => 1,
-                            'created_at' => Carbon::now()->toDateTimeString()
-                        ];
-                        $attribute_id = Attribute::insertGetId($attribute_data);
-                    }
-                    //属性值
-                    foreach (array_slice($attribute_info, 4) as $k => $value) {
-                        if (! $value) continue;
-                        if (! $attr_value = AttributeValue::where(['attribute_id' => $attribute_id, 'name' => $value])->first()) {
-                            $attr_data = [
-                                'attribute_id' => $attribute_id,
-                                'name' => $value,
-                                'en_name' => $en[$key][$k+4],
-                                'created_at' => Carbon::now()->toDateTimeString()
-                            ];
-                            AttributeValue::insertGetId($attr_data);
-                        }
-                    }
-                    $this->info('end');
-                }*/
-
             });
+            $this->info($i.'-finish!');
         }
+        $this->info('finish!');
     }
 
 }
