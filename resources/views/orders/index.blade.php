@@ -190,7 +190,9 @@
                                             </td>
                                             <td>{{ $order->unit_price }}</td>
                                             <td>{{ $order->num }}</td>
-                                            @if($loop->index==($loop->first))
+
+
+                                            @if($loop->first)
                                                 <td rowspan="{{ $loop->count }}">
                                                     {{ $orderlist->final_price }}
                                                 </td>
@@ -200,9 +202,6 @@
                                                 <td rowspan="{{ $loop->count }}">
                                                     {{ $orders->StatusWords[$orderlist->status] }}
                                                 </td>
-                                            @endif
-
-                                            @if($loop->index==($loop->first))
                                                 <td rowspan="{{ $loop->count }}">
                                                     <p style="padding: 5px;">
                                                         <a href="{{ secure_route('orders.show',['id'=>$orderlist->id]) }}"

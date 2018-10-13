@@ -43,4 +43,8 @@ class Order extends Model implements Transformable
     {
         return $this->hasOne('App\Entities\User\User', 'id', 'customer_id');
     }
+    public function orderTrackingmore()
+    {
+        return $this->hasOne('App\Entities\Order\OrderTrackingmore', 'order_id', 'order_id');
+    }
 }

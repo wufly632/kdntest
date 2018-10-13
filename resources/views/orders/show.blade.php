@@ -200,7 +200,7 @@
                                             <div class="col-sm-2">
                                                 <div class="h5">订单状态：</div>
                                                 @if($order->status==6)
-                                                    <div class="text-danger">交易取消取消</div>
+                                                    <div class="text-danger">交易取消</div>
                                                 @endif
                                             </div>
                                             <div class="col-sm-10"
@@ -246,7 +246,7 @@
                                                                 </p>
                                                             </div>
                                                         </td>
-                                                        @if($loop->index==($loop->first))
+                                                        @if($loop->first)
                                                             <td rowspan="{{ $loop->count }}">
                                                                 {{ $order->final_price }}
                                                             </td>
@@ -347,7 +347,7 @@
                 },
                 created: function () {
                     _index = this;
-                    axios.get('{{ secure_route('trackingmore.getstream',['shipper_code'=>$order->shipper_code,'waybill_id'=>$order->waybill_id]) }}').then(function (res) {
+                    axios.get('{{ secure_route('trackingmore.getstream',['id'=>$order->id,'shipper_code'=>$order->shipper_code,'waybill_id'=>$order->waybill_id]) }}').then(function (res) {
                         _index.trackIinfo = res.data.origin_info.trackinfo;
                         console.log(_index.trackIinfo);
                     });

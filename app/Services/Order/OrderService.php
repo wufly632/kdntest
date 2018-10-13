@@ -184,4 +184,9 @@ class OrderService
             return ApiResponse::failure(g_API_ERROR,'修改失败');
         }
     }
+
+    public function test()
+    {
+        $this->order->firstOrCreate();
+    }
 }

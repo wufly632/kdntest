@@ -94,8 +94,6 @@
                 <ul class="treeview-menu">
                     <li><a data-target-url="orders" href="{{secure_route('orders.index')}}"><i
                                     class="fa fa-circle-o"></i>订单列表</a></li>
-                    <li><a data-target-url="waitdeliver" href="{{secure_route('orders.index')}}"><i
-                                    class="fa fa-circle-o"></i>未发货</a></li>
                 </ul>
             </li>
         </ul>

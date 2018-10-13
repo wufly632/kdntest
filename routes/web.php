@@ -95,7 +95,7 @@ Route::group(['middleware' => ['auth', 'web']], function () {
     //物流信息
     Route::group(['namespace' => 'TrackingMore'], function () {
         Route::get('/trackingmore/getcarriers','TrackingMoreController@getCarriers')->name('trackingmore.getcarriers');
-        Route::get('/trackingmore/getstream','TrackingMoreController@getStream')->name('trackingmore.getstream');///{shipper_code}/{waybill_id}
+        Route::get('/trackingmore/getstream/{id}/{shipper_code}/{waybill_id}','TrackingMoreController@getStream')->name('trackingmore.getstream');///{shipper_code}/{waybill_id}
         Route::get('/trackingmore/createtracking/{shipper_code}/{waybill_id}','TrackingMoreController@createTracking')->name('trackingmore.createtracking');
         Route::get('/trackingmore/detectcarrier/{waybill_id}','TrackingMoreController@detectCarrier')->name('trackingmore.detectcarrier');
     });

@@ -133,11 +133,22 @@ class OrderController extends Controller
         //
     }
 
+    /**
+     * 发货页面
+     * @param $id
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     public function send($id)
     {
         return view('orders.send', ['order' => $this->orderService->getOrderInfo($id)]);
     }
 
+    /**
+     * 确认发货
+     * @param Request $request
+     * @param $id
+     * @return mixed
+     */
     public function sendConfirm(Request $request, $id)
     {
         if (!$request->filled('shipper_code') || !$request->filled('waybill_id')) {
@@ -172,6 +183,11 @@ class OrderController extends Controller
         }
     }
 
+    /**
+     * 取消订单
+     * @param $id
+     * @return mixed
+     */
     public function orderCancel($id)
     {
         if ($this->orderService->orderCancel($id)['status'] == 200) {
