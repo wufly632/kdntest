@@ -22,9 +22,9 @@ class GoodSkuImage extends Model implements Transformable
      *
      * @var array
      */
-    protected $fillable = [];
+    protected $fillable = ['good_id', 'sku_id', 'src', 'sort', 'is_deleted', 'created_at', 'updated_at'];
 
     // 需同步的字段
-    public static $syncField = ['id', 'good_id', 'sku_id', 'src', 'sort', 'is_deleted'];
+    public static $syncField = ['id','good_id', 'sku_id', 'src', 'sort', 'is_deleted'];
 
 }

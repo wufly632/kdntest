@@ -76,6 +76,13 @@
         }
         .acTable,.acTable tr th, .acTable tr td { border:1px solid #E4E4E4;
             padding: 5px;}
+        ._goodDetail{
+            width: 80%;
+            margin-left: 10%;
+        }
+        ._goodDetail td{
+            padding: 5px;
+        }
     </style>
 @endsection
 @extends('layouts.default')
@@ -451,7 +458,7 @@
                                         </div>
                                     </div>
                                     <hr>
-                                    <table id="promotion_good_table" class="table table-bordered table-hover text-center">
+                                    <table id="promotion_good_table" class="table table-bordered table-hover text-center promotion-activity-type2">
                                         <thead>
                                         <tr>
                                             <td>商品图片</td>
@@ -570,7 +577,7 @@
                                     '                                <td>'+data_content[i].good_stock+'</td>\n' +
                                     '                                <td>\n' +
                                     '                                <div><a href="javascript:void(0);" class="promotion-goods-delete" data-id="'+data_content[i].id+'">删除</a></div>\n' +
-                                    '                            <div class="set_promotion"><a href="javascript:void(0);">设置优惠</a></div>\n' +
+                                    '                            <div class="set_promotion"><span class="promotion-goods-single" data-id="'+data_content[i].id+'">设置优惠</span></div>\n' +
                                     '                            </td>\n' +
                                     '                            </tr>';
                             }
@@ -699,6 +706,34 @@
                     $(".limit-type-html").text("折");
                 }
 
+            });
+
+            //设置优惠
+            $('.promotion-activity-type1,.promotion-activity-type2').on('click', '.promotion-goods-single', function(){
+                var activity_id = $('input[name=id]').val();
+                var _this = $(this);
+                var toggle = _this.attr('data-toggle');
+                if( toggle == 'false' ) return;
+                var good_id = _this.data('id');
+                _this.attr('data-toggle', false);
+                $.ajax({
+                    type:'post',
+                    data:{activity_id:activity_id, good_id:good_id,_token:"{{csrf_token()}}"},
+                    url:"{{secure_route('promotion.getSingleSkuHtml')}}",
+                    dataType:'json',
+                    success:function(d){
+                        if(d.status == 200){
+                            _this.parents('tr').after(d.content);
+                        }else{
+                            _this.attr('data-toggle', true);
+                            toastr.warning(d.msg);
+                        }
+                    }
+                });
+            });
+            $('#promotion-activity-type1,#promotion-activity-type2').on('click', '.promotion-goods-single-clear', function(){
+                $(this).parents('td.add_Table').parent().prev().find('.promotion-goods-single').attr('data-toggle', true);
+                $(this).parents('td.add_Table').parent().remove();
             });
         });
         function getGoods(obj, url){

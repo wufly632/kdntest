@@ -17,6 +17,7 @@ use App\Entities\Good\GoodSkuImage;
 use App\Entities\Product\Product;
 use App\Entities\Product\ProductAttrValue;
 use App\Entities\Product\ProductSku;
+use App\Entities\Product\ProductSkuImages;
 use App\Repositories\Good\GoodRepository;
 use App\Repositories\Product\ProductRepository;
 use App\Validators\Good\GoodValidator;
@@ -130,11 +131,13 @@ class GoodService{
             $good->status = Good::WAIT_EDIT;
             $good->save();
             // 同步商品数据
-            $this->syncGoodData($good);
+            if (! $this->syncGoodData($good)) {
+                DB::rollback();
+                return false;
+            }
             DB::commit();
             return true;
         } catch (\Exception $e) {
-            debug($e->getMessage());
             DB::rollback();
             return false;
         }
@@ -146,13 +149,22 @@ class GoodService{
     public function syncGoodData($good)
     {
         // 同步goods表
-        $this->syncProducts($good);
+        if (! $this->syncProducts($good)) {
+            return false;
+        }
         // 同步good_skus表
-        $this->syncGoodskus($good->id,$good->getSkus);
+        if (! $this->syncGoodskus($good->id,$good->getSkus)) {
+            return false;
+        }
         // 同步good_sku_images表
-        $this->syncGoodSkuImages($good->id,$good->getImages);
+        if (! $this->syncGoodSkuImages($good->id,$good->getImages)) {
+            return false;
+        }
         // 同步goods_attr_value表
-        $this->syncGoodAttrValue($good->id,$good->getAttrValue);
+        if (! $this->syncGoodAttrValue($good->id,$good->getAttrValue)) {
+            return false;
+        }
+        return true;
     }
 
     /**
@@ -160,10 +172,17 @@ class GoodService{
      */
     private function syncProducts($good)
     {
-        $data = $good->only(Good::$syncField);
-        $data['created_at'] = Carbon::now()->toDateTimeString();
-        $data['status'] = Product::OFFLINE;
-        $this->product->updateOrCreate(['id' => $data['id']], $data);
+        try {
+            $data = $good->only(Good::$syncField);
+            $data['created_at'] = Carbon::now()->toDateTimeString();
+            $data['status'] = Product::OFFLINE;
+            $this->product->updateOrCreate(['id' => $data['id']], $data);
+            return true;
+        } catch (\Exception $e) {
+            Log::info($e->getMessage());
+            return false;
+        }
+
     }
 
     /**
@@ -171,11 +190,18 @@ class GoodService{
      */
     private function syncGoodskus($good_id, $goodSkus)
     {
-        $goodSkus = $goodSkus->map(function($item) {
-            return $item->only(GoodSku::$syncField);
-        })->toArray();
-        GoodSku::where('good_id', $good_id)->delete();
-        GoodSku::insert($goodSkus);
+        try {
+            $goodSkus = $goodSkus->map(function($item) {
+                return $item->only(GoodSku::$syncField);
+            })->toArray();
+            ProductSku::where('good_id', $good_id)->delete();
+            ProductSku::insert($goodSkus);
+            return true;
+        } catch (\Exception $e) {
+            Log::info($e->getMessage());
+            return false;
+        }
+
     }
 
     /**
@@ -183,11 +209,20 @@ class GoodService{
      */
     private function syncGoodSkuImages($good_id, $goodSkuimages)
     {
-        $goodSkuimages = $goodSkuimages->map(function ($item) {
-            return $item->only(GoodSkuImage::$syncField);
-        })->toArray();
-        GoodSkuImage::where('good_id', $good_id)->delete();
-        GoodSkuImage::insert($goodSkuimages);
+        try {
+            $goodSkuimages = $goodSkuimages->map(function ($item) {
+                $item = $item->only(GoodSkuImage::$syncField);
+                $item['created_at'] = Carbon::now()->toDateTimeString();
+                return $item;
+            })->toArray();
+            ProductSkuImages::where('good_id', $good_id)->delete();
+            ProductSkuImages::insert($goodSkuimages);
+            return true;
+        } catch (\Exception $e) {
+            Log::info($e->getMessage());
+            return false;
+        }
+
     }
 
     /**
@@ -195,11 +230,20 @@ class GoodService{
      */
     private function syncGoodAttrValue($good_id, $goodAttrValues)
     {
-        $goodAttrValues = $goodAttrValues->map(function ($item){
-            return $item->only(GoodAttrValue::$syncField);
-        })->toArray();
-        GoodAttrValue::where('good_id', $good_id)->delete();
-        GoodAttrValue::insert($goodAttrValues);
+        try {
+            $goodAttrValues = $goodAttrValues->map(function ($item){
+                $item = $item->only(GoodAttrValue::$syncField);
+                $item['created_at'] = Carbon::now()->toDateTimeString();
+                return $item;
+            })->toArray();
+            ProductAttrValue::where('good_id', $good_id)->delete();
+            ProductAttrValue::insert($goodAttrValues);
+            return true;
+        } catch (\Exception $e) {
+            Log::info($e->getMessage());
+            return false;
+        }
+
     }
 
     /**

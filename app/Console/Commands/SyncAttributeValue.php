@@ -58,9 +58,11 @@ class SyncAttributeValue extends Command
     public function handleProgress()
     {
         $arr = [
-            /*'服饰.xlsx',
-            '居家百货属性.xlsx',*/
-            '汽车配饰属性.xlsx',
+            '户外运动属性.xlsx',
+            '居家百货属性.xlsx',
+            '汽车配饰全属性.xlsx',
+            '手机数码属性.xlsx',
+            '美妆个护.xlsx'
         ];
         foreach ($arr as $i) {
             $excel_path = 'storage'.DIRECTORY_SEPARATOR.'excel'.DIRECTORY_SEPARATOR.'import/attribute'.DIRECTORY_SEPARATOR.$i;
@@ -81,7 +83,7 @@ class SyncAttributeValue extends Command
                     if ($attribute = Attribute::where('name', $attr_name)->first()) {
                         $attribute_id = $attribute->id;
                     } else {
-
+                        //属性类型（标准/非标准）
                         $type = $item[4] == 3 ? 2 : 1;
                         $attribute_data = [
                             'name' => $attr_name,

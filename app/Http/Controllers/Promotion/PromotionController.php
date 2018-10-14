@@ -144,4 +144,13 @@ class PromotionController extends Controller
         }*/
         return $result;
     }
+
+    /**
+     * 返回单品优惠html文档
+     */
+    public function getSingleSkuHtml(Request $request)
+    {
+        $result = $this->promotionService->getSingleSkuHtml($request);
+        return $result;
+    }
 }

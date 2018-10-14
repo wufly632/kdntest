@@ -450,4 +450,27 @@ class PromotionService
         $goodStr = view('promotion.addGoods', compact('goods'));
         return $goodStr;
     }
+
+    /**
+     * @function 获取单个sku的页面信息
+     * @param $request
+     * @return mixed
+     */
+    public function getSingleSkuHtml($request)
+    {
+        $good_id = $request->good_id;
+        $activity_id = $request->activity_id;
+        if (! $good_id || ! $activity_id) {
+            return ApiResponse::failure(g_API_ERROR, '请选择要设置是商品');
+        }
+        $activityGoods = $this->promotionGood->findWhere(['goods_id' => $good_id, 'activity_id' => $activity_id]);
+        if (! $activityGoods) {
+            return ApiResponse::failure(g_API_ERROR, '请重新选择要设置的商品');
+        }
+        $good = $this->product->find($good_id);
+        $goodSkus = $good->getGood->getSkus;
+        $skuHtml = view('promotion.singlesku', compact('goodSkus'));
+        $html=response($skuHtml)->getContent();
+        return ApiResponse::success($html);
+    }
 }

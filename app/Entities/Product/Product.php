@@ -2,6 +2,7 @@
 
 namespace App\Entities\Product;
 
+use App\Entities\Good\Good;
 use Illuminate\Database\Eloquent\Model;
 use Prettus\Repository\Contracts\Transformable;
 use Prettus\Repository\Traits\TransformableTrait;
@@ -35,4 +36,14 @@ class Product extends Model implements Transformable
         self::ONLINE => '上架',
         self::OFFLINE => '上架',
     ];
+
+    public function productSku()
+    {
+        return $this->hasMany(ProductSku::class, 'good_id', 'id');
+    }
+
+    public function getGood()
+    {
+        return $this->hasOne(Good::class, 'id', 'id');
+    }
 }
