@@ -138,6 +138,9 @@
                                 </tbody>
                             </table>
                         </div>
+                        <div class="text-right">
+                            {{$goods->appends(Request::all())->links()}}
+                        </div>
                         <!-- /.box-body -->
                     </div>
                     <!-- /.box -->

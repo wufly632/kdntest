@@ -11,14 +11,19 @@
 
 namespace App\Services\Coupon;
 
+use App\Criteria\Coupon\CouponGrantTimeCriteria;
+use App\Criteria\Coupon\CouponIdCriteria;
+use App\Criteria\Coupon\CouponNameCriteria;
 use App\Criteria\Coupon\CouponPurposeCriteria;
+use App\Criteria\Coupon\CouponStatusCriteria;
+use App\Criteria\Coupon\CouponUseTimeCriteria;
 use App\Entities\Coupon\Coupon;
 use App\Repositories\Coupon\CouponRepository;
 use App\Services\Api\ApiResponse;
 use App\Validators\Coupon\CouponValidator;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
-use DB;
+use DB,Request;
 use Illuminate\Support\Facades\Input;
 use Prettus\Validator\Contracts\ValidatorInterface;
 
@@ -49,7 +54,12 @@ class CouponService
         $orderBy = $request->orderBy ?? 'id';
         $sort = $request->sort ?? 'desc';
         $length = $request->length ?? 20;
-
+        $this->coupon->pushCriteria(new CouponIdCriteria(Request::input('id')));
+        $this->coupon->pushCriteria(new CouponNameCriteria(Request::input('coupon_title')));
+        $this->coupon->pushCriteria(new CouponPurposeCriteria(Request::input('coupon_purpost')));
+        $this->coupon->pushCriteria(new CouponStatusCriteria(Request::input('status')));
+        $this->coupon->pushCriteria(new CouponGrantTimeCriteria(Request::input('grant_time')));
+        $this->coupon->pushCriteria(new CouponUseTimeCriteria(Request::input('use_time')));
         return $this->coupon->orderBy($orderBy, $sort)->paginate($length);
     }
 

@@ -12,8 +12,8 @@
     <div class="content-wrapper">
         <section class="content-header">
             <h1>
-                店铺券列表
-                <small>店铺券</small>
+                营销管理
+                <small>促销活动</small>
             </h1>
             <ol class="breadcrumb">
                 <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
@@ -58,28 +58,28 @@
                                     <div class="form-group col-xs-3">
                                         <label for="" class="col-xs-4 control-label">创建时间：</label>
                                         <div class="col-xs-8">
-                                            <input type="text" id="create_time" class="form-control create_time"
+                                            <input type="text" id="create_time" name="create_time" class="form-control create_time"
                                                    autocomplete="off">
                                         </div>
                                     </div>
                                     <div class="form-group col-xs-3">
                                         <label for="coupon_name" class="col-xs-4 control-label">活动名称：</label>
                                         <div class="col-xs-8">
-                                            <input type="text" name="coupon_name" class="form-control">
+                                            <input type="text" name="title" class="form-control">
                                         </div>
                                     </div>
                                     <div class="form-group col-xs-3">
                                         <label for="coupon_status" class="col-xs-4 control-label">状&nbsp;态</label>
                                         <div class="col-xs-8">
-                                            <select name="coupon_status" id="coupon_status" class="form-control">
+                                            <select name="status" id="status" class="form-control">
                                                 <option value="">全部</option>
-                                                <option value="">未开始</option>
-                                                <option value="">进行中</option>
-                                                <option value="">已结束</option>
+                                                @foreach(\App\Entities\Promotion\Promotion::$allStatus as $key => $status)
+                                                    <option value="{{$key}}">{{$status}}</option>
+                                                @endforeach
                                             </select>
                                         </div>
                                     </div>
-                                    <input type="button" class="btn btn-success" value="查找">
+                                    <button class="btn btn-success">查找</button>
                                     <input type="button" class="btn btn-success col-xs-offset-1" data-toggle="modal"
                                            data-target="#modal-default" value="创建活动">
                                 </div>
@@ -118,6 +118,9 @@
                                     </tbody>
                                 </table>
                             </div>
+                            <div class="text-right">
+                                {{$promotions->appends(Request::all())->links()}}
+                            </div>
                         </form>
                     </div>
                 </div>
@@ -135,31 +138,6 @@
     <script>
         $('#modal-cancel').click(function () {
             $("#modal-default").modal('hide');
-        });
-        $('#promotion_table').DataTable({
-            language: {
-                paginate: {
-                    first: '首页',
-                    previous: '上一页',
-                    next: '下一页',
-                    last: '末页'
-                },
-                aria: {
-                    paginate: {
-                        first: 'First',
-                        previous: 'Previous',
-                        next: 'Next',
-                        last: 'Last'
-                    }
-                },
-                info: '显示 _START_ 到 _END_ 条，共 _TOTAL_ 条'
-            },
-            'paging': true,
-            'lengthChange': false,
-            'searching': false,
-            'ordering': true,
-            'info': true,
-            'autoWidth': false,
         });
         let locale = {
             "format": 'YYYY-MM-DD hh:mm',

@@ -15,11 +15,13 @@ use App\Criteria\Product\ProductCodeCriteria;
 use App\Criteria\Product\ProductIdCriteria;
 use App\Criteria\Product\ProductNotIdCriteria;
 use App\Criteria\Product\ProductTitleCriteria;
+use App\Criteria\Promotion\PromotionCreateTimeCriteria;
+use App\Criteria\Promotion\PromotionNameCriteria;
+use App\Criteria\Promotion\PromotionStatusCriteria;
 use App\Entities\Coupon\Coupon;
 use App\Entities\Product\ProductSku;
 use App\Entities\Promotion\PromotionGoodSku;
 use App\Exceptions\CustomException;
-use App\Http\Requests\Request;
 use App\Repositories\Product\ProductRepository;
 use App\Repositories\Promotion\PromotionGoodRepository;
 use App\Repositories\Promotion\PromotionGoodSkuRepository;
@@ -32,6 +34,7 @@ use Clockwork\Request\Log;
 use Dotenv\Exception\ValidationException;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Request;
 
 class PromotionService
 {
@@ -92,6 +95,9 @@ class PromotionService
         $orderBy = $request->orderBy ?? 'id';
         $sort = $request->sort ?? 'desc';
         $length = $request->length ?? 20;
+        $this->promotion->pushCriteria(new PromotionCreateTimeCriteria(Request::input('create_time')));
+        $this->promotion->pushCriteria(new PromotionNameCriteria(Request::input('title')));
+        $this->promotion->pushCriteria(new PromotionStatusCriteria(Request::input('status')));
         return $this->promotion->orderBy($orderBy, $sort)->paginate($length);
     }
 

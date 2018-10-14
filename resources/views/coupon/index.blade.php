@@ -15,8 +15,8 @@
         <!-- Content Header (Page header) -->
         <section class="content-header">
             <h1>
-                店铺券列表
-                <small>店铺券</small>
+                营销管理
+                <small>优惠券</small>
             </h1>
             <ol class="breadcrumb">
                 <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
@@ -220,7 +220,7 @@
 
                                         <div class="col-sm-8">
                                             <input type="text" class="form-control" id="coupon_id" placeholder=""
-                                                   name="coupon_id" value="{{old('coupon_id')}}">
+                                                   name="id" value="{{old('id')}}">
                                         </div>
                                     </div>
                                     <div class="form-group col-xs-3">
@@ -260,7 +260,7 @@
                                         <label for="take_time" class="col-sm-4 control-label date_choice">发放时间：</label>
                                         <div class="col-sm-8">
                                             <input type="text" class="form-control take_time rangetime"
-                                                   name="take_time" autocomplete="off">
+                                                   name="grant_time" autocomplete="off">
                                         </div>
                                     </div>
                                 </div>
@@ -336,6 +336,9 @@
                                     @endforeach
                                     </tbody>
                                 </table>
+                            </div>
+                            <div class="text-right">
+                                {{$coupons->appends(Request::all())->links()}}
                             </div>
                             <!-- /.box-footer -->
                         </form>
@@ -417,7 +420,7 @@
         $('#method3').click(function () {
             $('.show-info').text('');
         });
-        $('#coupon_table').DataTable({
+        /*$('#coupon_table').DataTable({
             language: {
                 paginate: {
                     first: '首页',
@@ -441,7 +444,7 @@
             'ordering': true,
             'info': true,
             'autoWidth': false,
-        });
+        });*/
         $('.modal-content').css({'box-shadow': 'none'});
         $(function () {
             $('#coupon-create').on('click', '.save', function () {
