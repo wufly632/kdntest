@@ -17,6 +17,7 @@ use App\Criteria\Product\ProductNotIdCriteria;
 use App\Criteria\Product\ProductTitleCriteria;
 use App\Entities\Coupon\Coupon;
 use App\Entities\Product\ProductSku;
+use App\Entities\Promotion\PromotionGoodSku;
 use App\Exceptions\CustomException;
 use App\Http\Requests\Request;
 use App\Repositories\Product\ProductRepository;
@@ -125,15 +126,20 @@ class PromotionService
             $promotion = $this->transform($request);
             DB::beginTransaction();
             $this->promotion->update($promotion['promotion'], $request->id);
-            /*foreach ($promotion['promotion_goods'] as $promotion_good) {
-                $this->promotionGood->update($promotion_good, $promotion_good->id);
+            foreach ($promotion['promotion_goods'] as $promotion_good) {
+                $this->promotionGood->update($promotion_good, $promotion_good['id']);
             }
-            if ($promotion['promotion_goods']['promotion_goods_sku']) {
-                $this->promotionGoodSku->create($promotion['promotion_goods']['promotion_goods_sku']);
-            }*/
+            if ($promotion['promotion_goods_sku']) {
+                // $this->promotionGoodSku->create($promotion['promotion_goods_sku']);
+                /*foreach ($promotion['promotion_goods_sku'] as $item) {
+                    dd($item);
+                    $this->promotionGoodSku->create($item);
+                }*/
+                PromotionGoodSku::insert($promotion['promotion_goods_sku']);
+            }
             DB::commit();
             return ApiResponse::success('保存成功');
-        } catch (ValidationException $e) {
+        } catch (\Exception $e) {
             DB::rollback();
             return ApiResponse::failure(g_API_ERROR, $e->getMessage());
         }
@@ -177,14 +183,16 @@ class PromotionService
         foreach ($promotion_goods['promotion_goods_sku'] as $val) {
             foreach ($sku_info as $v) {
                 if ($val['goods_id'] == $v->good_id && $val['sku_id'] == $v->value_ids) {
-                    throw new CustomException('促销价不能大于售价');
-                    break;
+                    if($val['price'] > $v['supply_price']) {
+                        throw new CustomException('促销价不能大于售价');
+                        break;
+                    }
                 }
             }
         }
         $promotion['promotion']['goods_value'] = $goodsValue;
         $promotion['promotion'] = array_merge($promotion['promotion'], $promotion_type_info);
-        $promotion['promotion_goods'] = [];
+        $promotion = array_merge($promotion, $promotion_goods);
         return $promotion;
     }
 

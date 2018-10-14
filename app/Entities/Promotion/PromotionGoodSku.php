@@ -15,6 +15,8 @@ class PromotionGoodSku extends Model implements Transformable
 {
     use TransformableTrait;
 
+    const UPDATED_AT = null;
+
     protected $table = 'promotions_activity_goods_sku';
 
     /**
@@ -22,6 +24,6 @@ class PromotionGoodSku extends Model implements Transformable
      *
      * @var array
      */
-    protected $fillable = [];
+    protected $fillable = ['activity_id', 'goods_id', 'sku_id', 'price', 'created_at'];
 
 }

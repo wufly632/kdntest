@@ -26,8 +26,8 @@
                     @endforeach
                     <td>
                         {{$goodSku->supply_price ?? '0.00'}}
-                        <input type="hidden" name="sku-id{{$goodSku->good_id}}[]" value="{{$goodSku->id}}"/>
-                        <input type="hidden" name="sku-str{{$goodSku->good_id}}[]" value="{{$goodSku->value_ids}}"/>
+                        <input type="hidden" name="sku_id{{$goodSku->good_id}}[]" value="{{$goodSku->id}}"/>
+                        <input type="hidden" name="sku_str{{$goodSku->good_id}}[]" value="{{$goodSku->value_ids}}"/>
                     </td>
                     <td>
                         {{$goodSku->price ?? '0.00'}}

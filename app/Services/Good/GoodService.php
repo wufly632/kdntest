@@ -287,9 +287,11 @@ class GoodService{
             $this->product->update(['good_en_title' => $request->good_en_title], $request->id);
             $this->good->update(['status' => Good::EDITED], $request->id);
             //修改自定义属性
-            foreach ($request->attr_id as $attr_id => $en_value) {
-                GoodAttrValue::where(['good_id' => $request->id, 'attr_id' => $attr_id])->update(['value_name' => $en_value]);
-                ProductAttrValue::where(['good_id' => $request->id, 'attr_id' => $attr_id])->update(['value_name' => $en_value]);
+            if ($request->attr_id) {
+                foreach ($request->attr_id as $attr_id => $en_value) {
+                    GoodAttrValue::where(['good_id' => $request->id, 'attr_id' => $attr_id])->update(['value_name' => $en_value]);
+                    ProductAttrValue::where(['good_id' => $request->id, 'attr_id' => $attr_id])->update(['value_name' => $en_value]);
+                }
             }
             //修改sku价格
             foreach ($request->good_sku['price'] as $sku_id => $price) {

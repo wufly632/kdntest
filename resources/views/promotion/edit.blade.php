@@ -87,6 +87,7 @@
 @endsection
 @extends('layouts.default')
 @section('content')
+    <?php $promotion_rule =isset($promotion->rule) ? json_decode($promotion->rule) : '';?>
     <div class="content-wrapper">
         <section class="content-header">
             <h1>
@@ -202,20 +203,20 @@
                                                     <div class="pull-left text-padding-top">活动期间，买满</div>
                                                     <div class="col-xs-2">
                                                         <div class="input-group">
-                                                            <input type="text" class="form-control" name="reduce_name[]">
+                                                            <input type="text" class="form-control" name="reduce_name[]" value="@if($promotion->activity_type == 'reduce') {{$promotion_rule ? $promotion_rule[0]->money : ''}} @endif">
                                                             <span class="input-group-addon">元</span>
                                                         </div>
                                                     </div>
                                                     <div class="pull-left text-padding-top" style="width: 60px;padding-left: 0;padding-right: 0">，立减</div>
                                                     <div class="col-xs-2">
                                                         <div class="input-group">
-                                                            <input type="text" class="form-control" name="reduce_value[]">
+                                                            <input type="text" class="form-control" name="reduce_value[]" value="@if($promotion->activity_type == 'reduce') {{$promotion_rule ? $promotion_rule[0]->reduce : ''}} @endif">
                                                             <span class="input-group-addon">元</span>
                                                         </div>
                                                     </div>
-                                                    <button id="add-reduce-detail" type="button" class="btn btn-primary btn-flat icon-add" style="border-radius: 90px;">+</button>
+                                                    <button id="add-reduce-detail" type="button" class="btn btn-primary btn-flat icon-add @if($promotion->activity_type == 'reduce' && count($promotion_rule) > 1) dis-no @endif" style="border-radius: 90px;">+</button>
                                                 </div>
-                                                <div class="reduce-detail-row add-row dis-no">
+                                                <div class="reduce-detail-row add-row dis-no @if($promotion->activity_type == 'reduce' && count($promotion_rule) > 1) dis-no @endif">
                                                     <div class="pull-left text-padding-top">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;满</div>
                                                     <div class="col-xs-2">
                                                         <div class="input-group">
