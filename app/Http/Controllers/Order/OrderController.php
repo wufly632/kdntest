@@ -12,16 +12,20 @@
 namespace App\Http\Controllers\Order;
 
 use App\Http\Controllers\Controller;
+use App\Services\Api\ApiResponse;
 use App\Services\Order\OrderService;
+use App\Services\TrackingMore\TrackingMoreService;
 use Illuminate\Http\Request;
 
 class OrderController extends Controller
 {
     protected $orderService;
+    protected $trackingMoreService;
 
-    public function __construct(OrderService $orderService)
+    public function __construct(OrderService $orderService, TrackingMoreService $trackingMoreService)
     {
         $this->orderService = $orderService;
+        $this->trackingMoreService = $trackingMoreService;
     }
 
     public function index(Request $request)
@@ -90,7 +94,8 @@ class OrderController extends Controller
     public function show($id)
     {
         //
-        return view('orders.show', ['order' => $this->orderService->getOrderInfo($id)]);
+        $order = $this->orderService->getOrderInfo($id);
+        return view('orders.show', ['order' => $order]);
 
     }
 
@@ -126,5 +131,69 @@ class OrderController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    /**
+     * 发货页面
+     * @param $id
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
+    public function send($id)
+    {
+        return view('orders.send', ['order' => $this->orderService->getOrderInfo($id)]);
+    }
+
+    /**
+     * 确认发货
+     * @param Request $request
+     * @param $id
+     * @return mixed
+     */
+    public function sendConfirm(Request $request, $id)
+    {
+        if (!$request->filled('shipper_code') || !$request->filled('waybill_id')) {
+            return ApiResponse::failure(g_API_ERROR, '参数不全');
+        }
+        // TODO:状态码可能修改
+
+        if (!$this->checkOrderStatus($id, $this->orderService::ORDER_STATUS['waitting_delivery'])) {
+            return ApiResponse::failure(g_API_ERROR, '订单状态有误');
+        }
+        if ($this->orderService->confirmDelivery($request, $id)['status'] == 200) {
+            return ApiResponse::success();
+        } else {
+            return ApiResponse::failure(g_API_ERROR, '修改失败');
+        }
+
+    }
+
+    /**
+     * 查询订单状态
+     * @param $id
+     * @param $status
+     * @return bool
+     */
+    public function checkOrderStatus($id, $status)
+    {
+        $orderInfo = $this->orderService->getOrderInfo($id, ['status']);
+        if ($orderInfo['status'] != $status) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+    /**
+     * 取消订单
+     * @param $id
+     * @return mixed
+     */
+    public function orderCancel($id)
+    {
+        if ($this->orderService->orderCancel($id)['status'] == 200) {
+            return ApiResponse::success();
+        } else {
+            return ApiResponse::failure(g_API_ERROR, '取消失败');
+        }
     }
 }

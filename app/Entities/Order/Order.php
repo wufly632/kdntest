@@ -22,7 +22,7 @@ class Order extends Model implements Transformable
      *
      * @var array
      */
-    protected $fillable = [];
+    protected $fillable = ['status','shipper_code', 'waybill_id','delivery_at'];
 
     public function customerOrderGood()
     {
@@ -37,5 +37,14 @@ class Order extends Model implements Transformable
     public function customerOrderPayment()
     {
         return $this->hasOne('App\Entities\Order\OrderPayment', 'order_id', 'order_id');
+    }
+
+    public function customer()
+    {
+        return $this->hasOne('App\Entities\User\User', 'id', 'customer_id');
+    }
+    public function orderTrackingmore()
+    {
+        return $this->hasOne('App\Entities\Order\OrderTrackingmore', 'order_id', 'order_id');
     }
 }

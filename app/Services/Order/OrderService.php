@@ -14,7 +14,12 @@ namespace App\Services\Order;
 use App\Repositories\Good\GoodRepository;
 use App\Repositories\Order\OrderGoodRepository;
 use App\Repositories\Order\OrderRepository;
+use App\Services\Api\ApiResponse;
+use App\Services\TrackingMore\TrackingMoreService;
 use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\DB;
+use phpDocumentor\Reflection\Types\Self_;
 
 class OrderService
 {
@@ -24,6 +29,15 @@ class OrderService
     protected $order;
     protected $orderGoodRepository;
     protected $goodRepository;
+    protected $trackingMoreService;
+
+    const ORDER_STATUS = [
+        'waitting_pay' => 1,
+        'waitting_delivery' => 3,
+        'waitting_recieve' => 4,
+        'trade_deal' => 5,
+        'trade_cancle' => 6,
+    ];
 
     /**
      * OrderController constructor.
@@ -31,11 +45,12 @@ class OrderService
      * @param OrderRepository $order
      * @param OrderGoodRepository $orderGoodRepository
      */
-    public function __construct(OrderRepository $order, OrderGoodRepository $orderGoodRepository, GoodRepository $goodRepository)
+    public function __construct(OrderRepository $order, OrderGoodRepository $orderGoodRepository, GoodRepository $goodRepository, TrackingMoreService $trackingMoreService)
     {
         $this->order = $order;
         $this->orderGoodRepository = $orderGoodRepository;
         $this->goodRepository = $goodRepository;
+        $this->trackingMoreService = $trackingMoreService;
     }
 
     /**
@@ -95,14 +110,14 @@ class OrderService
 
     public function getStatusWords()
     {
+        $statuscode = self::ORDER_STATUS;
         return [
-            '全部',
-            '待付款',
-            '',
-            '待发货',
-            '待收货',
-            '交易完成',
-            '交易取消'
+            0 => '全部',
+            $statuscode['waitting_pay'] => '待付款',
+            $statuscode['waitting_delivery'] => '待发货',
+            $statuscode['waitting_recieve'] => '待收货',
+            $statuscode['trade_deal'] => '交易完成',
+            $statuscode['trade_cancle'] => '交易取消'
         ];
 
     }
@@ -119,8 +134,59 @@ class OrderService
         ];
     }
 
-    public function getOrderInfo($id)
+    public function getOrderInfo($id, $field = ['*'])
     {
-        return $this->order->findByField('order_id', $id)->first();
+        $order = $this->order->find($id);
+        $order->StatusWords = $this->getStatusWords();
+        return $order;
+    }
+
+    /**
+     * 确认发货
+     * @param $request
+     * @param $id
+     * @return mixed
+     */
+    public function confirmDelivery($request, $id)
+    {
+        $waybill_id = $request->post('waybill_id');
+        $shipper_code = $request->post('shipper_code');
+        $delivery_at = Carbon::now()->toDateTimeString();
+        $status = self::ORDER_STATUS['waitting_recieve'];
+        try {
+            DB::beginTransaction();
+            $this->order->update(['status' => $status, 'waybill_id' => $waybill_id, 'shipper_code' => $shipper_code, 'delivery_at' => $delivery_at], $id);
+            DB::commit();
+            return ApiResponse::success();
+        } catch (\Exception $e) {
+            DB::rollback();
+            return ApiResponse::failure(g_API_ERROR, '创建失败');
+        }
+    }
+
+    public function createTrackingMore($shipper_code, $waybill_id)
+    {
+        $trackResponse = $this->trackingMoreService->createTracking($shipper_code, $waybill_id);
+        if ($trackResponse['meta']['code'] == 200) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public function orderCancel($id)
+    {
+        $status = self::ORDER_STATUS['trade_cancle'];
+        try {
+            $this->order->update(['status' => $status,],$id);
+            return ApiResponse::success();
+        } catch (\Exception $e) {
+            return ApiResponse::failure(g_API_ERROR,'修改失败');
+        }
+    }
+
+    public function test()
+    {
+        $this->order->firstOrCreate();
     }
 }
