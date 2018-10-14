@@ -459,7 +459,7 @@
                                         </div>
                                     </div>
                                     <hr>
-                                    <table id="promotion_good_table" class="table table-bordered table-hover text-center promotion-activity-type2">
+                                    <table id="promotion_good_table" class="table table-bordered table-hover text-center promotion-activity-type1">
                                         <thead>
                                         <tr>
                                             <td>商品图片</td>
@@ -473,6 +473,53 @@
                                         </thead>
                                         <tbody class="tableTbody">
 
+                                        </tbody>
+                                    </table>
+                                    <table id="promotion_good_table" class="table table-bordered table-hover text-center promotion-activity-type2">
+                                        <thead>
+                                        <tr>
+                                            <td>商品图片</td>
+                                            <td>商品信息</td>
+                                            <td>采购价</td>
+                                            <td>供应价</td>
+                                            <td>最近30天销量</td>
+                                            <td>库存数量</td>
+                                            <td>操作</td>
+                                        </tr>
+                                        </thead>
+                                        <tbody class="tableTbody">
+                                        @if(! in_array($promotion->activity_type, ['limit', 'quantity']))
+                                        @foreach($promotion->getPromotionGoods as $promotionGood)
+                                            <?php $product = $promotionGood->getProduct;?>
+                                            <tr class="table-level-one">
+                                                <td>
+                                                    <img src="{{ImgResize($product->main_pic, 100)}}" alt="" width="100px" height="100px">
+                                                </td>
+                                                <td style="width: 200px;">
+                                                    <div>
+                                                        <div class="col-xs-5 text-right">ID：</div>
+                                                        <div class="col-xs-7 text-left">{{$product->id}}</div>
+                                                    </div>
+                                                    <div>
+                                                        <div class="col-xs-5 text-right">名称：</div>
+                                                        <div class="col-xs-7 text-left">{{$product->good_title}}</div>
+                                                    </div>
+                                                    <div>
+                                                        <div class="col-xs-5 text-right">货号：</div>
+                                                        <div class="col-xs-7 text-left">{{$product->good_code}}</div>
+                                                    </div>
+                                                </td>
+                                                <td>{{$product->stock_price}}起</td>
+                                                <td>¥{{$product->supply_price}}起</td>
+                                                <td>{{$product->orders}}</td>
+                                                <td>{{$product->good_stock}}</td>
+                                                <td>
+                                                    <div><a href="javascript:void(0);" class="promotion-goods-delete" data-id="{{$product->id}}">删除</a></div>
+                                                    <div class="set_promotion"><span class="promotion-goods-single" data-id="{{$product->id}}">设置优惠</span></div>
+                                                </td>
+                                            </tr>
+                                        @endforeach
+                                        @endif
                                         </tbody>
                                     </table>
                                     <div>
@@ -509,7 +556,7 @@
         createDataTable($('#select_coupon_table'));
         $('.modal-content').css({'box-shadow': 'none'});
 
-        $('.set_promotion').click(function () {
+        /*$('.set_promotion').click(function () {
             let thisParent = $(this).parents('.table-level-one');
             console.log(thisParent.next().hasClass('table-level-two'));
             if (thisParent.next().hasClass('table-level-two')) {
@@ -517,7 +564,7 @@
             } else {
                 $(this).parents('.table-level-one').after(newTable);
             }
-        });
+        });*/
 
         //添加促销商品
         $('#myModal-one').on('click', '.submit', function (event) {
@@ -548,41 +595,9 @@
                     console.log(data);
                     if (data.status == 200) {
                         if(type == 'quantity' || type == 'limit'){
-                            $('#promotion-activity-type1').append(data.msg);
+                            $('.promotion-activity-type1').append(data.content);
                         }else{
-                            var html = '';
-                            var data_content = data.content.goods;
-                            console.log(data_content);
-                            for (var i in data_content) {
-                                html += '<tr class="table-level-one">\n' +
-                                    '                                <td>\n' +
-                                    '                                <img src="'+data_content[i].main_pic+'" alt="" width="100px" height="100px">\n' +
-                                    '                                </td>\n' +
-                                    '                                <td style="width: 200px;">\n' +
-                                    '                                <div>\n' +
-                                    '                                <div class="col-xs-5 text-right">ID：</div>\n' +
-                                    '                            <div class="col-xs-7 text-left">'+data_content[i].id+'</div>\n' +
-                                    '                                </div>\n' +
-                                    '                                <div>\n' +
-                                    '                                <div class="col-xs-5 text-right">名称：</div>\n' +
-                                    '                            <div class="col-xs-7 text-left">'+data_content[i].good_title+'</div>\n' +
-                                    '                                </div>\n' +
-                                    '                                <div>\n' +
-                                    '                                <div class="col-xs-5 text-right">货号：</div>\n' +
-                                    '                            <div class="col-xs-7 text-left">'+data_content[i].good_code+'</div>\n' +
-                                    '                                </div>\n' +
-                                    '                                </td>\n' +
-                                    '                                <td>'+data_content[i].stock_price+'起</td>\n' +
-                                    '                                <td>¥'+data_content[i].supply_price+'起</td>\n' +
-                                    '                                <td>'+data_content[i].orders+'</td>\n' +
-                                    '                                <td>'+data_content[i].good_stock+'</td>\n' +
-                                    '                                <td>\n' +
-                                    '                                <div><a href="javascript:void(0);" class="promotion-goods-delete" data-id="'+data_content[i].id+'">删除</a></div>\n' +
-                                    '                            <div class="set_promotion"><span class="promotion-goods-single" data-id="'+data_content[i].id+'">设置优惠</span></div>\n' +
-                                    '                            </td>\n' +
-                                    '                            </tr>';
-                            }
-                            $('#promotion_good_table').find('.tableTbody').append(html);
+                            $('.promotion-activity-type2').find('.tableTbody').append(data.content);
                         }
                         getGoods($('#myModal-one').find('form'));
                         $('#myModal-one').modal('hide');

@@ -24,4 +24,8 @@ class ProductSku extends Model implements Transformable
      */
     protected $fillable = [];
 
+    public function skuAttributes()
+    {
+        return $this->hasMany(ProductAttrValue::class,'sku_id', 'id');
+    }
 }

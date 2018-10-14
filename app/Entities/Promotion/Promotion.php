@@ -25,4 +25,8 @@ class Promotion extends Model implements Transformable
 
     protected $guarded = ['id'];
 
+    public function getPromotionGoods()
+    {
+        return $this->hasMany(PromotionGood::class, 'activity_id', 'id');
+    }
 }

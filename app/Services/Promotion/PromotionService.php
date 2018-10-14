@@ -171,7 +171,7 @@ class PromotionService
         if ($request->activity_type == 'quantity') {
             // 货值（商品最高sku供货价*秒杀数量）
             $goodsValue = $activity_goods->map(function ($activity_good) {
-               return $activity_good->num*$activity_good->getProduct->getProductSkus->max('supply_price');
+               return $activity_good->num*$activity_good->getProduct->productSku->max('supply_price');
             })->sum();
         } else {
             // 货值（商品sku供货价*商品数量）
@@ -304,9 +304,12 @@ class PromotionService
                     $good_ids[] = $good_id;
                     $good_tmp['id'] = $val->id;
                     $good_tmp['per_num'] = $request->input(['per_num'.$good_id]);
-                    if (! $request->input('num'.$good_id)) {
+                    if ($request->input('num'.$good_id) !== null && ! $request->input('num'.$good_id)) {
                         throw new CustomException('请完善优惠活动的商品信息，商品id：'.$good_id);
                     }
+                    /*if (! $request->input('num'.$good_id)) {
+                        throw new CustomException('请完善优惠活动的商品信息，商品id：'.$good_id);
+                    }*/
                     $good_tmp['num'] = $request->input('num'.$good_id);
                     $stock += $request->input('num'.$good_id);
 
@@ -380,9 +383,12 @@ class PromotionService
                 $this->promotionGood->create($tmp);
             }
             DB::commit();
-            $goods_sku_str = $this->getGoodsWithSku($good_info, $request->type);
+            $type = $request->type;
+            $view = view('promotion.good_sku_list', compact('good_info', 'type'));
+            $goods_sku_str = response($view)->getContent();
             return ApiResponse::success($goods_sku_str);
         } catch (\Exception $e) {
+            echo $e->getMessage();die;
             DB::rollBack();
             return ApiResponse::failure(g_API_ERROR, '添加活动商品失败，请稍后重试或者联系管理员');
         }
@@ -429,12 +435,6 @@ class PromotionService
     public function getGoodsWithSku($goods, $type){
         if(empty($goods)) return '';
         $good_ids = $goods->pluck('id');
-        if (in_array($type, ['limit', 'quantity'])) {
-
-        }
-
-
-
         $data['goods'] = $goods;
         $data['type'] = $type;
         $goodSkuStr = compact('goods', 'type');
