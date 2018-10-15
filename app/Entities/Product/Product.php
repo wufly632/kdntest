@@ -34,7 +34,7 @@ class Product extends Model implements Transformable
 
     public static $allStatus = [
         self::ONLINE => '上架',
-        self::OFFLINE => '上架',
+        self::OFFLINE => '下架',
     ];
 
     public function productSku()

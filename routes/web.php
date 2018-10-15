@@ -64,6 +64,11 @@ Route::group(['middleware' => ['auth', 'web']], function () {
         Route::post('/auditReject', ['as' => 'good.auditReject', 'uses' => 'GoodsController@auditReject']);
     });
 
+    Route::group(['prefix' => 'product', 'namespace' => 'Product'], function() {
+        Route::post('/onshelf', ['as' => 'product.onshelf', 'uses' => 'ProductController@onshelf']);
+        Route::post('/offshelf', ['as' => 'product.offshelf', 'uses' => 'ProductController@offshelf']);
+    });
+
     //促销活动模块
     Route::group(['prefix' => 'promotion', 'namespace' => 'Promotion'], function () {
         Route::get('/', ['as' => 'promotion.index', 'uses' => 'PromotionController@index']);

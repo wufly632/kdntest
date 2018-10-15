@@ -124,13 +124,28 @@
                                         </td>
                                         <td class="table-center">{{$good->orders}}</td>
                                         <td class="table-center">{{$good->good_stock}}</td>
-                                        <td class="table-center">{{\App\Entities\Good\Good::$allStatus[$good->status]}}</td>
+                                        <td class="table-center">
+                                            {{\App\Entities\Good\Good::$allStatus[$good->status]}}<br>
+                                            @if($good->getProduct)
+                                                {{\App\Entities\Product\Product::$allStatus[$good->getProduct->status]}}
+                                            @endif
+                                        </td>
                                         <td class="table-center">
                                             @if(in_array($good->status, [\App\Entities\Good\Good::WAIT_AUDIT]))
                                                 <a href="{{secure_route('good.audit', ['good' => $good->id])}}">审核</a>
+                                                <br>
                                             @endif
                                             @if(! in_array($good->status, [\App\Entities\Good\Good::WAIT_AUDIT]))
                                                 <a href="{{secure_route('good.audit', ['good' => $good->id])}}">编辑</a>
+                                                <br>
+                                            @endif
+                                            @if(in_array($good->status, [\App\Entities\Good\Good::EDITED]) && $good->getProduct)
+                                                @if($good->getProduct->status == \App\Entities\Product\Product::OFFLINE)
+                                                    <a href="javascript:;" onclick="onshelf({{$good->id}})">上架</a><br>
+                                                @endif
+                                                @if($good->getProduct->status == \App\Entities\Product\Product::ONLINE)
+                                                    <a href="javascript:;" onclick="offshelf({{$good->id}})">下架</a><br>
+                                                @endif
                                             @endif
                                         </td>
                                     </tr>
@@ -153,3 +168,59 @@
     </div>
     <!-- /.content-wrapper -->
 @stop
+@section('script')
+<script>
+    function onshelf(id) {
+        var _index = $(this);
+        $.ajax({
+            type:'post',
+            url:"{{secure_route('product.onshelf')}}",
+            data:{id:id,_token:"{{csrf_token()}}"},
+            beforeSend:function() {
+                _index.attr('disabled', true);
+            },
+            success:function(data){
+                if (data.status == 200) {
+                    toastr.success(data.content);
+                    parent.location.reload();
+                } else {
+                    toastr.error(data.msg);
+                    _index.attr('disabled', false);
+                }
+            },
+            error:function(data){
+                var json=eval("("+data.responseText+")");
+                toastr.error(json.msg);
+                _index.attr('disabled', false);
+                _index.html('保存');
+            },
+        });
+    }
+    function offshelf(id) {
+        var _index = $(this);
+        $.ajax({
+            type:'post',
+            url:"{{secure_route('product.offshelf')}}",
+            data:{id:id,_token:"{{csrf_token()}}"},
+            beforeSend:function() {
+                _index.attr('disabled', true);
+            },
+            success:function(data){
+                if (data.status == 200) {
+                    toastr.success(data.content);
+                    parent.location.reload();
+                } else {
+                    toastr.error(data.msg);
+                    _index.attr('disabled', false);
+                }
+            },
+            error:function(data){
+                var json=eval("("+data.responseText+")");
+                toastr.error(json.msg);
+                _index.attr('disabled', false);
+                _index.html('保存');
+            },
+        });
+    }
+</script>
+@endsection

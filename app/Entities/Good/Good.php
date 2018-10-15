@@ -3,6 +3,7 @@
 namespace App\Entities\Good;
 
 use App\Entities\CateAttr\GoodAttrValue;
+use App\Entities\Product\Product;
 use Illuminate\Database\Eloquent\Model;
 use Prettus\Repository\Contracts\Transformable;
 use Prettus\Repository\Traits\TransformableTrait;
@@ -86,6 +87,15 @@ class Good extends Model implements Transformable
     public function getAttrValue()
     {
         return $this->hasMany(GoodAttrValue::class, 'good_id', 'id');
+    }
+
+    /**
+     * @function 获取正式表的商品数据
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     */
+    public function getProduct()
+    {
+        return $this->hasOne(Product::class, 'id', 'id');
     }
 
 }
