@@ -75,6 +75,7 @@ class GoodPresenter extends FractalPresenter
         $sku_th_names = '';
         $sku_attribute_name       = [];
         $sku_attribute_value_name       = [];
+        $attr_num = 0;
         foreach ($skus as $key => $sku) {
             foreach ($sku->skuAttributes as $v) {
                 $tmp[$v->attr_id]['value_name'][$v->value_ids] = $v->getAttrValue->name;
@@ -84,7 +85,9 @@ class GoodPresenter extends FractalPresenter
             }
         }
         // dd($tmp);
+
         foreach ($tmp as $key => $sku_attribute) {
+            $attr_num++;
             $sku_th_names .= "<th>".$sku_attribute['name']."</th>";
             //显示图片属性
             if ($sku_attribute['is_image']) {
@@ -101,7 +104,7 @@ class GoodPresenter extends FractalPresenter
                 }
             }
         }
-        return compact('sku_attribute_name', 'sku_th_names', 'sku_attribute_value_name');
+        return compact('sku_attribute_name', 'sku_th_names', 'sku_attribute_value_name', 'attr_num');
     }
 
 }

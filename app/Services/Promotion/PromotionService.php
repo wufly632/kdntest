@@ -14,11 +14,13 @@ namespace App\Services\Promotion;
 use App\Criteria\Product\ProductCodeCriteria;
 use App\Criteria\Product\ProductIdCriteria;
 use App\Criteria\Product\ProductNotIdCriteria;
+use App\Criteria\Product\ProductStatusCriteria;
 use App\Criteria\Product\ProductTitleCriteria;
 use App\Criteria\Promotion\PromotionCreateTimeCriteria;
 use App\Criteria\Promotion\PromotionNameCriteria;
 use App\Criteria\Promotion\PromotionStatusCriteria;
 use App\Entities\Coupon\Coupon;
+use App\Entities\Product\Product;
 use App\Entities\Product\ProductSku;
 use App\Entities\Promotion\PromotionGoodSku;
 use App\Exceptions\CustomException;
@@ -30,11 +32,10 @@ use App\Services\Api\ApiResponse;
 use App\Validators\Promotion\PromotionGoodValidator;
 use App\Validators\Promotion\PromotionValidator;
 use Carbon\Carbon;
-use Clockwork\Request\Log;
 use Dotenv\Exception\ValidationException;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
-use Request;
+use Request,Log;
 
 class PromotionService
 {
@@ -75,7 +76,7 @@ class PromotionService
      */
     public function __construct(
         PromotionRepository $promotion, PromotionValidator $promotionValidator,
-        PromotionGoodRepository $promotionGood, PromotionGoodValidator $promotionGoodValidator,
+        PromotionGoodRepository $promotionGood,
         PromotionGoodSkuRepository $promotionGoodSku,
         ProductRepository $product
     )
@@ -83,7 +84,7 @@ class PromotionService
         $this->promotion = $promotion;
         $this->promotionValidator = $promotionValidator;
         $this->promotionGood = $promotionGood;
-        $this->promotionGoodValidator = $promotionGoodValidator;
+        $this->promotionGoodSku = $promotionGoodSku;
         $this->product = $product;
     }
 
@@ -144,11 +145,6 @@ class PromotionService
                 $this->promotionGood->update($promotion_good, $promotion_good['id']);
             }
             if ($promotion['promotion_goods_sku']) {
-                // $this->promotionGoodSku->create($promotion['promotion_goods_sku']);
-                /*foreach ($promotion['promotion_goods_sku'] as $item) {
-                    dd($item);
-                    $this->promotionGoodSku->create($item);
-                }*/
                 PromotionGoodSku::insert($promotion['promotion_goods_sku']);
             }
             DB::commit();
@@ -159,6 +155,12 @@ class PromotionService
         }
     }
 
+    /**
+     * @function 数据拼装
+     * @param $request
+     * @return mixed
+     * @throws CustomException
+     */
     private function transform($request)
     {
         $promotion['promotion'] = $request->only(['id','title','activity_type','is_all','pre_time']);
@@ -441,8 +443,10 @@ class PromotionService
         $this->product->pushCriteria(new ProductIdCriteria($request->good_id));
         $this->product->pushCriteria(new ProductCodeCriteria($request->good_code));
         $this->product->pushCriteria(new ProductNotIdCriteria($activity_good_ids));
+        $this->product->pushCriteria(new ProductStatusCriteria(Product::ONLINE));
         $goods = $this->product->orderBy('id', 'desc')->paginate(10);
-        $goodStr = view('promotion.addGoods', compact('goods'));
+        $addGoods = view('promotion.addGoods', compact('goods'));
+        $goodStr = response($addGoods)->getContent();
         return $goodStr;
     }
 
@@ -494,5 +498,24 @@ class PromotionService
         $skuHtml = view('promotion.singlesku', compact('goodSkus'));
         $html=response($skuHtml)->getContent();
         return ApiResponse::success($html);
+    }
+
+    public function deletePromotion($id)
+    {
+        try {
+            DB::beginTransaction();
+            //删除促销活动
+            $this->promotion->delete($id);
+            //删除促销活动商品
+            $this->promotionGood->deleteWhere(['activity_id' => $id]);
+            //删除促销活动商品SKU
+            $this->promotionGoodSku->deleteWhere(['activity_id' => $id]);
+            DB::commit();
+            return ApiResponse::success('删除成功');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            Log::info('促销活动删除失败'.$e->getMessage());
+            return ApiResponse::failure(g_API_ERROR, '删除失败');
+        }
     }
 }

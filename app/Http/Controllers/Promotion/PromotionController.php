@@ -158,4 +158,17 @@ class PromotionController extends Controller
         $result = $this->promotionService->getSingleSkuHtml($request);
         return $result;
     }
+
+    /**
+     * @function 删除促销活动
+     * @param Request $request
+     * @return mixed
+     */
+    public function delete(Request $request)
+    {
+        if (! $id = $request->id) {
+            return ApiResponse::failure(g_API_ERROR, '请选择要删除的活动');
+        }
+        return $this->promotionService->deletePromotion($id);
+    }
 }

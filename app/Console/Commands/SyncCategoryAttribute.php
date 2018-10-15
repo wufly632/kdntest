@@ -61,9 +61,12 @@ class SyncCategoryAttribute extends Command
         $arr = [
             '户外运动属性.xlsx',
             '居家百货属性.xlsx',
-            '汽车配饰全属性.xlsx',
+            '汽车配饰属性.xlsx',
             '手机数码属性.xlsx',
-            '美妆个护.xlsx'
+            // '美妆个护.xlsx',
+            // '服装服饰类目.xlsx',
+            // '孕婴童.csv',
+            // '箱包配饰.xlsx'
         ];
         foreach ($arr as $i) {
             $excel_path = 'storage'.DIRECTORY_SEPARATOR.'excel'.DIRECTORY_SEPARATOR.'import/attribute'.DIRECTORY_SEPARATOR.$i;

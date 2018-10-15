@@ -117,10 +117,10 @@
                                             <span>货号：{{$good->good_code}}</span><br>
                                         </td>
                                         <td class="table-center">
-                                            <label for="">￥：</label>{{$good->stock_price}}
+                                            <label for="">￥：</label>{{$good->supply_price}}
                                         </td>
                                         <td class="table-center">
-                                            <label for="">￥：</label>{{$good->supply_price}}
+                                            <label for="">￥：</label>{{$good->price}}
                                         </td>
                                         <td class="table-center">{{$good->orders}}</td>
                                         <td class="table-center">{{$good->good_stock}}</td>

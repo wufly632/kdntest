@@ -24,9 +24,9 @@ class Good extends Model implements Transformable
      *
      * @var array
      */
-    protected $fillable = ['category_id','category_path','supplier_id','good_code','stock_price','supply_price','good_stock','good_title','good_en_title','good_summary','good_en_summary','main_pic','pic','content','status','created_at','shelf_at','deleted_at','updated_at'];
+    protected $fillable = ['category_id','category_path','supplier_id','good_code','price','supply_price','good_stock','good_title','good_en_title','good_summary','good_en_summary','main_pic','pic','content','status','created_at','shelf_at','deleted_at','updated_at'];
 
-    public static $syncField = ['id', 'category_id', 'category_path', 'supplier_id', 'good_code', 'brand_name', 'stock_price',
+    public static $syncField = ['id', 'category_id', 'category_path', 'supplier_id', 'good_code', 'brand_name', 'price',
                                 'supply_price', 'good_stock', 'orders', 'good_en_title', 'good_summary', 'good_en_summary',
                                 'main_pic','pic','content','video'];
 

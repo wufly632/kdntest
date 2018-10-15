@@ -1,23 +1,25 @@
 <div class="modal-dialog" style="width: 1000px;">
     <div class="modal-content">
-        <div class="modal-body">
-            <h2 class="text-center">添加商品</h2>
+        <div class="modal-body col-sm-12">
+            <h2 class="text-center" style="margin: 20px;">添加商品</h2>
             <form action="" class="form-inline">
-                <div class="form-group">
-                    <label for="">商品名称：</label>
-                    <input type="text" class="form-control" id="">
+                <div class="form-group col-sm-3">
+                    <label for="" style="float: left;">商品名称：</label>
+                    <input type="text" class="col-sm-8">
                 </div>
-                <div class="form-group">
-                    <label for="">商品ID：</label>
-                    <input type="text" class="form-control" id="">
+                <div class="form-group col-sm-3">
+                    <label for="" style="float: left;">商品ID：</label>
+                    <input type="text" class="col-sm-8" id="">
                 </div>
-                <div class="form-group">
-                    <label for="">商品货号：</label>
-                    <input type="text" class="form-control" id="">
+                <div class="form-group col-sm-3">
+                    <label for="" style="float: left;">商品货号：</label>
+                    <input type="text" class="col-sm-8" id="">
                 </div>
-                <input type="button" class="btn pull-right" value="查找">
+                <div class="form-group col-sm-3 text-right">
+                    <button type="button" class="btn btn-success">查找</button>
+                </div>
             </form>
-            <table id="select_coupon_table"
+            <table
                    class="table table-hover table-striped table-bordered text-center">
                 <thead>
                 <tr>
@@ -39,16 +41,16 @@
                         </td>
                         <td style="width: 200px;">
                             <div>
-                                <div class="col-xs-5 text-right">ID：</div>
-                                <div class="col-xs-7 text-left">{{$product->id}}</div>
+                                <div class="text-right" style="width:30%;float: left;">ID：</div>
+                                <div class="text-left" style="width: 70%;float: left">{{$product->id}}</div>
                             </div>
-                            <div>
-                                <div class="col-xs-5 text-right">名称：</div>
-                                <div class="col-xs-7 text-left">{{$product->good_title}}</div>
+                            <div style="clear: both;">
+                                <div class="text-right" style="width:30%;float: left">名称：</div>
+                                <div class="text-left" style="width: 70%;float: left">{{$product->good_title}}</div>
                             </div>
-                            <div>
-                                <div class="col-xs-5 text-right">货号：</div>
-                                <div class="col-xs-7 text-left">{{$product->good_code}}</div>
+                            <div style="clear: both;">
+                                <div class="text-right" style="width:30%;float: left">货号：</div>
+                                <div class="text-left" style="width: 70%;float: left">{{$product->good_code}}</div>
                             </div>
                         </td>
                         <td>{{$product->supply_price}}</td>
@@ -59,10 +61,12 @@
                 @endforeach
                 </tbody>
             </table>
-            <hr>
-            <div>
-                <input type="button" class="btn btn-danger pull-right" value="取消">
-                <input type="button" class="btn btn-success pull-right submit" value="确认添加">
+            <div class="text-right">
+                {{$goods->appends(Request::all())->links()}}
+            </div>
+            <div style="margin-top: 20px;">
+                <button class="btn btn-success submit pull-right">确认添加</button>
+                <button class="btn btn-danger pull-right" style="margin-right: 30px;" data-dismiss="modal">取消</button>
             </div>
         </div>
     </div>

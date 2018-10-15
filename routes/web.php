@@ -81,6 +81,7 @@ Route::group(['middleware' => ['auth', 'web']], function () {
         Route::post('/addGoodPost', ['as' => 'promotion.add.goodPost', 'uses' => 'PromotionController@addGoodPost']);
         Route::post('/delGood', ['as' => 'promotion.good.delete', 'uses' => 'PromotionController@delGoodPost']);
         Route::post('/getSingleSkuHtml', ['as' => 'promotion.getSingleSkuHtml', 'uses' => 'PromotionController@getSingleSkuHtml']);
+        Route::post('/delete', ['as' => 'promotion.delete', 'uses' => 'PromotionController@delete']);
     });
 
     //优惠券模块

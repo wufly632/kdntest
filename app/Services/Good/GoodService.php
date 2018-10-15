@@ -284,8 +284,7 @@ class GoodService{
     {
         try {
             DB::beginTransaction();
-            $this->product->update(['good_en_title' => $request->good_en_title], $request->id);
-            $this->good->update(['status' => Good::EDITED], $request->id);
+
             //修改自定义属性
             if ($request->attr_id) {
                 foreach ($request->attr_id as $attr_id => $en_value) {
@@ -295,8 +294,11 @@ class GoodService{
             }
             //修改sku价格
             foreach ($request->good_sku['price'] as $sku_id => $price) {
+                GoodSku::where(['id' => $sku_id])->update(['price' => $price]);
                 ProductSku::where(['id' => $sku_id])->update(['price' => $price]);
             }
+            $this->product->update(['good_en_title' => $request->good_en_title], $request->id);
+            $this->good->update(['status' => Good::EDITED], $request->id);
             DB::commit();
             return true;
         } catch (\Exception $e) {

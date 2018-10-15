@@ -77,12 +77,14 @@
         .acTable,.acTable tr th, .acTable tr td { border:1px solid #E4E4E4;
             padding: 5px;}
         ._goodDetail{
-            width: 80%;
-            margin-left: 10%;
+            width: 90%;
+            margin-left: 5%;
         }
-        ._goodDetail td{
-            padding: 5px;
-        }
+        ._goodDetail,._goodDetail tr th, ._goodDetail tr td { border:1px solid #E4E4E4;padding: 5px;}
+        .promotion-goods-list,.promotion-goods-list tr th, .promotion-goods-list tr td{border:1px solid #E4E4E4;padding: 5px;}
+        .promotion-goods-list{width: 90%;margin: 30px 5%;}
+        .fl{float: left;}
+        .fr{float: right;}
     </style>
 @endsection
 @extends('layouts.default')
@@ -91,8 +93,8 @@
     <div class="content-wrapper">
         <section class="content-header">
             <h1>
-                添加店铺券
-                <small>添加店铺券</small>
+                营销活动
+                <small>促销活动</small>
             </h1>
             <ol class="breadcrumb">
                 <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
@@ -153,8 +155,8 @@
                                     <div class="col-xs-10">
                                         <span class="promotion_type">
                                             <label for="method1" id="method-label1" class="label-inline method_radio">
-                                                <input name="activity_type" class="promotion_method" id="method1"
-                                                       type="radio" value="reduce" checked>满减
+                                                <input name="activity_type" class="promotion_method" id="method1" checked
+                                                       type="radio" value="reduce">满减
                                             </label>
                                         </span>
                                         <span class="promotion_type">
@@ -253,7 +255,7 @@
                                                     <button type="button" class="btn btn-primary" style="border-radius: 90px;"  data-toggle="modal" data-target="#myModal-four">+</button>
                                                     <span class="span-tex" id="return-price_sum"></span>
                                                 </div>
-                                                <div class="clearfix" id="return-detail">
+                                                <div class="clearfix dis-no" id="return-detail">
                                                     <table class="acTable">
                                                         <thead>
                                                         <tr>
@@ -390,44 +392,47 @@
                                                 <div class="pull-left text-padding-top">
                                                     活动期间，活动商品统一
                                                 </div>
-                                                <div class="col-xs-2 no-padding" style="width: 90px;">
-                                                    <select name="" id="" class="form-control">
-                                                        <option value="">价格</option>
-                                                        <option value="">折扣</option>
+                                                <div class="col-xs-2 no-padding" style="width: 90px;margin:0 10px;">
+                                                    <select name="quantity_type" class="form-control active-select">
+                                                        <option value="1">价格</option>
+                                                        <option value="2">折扣</option>
                                                     </select>
                                                 </div>
                                                 <div class="col-xs-2 no-padding" style="width: 90px;">
                                                     <div class="input-group">
-                                                        <input type="text" class="form-control">
-                                                        <span class="input-group-addon">元</span>
+                                                        <input type="text" class="form-control" name="quantity_price1">
+                                                        <span class="input-group-addon limit-type-html">元</span>
+                                                    </div>
+                                                    <div class="input-group dis-no">
+                                                        <input type="text" class="form-control" name="quantity_price2">
+                                                        <span class="input-group-addon limit-type-html">元</span>
                                                     </div>
                                                 </div>
-                                                <div class="col-xs-1 control-label" style="width: 110px;">， 秒杀库存</div>
-                                                <div class="col-xs-1" style="width: 110px;">
+                                                <div class="col-xs-1 control-label text-left" style="width: 110px;margin-left: -15px;">， 秒杀库存</div>
+                                                <div class="col-xs-1" style="width: 110px;margin-left: -20px">
                                                     <div class="input-group">
-                                                        <input type="text" class="form-control">
+                                                        <input type="text" class="form-control" name="quantity_num">
                                                         <span class="input-group-addon">件</span>
                                                     </div>
                                                 </div>
 
-                                                <div class="col-xs-2 text-danger">
+                                                <div class="col-xs-2 text-danger" style="margin-left: -20px;">
                                                     (不设置件数即为当前库存均用于秒杀)
                                                 </div>
-                                                <div class="col-xs-1 control-label" style="width: 110px;">每人限购件</div>
+                                                <div class="col-xs-1 control-label" style="width: 110px;margin-left: -30px">每人限购件</div>
                                                 <div class="col-xs-2 no-padding">
-                                                    <select name="" id="" class="form-control" style="width: 90px;">
+                                                    <select name="" class="form-control" style="width: 90px;">
                                                         <option value="">不限</option>
                                                         <option value="">1</option>
                                                         <option value="">2</option>
                                                         <option value="">3</option>
-                                                        <option value="">4</option>
                                                         <option value="">5</option>
                                                     </select>
                                                 </div>
 
                                                 <div class="col-xs-12">
-                                                    <div class="text-left col-xs-4 text-info" style="padding: 10px 5px;">注：可在添加商品时针对每个商品分别设置优惠力度。</div>
-                                                    <input type="button" class="btn col-xs-offset-6" value="确定">
+                                                    <div class="text-left col-xs-5 text-info" style="padding: 10px 5px;">注：可在添加商品时针对每个商品分别设置优惠力度。</div>
+                                                    <button type="button" class="btn col-xs-offset-5 btn-primary" onclick="setGoodInfo(this)">确定</button>
                                                 </div>
                                             </div>
                                         </div>
@@ -441,41 +446,12 @@
                                         <button type="button" class="btn btn-default pull-right" data-toggle="modal" data-target="#myModal-one">添加商品
                                         </button>
                                     </div>
-                                    <div class="form-inline" style="padding-top: 20px;padding-bottom: 40px;">
-                                        <div class="col-xs-3 no-padding-left">
-                                            <label for="">商品名称：</label>
-                                            <input type="text" class="form-control" id="">
-                                        </div>
-                                        <div class="col-xs-3">
-                                            <label for="">商品ID：</label>
-                                            <input type="text" class="form-control" id="">
-                                        </div>
-                                        <div class="col-xs-3">
-                                            <label for="">商品货号：</label>
-                                            <input type="text" class="form-control" id="">
-                                        </div>
-                                        <div class="col-xs-1">
-                                            <input type="button" class="btn btn-success" value="查找">
-                                        </div>
-                                    </div>
-                                    <hr>
-                                    <table id="promotion_good_table" class="table table-bordered table-hover text-center promotion-activity-type1">
-                                        <thead>
-                                        <tr>
-                                            <td>商品图片</td>
-                                            <td>商品信息</td>
-                                            <td>采购价</td>
-                                            <td>供应价</td>
-                                            <td>最近30天销量</td>
-                                            <td>库存数量</td>
-                                            <td>操作</td>
-                                        </tr>
-                                        </thead>
+                                    <table class="table promotion_good_table table-hover text-center promotion-activity-type1">
                                         <tbody class="tableTbody">
 
                                         </tbody>
                                     </table>
-                                    <table id="promotion_good_table" class="table table-bordered table-hover text-center promotion-activity-type2">
+                                    <table class="table promotion_good_table table-bordered table-hover text-center promotion-activity-type2 dis-no">
                                         <thead>
                                         <tr>
                                             <td>商品图片</td>
@@ -596,8 +572,12 @@
                     if (data.status == 200) {
                         if(type == 'quantity' || type == 'limit'){
                             $('.promotion-activity-type1').append(data.content);
+                            $('.promotion-activity-type1').removeClass('dis-no');
+                            $('.promotion-activity-type2').addClass('dis-no');
                         }else{
                             $('.promotion-activity-type2').find('.tableTbody').append(data.content);
+                            $('.promotion-activity-type2').removeClass('dis-no');
+                            $('.promotion-activity-type1').addClass('dis-no');
                         }
                         getGoods($('#myModal-one').find('form'));
                         $('#myModal-one').modal('hide');
@@ -661,7 +641,7 @@
                     }
                 })
             });
-            $('#promotion_good_table').on('click', '.promotion-goods-delete', function () {
+            $('.promotion_good_table').on('click', '.promotion-goods-delete', function () {
                 if(confirm("确定要删除活动商品吗？")){
                     var activity_id = $('input[name=id]').val();
                     var _this = $(this);
@@ -675,8 +655,8 @@
                         },
                         success:function(data){
                             if (data.status == 200) {
-                                if(_this.parents('#promotion-activity-type1').length > 0){
-                                    _this.parents('table').remove();
+                                if(_this.parents('.promotion-activity-type1').length > 0){
+                                    _this.parents('.promotion-goods-list').remove();
                                 }else{
                                     var addtable = _this.parents('tr').next().find('.add_Table');
                                     if(addtable.length > 0){
@@ -715,6 +695,7 @@
 
             //立减/立享
             $(".limit-detail").on("change", '.active-select', function(){
+                console.log(22);
                 var value=$(this).val();
                 if(value==1){
                     $(".limit-type-html").text("元");
@@ -724,12 +705,36 @@
 
             });
 
+            $(".quantity-detail").on("change", '.active-select', function(){
+                var value=$(this).val();
+                if(value==1){
+                    $(".Input-select").removeClass("dis-no");
+                    $(".input-Select").addClass("dis-no");
+                    $(this).parents('.active-container').find('.quantity-text').text('元， 秒杀库存');
+                }else if(value==2){
+                    $(".Input-select").addClass("dis-no");
+                    $(".input-Select").removeClass("dis-no");
+                    $(this).parents('.active-container').find('.quantity-text').text('折， 秒杀库存');
+                }
+
+            });
+
+            $("input[name=activity_type]").change(function(e){
+                if ($(this).val()) {
+                    if(!confirm("确定修改内容？整个页面内容会被覆盖。")){
+                        e.preventDefault();
+                    }
+                }
+            });
+
             //设置优惠
             $('.promotion-activity-type1,.promotion-activity-type2').on('click', '.promotion-goods-single', function(){
                 var activity_id = $('input[name=id]').val();
                 var _this = $(this);
                 var toggle = _this.attr('data-toggle');
+                console.log(1);
                 if( toggle == 'false' ) return;
+                console.log(2);
                 var good_id = _this.data('id');
                 _this.attr('data-toggle', false);
                 $.ajax({
@@ -797,35 +802,35 @@
                         toastr.warning('价格格式错误，请重新修改');
                         return false;
                     }
-                    /*$('.promotion-price').each(function(){
+                    $('.promotion-price').each(function(){
                         var tmpPrice = $(this).parent().prev().data('price');
                         var price = parseFloat(tmpPrice) - parseFloat(num);
                         if(price <= 0) price = 0.01;
                         $(this).val(price);
-                    });*/
+                    });
                 }else if(parseInt(activity_type) == 2){
                     if(!/^\d(\.\d?)?$/.test(num)){
                         toastr.warning('折扣格式错误，请重新修改');
                         return false;
                     }
-                   /* $('.promotion-price').each(function(){
+                    $('.promotion-price').each(function(){
                         var tmpPrice = $(this).parent().prev().data('price');
                         var price = Math.round(parseFloat(tmpPrice) * parseFloat(num) * 100) /1000;
                         if(price <= 0) price = 0.01;
                         $(this).val(price);
-                    });*/
+                    });
                 }
             }else if(type == 'quantity'){
-                var activity_type = $('select[name='+type+'-type]').val();
-                var price = $('input[name=quantity-price'+activity_type+']').val();
-                var num = $('input[name='+type+'-num]').val();
+                var activity_type = $('select[name='+type+'_type]').val();
+                var price = $('input[name=quantity_price'+activity_type+']').val();
+                var num = $('input[name='+type+'_num]').val();
                 if(parseInt(activity_type) == 1){
                     if(!/^\d+(\.\d{0,2})?$/.test(price)){
-                        alert('价格格式错误，请重新修改');
+                        toastr.warning('价格格式错误，请重新修改');
                         return false;
                     }
-                    if(!empty(num) && !/^\d+$/.test(num)){
-                        alert('活动商品数量只能为整数');
+                    if(num && !/^\d+$/.test(num)){
+                        toastr.warning('活动商品数量只能为整数');
                         return false;
                     }
                     $('.promotion-price').each(function(){
@@ -833,16 +838,16 @@
                     });
                     $('.promotion-num').each(function(){
                         var maxNum = $(this).parents('table').data('stock');
-                        var tmp = (empty(num) || num > maxNum) ? maxNum : num;
+                        var tmp = (!num || num > maxNum) ? maxNum : num;
                         $(this).val(tmp);
                     });
                 }else if(parseInt(activity_type) == 2){
                     if(!/^\d(\.\d?)?$/.test(price)){
-                        alert('折扣格式错误，请重新修改');
+                        toastr.warning('折扣格式错误，请重新修改');
                         return false;
                     }
-                    if(!empty(num) && !/^\d+$/.test(num)){
-                        alert('活动商品数量只能为整数');
+                    if(num && !/^\d+$/.test(num)){
+                        toastr.warning('活动商品数量只能为整数');
                         return false;
                     }
                     $('.promotion-price').each(function(){
@@ -851,7 +856,7 @@
                     });
                     $('.promotion-num').each(function(){
                         var maxNum = $(this).parents('table').data('stock');
-                        var tmp = (empty(num) || num > maxNum) ? maxNum : num;
+                        var tmp = (!num || num > maxNum) ? maxNum : num;
                         $(this).val(tmp);
                     });
                 }

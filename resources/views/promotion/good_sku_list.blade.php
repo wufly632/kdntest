@@ -1,40 +1,39 @@
 @inject('goodPresenter',"App\Presenters\Good\GoodPresenter")
-
 @if(in_array($type, ['limit', 'quantity']))
-    <div class="time-good seckill-bottom">
         @foreach($good_info as $val)
             <?php $displayAttr          = $goodPresenter->displayAttr($val->productSku);?>
         <table class="promotion-goods-list" id="good-list{{$val->id}}" data-stock="{{$val->good_stock}}">
             <tbody>
             <tr>
-                <td colspan="">
+                <?php $num = $type == 'limit' ? 5 : 6;?>
+                <td colspan="{{$displayAttr['attr_num']+$num}}">
                     <div class="clearfix">
                         <div class="fl good-pic">
                             <img src="{{ImgResize($val->main_pic, 100)}}" alt=""/>
                         </div>
                         <div class="fl good-detail">
-                            <p>名称：{{$val->good_title}}</p>
-                            <p class="clearfix">
-                                <span class="go-id">ID：{{$val->id}}</span>
-                                <span class="go-num">货号：{{$val->good_code}}</span>
-                                <span class="go-nunber">最近30天销量</span>
-                            <div class="fl clearfix limitnum-container">
-                                <span class="fl">每人限购</span>
-                                <select class="fl promotion-per-num" name="per_num{{$val->id}}">
-                                    <option value="0">不限</option>
-                                    <option value="1">1</option>
-                                    <option value="2">2</option>
-                                    <option value="3">3</option>
-                                    <option value="5">5</option>
-                                </select>
-                                <span class="fl">件</span>
+                            <div class="text-left" style="margin: 30px 0 20px 5px;">名称：{{$val->good_title}}</div>
+                            <div class="clearfix" style="margin-left: 5px;">
+                                <span class="fl go-id">ID：{{$val->id}}</span>
+                                <span class="fl go-num" style="margin-left: 20px;">货号：{{$val->good_code}}</span>
+                                <span class="fl go-nunber" style="margin-left: 20px;">最近30天销量</span>
+                                <div class="fl clearfix limitnum-container" style="margin-left: 300px;">
+                                    <span class="fl">每人限购</span>
+                                    <select class="fl promotion-per-num" name="per_num{{$val->id}}">
+                                        <option value="0">不限</option>
+                                        <option value="1">1</option>
+                                        <option value="2">2</option>
+                                        <option value="3">3</option>
+                                        <option value="5">5</option>
+                                    </select>
+                                    <span class="fl">件</span>
+                                </div>
+                                <button class="btn btn-primary fr" style="margin-left: 30px;" data-toggle="modal" data-target="">一键设置</button>
                             </div>
-                            <span class="go-set fr good-sku-set" data-toggle="modal" data-target="">一键设置</span>
-                            </p>
                         </div>
                     </div>
                 </td>
-                <td rowspan="" style="width: 80px;">
+                <td rowspan="{{$val->count()+2}}" style="width: 80px;">
                     <span class="good-delete promotion-goods-delete" data-id="{{$val->id}}" >删除</span>
                 </td>
             </tr>
@@ -68,6 +67,9 @@
                     <input type="hidden" name="sku_str{{$val->id}}[]" value="{{$kv->value_ids}}"/>
                     {{$kv->stock_price}}
                 </td>
+                <td data-price="10">
+                    10
+                </td>
                 @if($type == 'quantity')
                     <td>
                         <input class="table-into-input promotion-price" name="price{{$kv->id}}" value="">
@@ -87,7 +89,6 @@
             </tbody>
         </table>
         @endforeach
-    </div>
     <script type="text/javascript">
         $('.good-sku-set').on('click', function(){
             var id = $(this).data('good');
@@ -121,7 +122,7 @@
             <td>{{$good->good_stock}}</td>
             <td>
                 <div><a href="javascript:void(0);" class="promotion-goods-delete" data-id="{{$good->id}}">删除</a></div>
-                <div class="set_promotion"><a href="javascript:void(0);">设置优惠</a></div>
+                <div class="promotion-goods-single" data-id="{{$good->id}}" data-toggle="true"><a href="javascript:void(0);">设置优惠</a></div>
             </td>
         </tr>
     @endforeach
