@@ -46,18 +46,24 @@
                                 <div class="col-xs-3 col-xs-offset-1">
                                     <div class="form-group">
                                         <label for="name" class="control-label">用户名:</label>
-                                        <div class="form-group"><input type="text" class="form-control" id="name" name="name" value="{{ request()->get('name') }}"></div>
+                                        <div class="form-group"><input type="text" class="form-control" id="name"
+                                                                       name="name" value="{{ request()->get('name') }}">
+                                        </div>
                                     </div>
                                 </div>
                                 <div class="col-xs-3">
                                     <div class="form-group">
                                         <label for="email" class="control-label">用户邮箱:</label></div>
-                                    <div class="form-group"><input type="text" class="form-control" id="email" name="email" value="{{ request()->get('email') }}"></div>
+                                    <div class="form-group"><input type="text" class="form-control" id="email"
+                                                                   name="email" value="{{ request()->get('email') }}">
+                                    </div>
                                 </div>
                                 <div class="col-xs-3">
                                     <div class="form-group">
                                         <label for="user_id" class="control-label">用户ID:</label>
-                                        <div class="form-group"><input type="text" class="form-control" id="user_id" name="user_id" value="{{ request()->get('user_id') }}">
+                                        <div class="form-group"><input type="text" class="form-control" id="user_id"
+                                                                       name="user_id"
+                                                                       value="{{ request()->get('user_id') }}">
                                         </div>
                                     </div>
                                 </div>
@@ -96,7 +102,13 @@
                                         <td>{{ $user->mobile }}</td>
                                         <td>{{ $user->email }}</td>
                                         <td>{{ $user->amount_money }}</td>
-                                        <td>{{ $user->status }}</td>
+                                        <td>
+                                            @if($user->status==1)
+                                                正常
+                                            @else
+                                                冻结
+                                            @endif
+                                        </td>
                                         <td>{{ $user->created_at }}</td>
                                         <td id="bread-actions" class="no-sort no-click">
                                             <div class="btn-group">

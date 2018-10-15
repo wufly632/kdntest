@@ -26,7 +26,7 @@ class SupplierUserCreateRequest extends FormRequest
         return [
             'name' => 'required',
             'mobile' => 'required',
-            'email' => 'required|email',
+            'email' => 'required|email|unique:supplier_users,email',
             'password' => 'required|confirmed',
             'password_confirmation' => 'required|min:6'
         ];

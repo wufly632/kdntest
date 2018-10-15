@@ -63,7 +63,7 @@ class OrderTrackingMoreController extends Controller
 
     public function getStream($id, $shipperCode, $waybillId)//$shipperCode, $waybillId delivered
     {
-        $order = $this->orderService->getOrderInfo(1582, ['order_id', 'status']);
+        $order = $this->orderService->getOrderInfo($id, ['order_id', 'status']);
         if ($order['status'] != 4) {
             if ($order->orderTrackingmore) {
                 return ApiResponse::success(['trackinfo' => $order->orderTrackingmore->trackinfo]);
