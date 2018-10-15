@@ -18,9 +18,14 @@ class OrderTrackingMoreService
         $this->orderTrackingmoreRepository = $orderTrackingmoreRepository;
     }
 
-    public function checkOrCreate($order_id, $info)
+    public function updateTable($order_id, $info)
     {
-        $this->orderTrackingmoreRepository->update(['order_id' => $order_id], $info);
+        $this->orderTrackingmoreRepository->update($info, $order_id);
+    }
+
+    public function createTable($info)
+    {
+        $this->orderTrackingmoreRepository->create($info);
     }
 
 }

@@ -24,10 +24,7 @@ class SupplierUserUpdateRequest extends FormRequest
     public function rules()
     {
         return [
-            'name' => 'required',
-            'mobile' => 'required',
-            'email' => 'required|email',
-            'password' => 'confirmed|min:6'
+
         ];
     }
 

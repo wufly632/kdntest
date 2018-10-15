@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\TrackingMore;
 
+use App\Services\Api\ApiResponse;
 use App\Services\Order\OrderService;
 use App\Services\Order\OrderTrackingMoreService;
 use App\Http\Controllers\Controller;
@@ -12,7 +13,7 @@ class OrderTrackingMoreController extends Controller
     //
     protected $trackingMoreService;
     protected $orderService;
-    protected $orderTrackingmoreRepository;
+    protected $orderTrackingMoreService;
 
     /**
      * OrderTrackingMoreController constructor.
@@ -62,23 +63,37 @@ class OrderTrackingMoreController extends Controller
 
     public function getStream($id, $shipperCode, $waybillId)//$shipperCode, $waybillId delivered
     {
-        $order = $this->orderService->getOrderInfo($id, ['order_id', 'status']);
+        $order = $this->orderService->getOrderInfo(1582, ['order_id', 'status']);
         if ($order['status'] != 4) {
             if ($order->orderTrackingmore) {
-                return $order->orderTrackingmore->trackinfo;
+                return ApiResponse::success(['trackinfo' => $order->orderTrackingmore->trackinfo]);
             } else {
-                return false;
+                return ApiResponse::failure(g_API_ERROR, '获取信息失败');
             }
 
         }
         if ($order->orderTrackingmore && $order->orderTrackingmore->trackinfo->status == 'delivered') {
-            return $order->orderTrackingmore->trackinfo;
+            return ApiResponse::success(['trackinfo' => $order->orderTrackingmore->trackinfo]);
         };
         $orderTrackInfo = $this->trackingMoreService->getSingleTrackingResult($shipperCode, $waybillId);
         if ($orderTrackInfo['meta']['code'] == 200) {
-            return $orderTrackInfo['data']['origin_info']['trackinfo'];
-        }else{
-            return false;
+            $getApiInfo = [
+                'order_id' => $order->order_id,
+                'status' => $orderTrackInfo['data']['status'],
+                'trackinfo' => json_encode($orderTrackInfo['data']['origin_info']['trackinfo'])
+            ];
+            try {
+                if ($order->orderTrackingmore) {
+                    $this->orderTrackingMoreService->updateTable($order->orderTrackingmore->id, $getApiInfo);
+                } else {
+                    $this->orderTrackingMoreService->createTable($getApiInfo);
+                }
+            } catch (\Exception $e) {
+                return ApiResponse::failure(g_API_ERROR, '获取信息失败');
+            }
+            return ApiResponse::success(['trackinfo' => $orderTrackInfo['data']['origin_info']['trackinfo']]);
+        } else {
+            return ApiResponse::failure(g_API_ERROR, '获取信息失败');
         }
 
     }
