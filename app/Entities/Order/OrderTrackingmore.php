@@ -21,6 +21,6 @@ class OrderTrackingmore extends Model implements Transformable
      *
      * @var array
      */
-    protected $fillable = [];
+    protected $fillable = ['order_id', 'status', 'trackinfo', 'destination_arrived'];
 
 }
