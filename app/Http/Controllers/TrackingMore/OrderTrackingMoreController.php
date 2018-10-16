@@ -72,7 +72,7 @@ class OrderTrackingMoreController extends Controller
             }
 
         }
-        if ($order->orderTrackingmore && $order->orderTrackingmore->trackinfo->status == 'delivered') {
+        if ($order->orderTrackingmore && $order->orderTrackingmore->status == 'delivered') {
             return ApiResponse::success(['trackinfo' => $order->orderTrackingmore->trackinfo]);
         };
         $orderTrackInfo = $this->trackingMoreService->getSingleTrackingResult($shipperCode, $waybillId);

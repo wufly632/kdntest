@@ -349,7 +349,7 @@
                     _index = this;
                     axios.get('{{ secure_route('trackingmore.getstream',['id'=>$order->id,'shipper_code'=>$order->shipper_code,'waybill_id'=>$order->waybill_id]) }}').then(function (res) {
                         if (res.data.status === 200) {
-                            _index.trackIinfo = JSON.parse(res.data.content.trackinfo);
+                            _index.trackIinfo = res.data.content.trackinfo;
                         }
                     });
 
