@@ -10,6 +10,7 @@ use App\Entities\Promotion\Promotion;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Promotion\PromotionAddGoodRequest;
 use App\Services\Api\ApiResponse;
+use App\Services\Api\CommonService;
 use App\Services\Coupon\CouponService;
 use App\Services\Product\ProductService;
 use App\Services\Promotion\PromotionService;
@@ -171,4 +172,40 @@ class PromotionController extends Controller
         }
         return $this->promotionService->deletePromotion($id);
     }
+
+    /**
+     * @function 促销活动图上传
+     * @param Request $request
+     * @return mixed
+     */
+    public function imgUpload(Request $request)
+    {
+        $img_name = $request->input('img_name');
+        if ($request->hasFile($img_name)) {
+            $file = $request->file($img_name);
+            $ext = $file->getClientOriginalExtension();
+            if( ! in_array(strtolower($ext), ['jpg', 'png', 'bmp', 'wbmp'])){
+                return ApiResponse::failure(g_API_ERROR, '图片格式不正确，请检查!');
+            }
+            if(!$request->input('not_limit')){
+                list($width, $height) = getimagesize($file->getRealPath());
+                /*if($width > 800 || $height > 800){ //限制图片的宽高
+                    return ApiResponse::failure(g_API_ERROR, '图片宽高不能大于800!');
+                }*/
+            }
+        }
+        $directory = 'promotion';
+        $ali = env('APP_ENV', 'local') == 'production';
+        $urlInfo = app(CommonService::class)->uploadFile($file = $img_name, $bucket = 'cucoe', $directory, $ali, false, false);
+        if ($urlInfo) {
+            if ($ali) {
+                return ApiResponse::success($urlInfo['oss-request-url'], '图片上传成功');
+            } else {
+                return ApiResponse::success($urlInfo, '图片上传成功');
+            }
+        }else{
+            return ApiResponse::failure(g_API_ERROR, '图片上传失败!');
+        }
+    }
+
 }
