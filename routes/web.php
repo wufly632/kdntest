@@ -36,7 +36,7 @@ Route::group(['middleware' => ['auth', 'web']], function () {
         //更新或添加
         Route::post('/update', ['as' => 'category.update', 'uses' => 'CategoryController@update']);
         Route::get('/current_category_info/{category_id}', ['as' => 'category.current_info', 'uses' => 'CategoryController@currentCategoryInfo']);
-        Route::get('/{category_id}/attribute/{attribute_id}/detail',['as' => 'category.category.attribute','uses' => 'CategoryController@getCategoryAttributeDetail']);
+        Route::get('/{category_id}/attribute/{attribute_id}/detail', ['as' => 'category.category.attribute', 'uses' => 'CategoryController@getCategoryAttributeDetail']);
         Route::post('/attribute/update', ['as' => 'category.attribute.update', 'uses' => 'CategoryController@updateCategoryAttribute']);
         Route::get('/existCategoryPicAttribute', ['as' => 'category.exist.picAttribute', 'uses' => 'CategoryController@existCategoryPicAttribute']);
     });
@@ -64,7 +64,7 @@ Route::group(['middleware' => ['auth', 'web']], function () {
         Route::post('/auditReject', ['as' => 'good.auditReject', 'uses' => 'GoodsController@auditReject']);
     });
 
-    Route::group(['prefix' => 'product', 'namespace' => 'Product'], function() {
+    Route::group(['prefix' => 'product', 'namespace' => 'Product'], function () {
         Route::post('/onshelf', ['as' => 'product.onshelf', 'uses' => 'ProductController@onshelf']);
         Route::post('/offshelf', ['as' => 'product.offshelf', 'uses' => 'ProductController@offshelf']);
     });
@@ -94,17 +94,17 @@ Route::group(['middleware' => ['auth', 'web']], function () {
 
     //用户订单模块
     Route::group(['namespace' => 'Order'], function () {
-        Route::get('/orders/send/{id}','OrderController@send')->name('orders.send');
-        Route::post('/orders/sendconfirm/{id}','OrderController@sendConfirm')->name('orders.sendconfirm');
-        Route::post('/orders/orders.cancel/{id}','OrderController@orderCancel')->name('orders.cancel');
+        Route::get('/orders/send/{id}', 'OrderController@send')->name('orders.send');
+        Route::post('/orders/sendconfirm/{id}', 'OrderController@sendConfirm')->name('orders.sendconfirm');
+        Route::post('/orders/orders.cancel/{id}', 'OrderController@orderCancel')->name('orders.cancel');
         Route::resources(['orders' => 'OrderController']);
     });
     //物流信息
     Route::group(['namespace' => 'TrackingMore'], function () {
-        Route::get('/trackingmore/getcarriers','OrderTrackingMoreController@getCarriers')->name('trackingmore.getcarriers');
-        Route::get('/trackingmore/getstream/{id}/{shipper_code}/{waybill_id}','OrderTrackingMoreController@getStream')->name('trackingmore.getstream');///{shipper_code}/{waybill_id}
-        Route::get('/trackingmore/createtracking/{shipper_code}/{waybill_id}','OrderTrackingMoreController@createTracking')->name('trackingmore.createtracking');
-        Route::get('/trackingmore/detectcarrier/{waybill_id}','OrderTrackingMoreController@detectCarrier')->name('trackingmore.detectcarrier');
+        Route::get('/trackingmore/getcarriers', 'OrderTrackingMoreController@getCarriers')->name('trackingmore.getcarriers');
+        Route::get('/trackingmore/getstream/{id}/{shipper_code}/{waybill_id}', 'OrderTrackingMoreController@getStream')->name('trackingmore.getstream');///{shipper_code}/{waybill_id}
+        Route::get('/trackingmore/createtracking/{shipper_code}/{waybill_id}', 'OrderTrackingMoreController@createTracking')->name('trackingmore.createtracking');
+        Route::get('/trackingmore/detectcarrier/{waybill_id}', 'OrderTrackingMoreController@detectCarrier')->name('trackingmore.detectcarrier');
     });
 
     //用户管理模块
@@ -113,6 +113,13 @@ Route::group(['middleware' => ['auth', 'web']], function () {
             'users' => 'UsersController',
             'supplierusers' => 'SupplierUserController',
             'adminusers' => 'AdminUserController'
+        ]);
+    });
+
+    //网站设置
+    Route::group(['namespace' => 'Website'], function () {
+        Route::resources([
+            'banners' => 'BannerController'
         ]);
     });
 });
