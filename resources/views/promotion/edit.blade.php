@@ -85,11 +85,19 @@
         .promotion-goods-list{width: 90%;margin: 30px 5%;}
         .fl{float: left;}
         .fr{float: right;}
+        .png-add{
+            position: absolute;
+            top: 24px;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+        }
     </style>
 @endsection
 @extends('layouts.default')
 @section('content')
-    <?php $promotion_rule =isset($promotion->rule) ? json_decode($promotion->rule) : '';?>
+    <?php $promotion_rule =$promotion->rule ? json_decode($promotion->rule) : [];?>
     <div class="content-wrapper">
         <section class="content-header">
             <h1>
@@ -121,6 +129,16 @@
                             {{ csrf_field() }}
                             <input type="hidden" name="id" value="{{$promotion->id}}">
                             <div class="box-header">
+                                <div class="form-group">
+                                    <label for="promotion_time" class="col-xs-1 control-label">活动图：</label>
+                                    <div class="col-xs-3">
+                                        <input type="hidden" name="poster_pic" value="{{$promotion->poster_pic}}">
+                                        <div class="add-upload">
+                                            <img src="{{$promotion->poster_pic ?? 'http://placehold.it/150x100'}}" alt="" class="promotion-pic" width="150px" height="150px">
+                                            <input type="file" class="png-add" name="img_file">
+                                        </div>
+                                    </div>
+                                </div>
                                 <div class="form-group">
                                     <label for="promotion_time" class="col-xs-1 control-label">活动时间：</label>
                                     <div class="col-xs-3">
@@ -155,43 +173,50 @@
                                     <div class="col-xs-10">
                                         <span class="promotion_type">
                                             <label for="method1" id="method-label1" class="label-inline method_radio">
-                                                <input name="activity_type" class="promotion_method" id="method1" checked
+                                                <input name="activity_type" class="promotion_method" id="method1"
+                                                       @if($promotion->activity_type == 'reduce' || ! $promotion->activity_type) checked @endif
                                                        type="radio" value="reduce">满减
                                             </label>
                                         </span>
                                         <span class="promotion_type">
                                             <label for="method2" id="method-label2" class="label-inline method_radio">
                                                 <input name="activity_type" class="promotion_method" id="method2"
+                                                       @if($promotion->activity_type == 'return') checked @endif
                                                        type="radio" value="return">满返
                                             </label>
                                         </span>
                                         <span class="promotion_type">
                                             <label for="method3" id="method-label3" class="label-inline method_radio">
                                                 <input name="activity_type" class="promotion_method" id="method3"
+                                                       @if($promotion->activity_type == 'discount') checked @endif
                                                        type="radio" value="discount">多件多折
                                             </label>
                                         </span>
                                         <span class="promotion_type">
                                             <label for="method4" id="method-label4" class="label-inline method_radio">
                                                 <input name="activity_type" class="promotion_method" id="method4"
+                                                       @if($promotion->activity_type == 'wholesale') checked @endif
                                                        type="radio" value="wholesale">x元n件
                                             </label>
                                         </span>
                                         <span class="promotion_type">
                                             <label for="method5" id="method-label5" class="label-inline method_radio">
                                                 <input name="activity_type" class="promotion_method" id="method5"
+                                                       @if($promotion->activity_type == 'give') checked @endif
                                                        type="radio" value="give">买n免一
                                             </label>
                                         </span>
                                         <span class="promotion_type">
                                             <label for="method6" id="method-label6" class="label-inline method_radio">
                                                 <input name="activity_type" class="promotion_method" id="method6"
+                                                       @if($promotion->activity_type == 'limit') checked @endif
                                                        type="radio" value="limit">限时特价
                                             </label>
                                         </span>
                                         <span class="promotion_type">
                                             <label for="method7" id="method-label7" class="label-inline method_radio">
                                                 <input name="activity_type" class="promotion_method" id="method7"
+                                                       @if($promotion->activity_type == 'quantity') checked @endif
                                                        type="radio" value="quantity">限量秒杀
                                             </label>
                                         </span>
@@ -218,18 +243,18 @@
                                                     </div>
                                                     <button id="add-reduce-detail" type="button" class="btn btn-primary btn-flat icon-add @if($promotion->activity_type == 'reduce' && count($promotion_rule) > 1) dis-no @endif" style="border-radius: 90px;">+</button>
                                                 </div>
-                                                <div class="reduce-detail-row add-row dis-no @if($promotion->activity_type == 'reduce' && count($promotion_rule) > 1) dis-no @endif">
+                                                <div class="reduce-detail-row add-row @if($promotion->activity_type != 'reduce' || count($promotion_rule) <= 1) dis-no @endif">
                                                     <div class="pull-left text-padding-top">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;满</div>
                                                     <div class="col-xs-2">
                                                         <div class="input-group">
-                                                            <input type="text" class="form-control" name="reduce_name[]">
+                                                            <input type="text" class="form-control" name="reduce_name[]" value=""@if($promotion->activity_type == 'reduce' && isset($promotion_rule[1])) {{$promotion_rule[1]->money}} @endif">
                                                             <span class="input-group-addon">元</span>
                                                         </div>
                                                     </div>
                                                     <div class="pull-left text-padding-top" style="width: 60px;padding-left: 0;padding-right: 0">，立减</div>
                                                     <div class="col-xs-2">
                                                         <div class="input-group">
-                                                            <input type="text" class="form-control" name="reduce_value[]">
+                                                            <input type="text" class="form-control" name="reduce_value[]" value="@if($promotion->activity_type == 'reduce' && isset($promotion_rule[1])) {{$promotion_rule[1]->reduce}} @endif">
                                                             <span class="input-group-addon">元</span>
                                                         </div>
                                                     </div>
@@ -241,7 +266,7 @@
                                                     <div class="pull-left text-padding-top">活动期间，买满</div>
                                                     <div class="col-xs-2">
                                                         <div class="input-group">
-                                                            <input type="text" class="form-control">
+                                                            <input type="text" class="form-control" name="return_price" value="@if($promotion->activity_type == 'return') {{$promotion->consume}} @endif">
                                                             <span class="input-group-addon">元</span>
                                                         </div>
                                                         <input type="hidden" class="price fl" name="return-sum" id="coupon-price-sum" value=""/>
@@ -280,7 +305,7 @@
                                                     </div>
                                                     <div class="col-xs-2">
                                                         <div class="input-group">
-                                                            <input type="text" class="form-control" name="discount_name[]">
+                                                            <input type="text" class="form-control" name="discount_name[]" value="@if($promotion->activity_type == 'discount') {{$promotion_rule ? $promotion_rule[0]->num : ''}} @endif">
                                                             <span class="input-group-addon">件</span>
                                                         </div>
                                                     </div>
@@ -289,19 +314,19 @@
                                                     </div>
                                                     <div class="col-xs-2">
                                                         <div class="input-group">
-                                                            <input type="text" class="form-control" name="discount_value[]">
+                                                            <input type="text" class="form-control" name="discount_value[]" value="@if($promotion->activity_type == 'discount') {{$promotion_rule ? $promotion_rule[0]->discount : ''}} @endif">
                                                             <span class="input-group-addon">折</span>
                                                         </div>
                                                     </div>
-                                                    <button id="add-discount-detail" type="button" class="btn btn-primary btn-flat icon-add" style="border-radius: 90px;">+</button>
+                                                    <button id="add-discount-detail" type="button" class="btn btn-primary btn-flat icon-add @if($promotion->activity_type == 'discount' || (is_array($promotion_rule) && count($promotion_rule) > 1)) dis-no @endif" style="border-radius: 90px;">+</button>
                                                 </div>
-                                                <div class="discount-detail-row add-row dis-no">
+                                                <div class="discount-detail-row add-row @if($promotion->activity_type != 'discount' || count($promotion_rule) <= 1) dis-no @endif">
                                                     <div class="pull-left text-padding-top">
                                                         　　　　　　　　　满
                                                     </div>
                                                     <div class="col-xs-2">
                                                         <div class="input-group">
-                                                            <input type="text" class="form-control" name="discount_name[]">
+                                                            <input type="text" class="form-control" name="discount_name[]" value="@if($promotion->activity_type == 'discount' && isset($promotion_rule[1])) {{$promotion_rule[1]->num}} @endif">
                                                             <span class="input-group-addon">件</span>
                                                         </div>
                                                     </div>
@@ -310,7 +335,7 @@
                                                     </div>
                                                     <div class="col-xs-2">
                                                         <div class="input-group">
-                                                            <input type="text" class="form-control" name="discount_value[]">
+                                                            <input type="text" class="form-control" name="discount_value[]" value="@if($promotion->activity_type == 'discount' && isset($promotion_rule[1])) {{$promotion_rule[1]->discount}} @endif">
                                                             <span class="input-group-addon">折</span>
                                                         </div>
                                                     </div>
@@ -324,7 +349,7 @@
                                                 </div>
                                                 <div class="col-xs-2">
                                                     <div class="input-group">
-                                                        <input type="text" class="form-control" name="wholesale_name[]">
+                                                        <input type="text" class="form-control" name="wholesale_name[]" value="@if($promotion->activity_type == 'wholesale') {{$promotion_rule ? $promotion_rule[0]->money : ''}} @endif">
                                                         <span class="input-group-addon">元</span>
                                                     </div>
                                                 </div>
@@ -333,7 +358,7 @@
                                                 </div>
                                                 <div class="col-xs-2">
                                                     <div class="input-group">
-                                                        <input type="text" class="form-control" name="wholesale_value[]">
+                                                        <input type="text" class="form-control" name="wholesale_value[]" value="@if($promotion->activity_type == 'wholesale') {{$promotion_rule ? $promotion_rule[0]->wholesale : ''}} @endif"">
                                                         <span class="input-group-addon">件</span>
                                                     </div>
                                                 </div>
@@ -344,7 +369,7 @@
                                                 </div>
                                                 <div class="col-xs-2">
                                                     <div class="input-group">
-                                                        <input type="text" class="form-control">
+                                                        <input type="text" class="form-control" name="give_num" value="@if($promotion->activity_type == 'give') {{$promotion->rule}} @endif">
                                                         <span class="input-group-addon">
                                                         件
                                                     </span>
@@ -446,12 +471,16 @@
                                         <button type="button" class="btn btn-default pull-right" data-toggle="modal" data-target="#myModal-one">添加商品
                                         </button>
                                     </div>
-                                    <table class="table promotion_good_table table-hover text-center promotion-activity-type1">
+                                    <table class="table promotion_good_table table-hover text-center promotion-activity-type1
+                                        @if(! in_array($promotion->activity_type, ['limit','quantity'])) dis-no @endif
+                                    ">
                                         <tbody class="tableTbody">
 
                                         </tbody>
                                     </table>
-                                    <table class="table promotion_good_table table-bordered table-hover text-center promotion-activity-type2 dis-no">
+                                    <table class="table promotion_good_table table-bordered table-hover text-center promotion-activity-type2
+                                    @if(! in_array($promotion->activity_type, ['reduce','return','discount','wholesale'])) dis-no @endif
+                                    ">
                                         <thead>
                                         <tr>
                                             <td>商品图片</td>
@@ -921,5 +950,64 @@
             coupons:[],
             sum:0
         };
+
+        function upload_img(img){
+            var _this = $(img);
+            var img_name = _this.attr("name");
+            var url = "{{secure_route('promotion.imgUpload')}}";
+            _this.wrap("<form id="+img_name+" action="+url+" method='post' enctype='multipart/form-data'></form>");
+            $("#"+img_name).ajaxSubmit({
+                data: {
+                    "_token": "{{csrf_token()}}",
+                    "img_name": img_name
+                },
+                beforeSend: function() {
+                    _this.siblings('.add').html('正在上传...');
+                    _this.attr({ disabled: "disabled" })
+                },
+                uploadProgress: function(event, position, total, percentComplete) {
+                    console.log('进度'+percentComplete);
+                },
+                success: function(data) {
+                    console.log(data);
+                    _this.unwrap();
+                    _this.removeAttr("disabled");
+                    if (data.status == 200) {
+                        toastr.success(data.msg);
+                        $('.promotion-pic').attr('src', data.content);
+                        $('input[name=poster_pic]').val(data.content);
+                    } else {
+                        toastr.warning(data.msg);
+                    }
+                },
+                error:function(xhr){
+                    _this.unwrap();
+                    _this.removeAttr("disabled");
+                    toastr.error(xhr.responseText+ "图片上传失败");
+                }
+            });
+        }
+        //当用户上传商品图片时
+        $('.add-upload').on('change','.png-add',function(event){
+            var _file = this;
+            var reader = new FileReader();
+            reader.onload = function(evt){
+                var image = new Image();
+                image.onload = function () {
+                    // if (this.width == this.height && this.width >= 500 && this.width <= 1000 && this.height >= 500 && this.height <= 1000) {
+                    upload_img(_file);
+                    // } else {
+                    //     layer.msg('图片大小不符合要求，请重试。', {icon: 2});
+                    // return false;
+                    // }
+                };
+                image.src = evt.target.result;
+            };
+            if(typeof(_file.files[0])=='object'){
+                reader.readAsDataURL(_file.files[0]);
+            }
+
+            event.stopPropagation();
+        });
     </script>
 @endsection

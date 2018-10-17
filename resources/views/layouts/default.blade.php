@@ -49,7 +49,7 @@
     <script src="{{asset('assets/plugins/toastr/toastr.min.js')}}"></script>
     <script src="{{asset('assets/plugins/layui/layer.js')}}"></script>
     <script src="{{asset('assets/plugins/sweetalert/sweetalert-dev.js')}}"></script>
-
+    <script src="{{asset('assets/plugins/jquery-form/jquery.form.js')}}"></script>
     @yield('css')
 </head>
 <!-- ADD THE CLASS fixed TO GET A FIXED HEADER AND SIDEBAR LAYOUT -->
