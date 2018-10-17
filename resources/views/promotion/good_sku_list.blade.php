@@ -65,7 +65,7 @@
                 <td>
                     <input type="hidden" name="sku_id{{$val->id}}[]" value="{{$kv->id}}"/>
                     <input type="hidden" name="sku_str{{$val->id}}[]" value="{{$kv->value_ids}}"/>
-                    {{$kv->stock_price}}
+                    {{$kv->supply_price}}
                 </td>
                 <td data-price="10">
                     10

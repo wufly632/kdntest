@@ -7,7 +7,7 @@
     <link rel="stylesheet"
           href="{{ asset('/assets/admin-lte/bower_components/bootstrap-datepicker/dist/css/bootstrap-datepicker.min.css') }}">
     <link rel="stylesheet"
-          href="{{ asset('/assets/admin-/bower_components/bootstrap-daterangepicker/daterangepicker.css') }}">
+          href="{{ asset('/assets/admin-lte/bower_components/bootstrap-daterangepicker/daterangepicker.css') }}">
     <style>
         .text-padding-top {
             padding-top: 6px;
@@ -134,7 +134,7 @@
                                     <div class="col-xs-3">
                                         <input type="hidden" name="poster_pic" value="{{$promotion->poster_pic}}">
                                         <div class="add-upload">
-                                            <img src="{{$promotion->poster_pic ?? 'http://placehold.it/150x100'}}" alt="" class="promotion-pic" width="150px" height="150px">
+                                            <img src="{{$promotion->poster_pic ?: 'http://placehold.it/150x100'}}" alt="" class="promotion-pic" width="150px" height="150px">
                                             <input type="file" class="png-add" name="img_file">
                                         </div>
                                     </div>
