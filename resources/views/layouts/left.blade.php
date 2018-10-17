@@ -31,12 +31,12 @@
                 <a href="#">
                     <i class="fa fa-dashboard"></i> <span>类目属性</span>
                     <span class="pull-right-container">
-              <i class="fa fa-angle-left pull-right"></i>
-            </span>
+                      <i class="fa fa-angle-left pull-right"></i>
+                    </span>
                 </a>
                 <ul class="treeview-menu">
                     <li><a data-target-url="category" href="{{secure_route('category.index')}}"><i
-                                    class="fa fa-circle-o"></i> 分类管理</a></li>
+                                    class="fa fa-circle-o"></i> 类目管理</a></li>
                     <li><a data-target-url="attribute" href="{{secure_route('attribute.index')}}"><i
                                     class="fa fa-circle-o"></i> 属性管理</a></li>
                 </ul>
@@ -46,8 +46,8 @@
                     <i class="fa fa-files-o"></i>
                     <span>商品管理</span>
                     <span class="pull-right-container">
-              <span class="label label-primary pull-right">4</span>
-            </span>
+                      <i class="fa fa-angle-left pull-right"></i>
+                    </span>
                 </a>
                 <ul class="treeview-menu">
                     <li><a data-target-url="good" href="{{secure_route('good.index')}}"><i class="fa fa-circle-o"></i>商品列表</a>
@@ -59,7 +59,7 @@
                     <i class="fa fa-pie-chart"></i>
                     <span>营销管理</span>
                     <span class="pull-right-container">
-                      <small class="label pull-right bg-green">new</small>
+                      <i class="fa fa-angle-left pull-right"></i>
                     </span>
                 </a>
                 <ul class="treeview-menu">
@@ -74,22 +74,25 @@
                     <i class="fa fa-users"></i>
                     <span>用户管理</span>
                     <span class="pull-right-container">
-                      <small class="label pull-right bg-green">new</small>
+                      <i class="fa fa-angle-left pull-right"></i>
                     </span>
                 </a>
                 <ul class="treeview-menu">
                     <li><a data-target-url="users" href="{{secure_route('users.index')}}"><i
-                                    class="fa fa-circle-o"></i>普通用户管理</a></li>
+                                    class="fa fa-circle-o"></i>会员管理</a></li>
                     <li><a data-target-url="supplierusers" href="{{secure_route('supplierusers.index')}}"><i
                                     class="fa fa-circle-o"></i>商家管理</a></li>
                     <li><a data-target-url="adminusers" href="{{secure_route('adminusers.index')}}"><i
-                                    class="fa fa-circle-o"></i>管理员管理</a></li>
+                                    class="fa fa-circle-o"></i>用户管理</a></li>
                 </ul>
             </li>
             <li class="treeview">
                 <a href="#">
                     <i class="fa fa-th-list"></i>
                     <span>订单管理</span>
+                    <span class="pull-right-container">
+                      <i class="fa fa-angle-left pull-right"></i>
+                    </span>
                 </a>
                 <ul class="treeview-menu">
                     <li><a data-target-url="orders" href="{{secure_route('orders.index')}}"><i
@@ -100,6 +103,9 @@
                 <a href="#">
                     <i class="fa fa-sitemap"></i>
                     <span>网站设置</span>
+                    <span class="pull-right-container">
+                      <i class="fa fa-angle-left pull-right"></i>
+                    </span>
                 </a>
                 <ul class="treeview-menu">
                     <li><a data-target-url="banners" href="{{secure_route('banners.index')}}"><i
