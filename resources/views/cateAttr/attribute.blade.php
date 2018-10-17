@@ -3,6 +3,7 @@
     {{trans('common.system_name')}}
 @endsection
 @section('css')
+    <link rel="stylesheet" href="{{asset('assets/admin-lte/plugins/iCheck/all.css')}}">
     <style type="text/css">
         .content-item{
             height: 100%;
@@ -143,6 +144,10 @@ $defaultSelectAttribute = count($attribute_list)>0?$attribute_list[0]:0;
                                     <li>
                                         <span class="mess-name">属性名(英文):</span>
                                         <span class="mess-key" v-text = "attribute_info.en_name"></span>
+                                    </li>
+                                    <li>
+                                        <span class="mess-name">属性类型:</span>
+                                        <span class="mess-key" v-text = "attribute_info.type == 1 ? '标准化属性' : '自定义文本'"></span>
                                     </li>
                                     <li>
                                         <span class="mess-name">排序值:</span>
@@ -485,7 +490,7 @@ $defaultSelectAttribute = count($attribute_list)>0?$attribute_list[0]:0;
                         attributes_values_data.alias = attribute.alias_name;
                         //更新属性关联类别列表
                         attributes_categories_data.items = attribute.categories;
-                        //更新编辑Form默认信息
+                        //更新编辑//渲染属性值列表Form默认信息
                         updateEditFormDefaultInfo(attribute);
                         add_edit_attribute_value_data.attribute_id = attribute.id;
                         /* 切换属性成功 */
@@ -515,6 +520,7 @@ $defaultSelectAttribute = count($attribute_list)>0?$attribute_list[0]:0;
             add_edit_attribute_data.name = attribute.name;
             add_edit_attribute_data.en_name = attribute.en_name;
             add_edit_attribute_data.alias_name = attribute.alias_name;
+            add_edit_attribute_data.type = attribute.type;
             $("input[type='radio'][name='type'][value='"+ attribute.type +"']").iCheck('check');
             add_edit_attribute_data.sort = attribute.sort;
         }

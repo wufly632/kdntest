@@ -33,7 +33,7 @@
             <div class="row">
                 <div class="col-xs-12" style="height: 50px;">
                     <div class="box box-default">
-                        <div class="col-xs-1 table-center" style="background-color: #293846;height: 50px;">
+                        {{--<div class="col-xs-1 table-center" style="background-color: #293846;height: 50px;">
                             <label for="" style="color: white;line-height: 50px;">状态：</label>
                         </div>
                         <div class="col-xs-2 table-center" style="background-color: #e0e3e6;height: 50px;">
@@ -44,26 +44,26 @@
                                 <i class="fa fa-fw fa-mail-reply-all"></i>
                                 <label for="" style="color: #777777;line-height: 50px;">返回到列表页</label>
                             </div>
-                        </a>
-                        <div class="col-xs-7 table-center" style="background-color: #e0e3e6;height: 50px;">
-                            <div class="col-xs-3"></div>
+                        </a>--}}
+                        <div class="col-xs-12 table-center" style="background-color: #e0e3e6;height: 50px;">
+                            <div class="col-xs-7"></div>
                             @if(in_array($good->status, \App\Entities\Good\Good::$auditSave))
-                            <div class="col-xs-2">
+                            <div class="col-xs-1">
                                 <button type="button" class="btn btn-block btn-success btn-lg btn-edit" data-toggle="modal" data-target="#modal-default">编辑</button>
                             </div>
                             @endif
                             @if(in_array($good->status, \App\Entities\Good\Good::$auditPass))
-                            <div class="col-xs-2">
+                            <div class="col-xs-1">
                                 <button type="button" class="btn btn-block btn-success btn-lg auditPass btn-edit">审核通过</button>
                             </div>
                             @endif
                             @if(in_array($good->status, \App\Entities\Good\Good::$auditReturn))
-                            <div class="col-xs-2">
+                            <div class="col-xs-1">
                                 <button type="button" class="btn btn-block btn-info btn-lg auditReturn btn-edit">退回修改</button>
                             </div>
                             @endif
                             @if(in_array($good->status, \App\Entities\Good\Good::$auditReject))
-                            <div class="col-xs-2">
+                            <div class="col-xs-1">
                                 <button type="button" class="btn btn-block btn-warning btn-lg reject btn-edit">拒绝</button>
                             </div>
                             @endif
@@ -78,7 +78,7 @@
                         <div class="box-body">
                             <!-- 第一行 -->
                             <div class="col-xs-12">
-                                <div class="form-group col-xs-4">
+                                <div class="form-group col-xs-5">
                                     <label for="inputEmail3" class="col-sm-4 control-label">商品类目：</label>
 
                                     <div class="col-sm-8" style="padding-top: 8px;">
@@ -89,7 +89,7 @@
 
                             <!-- 第二行 -->
                             <div class="col-xs-12">
-                                <div class="form-group col-xs-4">
+                                <div class="form-group col-xs-5">
                                     <label for="inputEmail3" class="col-sm-4 control-label">品牌：</label>
 
                                     <div class="col-sm-8">
@@ -100,7 +100,7 @@
 
                             <!-- 第三行 -->
                             <div class="col-xs-12">
-                                <div class="form-group col-xs-4">
+                                <div class="form-group col-xs-5">
                                     <label for="inputPassword3" class="col-sm-4 control-label">货号：</label>
                                     <div class="col-sm-8">
                                         <input type="text" class="form-control" id="number" placeholder="" value="{{$good->good_code}}" readonly>
@@ -110,7 +110,7 @@
 
                             <!-- 第四行 -->
                             <div class="col-xs-12">
-                                <div class="form-group col-xs-4">
+                                <div class="form-group col-xs-5">
                                     <label for="inputPassword3" class="col-sm-4 control-label">商品名称：</label>
                                     <div class="col-sm-8">
                                         <input type="text" class="form-control" id="goods_name" placeholder="" value="{{$good->good_title}}" readonly>
@@ -190,7 +190,7 @@
                                                         </td>
                                                     @endforeach
                                                     <td class="table-center">
-                                                        <label for="">￥：</label>{{$sku->supply_price}}
+                                                        <label for=""></label>{{$sku->supply_price}}
                                                     </td>
                                                     <td class="table-center col-sm-2">
                                                         <div class="col-sm-12">
@@ -221,13 +221,13 @@
                                                             <div class="form-group col-xs-12">
                                                                 <label for="inputEmail3" class="col-sm-2 control-label">商品名称：</label>
                                                                 <div class="col-sm-10">
-                                                                    <input type="text" class="form-control"  placeholder="" value="{{$good->brand_name}}" readonly="">
+                                                                    <input type="text" class="form-control" value="{{$good->good_title}}" readonly="">
                                                                 </div>
                                                             </div>
                                                             <div class="form-group col-xs-12">
                                                                 <label for="inputEmail3" class="col-sm-2 control-label">title：</label>
                                                                 <div class="col-sm-10">
-                                                                    <input type="text" class="form-control" name="good_en_title" placeholder="" value="">
+                                                                    <input type="text" class="form-control" name="good_en_title"  value="{{$good->good_en_title}}">
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -236,13 +236,13 @@
                                                                 <div class="form-group col-xs-12">
                                                                     <label for="inputEmail3" class="col-sm-2 control-label">{{$attr->name}}：</label>
                                                                     <div class="col-sm-10">
-                                                                        <input type="text" class="form-control" placeholder="" value="{{$good->attr_ids}}" readonly="">
+                                                                        <input type="text" class="form-control"  value="{{$attr->ch_attr_value}}" readonly="">
                                                                     </div>
                                                                 </div>
                                                                 <div class="form-group col-xs-12">
                                                                     <label for="inputEmail3" class="col-sm-2 control-label">{{$attr->en_name}}：</label>
                                                                     <div class="col-sm-10">
-                                                                        <input type="text" class="form-control" placeholder="" value="" name="attr_id[{{$attr->attr_id}}]">
+                                                                        <input type="text" class="form-control" value="{{$attr->en_attr_value}}" name="attr_id[{{$attr->attr_id}}]">
                                                                     </div>
                                                                 </div>
                                                             </div>

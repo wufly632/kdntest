@@ -95,8 +95,8 @@
                                 <tr class="text-center">
                                     <th>商品图片</th>
                                     <th>商品信息</th>
-                                    <th>采购价</th>
-                                    <th>售价</th>
+                                    <th>采购价(￥)</th>
+                                    <th>售价($)</th>
                                     <th>历史销量</th>
                                     <th>库存数量</th>
                                     <th>商品状态</th>
@@ -117,10 +117,10 @@
                                             <span>货号：{{$good->good_code}}</span><br>
                                         </td>
                                         <td class="table-center">
-                                            <label for="">￥：</label>{{$good->supply_price}}
+                                            <label for="">{{$good->supply_price}}</label>
                                         </td>
                                         <td class="table-center">
-                                            <label for="">￥：</label>{{$good->price}}
+                                            <label for="">{{$good->price}}</label>
                                         </td>
                                         <td class="table-center">{{$good->orders}}</td>
                                         <td class="table-center">{{$good->good_stock}}</td>

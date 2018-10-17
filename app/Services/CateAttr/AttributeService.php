@@ -50,10 +50,12 @@ class AttributeService{
     public function getAttributeCategories($attribute_categories_array)
     {
         $categories = [];
-        foreach ($attribute_categories_array as $attribute_categories){
-            $category = $attribute_categories->category;
-            $category->name = app(CategoryPresenter::class)->getCatePathName($category->category_ids);
-            array_push($categories, $category);
+        foreach ($attribute_categories_array as $key => $attribute_categories){
+            if ($key <= 100) {
+                $category = $attribute_categories->category;
+                $category->name = app(CategoryPresenter::class)->getCatePathName($category->category_ids);
+                array_push($categories, $category);
+            }
         }
         return $categories;
     }

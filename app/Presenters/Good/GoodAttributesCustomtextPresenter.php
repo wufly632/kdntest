@@ -16,7 +16,7 @@ class GoodAttributesCustomtextPresenter implements GoodAttributesPresenterInterf
     public function showGoodAttributes($key, $category_attributes, $good_attributes)
     {
         if(! $category_attributes) return '';
-        $showStr = '<input type="text" class="form-control" placeholder="" readonly value="'.$good_attributes[$key][0].'">';
+        $showStr = '<input type="text" class="form-control" placeholder="" readonly value="'.($good_attributes[$key][0] ?? '').'">';
         return $showStr;
     }
 }

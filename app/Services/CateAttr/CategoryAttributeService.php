@@ -78,7 +78,7 @@ class CategoryAttributeService{
      * @param int $categoryId
      * @return array
      */
-    public function getNotStandardAttr($category_id)
+    public function getNotStandardAttr($category_id, $good_category_attrs)
     {
         $categoryAttributes = CategoryAttribute::join('admin_attribute', 'admin_attribute.id', '=', 'admin_goods_category_attribute.attr_id')
             ->where([
@@ -88,6 +88,12 @@ class CategoryAttributeService{
             ])->get(['admin_attribute.name', 'admin_goods_category_attribute.attr_id', 'admin_attribute.en_name', 'admin_goods_category_attribute.id']);
         if (! $categoryAttributes) {
             return [];
+        }
+        $good_category_attrs = $good_category_attrs->pluck(null,'attr_id');
+        foreach ($categoryAttributes as &$categoryAttribute)
+        {
+            $categoryAttribute->ch_attr_value = isset($good_category_attrs[$categoryAttribute->attr_id]) ? $good_category_attrs[$categoryAttribute->attr_id]->value_ids : '';
+            $categoryAttribute->en_attr_value = isset($good_category_attrs[$categoryAttribute->attr_id]) ? $good_category_attrs[$categoryAttribute->attr_id]->value_name : '';
         }
         return $categoryAttributes;
     }

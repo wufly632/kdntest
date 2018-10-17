@@ -79,7 +79,7 @@ class GoodsController extends Controller
         // 分类信息
         $cate = Category::find($good->category_id);
         // 获取商品类目下的所有非标准属性
-        $notstandardAttr = $this->categoryAttributeService->getNotStandardAttr($good->category_id);
+        $notstandardAttr = $this->categoryAttributeService->getNotStandardAttr($good->category_id,$good->getAttrValue);
         return view('goods.audit', compact('categoryAttributes', 'picAttributeId', 'goodSkus', 'good', 'cate', 'notstandardAttr'));
     }
 

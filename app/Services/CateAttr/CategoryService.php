@@ -273,20 +273,25 @@ class CategoryService{
     public function updateCategoryAttribute($request)
     {
         $attribute = app(AttributeService::class)->getAttributeByPk($request->attribute_id);
+        $data = [
+            'category_id' => $request->category_id,
+            'attr_type' => $request->type,
+            'attr_id'   => $request->attribute_id,
+            'is_required' => $request->is_required,
+            'is_image'    => $request->is_image,
+            'is_diy'      => $request->is_diy,
+            'is_detail'   => $request->is_detail,
+            'created_at'  => Carbon::now()->toDateTimeString(),
+        ];
+        if ($attribute->type == 1) {//标准化属性
+            $data['attr_values'] = implode(',', $request->values_id);
+            $data['check_type'] = $request->check_type;
+        } else {
+            $data['attr_values'] = '';
+            $data['check_type'] = 0;
+        }
         try {
             DB::beginTransaction();
-            $data = [
-                'category_id' => $request->category_id,
-                'attr_type' => $request->type,
-                'attr_id'   => $request->attribute_id,
-                'attr_values' => implode(',', $request->values_id),
-                'is_required' => $request->is_required,
-                'check_type'  => $request->check_type,
-                'is_image'    => $request->is_image,
-                'is_diy'      => $request->is_diy,
-                'is_detail'   => $request->is_detail,
-                'created_at'  => Carbon::now()->toDateTimeString(),
-            ];
             $this->categoryAttribute->updateOrCreate(['category_id' => $request->category_id, 'attr_id' => $request->attribute_id],$data);
             DB::commit();
             return ApiResponse::success('', '操作成功!');
