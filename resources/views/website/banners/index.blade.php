@@ -38,13 +38,17 @@
                                     <label for="type" class="control-label col-sm-4">类型</label>
                                     <div class="col-sm-8">
                                         <select name="type" id="type" class="form-control">
-                                            <option value="1">PC</option>
+                                            <option value="1" selected>PC</option>
                                             <option value="2">移动设备</option>
                                         </select>
                                     </div>
                                 </div>
-                                <div class="col-sm-4">
+                                <div class="col-sm-2">
                                     <input type="submit" class="btn-sm btn-info">
+                                </div>
+                                <div class="col-sm-2">
+                                    <input type="button" class="btn-sm btn-primary" value="创建" id="create-banner"
+                                           data-target-uri="{{ secure_route('banners.create') }}">
                                 </div>
                             </form>
                         </div>
@@ -65,7 +69,7 @@
                                     <tr>
                                         <td>{{ $banner->title }}</td>
                                         <td><img src="{{ $banner->src }}" alt="{{ $banner->title }}"
-                                                 title="{{ $banner->title }}"> <span class="text-info">点击查看大图</span>
+                                                 title="{{ $banner->title }}" width="300px;">
                                         </td>
                                         <td>{{ $banner->describe }}</td>
                                         <td>@if($banner->type==1)PC端
@@ -80,7 +84,8 @@
                                                     修改
                                                 </button>
                                                 <button class="btn btn-danger order-delete"
-                                                        data-target-uri="{{ secure_route('banners.destroy',['id'=>$banner->id]) }}">
+                                                        data-target-uri="{{ secure_route('banners.destroy',['id'=>$banner->id]) }}"
+                                                        id="banner-delete">
                                                     删除
                                                 </button>
                                             </div>
@@ -89,6 +94,9 @@
                                 @endforeach
                                 </tbody>
                             </table>
+                            <div class="pull-right">
+                                {{ $banners->links() }}
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -102,6 +110,32 @@
     <script>
         $('.order-modify').click(function () {
             showInfo('banner修改', $(this).attr('data-target-uri'))
+        });
+        $('#create-banner').click(function () {
+            showInfo('banner创建', $(this).attr('data-target-uri'))
+        });
+        $('#banner-delete').click(function () {
+            let _clickEle = $(this);
+            layer.confirm('确定删除此用户', {
+                btn: ['删除', '取消'] //按钮
+            }, function () {
+                axios.delete(_clickEle.attr('data-target-uri')).then(function (res) {
+                    if (res.status === 200) {
+                        toastr.options.timeOut = 0.5;
+                        toastr.options.onHidden = function () {
+                            location.reload();
+                        };
+                        layer.closeAll();
+                        toastr.success('删除成功');
+                    } else {
+                        toastr.success('删除失败');
+                    }
+                }).catch(function (error) {
+                    toastr.success('删除失败');
+                });
+            }, function () {
+
+            })
         });
     </script>
 @endsection

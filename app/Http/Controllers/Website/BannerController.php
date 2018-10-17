@@ -2,9 +2,12 @@
 
 namespace App\Http\Controllers\Website;
 
+use App\Services\Api\ApiResponse;
+use App\Services\Api\CommonService;
 use App\Services\Website\BannerService;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Validation\ValidationException;
 
 class BannerController extends Controller
 {
@@ -24,8 +27,14 @@ class BannerController extends Controller
     public function index()
     {
         //
-
-        return view('website.banners.index', ['banners' => $this->bannerService->getAllBanner()]);
+        $option = [];
+        if (\request()->filled('type')) {
+            $option = array_merge($option, ['type' => \request()->get('type')]);
+        }
+        if (\request()->filled('name')) {
+            $option = array_merge($option, [['name', 'like', '%' . \request()->get('name') . '%']]);
+        }
+        return view('website.banners.index', ['banners' => $this->bannerService->getAllBanner($option)]);
     }
 
     /**
@@ -36,6 +45,7 @@ class BannerController extends Controller
     public function create()
     {
         //
+        return view('website.banners.edit');
     }
 
     /**
@@ -46,7 +56,23 @@ class BannerController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        try {
+            $validator = $this->validate($request,
+                $rules = [
+                    'title' => 'required',
+                    'src' => 'required',
+                    'describe' => '',
+                    'link' => 'required',
+                    'type' => 'required',
+                    'sort' => 'required'
+                ]
+            );
+            $this->bannerService->createBannerInfo($validator);
+            return ApiResponse::success();
+        } catch (\Exception $e) {
+            return ApiResponse::failure(g_API_ERROR, $e->getMessage());
+        }
+
     }
 
     /**
@@ -82,7 +108,22 @@ class BannerController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        try {
+            $validator = $this->validate($request,
+                $rules = [
+                    'title' => 'required',
+                    'src' => 'required',
+                    'describe' => '',
+                    'link' => 'required',
+                    'type' => 'required',
+                    'sort' => 'required'
+                ]
+            );
+            $this->bannerService->updateBannerInfo($validator, $id);
+            return ApiResponse::success();
+        } catch (\Exception $e) {
+            return ApiResponse::failure(g_API_ERROR, $e->getMessage());
+        }
     }
 
     /**
@@ -93,6 +134,37 @@ class BannerController extends Controller
      */
     public function destroy($id)
     {
-        //
+        try {
+            $this->bannerService->deleteBannerInfo($id);
+            return ApiResponse::success();
+        } catch (\Exception $e) {
+            return ApiResponse::failure(g_API_ERROR, '删除失败');
+        }
+    }
+
+    public function uploadImages(Request $request)
+    {
+        $img = $request->file('banner');
+        if ($request->hasFile('banner') && $img->isValid()) {
+            $ext = $img->getClientOriginalExtension();
+            if (!in_array(strtolower($ext), ['jpg', 'png', 'bmp', 'wbmp'])) {
+                return ApiResponse::failure(g_API_ERROR, '图片格式不正确，请检查!');
+            }
+            $directory = 'banner';
+            $ali = env('APP_ENV', 'local') == 'production';
+            $urlInfo = app(CommonService::class)->uploadFile($file = 'banner', $bucket = 'cucoe', $directory, $ali, false, false);
+            if ($urlInfo) {
+                if ($ali) {
+                    return ApiResponse::success($urlInfo['oss-request-url'], '图片上传成功');
+                } else {
+                    return ApiResponse::success($urlInfo, '图片上传成功');
+                }
+            } else {
+                return ApiResponse::failure(g_API_ERROR, '图片上传失败!');
+            }
+        } else {
+            return ApiResponse::failure(g_API_ERROR, '图片上传失败!');
+        }
+
     }
 }

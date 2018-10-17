@@ -7,13 +7,14 @@
         <div class="col-sm-6" style="padding-top: 76px;">
             <img :src="src" alt="" width="100%">
         </div>
-        <form action="{{ secure_route('banners.update',['id'=>$banner->id]) }}" class="form-horizontal col-sm-6"
+        <form class="form-horizontal col-sm-6"
               id="banner-form">
             <div class="h3 text-center" style="padding: 10px;">banner修改</div>
             <div class="form-group">
                 <label for="title" class="col-sm-2 control-label text-right">标题</label>
                 <div class="col-sm-8">
-                    <input type="text" name="title" id="title" class="form-control" value="{{ $banner->title }}">
+                    <input type="text" name="title" id="title" class="form-control"
+                           value="@if(isset($banner->title)){{ $banner->title }}@endif">
                 </div>
             </div>
             <div class="form-group">
@@ -25,25 +26,37 @@
             <div class="form-group">
                 <label for="link" class="col-sm-2 control-label text-right">链接</label>
                 <div class="col-sm-8">
-                    <input type="text" name="link" id="link" class="form-control" value="{{ $banner->link }}">
+                    <input type="text" name="link" id="link" class="form-control"
+                           value="@if(isset($banner->link)){{ $banner->link }}@endif">
                 </div>
             </div>
             <div class="form-group">
                 <label for="describe" class="col-sm-2 control-label text-right">描述</label>
                 <div class="col-sm-8">
                     <input type="text" name="describe" id="describe" class="form-control"
-                           value="{{ $banner->describe }}">
+                           value="@if(isset($banner->describe)){{ $banner->describe }}@endif">
                 </div>
             </div>
             <div class="form-group">
                 <label for="sort" class="col-sm-2 control-label text-right">排序</label>
                 <div class="col-sm-8">
-                    <input type="text" name="sort" id="sort" class="form-control" value="{{ $banner->sort }}">
+                    <input type="text" name="sort" id="sort" class="form-control"
+                           value="@if(isset($banner->sort)){{ $banner->sort }}@endif">
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="type" class="col-sm-2 control-label">类型</label>
+                <div class="col-sm-8">
+                    <select name="type" id="type" class="form-control">
+                        <option value="1">ＰＣ</option>
+                        <option value="2">移动设备</option>
+                    </select>
                 </div>
             </div>
             <div style="padding-top: 20px;">
                 <input type="button" class="btn btn-warning col-sm-offset-2" @click="closeWindow" value="取消">
-                <input type="button" class="btn btn-success col-sm-offset-4" @click="formSubmit" value="修改">
+                <input type="button" id="banner-modify" class="btn btn-success col-sm-offset-4" @click="formSubmit"
+                       value="@if(isset($banner->id))修改@else添加@endif">
             </div>
         </form>
     </div>
@@ -52,75 +65,73 @@
     <script src="{{asset('/assets/js/bower_components/axios/dist/axios.min.js')}}"></script>
     <script src="{{asset('/assets/js/bower_components/vue/dist/vue.min.js')}}"></script>
     <script>
-
-        console.log($('#banner-form').serialize());
         var index = parent.layer.getFrameIndex(window.name);
-        {{--$('#send-confirm').on('click', function () {--}}
-        {{--var toastrMsg;--}}
-        {{--var _index = $(this);--}}
-        {{--$.ajax({--}}
-        {{--type: 'post',--}}
-        {{--data: $('#send-confirm-form').serialize(),--}}
-        {{--url: "{{ secure_route('orders.sendconfirm',['id'=>1]) }}",--}}
-        {{--dataType: 'json',--}}
-        {{--beforeSend: function () {--}}
-        {{--_index.attr('disabled', true);--}}
-        {{--_index.html('保存中...');--}}
-        {{--console.log('发送中')--}}
-        {{--},--}}
-        {{--success: function (res) {--}}
-        {{--console.log(res);--}}
-        {{--if (res.status === 200) {--}}
-        {{--toastr.options.timeOut = 0.5;--}}
-        {{--toastr.options.onHidden = function () {--}}
-        {{--top.location.reload();--}}
-        {{--};--}}
-        {{--toastr.success('确认成功');--}}
-        {{--} else {--}}
-        {{--toastr.error(res.msg);--}}
-        {{--_index.attr('disabled', false);--}}
-        {{--_index.html('保存');--}}
-        {{--}--}}
-        {{--},--}}
-        {{--error: function (error) {--}}
-        {{--_index.attr('disabled', false);--}}
-        {{--_index.html('保存');--}}
-        {{--}--}}
-        {{--});--}}
-        {{--});--}}
-        $('#send-cancle').click(function () {
-            parent.layer.close(index);
-        });
-        // let that = this;
-        // let imgFile = $(this.$el).find('#imgLocal')[0].files[0];//取到上传的图片
-        // console.log($(this.$el).find('#imgLocal')[0].files);//由打印的可以看到，图片    信息就在files[0]里面
-        // let formData = new FormData();//通过formdata上传
-        // formData.append('file', imgFile);
-        // this.$http.post('图片上传接口', formData, {
-        //     method: 'post',
-        //     headers: {'Content-Type': 'multipart/form-data'}
-        // }).then(function (res) {
-        //     console.log(res.data);//
-        // }).catch(function (error) {
-        //     console.log(error);
-        // });
         var bannerBox = new Vue({
             el: '#banner-box',
             data: {
-                src: '{{ $banner->src }}'
+                src: '@if(isset($banner->src)){{ $banner->src }}@endif'
+            },
+            created: function () {
+                @if(isset($banner->type))
+                $('#type').val({{ $banner->type }});
+                @endif
             },
             methods: {
                 closeWindow: function (event) {
                     parent.layer.close(index);
                 }, formSubmit: function (event) {
+                    let that = this;
+                    let bannerModify = $('#banner-modify');
+                    let postUri;
+                    let errorMsg;
+                    let successMsg;
+                    let requestMethod;
 
-                    console.log(src);
+                    @if(isset($banner->id))
+                        postUri = "{{ secure_route('banners.update',['id'=>$banner->id]) }}";
+                    errorMsg = '修改失败';
+                    successMsg = '修改成功';
+                    requestMethod = 'put';
+                    @else
+                        postUri = "{{ secure_route('banners.store') }}";
+                    errorMsg = '添加失败';
+                    successMsg = '添加成功';
+                    requestMethod = 'post';
+                            @endif
+                    let postData = $('#banner-form').serialize() + '&_method=' + requestMethod + '&src=' + this.src + '&_token=' + '{{ csrf_token() }}';
+                    bannerModify.attr('disable', true);
+                    bannerModify.html('保存中');
+                    axios.post(postUri, postData).then(function (res) {
+                        if (res.status === 200 && res.data.status === 200) {
+                            toastr.options.timeOut = 0.5;
+                            toastr.options.onHidden = function () {
+                                top.location.reload();
+                            };
+                            toastr.success(successMsg);
+                        } else {
+                            bannerModify.attr('disable', false);
+                            bannerModify.html('保存');
+                            toastr.error(errorMsg);
+                        }
+                    });
                 }, uploadImg: function (event) {
                     let that = this;
-                    let src = $('#src')[0].files[0];
+                    let elSrc = $('#src');
+                    let src = elSrc[0].files[0];
                     let formData = new FormData();
                     formData.append('banner', src);
-                    axios.post('')
+                    formData.append('_token', '{{ csrf_token() }}');
+
+                    axios.post("{{ secure_route('banners.upload') }}", formData, {headers: {'Content-Type': 'multipart/form-data'}}).then(function (res) {
+                        if (res.status === 200) {
+
+                            if (res.data.status === 200) {
+                                that.src = res.data.content;
+                            } else {
+                                toastr.error(res.data.msg);
+                            }
+                        }
+                    })
                 }
             }
         });
