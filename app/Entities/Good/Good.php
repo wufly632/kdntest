@@ -4,6 +4,7 @@ namespace App\Entities\Good;
 
 use App\Entities\CateAttr\GoodAttrValue;
 use App\Entities\Product\Product;
+use App\Entities\Supplier\SupplierUser;
 use Illuminate\Database\Eloquent\Model;
 use Prettus\Repository\Contracts\Transformable;
 use Prettus\Repository\Traits\TransformableTrait;
@@ -96,6 +97,15 @@ class Good extends Model implements Transformable
     public function getProduct()
     {
         return $this->hasOne(Product::class, 'id', 'id');
+    }
+
+    /**
+     * @function 获取供应商信息
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     */
+    public function getSupplier()
+    {
+        return $this->hasOne(SupplierUser::class, 'id', 'supplier_id');
     }
 
 }

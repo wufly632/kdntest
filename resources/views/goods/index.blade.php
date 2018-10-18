@@ -94,6 +94,7 @@
                                 <thead>
                                 <tr class="text-center">
                                     <th>商品图片</th>
+                                    <th>供应商</th>
                                     <th>商品信息</th>
                                     <th>采购价(￥)</th>
                                     <th>售价($)</th>
@@ -110,6 +111,11 @@
                                             <div class="mailbox-attachment-icon has-img" style="width: 80px;">
                                                 <img src="{{$good->main_pic}}" alt="" width="60px" height="60px">
                                             </div>
+                                        </td>
+                                        <td class="table-center">
+                                            <span>{{$good->getSupplier->name}}</span><br>
+                                            <span>{{$good->getSupplier->mobile}}</span><br>
+                                            <span>{{$good->getSupplier->email}}</span><br>
                                         </td>
                                         <td class="table-center">
                                             <span>ID：{{$good->id}}</span><br>
