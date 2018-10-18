@@ -119,6 +119,7 @@ Route::group(['middleware' => ['auth', 'web']], function () {
 
     //网站设置
     Route::group(['namespace' => 'Website'], function () {
+        Route::post('banners.uploadImages', 'BannerController@uploadImages')->name('banners.upload');
         Route::resources([
             'banners' => 'BannerController'
         ]);
