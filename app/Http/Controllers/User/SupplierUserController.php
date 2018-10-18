@@ -51,6 +51,7 @@ class SupplierUserController extends Controller
     public function store(SupplierUserCreateRequest $request)
     {
         $userRequest = $request->only(['name', 'mobile', 'email', 'password', 'status']);
+        $userRequest['password'] = \Hash::make($request->input('password'));
         $result = $this->supplierUserService->createUser($userRequest);
         if ($result['status'] != 200) {
             return ApiResponse::failure(g_API_ERROR, $result['msg']);
