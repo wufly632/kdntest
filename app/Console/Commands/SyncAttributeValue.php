@@ -64,8 +64,9 @@ class SyncAttributeValue extends Command
             // '手机数码属性.xlsx',
             // '美妆个护.xlsx',
             // '服装服饰类目.xlsx',
-            '孕婴童.csv',
+            // '孕婴童.csv',
             // '箱包配饰.xlsx'
+            '类目增加.xlsx'
         ];
         foreach ($arr as $i) {
             $excel_path = 'storage'.DIRECTORY_SEPARATOR.'excel'.DIRECTORY_SEPARATOR.'import/attribute'.DIRECTORY_SEPARATOR.$i;
@@ -74,8 +75,8 @@ class SyncAttributeValue extends Command
                 //中文属性和属性值
                 $ch    = $reader1->toArray();
                 //英文属性和属性值
-                // $reader2 = $reader->getSheet(1);
-                // $en      = $reader2->toArray();
+                $reader2 = $reader->getSheet(1);
+                $en      = $reader2->toArray();
 
                 foreach ($ch as $key => $item) {
                     if ($key == 0) continue;
@@ -91,7 +92,7 @@ class SyncAttributeValue extends Command
                         $attribute_data = [
                             'name' => $attr_name,
                             'alias_name' => $item[6],
-                            // 'en_name' => ucwords(strtolower($en[$key][5])),
+                            'en_name' => ucwords(strtolower($en[$key][5])),
                             'type' => $type, //标准化文本
                             'status' => 1,
                             'created_at' => Carbon::now()->toDateTimeString()
@@ -106,7 +107,7 @@ class SyncAttributeValue extends Command
                             $attr_data = [
                                 'attribute_id' => $attribute_id,
                                 'name'         => $va,
-                                // 'en_name'      => ucwords(strtolower($en[$key][$k])),
+                                'en_name'      => ucwords(strtolower($en[$key][$k])),
                                 'created_at'   => Carbon::now()->toDateTimeString()
                             ];
                             AttributeValue::insertGetId($attr_data);
