@@ -13,3 +13,5 @@ yarn-error.log
 .DS_Store
 package-lock.json
 /public/uploads
+/composer.lock
+/public/mix-manifest.json
