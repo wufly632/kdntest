@@ -81,29 +81,29 @@ class SyncEnglish extends Command
                     //翻译类目
                     //一级类目
                     $category_one = Category::where(['name' => $ch[0], 'level' => 1])->first();
-                    $category_one->en_name = $en[$key][0];
+                    $category_one->en_name = ucwords(strtolower($en[$key][0]));
                     $category_one->save();
                     // 二级类目
                     $category_two = Category::where(['name' => $ch[1], 'level' => 2])->first();
-                    $category_two->en_name = $en[$key][1];
+                    $category_two->en_name = ucwords(strtolower($en[$key][1]));
                     $category_two->save();
                     // 三级类目
                     $category_three = Category::where(['name' => $ch[2], 'level' => 3])->first();
-                    $category_three->en_name = $en[$key][2];
+                    $category_three->en_name = ucwords(strtolower($en[$key][2]));
                     $category_three->save();
                     // 翻译属性
                     $attribute = Attribute::where(['name' => $ch[5]])->first();
-                    $attribute->en_name = $en[$key][5];
+                    $attribute->en_name = ucwords(strtolower($en[$key][5]));
                     $attribute->save();
                     //属性值翻译
                     foreach ($ch as $k => $va) {
                         if ($k < 7) continue;
                         if ( !$va) continue;
                         $attr_value = AttributeValue::where(['attribute_id' => $attribute->id, 'name' => $va])->first();
-                        $attr_value->en_name = $en[$key][$k];
+                        $attr_value->en_name = ucwords(strtolower($en[$key][$k]));
                         $attr_value->save();
                     }
-                    $this->info($ch.'-'.$key.'-'.$attribute->name.'完成');
+                    $this->info($ch[2].'-'.$key.'-'.$attribute->name.'完成');
                 }
             });
         }
