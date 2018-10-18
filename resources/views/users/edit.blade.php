@@ -1,108 +1,113 @@
+@extends('layouts.blank')
 @section('css')
     <style>
-        .text-padding-left {
-            padding-left: 1em;
+        #personer-edit div.form-group {
+            margin: 30px;
         }
 
-        .panel-bordered {
-            border: 1px solid #e4eaec;
-        }
-
-        .block-padding-top {
-            padding-top: 40px;
+        .form-content {
+            margin-top: 50px;
         }
     </style>
 @endsection
-@extends('layouts.default')
 @section('content')
-    <div class="content-wrapper">
-        <section class="content-header">
-            <h1>
-                编辑用户
-                <small>编辑</small>
-            </h1>
-            <ol class="breadcrumb">
-                <li><a href="#"><i class="fa fa-dashboard"></i> 主页</a></li>
-                <li><a href="#">用户</a></li>
-                <li class="active">编辑</li>
-            </ol>
-        </section>
-        <section class="content">
-            <div class="row">
-                <div class="col-xs-12">
-                    <div>
-                        <h1 class="h2 text-padding-left">
-                            <i class="fa fa-user"></i>
-                            <span class="h3 text-padding-left">编辑用户</span>
-                        </h1>
-                    </div>
-                    <div>
-                        <form action="@if(isset($user->id)){{ secure_route('users.update',['id'=>$user->id]) }}@else{{ secure_route('users.store') }}@endif"
-                              class="" method="post">
-                            @if(isset($user)){{ method_field('put') }}@endif
-                            {{ csrf_field() }}
-                            <div class="row block-padding-top">
-                                <div class="col-md-8">
-                                    <div class="panel panel-bordered">
-                                        <div class="panel-body">
-                                            <div class="form-group">
-                                                <label for="user_alias" class="control-label">用户昵称:</label>
-                                                <input type="text" id="user_alias" name="user_alias"
-                                                       class="form-control" value="@if(isset($user->user_alias)){{ $user->user_alias }}@endif">
-                                            </div>
-                                            <div class="form-group">
-                                                <label for="email" class="control-label">邮箱:</label>
-                                                <input type="text" id="email" name="email" class="form-control"
-                                                       value="@if(isset($user->email)){{ $user->email }}@endif">
-                                            </div>
-                                            <div class="form-group">
-                                                <label for="firstname" class="control-label">姓:</label>
-                                                <input type="text" id="firstname" name="firstname" class="form-control"
-                                                       value="@if(isset($user->firstname)){{ $user->firstname }}@endif">
-                                            </div>
-                                            <div class="form-group">
-                                                <label for="lastname" class="control-label">名:</label>
-                                                <input type="text" id="lastname" name="lastname" class="form-control"
-                                                       value="@if(isset($user->lastname)){{ $user->lastname }}@endif">
-                                            </div>
-                                            <div class="form-group">
-                                                <label for="password" class="control-label">密码:</label>
-                                                <input type="password" id="password" name="password"
-                                                       class="form-control">
-                                            </div>
-                                            <div class="form-group">
-                                                <label for="user_status" class="control-label">状态</label>
-                                                <select name="status" id="user_status" class="form-control">
-                                                    <option value="1">正常</option>
-                                                    <option value="2">冻结</option>
-                                                </select>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-md-4">
-                                    <div class="panel panel-bordered">
-                                        <div class="panel-body">
-                                            <div class="">
-
-                                            </div>
-                                            <div class="form-group">
-                                                <label for="logo">头像:@if(isset($user->logo))<img width="200px" src="{{ $user->logo }}"
-                                                                                                alt="">@endif</label>
-                                                <input type="file" id="logo" name="logo" class="form-control">
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="block-padding-top">
-                                <input type="submit" class="btn btn-success col-md-offset-11" value="保存">
-                            </div>
-
-                        </form>
-                    </div>
+    <div class="form-title">
+        <h1 class="h2 text-center">@if(isset($user->id))编辑商家@else添加用户@endif</h1>
+    </div>
+    <div class="form-content">
+        <form id="user_add_edit" method="post"
+              class="form-horizontal">
+            {!! csrf_field() !!}
+            @if(isset($user->id))<input type="hidden" name="id"
+                                        value="{{ $user->id }}">{{ method_field('PUT') }}@endif
+            <div class="form-group">
+                <div class="col-xs-1"></div>
+                <label for="coupon_name" class="col-xs-2 control-label" for="email">
+                    邮箱：
+                </label>
+                <div class="col-xs-7">
+                    <input type="email" id="email" name="email"
+                           class="form-control"
+                           value="@if(isset($user->email)){{ $user->email }}@endif">
                 </div>
             </div>
-        </section>
+            <div class="form-group">
+                <div class="col-xs-1"></div>
+                <label for="password" class="col-xs-2 control-label">
+                    新密码：
+                </label>
+                <div class="col-xs-7">
+                    <input type="password" id="password" class="form-control" name="password">
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-xs-1"></div>
+                <label for="password_confirmation" class="col-xs-2 control-label">
+                    确认密码：
+                </label>
+                <div class="col-xs-7">
+                    <input type="password" id="password_confirmation" class="form-control" name="password_confirmation">
+                </div>
+            </div>
+            <div>
+                <button type="button" class="btn btn-danger col-xs-offset-3 cancel">取消</button>
+                <button type="button" class="btn btn-success col-xs-offset-4 save">保存</button>
+            </div>
+        </form>
     </div>
-@stop
+@endsection
+@section('script')
+    <script src="{{ asset('/assets/js/bower_components/axios/dist/axios.min.js') }}"></script>
+    <script>
+        var index = parent.layer.getFrameIndex(window.name);
+
+        $('#user_add_edit').on('click', '.save', function () {
+            var toastrMsg;
+            var _index = $(this);
+            $.ajax({
+                type: 'post',
+                data: $('#user_add_edit').serialize(),
+                url: '123',
+                dataType: 'json',
+                beforeSend: function () {
+                    _index.attr('disabled', true);
+                    _index.html('保存中...');
+                    @if(isset($user->id))
+                        toastrMsg = '修改成功';
+                    this.url = "{{ secure_route('users.update',['id'=>$user->id]) }}";
+                    this.data._method = 'PUT';
+                    @else
+                        this.url = "{{ secure_route('users.store') }}";
+                    toastrMsg = '添加成功';
+                    @endif
+                },
+                success: function (res) {
+                    if (res.status === 200) {
+                        toastr.options.timeOut = 0.5;
+                        toastr.options.onHidden = function () {
+                            top.location.reload();
+                        };
+                        toastr.success(toastrMsg);
+                    } else {
+                        toastr.error(res.data.msg);
+                        _index.attr('disabled', false);
+                        _index.html('保存');
+                    }
+                },
+                error: function (error) {
+                    var json = eval("(" + error.responseText + ")");
+                    for (index in json.errors) {
+                        toastr.error(json.errors[index][0]);
+                        break;
+                    }
+                    _index.attr('disabled', false);
+                    _index.html('保存');
+                }
+            });
+        });
+        $('.cancel').click(function () {
+            parent.layer.close(index);
+        });
+
+    </script>
+@endsection

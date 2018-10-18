@@ -13,7 +13,7 @@ class UserCreateRequest extends FormRequest
      */
     public function authorize()
     {
-        return false;
+        return true;
     }
 
     /**
@@ -25,6 +25,9 @@ class UserCreateRequest extends FormRequest
     {
         return [
             //
+            'email' => 'required|email',
+            'password' => 'required|confirmed',
+            'password_confirmation' => 'required'
         ];
     }
 }

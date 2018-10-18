@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers\User;
 
+use App\Http\Requests\User\UserCreateRequest;
+use App\Services\Api\ApiResponse;
 use App\Services\User\UserService;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -45,9 +47,16 @@ class UsersController extends Controller
      * @param  \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(UserCreateRequest $request)
     {
         //
+        try {
+            $this->userService->createUser($request);
+            return ApiResponse::success();
+        } catch (\Exception $e) {
+            return ApiResponse::failure(g_API_ERROR, '创建失败');
+        }
+
     }
 
     /**
@@ -98,6 +107,11 @@ class UsersController extends Controller
     public function destroy($id)
     {
         //
-
+        try {
+            $this->userService->updateUser($id, ['status' => 2]);
+            return ApiResponse::success();
+        } catch (\Exception $e) {
+            return ApiResponse::failure(g_API_ERROR, $e->getMessage());
+        }
     }
 }

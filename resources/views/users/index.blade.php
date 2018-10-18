@@ -63,8 +63,11 @@
                                 </div>
                                 <div class="col-xs-1"><input type="button" id="user_search" value="查找"
                                                              class="btn btn-success"></div>
-                                <div class="col-xs-1"><a href="{{ secure_route('users.create') }}"><input type="button" id="create_user" value="创建新用户"
-                                                                        class="btn btn-success"></a></div>
+                                <div class="col-xs-1"><input type="button"
+                                                             id="create_user"
+                                                             value="创建新用户"
+                                                             class="btn btn-success">
+                                </div>
                             </form>
                         </div>
                         <hr>
@@ -90,7 +93,7 @@
                                     <tr>
                                         <td>{{ $user->id }}</td>
                                         <td class="header-image-block"><img
-                                                    src="{{ $user->cucoe_id }}"
+                                                    src="{{ $user->logo }}"
                                                     alt="" class="header-image">
                                         </td>
                                         <td>{{ $user->cucoe_id }}</td>
@@ -98,17 +101,13 @@
                                         <td>{{ $user->email }}</td>
                                         <td>{{ $user->amount_money }}</td>
                                         <td>{{ $user->status }}</td>
-                                        <td>{{ $user->create_at }}</td>
+                                        <td>{{ $user->created_at }}</td>
                                         <td>{{ $user->last_login_datetime }}</td>
                                         <td id="bread-actions" class="no-sort no-click">
-                                            <div class="btn-group">
-                                                <a href="{{ secure_route('users.show',['id'=>$user->id]) }}" type="text"
-                                                   class="btn btn-sm btn-warning"><span class="fa fa-eye"></span> 查看</a>
-                                                <a href="{{ secure_route('users.edit',['id'=>$user->id]) }}" type="text"
-                                                   class="btn btn-sm btn-primary"><span class="fa fa-edit"></span> 编辑</a>
-                                                <a href="" data-user-id="{{ $user->id }}" type="text"
-                                                   class="btn btn-sm btn-danger"><span class="fa fa-trash"></span> 删除</a>
-                                            </div>
+                                            <button class="btn btn-warning" id="user-forbid"
+                                                    data-target-uri="{{ secure_route('users.destroy',['id'=>$user->id]) }}"><span
+                                                        class="fa fa-lock"></span> 禁用
+                                            </button>
                                         </td>
                                     </tr>
                                 @endforeach
@@ -125,5 +124,35 @@
     </div>
 @stop
 @section('script')
+    <script src="{{ asset('/assets/js/bower_components/axios/dist/axios.min.js') }}"></script>
+    <script src="{{ asset('/assets/js/plugincommon.js') }}"></script>
+    <script>
+        $('#create_user').click(function () {
+            showInfo('新建用户', '{{ secure_route("users.create") }}')
+        });
+        $('#user-forbid').click(function () {
+            let _clickEle = $(this);
+            layer.confirm('确定删除此用户', {
+                btn: ['删除', '取消'] //按钮
+            }, function () {
+                console.log(_clickEle.attr('data-target-uri'));
+                axios.delete(_clickEle.attr('data-target-uri')).then(function (res) {
+                    if (res.status === 200) {
+                        toastr.options.timeOut = 0.5;
+                        toastr.options.onHidden = function () {
+                            location.reload();
+                        };
+                        layer.closeAll();
+                        toastr.success('删除成功');
+                    } else {
+                        toastr.success('删除失败');
+                    }
+                }).catch(function (error) {
+                    toastr.success('删除失败');
+                });
+            }, function () {
 
+            })
+        });
+    </script>
 @endsection

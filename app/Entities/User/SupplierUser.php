@@ -24,9 +24,4 @@ class SupplierUser extends Model implements Transformable
     protected $fillable = ['name', 'mobile', 'email', 'password', 'status'];
 
     protected $visible = ['id', 'name', 'mobile', 'email', 'password', 'amount_money', 'status', 'create_at'];
-
-    public function setPasswordAttribute($value)
-    {
-        $this->attributes['password'] = Hash::make($value);
-    }
 }

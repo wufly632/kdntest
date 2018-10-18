@@ -46,7 +46,7 @@ class UserService
 
     public function createUser($request)
     {
-        $this->userValidator->with($request->only(['user_alias', 'email', 'firstname', 'lastname', 'password', 'status']))->passesOrFail();
+        $this->userRepository->create($request->all());
     }
 
     public function transform($request)
@@ -54,9 +54,9 @@ class UserService
 
     }
 
-    public function updateUser($request)
+    public function updateUser($id, $option)
     {
-
+        $this->userRepository->update($option, $id);
     }
 
 }

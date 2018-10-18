@@ -93,7 +93,9 @@ class SupplierUserController extends Controller
     public function update(SupplierUserUpdateRequest $request, $id)
     {
         $userRequest = $request->only(['name', 'mobile', 'email', 'password', 'password_confirmation', 'status']);
-
+        if ($request->filled('password')) {
+            $userRequest['password'] = \Hash::make($request->input('password'));
+        }
         $result = $this->supplierUserService->updateUser($userRequest, $id);
         if ($result['status'] != 200) {
             return ApiResponse::failure(g_API_ERROR, $result['msg']);
