@@ -20,6 +20,7 @@ use App\Entities\Product\ProductSku;
 use App\Entities\Product\ProductSkuImages;
 use App\Repositories\Good\GoodRepository;
 use App\Repositories\Product\ProductRepository;
+use App\Services\Api\ApiResponse;
 use App\Validators\Good\GoodValidator;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
@@ -270,9 +271,9 @@ class GoodService{
         $good = $this->good->find($request->id);
         $good->status = Good::RETURN;
         if ($good->save()){
-            return true;
+            return ApiResponse::success('退回成功');
         }
-        return false;
+        return ApiResponse::failure(g_API_ERROR, '退回失败,请重试');
     }
 
     /**
