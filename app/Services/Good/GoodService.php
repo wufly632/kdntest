@@ -8,6 +8,7 @@ namespace App\Services\Good;
 
 use App\Criteria\Good\GoodCodeCriteria;
 use App\Criteria\Good\GoodIdCriteria;
+use App\Criteria\Good\GoodStatusCriteria;
 use App\Criteria\Good\GoodTitleCriteria;
 use App\Entities\CateAttr\CategoryAttribute;
 use App\Entities\CateAttr\GoodAttrValue;
@@ -70,6 +71,7 @@ class GoodService{
         $this->good->pushCriteria(new GoodTitleCriteria($request->good_title));
         $this->good->pushCriteria(new GoodIdCriteria($request->id));
         $this->good->pushCriteria(new GoodCodeCriteria($request->good_code));
+        $this->good->pushCriteria(new GoodStatusCriteria($request->status));
         return $this->good->orderBy($orderBy, $sort)->paginate($length);
     }
 

@@ -1,5 +1,6 @@
 @extends('layouts.default')
 @section('content')
+    @inject('categoryPresenter', "App\Presenters\CateAttr\CategoryPresenter")
     <!-- Content Wrapper. Contains page content -->
     <div class="content-wrapper">
         <!-- Content Header (Page header) -->
@@ -44,6 +45,20 @@
                                         <label for="inputPassword3" class="col-sm-4 control-label">商品货号：</label>
                                         <div class="col-sm-8">
                                             <input type="text" class="form-control" id="goods_number" placeholder="" name="good_code" value="{{old('good_code')}}">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-xs-12">
+                                    <div class="form-group col-xs-4">
+                                        <label for="inputPassword3" class="col-sm-4 control-label">商品状态：</label>
+                                        <div class="col-sm-8">
+                                            <select class="form-control select2" name="status"
+                                                    style="width: 100%;">
+                                                <option value="">请选择</option>
+                                                @foreach(\App\Entities\Good\Good::$allStatus as $key => $status)
+                                                    <option value="{{$key}}">{{$status}}</option>
+                                                @endforeach
+                                            </select>
                                         </div>
                                     </div>
                                 </div>
@@ -121,6 +136,7 @@
                                             <span>ID：{{$good->id}}</span><br>
                                             <span>名称：{{$good->good_title}}</span><br>
                                             <span>货号：{{$good->good_code}}</span><br>
+                                            <span>类目：{{$categoryPresenter->getCatePathName($good->category_path)}}</span><br>
                                         </td>
                                         <td class="table-center">
                                             <label for="">{{$good->supply_price}}</label>
