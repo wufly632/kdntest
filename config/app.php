@@ -121,9 +121,20 @@ return [
     |
     */
 
-    'log' => env('APP_LOG', 'single'),
+    'log' => env('APP_LOG', 'daily'),
 
     'log_level' => env('APP_LOG_LEVEL', 'debug'),
+
+    /**
+     * 日志位置
+     */
+    'log_path' => '/var/log/nginx/app/' . env('APP_NAME', 'laravel'),
+
+
+    /**
+     * 日志文件名称
+     */
+    'log_name' => env('APP_NAME', 'laravel'),
 
     /*
     |--------------------------------------------------------------------------

@@ -28,4 +28,9 @@ class ProductSku extends Model implements Transformable
     {
         return $this->hasMany(ProductAttrValue::class,'sku_id', 'id');
     }
+
+    public function getProduct()
+    {
+        return $this->hasOne(Product::class, 'id', 'good_id');
+    }
 }

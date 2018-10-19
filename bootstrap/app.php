@@ -41,6 +41,11 @@ $app->singleton(
     App\Exceptions\Handler::class
 );
 
+/*$app->configureMonologUsing(function($monolog) use ($app) {
+    $configureLogging = new \App\Services\Log\ConfigureLogging();
+    $configureLogging->configureHandlers($app, $app->log);
+});*/
+
 /*
 |--------------------------------------------------------------------------
 | Return The Application

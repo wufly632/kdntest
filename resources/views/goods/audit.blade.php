@@ -64,7 +64,7 @@
                             @endif
                             @if(in_array($good->status, \App\Entities\Good\Good::$auditReject))
                             <div class="col-xs-1">
-                                <button type="button" class="btn btn-block btn-warning btn-lg reject btn-edit">拒绝</button>
+                                <button type="button" class="btn btn-block btn-warning btn-lg auditReject btn-edit">拒绝</button>
                             </div>
                             @endif
                         </div>
@@ -285,9 +285,9 @@
 
                                         <div class="col-sm-8">
                                             <div class="timeline-body">
-                                                @foreach($sku_images as $sku_image)
+                                                @foreach($sku_images->pluck('src')->unique() as $sku_image)
                                                     <div class="col-sm-2">
-                                                        <img src="{{$sku_image['src']}}" alt="..."
+                                                        <img src="{{$sku_image}}" alt="..."
                                                              class="margin w100h100">
                                                         {{--<button type="button" class="btn btn-block btn-default btn-xs" disabled>
                                                             已设置为主图
@@ -502,7 +502,7 @@
             },
             success: function (res) {
                 if (res.status == 200) {
-                    toastr.success(res.content);
+                    toastr.success(res.msg);
                     window.location.reload();
                 } else {
                     toastr.error(res.msg);
