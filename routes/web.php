@@ -50,8 +50,8 @@ Route::group(['middleware' => ['auth', 'web']], function () {
         Route::get('/all', ['as' => 'attribute.all', 'uses' => 'AttributeController@getAllAttributes']);
     });
     Route::group(['prefix' => 'attrvalue', 'namespace' => 'CateAttr'], function () {
-        Route::post('updateOrInsert', ['as' => 'attrvalue.update_or_insert', 'uses' => 'AttrValueController@updateOrInsert']);
-        Route::post('/delete', ['as' => 'attrvalue.delete', 'uses' => 'AttrValueController@delete']);
+        Route::post('updateOrInsert', ['as' => 'attrvalue.update_or_insert', 'uses' => 'AttrvalueController@updateOrInsert']);
+        Route::post('/delete', ['as' => 'attrvalue.delete', 'uses' => 'AttrvalueController@delete']);
     });
 
     //商品模块
