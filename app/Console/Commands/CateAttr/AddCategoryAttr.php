@@ -58,7 +58,7 @@ class AddCategoryAttr extends Command
             '24266'
         ];
         $category = [
-            1 => [1,798,508],
+            1 => [172],
             2 => [],
             3 => []
         ];
