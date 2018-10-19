@@ -71,6 +71,10 @@ class AddCategoryAttr extends Command
                 $category_three = Category::whereIn('parent_id', $category_two)->pluck('id');
                 foreach ($category_three as $id) {
                     $category_attribute = CategoryAttribute::where(['category_id' => $id, 'attr_id' => $attr_id])->first();
+                    if (! $category_attribute->attr_values) {
+                        ding($id.'-'.$attr_id);
+                        die;
+                    }
                     $attr_values = array_unique(array_merge(explode(',', $category_attribute->attr_values), $attr_value_ids));
                     $category_attribute->attr_values = implode(',', $attr_values);
                     if ($category_attribute->save()) {
