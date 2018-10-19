@@ -101,6 +101,19 @@
             </li>
             <li class="treeview">
                 <a href="#">
+                    <i class="fa fa-th-list"></i>
+                    <span>发货管理</span>
+                    <span class="pull-right-container">
+                      <i class="fa fa-angle-left pull-right"></i>
+                    </span>
+                </a>
+                <ul class="treeview-menu">
+                    <li><a data-target-url="shipOrder" href="{{secure_route('shipOrder.prelist')}}"><i
+                                    class="fa fa-circle-o"></i>待发货商品</a></li>
+                </ul>
+            </li>
+            <li class="treeview">
+                <a href="#">
                     <i class="fa fa-sitemap"></i>
                     <span>网站设置</span>
                     <span class="pull-right-container">

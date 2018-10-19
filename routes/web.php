@@ -124,4 +124,9 @@ Route::group(['middleware' => ['auth', 'web']], function () {
             'banners' => 'BannerController'
         ]);
     });
+
+    //发货管理
+    Route::group(['namespace' => 'ShipOrder', 'prefix' => 'shipOrder'], function(){
+       Route::get('preList', ['as' => 'shipOrder.prelist', 'uses' => 'PreShipOrderController@index']);
+    });
 });
