@@ -46,6 +46,24 @@ class ShipOrder extends Model implements Transformable
      */
     public function getSupplier()
     {
-        return $this->hasOne(SupplierUser::class, 'supplier_id', 'id');
+        return $this->hasOne(SupplierUser::class, 'id', 'supplier_id');
+    }
+
+    /**
+     * @function 获取发货单快递信息
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function getExpress()
+    {
+        return $this->hasMany(ShipOrderExpress::class, 'ship_order_id', 'id');
+    }
+
+    /**
+     * @function 获取明细
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function getItems()
+    {
+        return $this->hasMany(ShipOrderItem::class, 'ship_order_id', 'id');
     }
 }

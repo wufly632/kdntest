@@ -26,13 +26,13 @@ class CouponRequest extends Request
         return [
             'coupon_name'      => 'required',
             'coupon_price'     => 'required|numeric',
-            'coupon_purpose'   => 'required|in:1,2,3',
+            'coupon_purpose'   => 'required|in:1,2,3,4',
             'use_type'         => 'required|in:1,2',
             'coupon_grant'     => 'required',
             'use_days'         => 'required_if:use_type,1',
             'coupon_use'       => 'required_if:use_type,2',
             'count_limit'      => 'required|in:1,2',
-            'coupon_number'    => 'required_if:count_limit,2|numeric',
+            // 'coupon_number'    => 'required_if:count_limit,2|numeric',
             'coupon_use_price' => 'required|numeric'
         ];
     }

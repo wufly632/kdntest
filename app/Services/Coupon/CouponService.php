@@ -22,6 +22,7 @@ use App\Repositories\Coupon\CouponRepository;
 use App\Services\Api\ApiResponse;
 use App\Validators\Coupon\CouponValidator;
 use Carbon\Carbon;
+use function Composer\Autoload\includeFile;
 use Illuminate\Support\Facades\Auth;
 use DB,Request;
 use Illuminate\Support\Facades\Input;
@@ -76,7 +77,15 @@ class CouponService
             $coupon = $request->only(['coupon_name','coupon_price', 'coupon_use_price', 'coupon_number',
                                       'use_type', 'use_days', 'coupon_use_startdate', 'coupon_use_enddate',
                                       'coupon_grant_startdate', 'coupon_grant_enddate', 'coupon_purpose',
-                                      'coupon_remark']);
+                                      'coupon_remark','coupon_key']);
+            if ($request->coupon_purpose == 4) {
+                if (! $request->coupon_key) {
+                    return ApiResponse::failure(g_API_ERROR, '请填写券口令');
+                }
+                if ($this->coupon->findWhere(['coupon_key' => $request->coupon_key])->count() > 0) {
+                    return ApiResponse::failure(g_API_ERROR, '券口令重复');
+                }
+            }
             if ($request->count_limit == 1) {
                 $coupon['coupon_number'] = 0;
             }
@@ -111,10 +120,18 @@ class CouponService
     {
         try {
             DB::beginTransaction();
-            $coupon = $request->only(['id','coupon_name','coupon_price', 'coupon_use_price', 'coupon_number',
+            $coupon = $request->only(['id','coupon_name','coupon_price', 'coupon_key','coupon_use_price', 'coupon_number',
                                       'use_type', 'use_days', 'coupon_use_startdate', 'coupon_use_enddate',
                                       'coupon_grant_startdate', 'coupon_grant_enddate', 'coupon_purpose',
                                       'coupon_remark']);
+            if ($request->coupon_purpose == 4) {
+                if (! $request->coupon_key) {
+                    return ApiResponse::failure(g_API_ERROR, '请填写券口令');
+                }
+                if ($this->coupon->findWhere([['coupon_key','=', $request->coupon_key], ['id', '<>', $request->id]])->count() > 0) {
+                    return ApiResponse::failure(g_API_ERROR, '券口令重复');
+                }
+            }
             if ($request->count_limit == 1) {
                 $coupon['coupon_number'] = 0;
             }

@@ -11,6 +11,7 @@
 
 namespace App\Http\Controllers\ShipOrder;
 
+use App\Entities\ShipOrder\ShipOrder;
 use App\Http\Controllers\Controller;
 use App\Services\ShipOrderService;
 use Illuminate\Http\Request;
@@ -35,9 +36,20 @@ class ShipOrderController extends Controller
         return view('shipOrder.pre_list', compact('pre_ship_orders'));
     }
 
+    /**
+     * @function 发货单列表页
+     * @param Request $request
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     public function index(Request $request)
     {
         $ship_orders = $this->shipOrderService->getList($request);
         return view('shipOrder.list', compact('ship_orders'));
+    }
+
+    public function shipOrderDetail(ShipOrder $shipOrder)
+    {
+        $shipOrderItems = $shipOrder->getItems;
+        return view('shipOrder.ship_order_detail', compact('shipOrder', 'shipOrderItems'));
     }
 }

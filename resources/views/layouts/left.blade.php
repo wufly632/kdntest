@@ -108,10 +108,8 @@
                     </span>
                 </a>
                 <ul class="treeview-menu">
-                    <li><a data-target-url="shipOrder" href="{{secure_route('shipOrder.prelist')}}"><i
+                    <li><a data-target-url="preShipOrder" href="{{secure_route('shipOrder.prelist')}}"><i
                                     class="fa fa-circle-o"></i>待发货商品</a></li>
-                </ul>
-                <ul class="treeview-menu">
                     <li><a data-target-url="shipOrder" href="{{secure_route('shipOrder.list')}}"><i
                                     class="fa fa-circle-o"></i>发货单列表</a></li>
                 </ul>

@@ -134,7 +134,11 @@
                                 <tbody>
                                 @foreach($ship_orders as $order)
                                     <tr>
-                                        <td>{{$order->id}}</td>
+                                        <td>
+                                            <a href="javascript:;" onclick="catShipOrder({{$order->id}})">
+                                                {{$order->id}}
+                                            </a>
+                                        </td>
                                         <td>{{ $order->getSupplier->name }}</td>
                                         <td>{{ $order->num }}</td>
                                         <td>
@@ -143,10 +147,22 @@
                                         <td>
                                             {{ $order->released }}
                                         </td>
-                                        <td>{{ $order->num }}</td>
-                                        <td>{{ $order->supply_price }}</td>
-                                        <td>{{ $order->num*$order->supply_price }}</td>
                                         <td>{{ $order->created_at }}</td>
+                                        <td>
+                                            @if($order->getExpress)
+                                                @foreach($order->getExpress as $express)
+                                                <span>{{$express->shipper_code}}</span>
+                                                <span>{{$express->waybill_id}}</span>
+                                                @endforeach
+                                            @endif
+                                        </td>
+                                        <td>{{ $order->note }}</td>
+                                        <td>
+                                            <button class="btn btn-primary">添加备注</button>
+                                            <button class="btn btn-primary">添加物流</button>
+                                            <button class="btn btn-primary">异常关闭</button>
+                                        </td>
+
                                     </tr>
                                 @endforeach
                                 </tbody>
@@ -162,46 +178,21 @@
     </div>
 @stop
 @section('script')
-    <script src="{{ asset('/assets/js/bootstrap-modalmanager.js') }}"></script>
-    <script src="{{ asset('/assets/js/bootstrap-modal.js') }}"></script>
-    <script src="{{ asset('/assets/admin-lte/bower_components/moment/min/moment.min.js') }}"></script>
-    <script src="{{ asset('/assets/admin-lte/bower_components/bootstrap-daterangepicker/daterangepicker.js') }}"></script>
-    <script src="{{ asset('/assets/js/plugincommon.js') }}"></script>
-    <script src="{{asset('/assets/js/bower_components/axios/dist/axios.min.js')}}"></script>
     <script>
-        addDateRangePicker($('#created_at'));
-        if ("{{ old('from_type') }}") {
-            $('#from-type').val("{{ old('from_type') }}");
-        }
-        if ("{{ old('status') }}") {
-            $('#order-status').val("{{ old('status') }}");
-        }
-        $('.modal-content').css({'box-shadow': 'none'});
-        $('.send-good').click(function () {
-            showInfo('确认发货', $(this).attr('data-target-uri'));
-        });
-        $('.order-cancel').click(function () {
-            var _clickEle = $(this);
-            layer.confirm('<span class="text-danger">建议取消订单前与用户协商一致,避免不利影响</span>', {
-                btn: ['确定', '取消'] //按钮
-            }, function () {
-                axios.post(_clickEle.attr('data-target-uri')).then(function (res) {
-                    if (res.status === 200) {
-                        toastr.options.timeOut = 0.5;
-                        toastr.options.onHidden = function () {
-                            location.reload();
-                        };
-                        layer.closeAll();
-                        toastr.success('取消成功');
-                    } else {
-                        toastr.success('取消失败');
-                    }
-                }).catch(function () {
-                    toastr.success('取消失败');
-                });
-            }, function () {
-
+        function catShipOrder(id) {
+            layer.open({
+                type: 2,
+                skin: 'layui-layer-rim', //加上边框
+                area: ['80%','600px'],
+                fix: false, //不固定
+                shadeClose: true,
+                maxmin: true,
+                shade:0.4,
+                title: '发货单明细',
+                content: "/shipOrder/detail/"+id,
+                end: function(layero, index) {
+                }
             });
-        });
+        }
     </script>
 @endsection
