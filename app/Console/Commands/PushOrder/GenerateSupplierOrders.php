@@ -145,6 +145,7 @@ class GenerateSupplierOrders extends Command
         $sku = ProductSku::where(['id' => $sku_id])->first();
         $pre_ship_order = PreShipOrder::create([
            'sku_id' => $sku->id,
+           'good_id' => $sku->good_id,
            'supplier_id' => $sku->getProduct->supplier_id,
            'num' => $num,
            'confirmed_num' => 0,

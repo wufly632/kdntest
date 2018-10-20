@@ -11,16 +11,21 @@
 
 namespace App\Services;
 
-use App\Repositories\ShiperOrder\PreShipOrderRepository;
+use App\Repositories\ShipOrder\PreShipOrderRepository;
+use App\Repositories\ShipOrder\ShipOrderRepository;
 use Request;
 
 class ShipOrderService
 {
     protected $preShipOrder;
 
-    public function __construct(PreShipOrderRepository $preShipOrder)
+    protected $shipOrder;
+
+    public function __construct(PreShipOrderRepository $preShipOrder,
+                                ShipOrderRepository $shipOrder)
     {
         $this->preShipOrder = $preShipOrder;
+        $this->shipOrder = $shipOrder;
     }
 
     /**
@@ -33,7 +38,21 @@ class ShipOrderService
         Request::flash();
         $orderBy = $request->orderBy ?: 'id';
         $sort = $request->sort ?: 'desc';
-        $length = $request->length ?: 20;
+        $length = $request->length ?: 5;
         return $this->preShipOrder->orderBy($orderBy, $sort)->paginate($length);
+    }
+
+    /**
+     * @function 发货单列表
+     * @param Request $request
+     * @return mixed
+     */
+    public function getList($request)
+    {
+        Request::flash();
+        $orderBy = $request->orderBy ?: 'id';
+        $sort = $request->sort ?: 'desc';
+        $length = $request->length ?: 5;
+        return $this->shipOrder->orderBy($orderBy, $sort)->paginate($length);
     }
 }

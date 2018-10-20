@@ -35,7 +35,7 @@
         <section class="content-header">
             <h1>
                 发货管理
-                <small>待发货商品</small>
+                <small>发货单列表</small>
             </h1>
             <ol class="breadcrumb">
                 <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
@@ -120,38 +120,28 @@
                             <table class="table vertical-middle table-bordered text-center" id="vertical-middle">
                                 <thead>
                                 <tr>
-                                    <th>订单ID <span class="pull-right fa fa-gray fa-unsorted"></span></th>
-                                    <th>SKU ID <span class="pull-right fa fa-gray fa-unsorted"></span></th>
-                                    <th>商品ID <span class="pull-right fa fa-gray fa-unsorted"></span></th>
-                                    <th>产品信息 <span class="pull-right fa fa-gray fa-unsorted"></span></th>
+                                    <th>发货单ID <span class="pull-right fa fa-gray fa-unsorted"></span></th>
                                     <th>供应商信息 <span class="pull-right fa fa-gray fa-unsorted"></span></th>
                                     <th>订单需求量 <span class="pull-right fa fa-gray fa-unsorted"></span></th>
-                                    <th>供货价 <span class="pull-right fa fa-gray fa-unsorted"></span></th>
-                                    <th>总金额 <span class="pull-right fa fa-gray fa-unsorted"></span></th>
+                                    <th>状态 <span class="pull-right fa fa-gray fa-unsorted"></span></th>
+                                    <th>发货数量 <span class="pull-right fa fa-gray fa-unsorted"></span></th>
                                     <th>创建时间 <span class="pull-right fa fa-gray fa-unsorted"></span></th>
+                                    <th>物流信息 <span class="pull-right fa fa-gray fa-unsorted"></span></th>
+                                    <th>备注 <span class="pull-right fa fa-gray fa-unsorted"></span></th>
+                                    <th>操作 <span class="pull-right fa fa-gray fa-unsorted"></span></th>
                                 </tr>
                                 </thead>
                                 <tbody>
-                                @foreach($pre_ship_orders as $order)
+                                @foreach($ship_orders as $order)
                                     <tr>
                                         <td>{{$order->id}}</td>
-                                        <td>{{$order->sku_id}}</td>
-                                        <td>{{$order->good_id}}</td>
+                                        <td>{{ $order->getSupplier->name }}</td>
+                                        <td>{{ $order->num }}</td>
                                         <td>
-                                            <p class="good-image">
-                                                <img src="{{ $order->getSku->icon }}" title="商品图片"
-                                                                       alt="商品图片">
-                                            </p>
-                                            <div class="good-info text-left">
-                                                <p>{{ $order->getProduct->good_title ?? '' }}</p>
-                                                <p>{{ $order->getProduct->good_code ?? '' }}</p>
-                                                <p>
-
-                                                </p>
-                                            </div>
+                                            {{ \App\Entities\ShipOrder\ShipOrder::$allStatus[$order->status] }}
                                         </td>
                                         <td>
-                                            {{ $order->getSupplier->name }}
+                                            {{ $order->released }}
                                         </td>
                                         <td>{{ $order->num }}</td>
                                         <td>{{ $order->supply_price }}</td>
@@ -162,7 +152,7 @@
                                 </tbody>
                             </table>
                             <div class="pull-right">
-                                {{ $pre_ship_orders->links() }}
+                                {{ $ship_orders->links() }}
                             </div>
                         </div>
                     </div>

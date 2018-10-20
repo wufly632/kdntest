@@ -11,10 +11,11 @@
 
 namespace App\Http\Controllers\ShipOrder;
 
+use App\Http\Controllers\Controller;
 use App\Services\ShipOrderService;
 use Illuminate\Http\Request;
 
-class PreShipOrderController
+class ShipOrderController extends Controller
 {
     protected $shipOrderService;
 
@@ -28,9 +29,15 @@ class PreShipOrderController
      * @param Request $request
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
-    public function index(Request $request)
+    public function preIndex(Request $request)
     {
         $pre_ship_orders = $this->shipOrderService->getPreList($request);
         return view('shipOrder.pre_list', compact('pre_ship_orders'));
+    }
+
+    public function index(Request $request)
+    {
+        $ship_orders = $this->shipOrderService->getList($request);
+        return view('shipOrder.list', compact('ship_orders'));
     }
 }
