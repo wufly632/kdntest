@@ -555,6 +555,13 @@
                 var val = $(this).val();
                 $('.detail-box').find('.detail').addClass('hidden');
                 $('.detail-box').find('.'+val+'-detail').removeClass('hidden');
+                if (val == 'limit' || val == 'quantity') {
+                    $('.promotion-activity-type1').removeClass('dis-no');
+                    $('.promotion-activity-type2').addClass('dis-no');
+                } else {
+                    $('.promotion-activity-type2').removeClass('dis-no');
+                    $('.promotion-activity-type1').addClass('dis-no');
+                }
             });
         });
         addDateRangePicker($('#promotion_time'));

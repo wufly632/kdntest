@@ -114,10 +114,7 @@ class PromotionController extends Controller
             return ApiResponse::failure(g_API_ERROR, '请先选择活动的类型');
         }
         $result = $this->promotionService->addGoods($request);
-        if ($result['status'] == 200) {
-            return ApiResponse::success($result['content']);
-        }
-        return ApiResponse::failure(g_API_ERROR, $result['msg']);
+        return $result;
     }
 
     /**
