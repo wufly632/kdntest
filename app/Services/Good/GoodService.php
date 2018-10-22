@@ -300,8 +300,9 @@ class GoodService{
                 GoodSku::where(['id' => $sku_id])->update(['price' => $price]);
                 ProductSku::where(['id' => $sku_id])->update(['price' => $price]);
             }
-            $this->good->update(['good_en_title' => $request->good_en_title], $request->id);
-            $this->product->update(['good_en_title' => $request->good_en_title], $request->id);
+            $price = collect($request->good_sku['price'])->min();
+            $this->good->update(['good_en_title' => $request->good_en_title, 'price' => $price], $request->id);
+            $this->product->update(['good_en_title' => $request->good_en_title, 'price' => $price], $request->id);
             $this->good->update(['status' => Good::EDITED], $request->id);
             DB::commit();
             return true;
