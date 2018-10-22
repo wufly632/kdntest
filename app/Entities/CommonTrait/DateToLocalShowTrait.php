@@ -15,7 +15,142 @@ use Carbon\Carbon;
 
 trait DateToLocalShowTrait
 {
+    /**
+     * @function 创建时间转化
+     * @param $date
+     * @return Carbon
+     */
     public function getCreatedAtAttribute($date)
+    {
+        return Carbon::parse($date)->addHours(8);
+    }
+
+    /**
+     * @function 更新时间转化
+     * @param $date
+     * @return Carbon
+     */
+    public function getUpdatedAtAttribute($date)
+    {
+        return Carbon::parse($date)->addHours(8);
+    }
+
+    /**
+     * @function 审核时间转化
+     * @param $date
+     * @return Carbon
+     */
+    public function getAuditedAtAttribute($date)
+    {
+        return Carbon::parse($date)->addHours(8);
+    }
+
+    /**
+     * @function 拒绝时间转化
+     * @param $date
+     * @return Carbon
+     */
+    public function getRejectedAtAttribute($date)
+    {
+        return Carbon::parse($date)->addHours(8);
+    }
+
+    /**
+     * @function 删除时间转化
+     * @param $date
+     * @return Carbon
+     */
+    public function getDeletedAtAttribute($date)
+    {
+        return Carbon::parse($date)->addHours(8);
+    }
+
+    /**
+     * @function 付款时间转化
+     * @param $date
+     * @return Carbon
+     */
+    public function getPayAtAttribute($date)
+    {
+        return Carbon::parse($date)->addHours(8);
+    }
+
+    /**
+     * @function 发货时间转化
+     * @param $date
+     * @return Carbon
+     */
+    public function getDeliveryAtAttribute($date)
+    {
+        return Carbon::parse($date)->addHours(8);
+    }
+
+    /**
+     * @function 签收时间转化
+     * @param $date
+     * @return Carbon
+     */
+    public function getSignAtAttribute($date)
+    {
+        return Carbon::parse($date)->addHours(8);
+    }
+
+    /**
+     * @function 上架时间转化
+     * @param $date
+     * @return Carbon
+     */
+    public function getShelfAtAttribute($date)
+    {
+        return Carbon::parse($date)->addHours(8);
+    }
+
+    /**
+     * @function 组单时间转化
+     * @param $date
+     * @return Carbon
+     */
+    public function getConfirmedAtAttribute($date)
+    {
+        return Carbon::parse($date)->addHours(8);
+    }
+
+    /**
+     * @function 组单时间转化
+     * @param $date
+     * @return Carbon
+     */
+    public function getShippedAtAttribute($date)
+    {
+        return Carbon::parse($date)->addHours(8);
+    }
+
+    /**
+     * @function 部分到货时间转化
+     * @param $date
+     * @return Carbon
+     */
+    public function getPartlyinhouseAtAttribute($date)
+    {
+        return Carbon::parse($date)->addHours(8);
+    }
+
+    /**
+     * @function 全部到货时间转化
+     * @param $date
+     * @return Carbon
+     */
+    public function getAcceptanceAtAttribute($date)
+    {
+        return Carbon::parse($date)->addHours(8);
+    }
+
+    /**
+     * @function 关闭时间时间转化
+     * @param $date
+     * @return Carbon
+     */
+    public function getCloseAtAttribute($date)
     {
         return Carbon::parse($date)->addHours(8);
     }

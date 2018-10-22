@@ -108,10 +108,24 @@
                     </span>
                 </a>
                 <ul class="treeview-menu">
-                    <li><a data-target-url="preShipOrder" href="{{secure_route('shipOrder.prelist')}}"><i
-                                    class="fa fa-circle-o"></i>待发货商品</a></li>
-                    <li><a data-target-url="shipOrder" href="{{secure_route('shipOrder.list')}}"><i
-                                    class="fa fa-circle-o"></i>发货单列表</a></li>
+                    <li>
+                        <a data-target-url="preShipOrder" href="{{secure_route('shipOrder.prelist')}}">
+                            <i class="fa fa-circle-o"></i>
+                            待发货商品
+                        </a>
+                    </li>
+                    <li>
+                        <a data-target-url="shipOrder" href="{{secure_route('shipOrder.list')}}">
+                            <i class="fa fa-circle-o"></i>
+                            发货单列表
+                        </a>
+                    </li>
+                    <li>
+                        <a data-target-url="lacklist" href="{{secure_route('shipOrder.lacklist')}}">
+                            <i class="fa fa-circle-o"></i>
+                            缺货申请记录
+                        </a>
+                    </li>
                 </ul>
             </li>
             <li class="treeview">

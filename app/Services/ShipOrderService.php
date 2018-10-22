@@ -11,6 +11,7 @@
 
 namespace App\Services;
 
+use App\Entities\ShipOrder\GoodSkuLack;
 use App\Repositories\ShipOrder\PreShipOrderRepository;
 use App\Repositories\ShipOrder\ShipOrderRepository;
 use Request;
@@ -21,11 +22,15 @@ class ShipOrderService
 
     protected $shipOrder;
 
+    protected $goodSkuLack;
+
     public function __construct(PreShipOrderRepository $preShipOrder,
-                                ShipOrderRepository $shipOrder)
+                                ShipOrderRepository $shipOrder,
+                                GoodSkuLack $goodSkuLack)
     {
         $this->preShipOrder = $preShipOrder;
         $this->shipOrder = $shipOrder;
+        $this->goodSkuLack = $goodSkuLack;
     }
 
     /**
@@ -38,7 +43,7 @@ class ShipOrderService
         Request::flash();
         $orderBy = $request->orderBy ?: 'id';
         $sort = $request->sort ?: 'desc';
-        $length = $request->length ?: 5;
+        $length = $request->length ?: 20;
         return $this->preShipOrder->orderBy($orderBy, $sort)->paginate($length);
     }
 
@@ -54,5 +59,19 @@ class ShipOrderService
         $sort = $request->sort ?: 'desc';
         $length = $request->length ?: 5;
         return $this->shipOrder->orderBy($orderBy, $sort)->paginate($length);
+    }
+
+    /**
+     * @function 缺货申请记录
+     * @param $request
+     * @return mixed
+     */
+    public function getLackList($request)
+    {
+        Request::flash();
+        $orderBy = $request->orderBy ?: 'id';
+        $sort = $request->sort ?: 'desc';
+        $length = $request->length ?: 20;
+        return $this->goodSkuLack->orderBy($orderBy, $sort)->paginate($length);
     }
 }

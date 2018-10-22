@@ -47,9 +47,24 @@ class ShipOrderController extends Controller
         return view('shipOrder.list', compact('ship_orders'));
     }
 
+    /**
+     * @function 发货单明细
+     * @param ShipOrder $shipOrder
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     public function shipOrderDetail(ShipOrder $shipOrder)
     {
         $shipOrderItems = $shipOrder->getItems;
         return view('shipOrder.ship_order_detail', compact('shipOrder', 'shipOrderItems'));
+    }
+
+    /**
+     * @function 缺货申请记录
+     * @param Request $request
+     */
+    public function lackList(Request $request)
+    {
+        $lackList = $this->shipOrderService->getLackList($request);
+        return view('shipOrder.lack_list', compact('lackList'));
     }
 }

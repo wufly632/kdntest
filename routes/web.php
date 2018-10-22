@@ -130,5 +130,6 @@ Route::group(['middleware' => ['auth', 'web']], function () {
        Route::get('/preList', ['as' => 'shipOrder.prelist', 'uses' => 'ShipOrderController@preIndex']);
        Route::get('/list', ['as' => 'shipOrder.list', 'uses' => 'ShipOrderController@index']);
        Route::get('/detail/{shipOrder}', ['as' => 'shipOrder.detail', 'uses' => 'ShipOrderController@shipOrderDetail']);
+       Route::get('/lacklist', ['as' => 'shipOrder.lacklist', 'uses' => 'ShipOrderController@lackList']);
     });
 });
