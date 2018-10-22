@@ -300,7 +300,7 @@
 @stop
 @section('script')
     <script src="{{asset('/assets/js/bower_components/axios/dist/axios.min.js')}}"></script>
-    <script src="{{asset('/assets/js/bower_components/vue/dist/vue.min.js')}}"></script>
+    <script src="{{asset('/assets/admin/js/vue.min.js')}}"></script>
 
     <script>
         var progressBar = $('.progress-bar');
