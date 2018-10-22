@@ -2,7 +2,7 @@
 @section('css')
     <link rel="stylesheet"
           href="{{ asset('/assets/admin-lte/bower_components/bootstrap-daterangepicker/daterangepicker.css') }}">
-    <link rel="stylesheet" href="{{ asset('/assets/js/bower_components/select2/dist/css/select2.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('/assets/admin/css/select2.min.css') }}">
 @endsection
 @section('content')
     <div class="container" id="banner-box">
@@ -60,7 +60,7 @@
     <script src="{{ asset('/assets/js/plugincommon.js') }}"></script>
     <script src="{{ asset('/assets/js/bower_components/axios/dist/axios.min.js') }}"></script>
     <script src="{{ asset('/assets/admin/js/vue.min.js') }}"></script>
-    <script src="{{ asset('/assets/js/bower_components/select2/dist/js/select2.js') }}"></script>
+    <script src="{{ asset('/assets/admin/js/select2.min.js') }}"></script>
     <script>
         var index = parent.layer.getFrameIndex(window.name);
         var bannerBox = new Vue({
