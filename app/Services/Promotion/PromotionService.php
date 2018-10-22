@@ -163,7 +163,7 @@ class PromotionService
      */
     private function transform($request)
     {
-        $promotion['promotion'] = $request->only(['id','title','activity_type','is_all','pre_time','poster_pic']);
+        $promotion['promotion'] = $request->only(['id','title','activity_type','is_all','pre_time','poster_pic','h5_poster_pic']);
         $promotion['promotion']['stock'] = 0;
         list($start_time,$end_time) = get_time_range($request->promotion_time);
         $promotion['promotion']['start_at'] = $start_time;

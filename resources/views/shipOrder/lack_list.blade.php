@@ -123,7 +123,7 @@
                                     <td>ID <span class="pull-right fa fa-gray fa-unsorted"></span></td>
                                     <th>待发货ID <span class="pull-right fa fa-gray fa-unsorted"></span></th>
                                     <th>供应商信息 <span class="pull-right fa fa-gray fa-unsorted"></span></th>
-                                    <th>SKU ID <span class="pull-right fa fa-gray fa-unsorted"></span></th>
+                                    <th>SKU信息 <span class="pull-right fa fa-gray fa-unsorted"></span></th>
                                     <th>缺货数量 <span class="pull-right fa fa-gray fa-unsorted"></span></th>
                                     <th>申请时间 <span class="pull-right fa fa-gray fa-unsorted"></span></th>
                                     <th>申请原因 <span class="pull-right fa fa-gray fa-unsorted"></span></th>
@@ -141,7 +141,7 @@
                                             {{$lack->pre_ship_order_id}}
                                         </td>
                                         <td>
-
+                                            {{$lack->getSupplier->name}}
                                         </td>
                                         <td>
                                             {{$lack->sku_id}}
@@ -156,12 +156,13 @@
                                             {{$lack->apply_note}}
                                         </td>
                                         <td>
-                                            {{$lack->status}}
+                                            {{\App\Entities\ShipOrder\GoodSkuLack::$allStatus[$lack->status]}}
                                         </td>
                                         <td>
-
+                                            @if($lack->status == \App\Entities\ShipOrder\GoodSkuLack::WAIT_AUDIT)
+                                                <button class="btn btn-primary" onclick="lackAudit({{$lack->id}})">审核</button>
+                                            @endif
                                         </td>
-
                                     </tr>
                                 @endforeach
                                 </tbody>
@@ -189,6 +190,22 @@
                 shade:0.4,
                 title: '发货单明细',
                 content: "/shipOrder/detail/"+id,
+                end: function(layero, index) {
+                }
+            });
+        }
+
+        function lackAudit(id) {
+            layer.open({
+                type: 2,
+                skin: 'layui-layer-rim', //加上边框
+                area: ['55%','400px'],
+                fix: false, //不固定
+                shadeClose: true,
+                maxmin: true,
+                shade:0.4,
+                title: '缺货审核',
+                content: "/shipOrder/lackAudit/"+id,
                 end: function(layero, index) {
                 }
             });
