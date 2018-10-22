@@ -742,8 +742,39 @@
             });
             $('#myModal-one').on('click', 'ul li a', function(){
                 var url = $(this).attr('href');
-                if(url.indexOf('http://') == -1) return false;
-                getGoods('', url);
+                var page = $(this).html();
+                console.log(url);
+                $(this).attr('href', 'javascript:;');
+                /*if(url.indexOf('http://') == -1 || url.indexOf('https://') == -1){
+                    console.log(77);
+                    return false;
+                }*/
+                // getGoods('', url);
+                var _index = $(this);
+                $.ajax({
+                    type:'get',
+                    url:"{{secure_route('promotion.getGoods')}}",
+                    data:{is_ajax:1,page:page},
+                    beforeSend:function() {
+                        _index.attr('disabled', true);
+                    },
+                    success:function(data){
+                        console.log(data);
+                        $('#myModal-one').find('.seckill-modal').html(data);
+                        /*if (data.status == 200) {
+                            toastr.success(data.content);
+                            window.location.href = "{{secure_route('promotion.index')}}";
+                        } else {
+                            toastr.error(data.msg);
+                            _index.attr('disabled', false);
+                        }*/
+                    },
+                    error:function(data){
+                        var json=eval("("+data.responseText+")");
+                        toastr.error(json.msg);
+                        _index.attr('disabled', false);
+                    }
+                })
                 return false;
             });
             $('#promotion-form').on('click', '.submit', function (event) {

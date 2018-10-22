@@ -141,11 +141,13 @@ class PromotionController extends Controller
      */
     public function getGoods(Request $request)
     {
-        $result = $this->promotionService->getAblePromotionActivityGoods($request->activity_id, $request);
+        //获取可添加的促销活动商品
+        $promotion_goods = $this->promotionService->getAblePromotionActivityGoods($request->activity_id, $request);
+        // $result = $this->promotionService->getAblePromotionActivityGoods($request->activity_id, $request);
         /*if ($request->is_ajax == 1) {
             return ApiResponse::success($result);
         }*/
-        return $result;
+        return $promotion_goods;
     }
 
     /**
