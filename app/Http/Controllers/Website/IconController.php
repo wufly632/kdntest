@@ -56,7 +56,7 @@ class IconController extends Controller
 
     public function getCategorys()
     {
-        return $this->categoryService->getCategoryByLevel(3, ['name', 'id']);
+        return $this->categoryService->getCategoryByLevel(1, ['name', 'id']);
     }
 
     /**
