@@ -7,7 +7,7 @@
         <div class="row">
             <div class="col-xs-12">
                 <div class="col-xs-1">备注:</div>
-                <textarea name="reject_note" class="col-xs-11" rows="8"></textarea>
+                <textarea name="reject_note" class="col-xs-11 reject_note" rows="8"></textarea>
             </div>
 
             <div class="col-xs-12" style="margin-top: 20px;">
@@ -22,7 +22,7 @@
         $(function () {
             $('.submit').click(function () {
                 var type = $(this).data('type');
-                var reject_note = $('input[name=reject_note]').val();
+                var reject_note = $('.reject_note').val();
                 var _index = $(this);
                 $.ajax({
                     type:'post',
