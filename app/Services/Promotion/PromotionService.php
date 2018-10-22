@@ -361,7 +361,7 @@ class PromotionService
                             $sku_tmp['activity_id'] = $request->id;
                             $sku_tmp['goods_id'] = $good_id;
                             $sku_tmp['sku_id'] = $request->input('sku_str'.$good_id)[$key];
-                            if(empty(floatval($request->input('price'.$v)))) {
+                            if($request->input('price'.$v) !== null && empty(floatval($request->input('price'.$v)))) {
                                 throw new CustomException('请完善优惠活动的商品信息，商品id：'.$good_id);
                             }
                             $sku_tmp['price'] = $request->input('price'.$v);

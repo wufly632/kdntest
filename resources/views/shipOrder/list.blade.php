@@ -158,7 +158,7 @@
                                         </td>
                                         <td>{{ $order->note }}</td>
                                         <td>
-                                            <button class="btn btn-primary">添加备注</button>
+                                            <button class="btn btn-primary" onclick="addNote({{$order->id}})">添加备注</button>
                                             <button class="btn btn-primary">添加物流</button>
                                             <button class="btn btn-primary">异常关闭</button>
                                         </td>
@@ -175,6 +175,13 @@
                 </div>
             </div>
         </section>
+
+        <div id="add_note" style="display: none;">
+            <form>
+                <input type="hidden" name="id">
+                <textarea name="" cols="30" rows="10"></textarea>
+            </form>
+        </div>
     </div>
 @stop
 @section('script')
@@ -190,6 +197,22 @@
                 shade:0.4,
                 title: '发货单明细',
                 content: "/shipOrder/detail/"+id,
+                end: function(layero, index) {
+                }
+            });
+        }
+        function addNote(id) {
+            $('#add_note').find('input[name=id]').val(id);
+            layer.open({
+                type: 1,
+                skin: 'layui-layer-rim', //加上边框
+                area: ['400px','300px'],
+                fix: false, //不固定
+                shadeClose: true,
+                maxmin: true,
+                shade:0.4,
+                title: '添加备注',
+                content: $('#add_note').html(),
                 end: function(layero, index) {
                 }
             });
