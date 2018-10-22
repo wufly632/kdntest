@@ -11,6 +11,7 @@
 
 namespace App\Http\Controllers\ShipOrder;
 
+use App\Entities\ShipOrder\GoodSkuLack;
 use App\Entities\ShipOrder\ShipOrder;
 use App\Http\Controllers\Controller;
 use App\Services\ShipOrderService;
@@ -66,5 +67,25 @@ class ShipOrderController extends Controller
     {
         $lackList = $this->shipOrderService->getLackList($request);
         return view('shipOrder.lack_list', compact('lackList'));
+    }
+
+    /**
+     * @function 缺货审核页面
+     * @param GoodSkuLack $lack
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
+    public function lackAudit(GoodSkuLack $lack)
+    {
+        return view('shipOrder.lack_audit', compact('lack'));
+    }
+
+    /**
+     * @function 缺货审核
+     * @param Request $request
+     * @return mixed
+     */
+    public function postLackAudit(Request $request)
+    {
+        return $this->shipOrderService->auditLack($request);
     }
 }
