@@ -477,7 +477,7 @@
                             <div class="box-body">
                                 <div class="col-xs-12">
                                     <div><span class="h2">活动商品</span>
-                                        <button type="button" class="btn btn-default pull-right" data-toggle="modal" data-target="#myModal-one">添加商品
+                                        <button type="button" class="btn btn-default pull-right" {{--data-toggle="modal" data-target="#myModal-one"--}} id="addPromotionGoods">添加商品
                                         </button>
                                     </div>
                                     <div class="table promotion_good_table table-hover text-center promotion-activity-type1
@@ -747,6 +747,27 @@
                 minushtml.addClass("dis-no");
                 // $(".seckill .se-sale").css("height","140px");
             });
+            $('#addPromotionGoods').click(function () {
+                var _index = $(this);
+                $.ajax({
+                    type:'get',
+                    url:"{{secure_route('promotion.getGoods')}}",
+                    data:{activity_id:"{{$promotion->id}}",page:1},
+                    beforeSend:function() {
+                        _index.attr('disabled', true);
+                    },
+                    success:function(data){
+                        _index.attr('disabled', false);
+                        $('#myModal-one').find('.seckill-modal').html(data);
+                        $('#myModal-one').modal('show');
+                    },
+                    error:function(data){
+                        var json=eval("("+data.responseText+")");
+                        toastr.error(json.msg);
+                        _index.attr('disabled', false);
+                    }
+                })
+            });
             $('#myModal-one').on('click', 'ul li a', function(){
                 var url = $(this).attr('href');
                 var page = $(this).html();
@@ -761,20 +782,13 @@
                 $.ajax({
                     type:'get',
                     url:"{{secure_route('promotion.getGoods')}}",
-                    data:{is_ajax:1,page:page},
+                    data:{activity_id:"{{$promotion->id}}",page:page},
                     beforeSend:function() {
                         _index.attr('disabled', true);
                     },
                     success:function(data){
                         console.log(data);
                         $('#myModal-one').find('.seckill-modal').html(data);
-                        /*if (data.status == 200) {
-                            toastr.success(data.content);
-                            window.location.href = "{{secure_route('promotion.index')}}";
-                        } else {
-                            toastr.error(data.msg);
-                            _index.attr('disabled', false);
-                        }*/
                     },
                     error:function(data){
                         var json=eval("("+data.responseText+")");

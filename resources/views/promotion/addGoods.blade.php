@@ -3,27 +3,49 @@
         <div class="modal-body col-sm-12">
             <h2 class="text-center" style="margin: 20px;">添加商品</h2>
             <form action="" class="form-inline">
-                <div class="form-group col-sm-3">
-                    <label for="" style="float: left;">商品名称：</label>
-                    <input type="text" class="col-sm-8">
+                <div>
+                    <div class="form-group col-sm-3">
+                        <label for="" style="float: left;">商品名称：</label>
+                        <input type="text" class="col-sm-8">
+                    </div>
+                    <div class="form-group col-sm-3">
+                        <label for="" style="float: left;">商品ID：</label>
+                        <input type="text" class="col-sm-8" id="">
+                    </div>
+                    <div class="form-group col-sm-3">
+                        <label for="" style="float: left;">商品货号：</label>
+                        <input type="text" class="col-sm-8" id="">
+                    </div>
                 </div>
-                <div class="form-group col-sm-3">
-                    <label for="" style="float: left;">商品ID：</label>
-                    <input type="text" class="col-sm-8" id="">
-                </div>
-                <div class="form-group col-sm-3">
-                    <label for="" style="float: left;">商品货号：</label>
-                    <input type="text" class="col-sm-8" id="">
-                </div>
-                <div class="form-group col-sm-3 text-right">
-                    <button type="button" class="btn btn-success">查找</button>
+                <div>
+                    <div class="form-group col-sm-3">
+                        <label for="" style="float: left;">一级类目：</label>
+                        <select name="category_one">
+                            <option value="">请选择</option>
+                        </select>
+                    </div>
+                    <div class="form-group col-sm-3">
+                        <label for="" style="float: left;">二级类目：</label>
+                        <select name="category_two">
+                            <option value="">请选择</option>
+                        </select>
+                    </div>
+                    <div class="form-group col-sm-3">
+                        <label for="" style="float: left;">三级类目：</label>
+                        <select name="category_two">
+                            <option value="">请选择</option>
+                        </select>
+                    </div>
+                    <div class="form-group col-sm-3 text-right">
+                        <button type="button" class="btn btn-success">查找</button>
+                    </div>
                 </div>
             </form>
             <table
                    class="table table-hover table-striped table-bordered text-center">
                 <thead>
                 <tr>
-                    <td class="text-left"><input type="checkbox"></td>
+                    <td class="text-left"><input type="checkbox" id="checkAll"></td>
                     <td>商品图片</td>
                     <td>商品信息</td>
                     <td>供货价</td>
@@ -71,3 +93,10 @@
         </div>
     </div>
 </div>
+<script>
+    $(function () {
+        $('#checkAll').click(function () {
+            $('.good-id').prop("checked", $(this).prop('checked'));
+        })
+    })
+</script>
