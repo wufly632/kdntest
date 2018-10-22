@@ -115,6 +115,7 @@
                                     <th>售价($)</th>
                                     <th>历史销量</th>
                                     <th>库存数量</th>
+                                    <th>创建时间</th>
                                     <th>商品状态</th>
                                     <th>操作</th>
                                 </tr>
@@ -146,6 +147,9 @@
                                         </td>
                                         <td class="table-center">{{$good->orders}}</td>
                                         <td class="table-center">{{$good->good_stock}}</td>
+                                        <td class="table-center">
+                                            {{$good->created_at}}
+                                        </td>
                                         <td class="table-center">
                                             {{\App\Entities\Good\Good::$allStatus[$good->status]}}<br>
                                             @if($good->getProduct)

@@ -65,8 +65,10 @@ class SyncAttributeValue extends Command
             // '美妆个护.xlsx',
             // '服装服饰类目.xlsx',
             // '孕婴童.csv',
-            // '箱包配饰.xlsx'
-            '类目增加.xlsx'
+            // '箱包配饰.xlsx',
+            // '类目增加.xlsx',
+            '办公用品类目.xlsx',
+            '椅子.xlsx',
         ];
         foreach ($arr as $i) {
             $excel_path = 'storage'.DIRECTORY_SEPARATOR.'excel'.DIRECTORY_SEPARATOR.'import/attribute'.DIRECTORY_SEPARATOR.$i;
