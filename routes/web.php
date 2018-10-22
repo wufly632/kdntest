@@ -121,7 +121,8 @@ Route::group(['middleware' => ['auth', 'web']], function () {
     Route::group(['namespace' => 'Website'], function () {
         Route::post('banners.uploadImages', 'BannerController@uploadImages')->name('banners.upload');
         Route::resources([
-            'banners' => 'BannerController'
+            'banners' => 'BannerController',
+            'icons' => 'IconController'
         ]);
     });
 });

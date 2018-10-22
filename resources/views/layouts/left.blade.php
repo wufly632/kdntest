@@ -110,7 +110,10 @@
                 <ul class="treeview-menu">
                     <li><a data-target-url="banners" href="{{secure_route('banners.index')}}"><i
                                     class="fa fa-circle-o"></i>banner设置</a></li>
+                    <li><a data-target-url="icons" href="{{secure_route('icons.index')}}"><i
+                                    class="fa fa-circle-o"></i>icon设置</a></li>
                 </ul>
+
             </li>
         </ul>
     </section>

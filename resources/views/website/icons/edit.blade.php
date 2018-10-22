@@ -2,17 +2,18 @@
 @section('css')
     <link rel="stylesheet"
           href="{{ asset('/assets/admin-lte/bower_components/bootstrap-daterangepicker/daterangepicker.css') }}">
+    <link rel="stylesheet" href="{{ asset('/assets/js/bower_components/select2/dist/css/select2.min.css') }}">
 @endsection
 @section('content')
     <div class="container" id="banner-box">
         <form class="form-horizontal"
               id="banner-form">
-            <div class="h3 text-center" style="padding: 10px;">@if(isset($banner->id))banner修改@else banner添加@endif</div>
+            <div class="h3 text-center" style="padding: 10px;">@if(isset($icon->id))ICON创建@else ICON添加@endif</div>
             <div class="form-group">
                 <label for="title" class="col-sm-2 control-label text-right">标题</label>
                 <div class="col-sm-8">
                     <input type="text" name="title" id="title" class="form-control"
-                           value="@if(isset($banner->title)){{ $banner->title }}@endif">
+                           value="@if(isset($icon->title)){{ $icon->title }}@endif">
                 </div>
             </div>
             <div class="form-group">
@@ -22,46 +23,33 @@
                 </div>
             </div>
             <div class="form-group">
-                <label for="link" class="col-sm-2 control-label text-right">链接</label>
+                <label for="category_id" class="col-sm-2 control-label text-right">类别</label>
                 <div class="col-sm-8">
-                    <input type="text" name="link" id="link" class="form-control"
-                           value="@if(isset($banner->link)){{ $banner->link }}@endif">
-                </div>
-            </div>
-            <div class="form-group">
-                <label for="describe" class="col-sm-2 control-label text-right">描述</label>
-                <div class="col-sm-8">
-                    <input type="text" name="describe" id="describe" class="form-control"
-                           value="@if(isset($banner->describe)){{ $banner->describe }}@endif">
+                    <select name="category_id" id="category_id" class="form-control">
+                        @foreach($categorys as $category)
+                            <option value="{{ $category->id }}">{{ $category->name }}</option>
+                        @endforeach
+                    </select>
                 </div>
             </div>
             <div class="form-group">
                 <label for="time_duration" class="col-sm-2 control-label text-right">起止时间</label>
                 <div class="col-sm-8">
                     <input autocomplete="off" type="text" name="time_duration" id="time_duration" class="form-control"
-                           value="@if(isset($banner->start_at)){{ $banner->start_at.'~'.$banner->end_at }}@endif">
+                           value="@if(isset($icon->start_at)){{ $icon->start_at.'~'.$icon->end_at }}@endif">
                 </div>
             </div>
             <div class="form-group">
                 <label for="sort" class="col-sm-2 control-label text-right">排序</label>
                 <div class="col-sm-8">
                     <input type="number" min="0" name="sort" id="sort" class="form-control"
-                           value="@if(isset($banner->sort)){{ $banner->sort }}@endif">
-                </div>
-            </div>
-            <div class="form-group">
-                <label for="type" class="col-sm-2 control-label">类型</label>
-                <div class="col-sm-8">
-                    <select name="type" id="type" class="form-control">
-                        <option value="1">ＰＣ</option>
-                        <option value="2">移动设备</option>
-                    </select>
+                           value="@if(isset($icon->sort)){{ $icon->sort }}@endif">
                 </div>
             </div>
             <div style="padding-top: 20px;">
                 <input type="button" class="btn btn-warning col-sm-offset-2" @click="closeWindow" value="取消">
                 <input type="button" id="banner-modify" class="btn btn-success col-sm-offset-4" @click="formSubmit"
-                       value="@if(isset($banner->id))修改@else添加@endif">
+                       value="@if(isset($icon->id))修改@else添加@endif">
             </div>
         </form>
     </div>
@@ -70,18 +58,19 @@
     <script src="{{ asset('/assets/admin-lte/bower_components/moment/min/moment.min.js') }}"></script>
     <script src="{{ asset('/assets/admin-lte/bower_components/bootstrap-daterangepicker/daterangepicker.js') }}"></script>
     <script src="{{ asset('/assets/js/plugincommon.js') }}"></script>
-    <script src="{{asset('/assets/js/bower_components/axios/dist/axios.min.js')}}"></script>
-    <script src="{{asset('/assets/js/bower_components/vue/dist/vue.min.js')}}"></script>
+    <script src="{{ asset('/assets/js/bower_components/axios/dist/axios.min.js') }}"></script>
+    <script src="{{ asset('/assets/js/bower_components/vue/dist/vue.min.js') }}"></script>
+    <script src="{{ asset('/assets/js/bower_components/select2/dist/js/select2.js') }}"></script>
     <script>
         var index = parent.layer.getFrameIndex(window.name);
         var bannerBox = new Vue({
             el: '#banner-box',
             data: {
-                src: '@if(isset($banner->src)){{ $banner->src }}@endif'
+                src: '@if(isset($icon->src)){{ $icon->src }}@endif'
             },
             created: function () {
-                @if(isset($banner->type))
-                $('#type').val({{ $banner->type }});
+                @if(isset($icon->type))
+                $('#type').val({{ $icon->type }});
                 @endif
             },
             methods: {
@@ -95,13 +84,13 @@
                     let successMsg;
                     let requestMethod;
 
-                    @if(isset($banner->id))
-                        postUri = "{{ secure_route('banners.update',['id'=>$banner->id]) }}";
+                    @if(isset($icon->id))
+                        postUri = "{{ secure_route('icons.update',['id'=>$icon->id]) }}";
                     errorMsg = '修改失败';
                     successMsg = '修改成功';
                     requestMethod = 'put';
                     @else
-                        postUri = "{{ secure_route('banners.store') }}";
+                        postUri = "{{ secure_route('icons.store') }}";
                     errorMsg = '添加失败';
                     successMsg = '添加成功';
                     requestMethod = 'post';
@@ -127,9 +116,9 @@
                     let elSrc = $('#src');
                     let src = elSrc[0].files[0];
                     let formData = new FormData();
-                    formData.append('banners', src);
+                    formData.append('icons', src);
                     formData.append('_token', '{{ csrf_token() }}');
-                    formData.append('dir_name', 'banners');
+                    formData.append('dir_name', 'icons');
 
                     axios.post("{{ secure_route('banners.upload') }}", formData, {headers: {'Content-Type': 'multipart/form-data'}}).then(function (res) {
                         if (res.status === 200) {
@@ -144,6 +133,7 @@
                 }
             }
         });
+        $('#category_id').select2();
         addDateRangePicker($('#time_duration'));
     </script>
 @endsection

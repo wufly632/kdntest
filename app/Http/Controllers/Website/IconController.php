@@ -3,20 +3,20 @@
 namespace App\Http\Controllers\Website;
 
 use App\Services\Api\ApiResponse;
-use App\Services\Api\CommonService;
-use App\Services\Website\BannerService;
+use App\Services\CateAttr\CategoryService;
+use App\Services\Website\IconService;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use Illuminate\Validation\ValidationException;
 
-class BannerController extends Controller
+class IconController extends Controller
 {
+    protected $iconService;
+    protected $categoryService;
 
-    protected $bannerService;
-
-    public function __construct(BannerService $bannerService)
+    public function __construct(IconService $iconService, CategoryService $categoryService)
     {
-        $this->bannerService = $bannerService;
+        $this->iconService = $iconService;
+        $this->categoryService = $categoryService;
     }
 
     /**
@@ -29,9 +29,6 @@ class BannerController extends Controller
         //
         \request()->flash();
         $option = [];
-        if (\request()->filled('type')) {
-            $option = array_merge($option, ['type' => \request()->get('type')]);
-        }
         if (\request()->filled('title')) {
             $option = array_merge($option, [['title', 'like', '%' . \request()->get('title') . '%']]);
         }
@@ -42,7 +39,7 @@ class BannerController extends Controller
 
             $option = array_merge($option, [['start_at', '<', $time[1]]]);
         }
-        return view('website.banners.index', ['banners' => $this->bannerService->getAllBanner($option)]);
+        return view('website.icons.index', ['icons' => $this->iconService->getIcons($option)]);
     }
 
     /**
@@ -53,7 +50,13 @@ class BannerController extends Controller
     public function create()
     {
         //
-        return view('website.banners.edit');
+        ;
+        return view('website.icons.edit', ['categorys' => $this->getCategorys()]);
+    }
+
+    public function getCategorys()
+    {
+        return $this->categoryService->getCategoryByLevel(3, ['name', 'id']);
     }
 
     /**
@@ -64,19 +67,18 @@ class BannerController extends Controller
      */
     public function store(Request $request)
     {
+        //
         try {
             $validator = $this->validate($request,
                 $rules = [
                     'title' => 'required',
                     'src' => 'required',
-                    'describe' => '',
-                    'link' => 'required',
-                    'type' => 'required',
+                    'category_id' => 'required',
                     'sort' => 'required',
                     'time_duration' => 'required'
                 ]
             );
-            $this->bannerService->createBannerInfo($validator);
+            $this->iconService->createIcon($validator);
             return ApiResponse::success();
         } catch (\Exception $e) {
             return ApiResponse::failure(g_API_ERROR, $e->getMessage());
@@ -93,6 +95,7 @@ class BannerController extends Controller
     public function show($id)
     {
         //
+        return view('website.icons.edit');
     }
 
     /**
@@ -104,8 +107,7 @@ class BannerController extends Controller
     public function edit($id)
     {
         //
-        $banner = $this->bannerService->getBannerInfo($id);
-        return view('website.banners.edit', ['banner' => $banner]);
+        return view('website.icons.edit', ['categorys' => $this->getCategorys(), 'icon' => $this->iconService->getIconInfo($id)]);
     }
 
     /**
@@ -117,19 +119,18 @@ class BannerController extends Controller
      */
     public function update(Request $request, $id)
     {
+        //
         try {
             $validator = $this->validate($request,
                 $rules = [
                     'title' => 'required',
                     'src' => 'required',
-                    'describe' => '',
-                    'link' => 'required',
-                    'type' => 'required',
+                    'category_id' => 'required',
                     'sort' => 'required',
                     'time_duration' => 'required'
                 ]
             );
-            $this->bannerService->updateBannerInfo($validator, $id);
+            $this->iconService->updateIconInfo($validator, $id);
             return ApiResponse::success();
         } catch (\Exception $e) {
             return ApiResponse::failure(g_API_ERROR, $e->getMessage());
@@ -144,50 +145,13 @@ class BannerController extends Controller
      */
     public function destroy($id)
     {
+        //
         try {
-            $this->bannerService->deleteBannerInfo($id);
+            $this->iconService->delete($id);
             return ApiResponse::success();
         } catch (\Exception $e) {
             return ApiResponse::failure(g_API_ERROR, '删除失败');
         }
-    }
 
-    public function uploadImages(Request $request)
-    {
-        $dirName = $request->input('dir_name');
-        if (!in_array($dirName, $this->getAllowDir())) {
-            return ApiResponse::failure(g_API_ERROR, '图片上传失败');
-        }
-        $img = $request->file($dirName);
-        if ($request->hasFile($dirName) && $img->isValid()) {
-            $ext = $img->getClientOriginalExtension();
-            if (!in_array(strtolower($ext), ['jpg', 'png', 'bmp', 'wbmp'])) {
-                return ApiResponse::failure(g_API_ERROR, '图片格式不正确，请检查!');
-            }
-            $directory = $dirName;
-            $ali = env('APP_ENV', 'local') == 'production';
-            $urlInfo = app(CommonService::class)->uploadFile($file = $dirName, $bucket = 'cucoe', $directory, $ali, false, false);
-            if ($urlInfo) {
-                if ($ali) {
-                    return ApiResponse::success($urlInfo['oss-request-url'], '图片上传成功');
-                } else {
-                    return ApiResponse::success($urlInfo, '图片上传成功');
-                }
-            } else {
-                return ApiResponse::failure(g_API_ERROR, '图片上传失败!');
-            }
-        } else {
-            return ApiResponse::failure(g_API_ERROR, '图片上传失败!');
-        }
-
-    }
-
-    public function getAllowDir()
-    {
-        return [
-            'icons',
-            'banners',
-
-        ];
     }
 }

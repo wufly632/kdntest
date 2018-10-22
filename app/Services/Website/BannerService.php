@@ -36,11 +36,17 @@ class BannerService
 
     public function updateBannerInfo($data, $id)
     {
+        $time = explode('~', $data['time_duration']);
+        $data['start_at'] = $time[0];
+        $data['end_at'] = $time[1];
         $this->bannerRepository->update($data, $id);
     }
 
     public function createBannerInfo($data)
     {
+        $time = explode('~', $data['time_duration']);
+        $data['start_at'] = $time[0];
+        $data['end_at'] = $time[1];
         $this->bannerRepository->create($data);
     }
 

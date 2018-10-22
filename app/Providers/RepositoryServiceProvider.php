@@ -46,6 +46,7 @@ class RepositoryServiceProvider extends ServiceProvider
         $this->app->bind(\App\Repositories\Product\ProductSkuImagesRepository::class, \App\Repositories\Product\ProductSkuImagesRepositoryEloquent::class);
         $this->app->bind(\App\Repositories\Website\BannerRepository::class, \App\Repositories\Website\BannerRepositoryEloquent::class);
         $this->app->bind(\App\Repositories\Supplier\SupplierUserRepository::class, \App\Repositories\Supplier\SupplierUserRepositoryEloquent::class);
+        $this->app->bind(\App\Repositories\Website\IconRepository::class, \App\Repositories\Website\IconRepositoryEloquent::class);
         //:end-bindings:
     }
 }
