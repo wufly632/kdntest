@@ -8,6 +8,9 @@
           href="{{ asset('/assets/admin-lte/bower_components/bootstrap-datepicker/dist/css/bootstrap-datepicker.min.css') }}">
     <link rel="stylesheet"
           href="{{ asset('/assets/admin-lte/bower_components/bootstrap-daterangepicker/daterangepicker.css') }}">
+    <style>
+        .dis-no{display: none;}
+    </style>
 @endsection
 @section('content')
     <div class="modal-content">
@@ -21,7 +24,7 @@
                     <label class="col-xs-2 control-label">
                         用途:
                     </label>
-                    <div class="col-xs-7">
+                    <div class="col-xs-8">
                         <div class="radio-inline">
                             <label>
                                 <input type="radio" name="coupon_purpose" class="" id="method1" value="1" @if($coupon->coupon_purpose == 1) checked @endif>页面领取
@@ -37,10 +40,24 @@
                                 <input type="radio" name="coupon_purpose" class="" id="method3" value="3" @if($coupon->coupon_purpose == 3) checked @endif>新人礼包
                             </label>
                         </div>
+                        <div class="radio-inline">
+                            <label>
+                                <input type="radio" name="coupon_purpose" class="" id="method4" value="4" @if($coupon->coupon_purpose == 4) checked @endif>通用
+                            </label>
+                        </div>
                         <p class="show-info text-danger"></p>
                     </div>
                     <div class="info-tips text-danger">
 
+                    </div>
+                </div>
+                <div class="form-group @if($coupon->coupon_purpose != 4) dis-no @endif" id="coupon_key">
+                    <div class="col-xs-1"></div>
+                    <label for="coupon_name" class="col-xs-2 control-label">
+                        券口令：
+                    </label>
+                    <div class="col-xs-7">
+                        <input type="text" class="form-control" name="coupon_key" value="{{$coupon->coupon_key}}">
                     </div>
                 </div>
                 <div class="form-group">
@@ -242,14 +259,21 @@
         });
         $('#method1').click(function () {
             $('.show-info').text('用户可在店铺主页领取，显示最新提交的3张；或在已设置的活动页面领取');
+            $('#coupon_key').addClass('dis-no');
         });
 
         $('#method2').click(function () {
             $('.show-info').text('满返活动券需要在满返活动中进行配置，用户方可在活动中获得返券');
+            $('#coupon_key').addClass('dis-no');
         });
 
         $('#method3').click(function () {
             $('.show-info').text('');
+            $('#coupon_key').addClass('dis-no');
+        });
+        $('#method4').click(function () {
+            $('.show-info').text('');
+            $('#coupon_key').removeClass('dis-no');
         });
         $('#coupon_table').DataTable({
             language: {

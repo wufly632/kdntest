@@ -50,8 +50,8 @@ Route::group(['middleware' => ['auth', 'web']], function () {
         Route::get('/all', ['as' => 'attribute.all', 'uses' => 'AttributeController@getAllAttributes']);
     });
     Route::group(['prefix' => 'attrvalue', 'namespace' => 'CateAttr'], function () {
-        Route::post('updateOrInsert', ['as' => 'attrvalue.update_or_insert', 'uses' => 'AttrValueController@updateOrInsert']);
-        Route::post('/delete', ['as' => 'attrvalue.delete', 'uses' => 'AttrValueController@delete']);
+        Route::post('updateOrInsert', ['as' => 'attrvalue.update_or_insert', 'uses' => 'AttrvalueController@updateOrInsert']);
+        Route::post('/delete', ['as' => 'attrvalue.delete', 'uses' => 'AttrvalueController@delete']);
     });
 
     //商品模块
@@ -124,5 +124,13 @@ Route::group(['middleware' => ['auth', 'web']], function () {
             'banners' => 'BannerController',
             'icons' => 'IconController'
         ]);
+    });
+
+    //发货管理
+    Route::group(['namespace' => 'ShipOrder', 'prefix' => 'shipOrder'], function(){
+       Route::get('/preList', ['as' => 'shipOrder.prelist', 'uses' => 'ShipOrderController@preIndex']);
+       Route::get('/list', ['as' => 'shipOrder.list', 'uses' => 'ShipOrderController@index']);
+       Route::get('/detail/{shipOrder}', ['as' => 'shipOrder.detail', 'uses' => 'ShipOrderController@shipOrderDetail']);
+       Route::get('/lacklist', ['as' => 'shipOrder.lacklist', 'uses' => 'ShipOrderController@lackList']);
     });
 });

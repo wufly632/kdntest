@@ -3,6 +3,7 @@
 namespace App\Entities\Product;
 
 use App\Entities\CateAttr\Attribute;
+use App\Entities\CateAttr\AttributeValue;
 use Illuminate\Database\Eloquent\Model;
 use Prettus\Repository\Contracts\Transformable;
 use Prettus\Repository\Traits\TransformableTrait;
@@ -27,7 +28,7 @@ class ProductAttrValue extends Model implements Transformable
 
     public function getAttrValue()
     {
-        return $this->hasOne(Attribute::class, 'id', 'value_ids');
+        return $this->hasOne(AttributeValue::class, 'id', 'value_ids');
     }
 
     public function getAttibute()

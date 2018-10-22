@@ -166,6 +166,8 @@ class PromotionService
         $promotion['promotion'] = $request->only(['id','title','activity_type','is_all','pre_time','poster_pic']);
         $promotion['promotion']['stock'] = 0;
         list($start_time,$end_time) = get_time_range($request->promotion_time);
+        $promotion['promotion']['start_at'] = $start_time;
+        $promotion['promotion']['end_at'] = $end_time;
         if ($request->pre_time) {
             $promotion['promotion']['pre_time'] = $request->pre_time;
             $start_time = Carbon::parse($start_time);
@@ -173,7 +175,7 @@ class PromotionService
         } else {
             $promotion['promotion']['show_at'] = $start_time;
         }
-        $promotion['promotion']['end_at'] = $end_time;
+
         $activity_goods = $this->promotionGood->findWhere(['activity_id' => $request->id]);
         if (! $activity_goods) {
             throw new CustomException('请添加要参加活动的商品');
@@ -404,7 +406,7 @@ class PromotionService
             $goods_sku_str = response($view)->getContent();
             return ApiResponse::success($goods_sku_str);
         } catch (\Exception $e) {
-            echo $e->getMessage();die;
+            ding('促销活动'.$request->activity_id.'添加商品失败'.$e->getMessage());
             DB::rollBack();
             return ApiResponse::failure(g_API_ERROR, '添加活动商品失败，请稍后重试或者联系管理员');
         }

@@ -114,10 +114,7 @@ class PromotionController extends Controller
             return ApiResponse::failure(g_API_ERROR, '请先选择活动的类型');
         }
         $result = $this->promotionService->addGoods($request);
-        if ($result['status'] == 200) {
-            return ApiResponse::success($result['content']);
-        }
-        return ApiResponse::failure(g_API_ERROR, $result['msg']);
+        return $result;
     }
 
     /**
@@ -144,11 +141,13 @@ class PromotionController extends Controller
      */
     public function getGoods(Request $request)
     {
-        $result = $this->promotionService->getAblePromotionActivityGoods($request->activity_id, $request);
+        //获取可添加的促销活动商品
+        $promotion_goods = $this->promotionService->getAblePromotionActivityGoods($request->activity_id, $request);
+        // $result = $this->promotionService->getAblePromotionActivityGoods($request->activity_id, $request);
         /*if ($request->is_ajax == 1) {
             return ApiResponse::success($result);
         }*/
-        return $result;
+        return $promotion_goods;
     }
 
     /**

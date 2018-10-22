@@ -123,10 +123,7 @@ class GoodsController extends Controller
             return ApiResponse::failure(g_API_ERROR, '请先选择商品');
         }
         $result = $this->goodService->auditReturn($request);
-        if ($result) {
-            return jsonMessage('', '退回修改成功');
-        }
-        return jsonMessage('退回修改失败，请重试');
+        return $result;
     }
 
     /**

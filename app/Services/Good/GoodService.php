@@ -8,6 +8,7 @@ namespace App\Services\Good;
 
 use App\Criteria\Good\GoodCodeCriteria;
 use App\Criteria\Good\GoodIdCriteria;
+use App\Criteria\Good\GoodStatusCriteria;
 use App\Criteria\Good\GoodTitleCriteria;
 use App\Entities\CateAttr\CategoryAttribute;
 use App\Entities\CateAttr\GoodAttrValue;
@@ -20,6 +21,7 @@ use App\Entities\Product\ProductSku;
 use App\Entities\Product\ProductSkuImages;
 use App\Repositories\Good\GoodRepository;
 use App\Repositories\Product\ProductRepository;
+use App\Services\Api\ApiResponse;
 use App\Validators\Good\GoodValidator;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
@@ -69,6 +71,7 @@ class GoodService{
         $this->good->pushCriteria(new GoodTitleCriteria($request->good_title));
         $this->good->pushCriteria(new GoodIdCriteria($request->id));
         $this->good->pushCriteria(new GoodCodeCriteria($request->good_code));
+        $this->good->pushCriteria(new GoodStatusCriteria($request->status));
         return $this->good->orderBy($orderBy, $sort)->paginate($length);
     }
 
@@ -270,9 +273,9 @@ class GoodService{
         $good = $this->good->find($request->id);
         $good->status = Good::RETURN;
         if ($good->save()){
-            return true;
+            return ApiResponse::success('退回成功');
         }
-        return false;
+        return ApiResponse::failure(g_API_ERROR, '退回失败,请重试');
     }
 
     /**

@@ -8,6 +8,7 @@ use App\Entities\Supplier\SupplierUser;
 use Illuminate\Database\Eloquent\Model;
 use Prettus\Repository\Contracts\Transformable;
 use Prettus\Repository\Traits\TransformableTrait;
+use App\Entities\CommonTrait\DateToLocalShowTrait;
 
 /**
  * Class Good.
@@ -17,6 +18,7 @@ use Prettus\Repository\Traits\TransformableTrait;
 class Good extends Model implements Transformable
 {
     use TransformableTrait;
+    use DateToLocalShowTrait;
 
     protected $table = 'audit_goods';
 
@@ -28,7 +30,7 @@ class Good extends Model implements Transformable
     protected $fillable = ['category_id','category_path','supplier_id','good_code','price','supply_price','good_stock','good_title','good_en_title','good_summary','good_en_summary','main_pic','pic','content','status','created_at','shelf_at','deleted_at','updated_at'];
 
     public static $syncField = ['id', 'category_id', 'category_path', 'supplier_id', 'good_code', 'brand_name', 'price',
-                                'supply_price', 'good_stock', 'orders', 'good_en_title', 'good_summary', 'good_en_summary',
+                                'supply_price', 'good_stock', 'orders','good_title', 'good_en_title', 'good_summary', 'good_en_summary',
                                 'main_pic','pic','content','video'];
 
 

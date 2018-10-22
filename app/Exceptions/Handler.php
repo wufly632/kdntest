@@ -36,6 +36,10 @@ class Handler extends ExceptionHandler
      */
     public function report(Exception $exception)
     {
+        if (env('APP_ENV', 'local') == 'production') {
+            ding()->at([""],true)
+                ->text($exception->getMessage());
+        }
         parent::report($exception);
     }
 

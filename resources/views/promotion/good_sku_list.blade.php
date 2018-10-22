@@ -11,13 +11,13 @@
                         <div class="fl good-pic">
                             <img src="{{ImgResize($val->main_pic, 100)}}" alt=""/>
                         </div>
-                        <div class="fl good-detail">
+                        <div class="fl good-detail" style="">
                             <div class="text-left" style="margin: 30px 0 20px 5px;">名称：{{$val->good_title}}</div>
                             <div class="clearfix" style="margin-left: 5px;">
                                 <span class="fl go-id">ID：{{$val->id}}</span>
                                 <span class="fl go-num" style="margin-left: 20px;">货号：{{$val->good_code}}</span>
                                 <span class="fl go-nunber" style="margin-left: 20px;">最近30天销量</span>
-                                <div class="fl clearfix limitnum-container" style="margin-left: 300px;">
+                                <div class="fl clearfix limitnum-container" style="margin-left: 200px;">
                                     <span class="fl">每人限购</span>
                                     <select class="fl promotion-per-num" name="per_num{{$val->id}}">
                                         <option value="0">不限</option>

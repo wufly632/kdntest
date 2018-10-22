@@ -8,6 +8,9 @@
           href="{{ asset('/assets/admin-lte/bower_components/bootstrap-datepicker/dist/css/bootstrap-datepicker.min.css') }}">
     <link rel="stylesheet"
           href="{{ asset('/assets/admin-lte/bower_components/bootstrap-daterangepicker/daterangepicker.css') }}">
+    <style>
+        .dis-no{display: none;}
+    </style>
 @endsection
 @section('content')
     <!-- Content Wrapper. Contains page content -->
@@ -33,7 +36,7 @@
                         <div class="modal-dialog">
                             <div class="modal-content">
                                 <div class="modal-body">
-                                    <h2 class="text-center">创建店铺券</h2>
+                                    <h2 class="text-center">创建优惠券</h2>
                                     <form id="coupon-create" method="post" class="form-horizontal">
                                         {!! csrf_field() !!}
                                         <div class="form-group">
@@ -41,7 +44,7 @@
                                             <label class="col-xs-2 control-label">
                                                 用途:
                                             </label>
-                                            <div class="col-xs-7">
+                                            <div class="col-xs-8">
                                                 <div class="radio-inline">
                                                     <label>
                                                         <input type="radio" name="coupon_purpose" class="" id="method1" value="1">页面领取
@@ -57,10 +60,24 @@
                                                         <input type="radio" name="coupon_purpose" class="" id="method3" value="3">新人礼包
                                                     </label>
                                                 </div>
+                                                <div class="radio-inline">
+                                                    <label>
+                                                        <input type="radio" name="coupon_purpose" class="" id="method4" value="4">通用券
+                                                    </label>
+                                                </div>
                                                 <p class="show-info text-danger"></p>
                                             </div>
                                             <div class="info-tips text-danger">
 
+                                            </div>
+                                        </div>
+                                        <div class="form-group dis-no" id="coupon_key">
+                                            <div class="col-xs-1"></div>
+                                            <label for="coupon_name" class="col-xs-2 control-label">
+                                                券口令：
+                                            </label>
+                                            <div class="col-xs-7">
+                                                <input type="text"  class="form-control" name="coupon_key">
                                             </div>
                                         </div>
                                         <div class="form-group">
@@ -270,7 +287,7 @@
                             <div class="box-body clearfix">
                                 <button type="submit" class="btn btn-success pull-left col-xs-offset-1">查找</button>
                                 <button type="button" class="btn btn-success col-xs-offset-9" data-toggle="modal"
-                                        data-target="#responsive">创建店铺券
+                                        data-target="#responsive">创建优惠券
                                 </button>
                             </div>
                             <div class="box-footer">
@@ -411,14 +428,21 @@
         });
         $('#method1').click(function () {
             $('.show-info').text('用户可在店铺主页领取，显示最新提交的3张；或在已设置的活动页面领取');
+            $('#coupon_key').addClass('dis-no');
         });
 
         $('#method2').click(function () {
             $('.show-info').text('满返活动券需要在满返活动中进行配置，用户方可在活动中获得返券');
+            $('#coupon_key').addClass('dis-no');
         });
 
         $('#method3').click(function () {
             $('.show-info').text('');
+            $('#coupon_key').addClass('dis-no');
+        });
+        $('#method4').click(function () {
+            $('.show-info').text('');
+            $('#coupon_key').removeClass('dis-no');
         });
         /*$('#coupon_table').DataTable({
             language: {
