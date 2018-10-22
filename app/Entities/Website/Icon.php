@@ -7,20 +7,20 @@ use Prettus\Repository\Contracts\Transformable;
 use Prettus\Repository\Traits\TransformableTrait;
 
 /**
- * Class Banner.
+ * Class Icon.
  *
  * @package namespace App\Entities\Website;
  */
-class Banner extends Model implements Transformable
+class Icon extends Model implements Transformable
 {
     use TransformableTrait;
 
-    protected $table = 'website_banners';
+    protected $table = 'website_icons';
     /**
      * The attributes that are mass assignable.
      *
      * @var array
      */
-    protected $fillable = ['title', 'describe', 'src', 'link', 'type', 'start_at', 'end_at', 'sort'];
+    protected $fillable = ['title', 'src', 'category_id', 'start_at', 'end_at', 'sort'];
 
 }

@@ -4,6 +4,7 @@
  * User: wufly
  * Date: 2018/9/19 上午11:47
  */
+
 namespace App\Services\CateAttr;
 
 use App\Entities\CateAttr\Attribute;
@@ -13,7 +14,8 @@ use App\Services\Api\ApiResponse;
 use Carbon\Carbon;
 use DB;
 
-class CategoryService{
+class CategoryService
+{
 
     /**
      * @var CategoryRepository
@@ -30,7 +32,7 @@ class CategoryService{
      *
      * @param CategoryRepository $category
      */
-    public function __construct(CategoryRepository $category,CategoryAttributeRepository $categoryAttribute)
+    public function __construct(CategoryRepository $category, CategoryAttributeRepository $categoryAttribute)
     {
         $this->category = $category;
         $this->categoryAttribute = $categoryAttribute;
@@ -91,7 +93,7 @@ class CategoryService{
             $tmp_attribute['id'] = $categoryAttribute->attr_id;
             $tmp_attribute['attr_type'] = $categoryAttribute->attr_type;
             $tmp_attribute['name'] = $attribute->name;
-            if (! isset($datas[$categoryAttribute->attr_type])) {
+            if (!isset($datas[$categoryAttribute->attr_type])) {
                 $datas[$categoryAttribute->attr_type] = [];
             }
             $datas[$categoryAttribute->attr_type][] = $tmp_attribute;
@@ -143,7 +145,8 @@ class CategoryService{
             DB::commit();
             return ApiResponse::success('操作成功');
         } catch (\Exception $e) {
-            echo $e->getMessage();die;
+            echo $e->getMessage();
+            die;
             DB::rollBack();
             return ApiResponse::failure(g_API_ERROR, '操作失败');
         }
@@ -191,14 +194,14 @@ class CategoryService{
     {
         $category_ids = '';
         $category = $this->category->find($category_id);
-        if (! $category) {
+        if (!$category) {
             return $category_ids;
         }
         if ($category->level == 1) {
-            $category_ids = '0,'.$category_id;
+            $category_ids = '0,' . $category_id;
         } else {
             $parent_category = $this->category->find($category->parent_id);
-            $category_ids = $parent_category->category_ids.','.$category_id;
+            $category_ids = $parent_category->category_ids . ',' . $category_id;
         }
         return $category_ids;
     }
@@ -276,12 +279,12 @@ class CategoryService{
         $data = [
             'category_id' => $request->category_id,
             'attr_type' => $request->type,
-            'attr_id'   => $request->attribute_id,
+            'attr_id' => $request->attribute_id,
             'is_required' => $request->is_required,
-            'is_image'    => $request->is_image,
-            'is_diy'      => $request->is_diy,
-            'is_detail'   => $request->is_detail,
-            'created_at'  => Carbon::now()->toDateTimeString(),
+            'is_image' => $request->is_image,
+            'is_diy' => $request->is_diy,
+            'is_detail' => $request->is_detail,
+            'created_at' => Carbon::now()->toDateTimeString(),
         ];
         if ($attribute->type == 1) {//标准化属性
             $data['attr_values'] = implode(',', $request->values_id);
@@ -292,12 +295,17 @@ class CategoryService{
         }
         try {
             DB::beginTransaction();
-            $this->categoryAttribute->updateOrCreate(['category_id' => $request->category_id, 'attr_id' => $request->attribute_id],$data);
+            $this->categoryAttribute->updateOrCreate(['category_id' => $request->category_id, 'attr_id' => $request->attribute_id], $data);
             DB::commit();
             return ApiResponse::success('', '操作成功!');
         } catch (\Exception $e) {
             DB::rollBack();
             return ApiResponse::failure(g_API_ERROR, $e->getMessage());
         }
+    }
+
+    public function getCategoryByLevel($level, $field = ['*'])
+    {
+        return $this->category->findWhere(['level' => $level], $field);
     }
 }

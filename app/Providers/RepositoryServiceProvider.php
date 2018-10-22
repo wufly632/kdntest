@@ -51,6 +51,7 @@ class RepositoryServiceProvider extends ServiceProvider
         $this->app->bind(\App\Repositories\ShipOrder\PreShipOrderRepository::class, \App\Repositories\ShipOrder\PreShipOrderRepositoryEloquent::class);
         $this->app->bind(\App\Repositories\ShipOrder\ShipOrderRepository::class, \App\Repositories\ShipOrder\ShipOrderRepositoryEloquent::class);
         $this->app->bind(\App\Repositories\ShipOrder\GoodSkuLackRepository::class, \App\Repositories\ShipOrder\GoodSkuLackRepositoryEloquent::class);
+        $this->app->bind(\App\Repositories\Website\IconRepository::class, \App\Repositories\Website\IconRepositoryEloquent::class);
         //:end-bindings:
     }
 }

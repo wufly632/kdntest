@@ -5,7 +5,8 @@
             vertical-align: middle;
         }
     </style>
-    <link rel="stylesheet" href="{{ asset('/assets/admin-lte/bower_components/bootstrap-daterangepicker/daterangepicker.css') }}">
+    <link rel="stylesheet"
+          href="{{ asset('/assets/admin-lte/bower_components/bootstrap-daterangepicker/daterangepicker.css') }}">
 @endsection
 @extends('layouts.default')
 @section('content')
@@ -13,8 +14,8 @@
         <!-- Content Header (Page header) -->
         <section class="content-header">
             <h1>
-                banner列表
-                <small>banner</small>
+                Icon列表
+                <small>Icon</small>
             </h1>
             <ol class="breadcrumb">
                 <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
@@ -27,79 +28,62 @@
             <div class="row">
                 <div class="col-xs-12">
                     <div class="box box-info">
-                        <div class="box-header" style="padding: 20px 10px;">
-                            <form action="{{ secure_route('banners.index') }}" class="form-horizontal">
-                                <div class="form-group col-sm-3">
-                                    <label for="title" class="control-label col-sm-2">标题</label>
-                                    <div class="col-sm-8">
-                                        <input type="text" class="col-sm-3 form-control" name="title" id="title">
+                        <div class="box-header">
+                            <form action="{{ secure_route('icons.index') }}" class="form-horizontal">
+                                <form action="{{ secure_route('icons.index') }}" class="form-horizontal">
+                                    <div class="form-group col-sm-3">
+                                        <label for="title" class="control-label col-sm-2">标题</label>
+                                        <div class="col-sm-8">
+                                            <input type="text" class="col-sm-3 form-control" name="title" id="title"
+                                                   value="{{ old('title') }}">
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="form-group col-sm-3">
-                                    <label for="type" class="control-label col-sm-4">类型</label>
-                                    <div class="col-sm-8">
-                                        <select name="type" id="type" class="form-control">
-                                            <option value="1" selected>PC</option>
-                                            <option value="2">移动设备</option>
-                                        </select>
+                                    <div class="form-group col-sm-3">
+                                        <label for="time_duration" class="control-label col-sm-4">起止时间</label>
+                                        <div class="col-sm-8">
+                                            <input type="text" class="form-control time_duration" id="time_duration"
+                                                   name="time_duration" autocomplete="off"
+                                                   value="{{ old('time_duration') }}">
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="form-group col-sm-3">
-                                    <label for="time_duration" class="control-label col-sm-4">起止时间</label>
-                                    <div class="col-sm-8">
-                                        <input type="text" class="form-control time_duration" id="time_duration" name="time_duration">
+                                    <div class="col-sm-1">
+                                        <input type="submit" class="btn-sm btn-info">
                                     </div>
-                                </div>
-                                <div class="col-sm-1">
-                                    <input type="submit" class="btn-sm btn-info">
-                                </div>
-                                <div class="col-sm-1">
-                                    <input type="button" class="btn-sm btn-primary" value="创建" id="create-banner"
-                                           data-target-uri="{{ secure_route('banners.create') }}">
-                                </div>
+                                    <div class="col-sm-1">
+                                        <input type="button" class="btn-sm btn-primary" value="创建" id="create-banner"
+                                               data-target-uri="{{ secure_route('icons.create') }}">
+                                    </div>
+                                </form>
                             </form>
                         </div>
-                        <hr>
                         <div class="box-body">
                             <table class="table table-bordered table-hover table-striped" id="banner-table">
                                 <thead>
                                 <tr>
                                     <th>标题 <span class="fa fa-unsorted pull-right"></span></th>
-                                    <th>图片<span class="fa fa-unsorted pull-right"></span></th>
-                                    <th>描述<span class="fa fa-unsorted pull-right"></span></th>
-                                    <th>类型<span class="fa fa-unsorted pull-right"></span></th>
+                                    <th>图标<span class="fa fa-unsorted pull-right"></span></th>
                                     <th>开始时间<span class="fa fa-unsorted pull-right"></span></th>
                                     <th>结束时间<span class="fa fa-unsorted pull-right"></span></th>
                                     <th>操作</th>
                                 </tr>
                                 </thead>
                                 <tbody>
-                                @foreach($banners as $banner)
+                                @foreach($icons as $icon)
                                     <tr>
-                                        <td>{{ $banner->title }}</td>
-                                        <td><img src="{{ $banner->src }}" alt="{{ $banner->title }}"
-                                                 title="{{ $banner->title }}" width="150px;">
+                                        <td>{{ $icon->title }}</td>
+                                        <td><img src="{{ $icon->src }}" alt="{{ $icon->title }}"
+                                                 title="{{ $icon->title }}" width="150px;">
                                         </td>
-                                        <td>{{ $banner->describe }}</td>
-                                        <td>@if($banner->type==1)PC端
-                                            @else
-                                                移动设备
-                                            @endif
-                                        </td>
-                                        <td>
-                                            {{ $banner->start_at }}
-                                        </td>
-                                        <td>
-                                            {{ $banner->end_at }}
-                                        </td>
+                                        <td>{{ $icon->start_at }}</td>
+                                        <td>{{ $icon->end_at }}</td>
                                         <td>
                                             <div class="btn-group-sm">
                                                 <button class="btn btn-warning order-modify"
-                                                        data-target-uri="{{ secure_route('banners.edit',['id'=>$banner->id]) }}">
+                                                        data-target-uri="{{ secure_route('icons.edit',['id'=>$icon->id]) }}">
                                                     修改
                                                 </button>
-                                                <button class="btn btn-danger order-delete banner-delete"
-                                                        data-target-uri="{{ secure_route('banners.destroy',['id'=>$banner->id]) }}">
+                                                <button class="btn btn-danger order-delete icons-delete"
+                                                        data-target-uri="{{ secure_route('icons.destroy',['id'=>$icon->id]) }}">
                                                     删除
                                                 </button>
                                             </div>
@@ -108,9 +92,6 @@
                                 @endforeach
                                 </tbody>
                             </table>
-                            <div class="pull-right">
-                                {{ $banners->links() }}
-                            </div>
                         </div>
                     </div>
                 </div>
@@ -123,7 +104,6 @@
     <script src="{{ asset('/assets/admin-lte/bower_components/bootstrap-daterangepicker/daterangepicker.js') }}"></script>
     <script src="{{ asset('/assets/js/plugincommon.js') }}"></script>
     <script src="{{asset('/assets/js/bower_components/axios/dist/axios.min.js')}}"></script>
-
     <script>
         $('.order-modify').click(function () {
             showInfo('banner修改', $(this).attr('data-target-uri'))
@@ -131,7 +111,7 @@
         $('#create-banner').click(function () {
             showInfo('banner创建', $(this).attr('data-target-uri'))
         });
-        $('.banner-delete').click(function () {
+        $('.icons-delete').click(function () {
             let _clickEle = $(this);
             layer.confirm('确定删除', {
                 btn: ['删除', '取消'] //按钮
