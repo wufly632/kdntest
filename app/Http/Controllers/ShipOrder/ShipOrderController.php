@@ -14,6 +14,7 @@ namespace App\Http\Controllers\ShipOrder;
 use App\Entities\ShipOrder\GoodSkuLack;
 use App\Entities\ShipOrder\ShipOrder;
 use App\Http\Controllers\Controller;
+use App\Services\Api\ApiResponse;
 use App\Services\ShipOrderService;
 use Illuminate\Http\Request;
 
@@ -88,4 +89,25 @@ class ShipOrderController extends Controller
     {
         return $this->shipOrderService->auditLack($request);
     }
+
+    /**
+     * @function 发货单添加备注
+     * @param Request $request
+     * @return mixed
+     */
+    public function addNote(Request $request)
+    {
+        if(! $ship_order_id = $request->id) {
+            return ApiResponse::failure(g_API_ERROR, '操作失败');
+        }
+        if (! $note = $request->note) {
+            return ApiResponse::failure(g_API_ERROR, '请填写备注');
+        }
+        $result = $this->shipOrderService->getShipOrderModel()->where(['id' => $ship_order_id])->update(['note' => $note]);
+        if ($result) {
+            return ApiResponse::success('添加成功');
+        }
+        return ApiResponse::failure(g_API_ERROR, '添加失败');
+    }
+
 }

@@ -41,7 +41,7 @@
                                     class="fa fa-circle-o"></i> 属性管理</a></li>
                 </ul>
             </li>
-            <li class="treeview active">
+            <li class="treeview">
                 <a href="#">
                     <i class="fa fa-files-o"></i>
                     <span>商品管理</span>
@@ -149,11 +149,17 @@
     <!-- /.sidebar -->
 </aside>
 <script>
-    let urlPathname = document.location.pathname;
-    urlPathnameParse = urlPathname.split('/');
-    let urlLink = $('[data-target-url=' + urlPathnameParse[1] + ']');
-    // urlLink.parents('.treeview').removeClass('active').removeClass('menu-open');
-    urlLink.parents('.treeview').siblings().removeClass('active menu-open').removeClass('menu-open');
-    urlLink.parents('.treeview').addClass('active menu-open');
-    urlLink.parent('li').addClass('active');
+    $(function(){
+        $('.sidebar-menu li:not(.treeview) > a').on('click', function(){
+            var $parent = $(this).parent().addClass('active');
+            $parent.siblings('.treeview.active').find('> a').trigger('click');
+            $parent.siblings().removeClass('active').find('li').removeClass('active');
+        });
+
+        $(window).on('load', function(){
+            $('.sidebar-menu').find('a[href="'+window.location.href.split('?')[0]+'"]').parent().addClass('active')
+                .closest('.treeview-menu').addClass('.menu-open')
+                .closest('.treeview').addClass('active');
+        });
+    });
 </script>

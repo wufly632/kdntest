@@ -35,6 +35,11 @@ class ShipOrderService
         $this->goodSkuLack = $goodSkuLack;
     }
 
+    public function getShipOrderModel()
+    {
+        return $this->shipOrder->makeModel();
+    }
+
     /**
      * @function 待发货商品列表
      * @param Request $request
@@ -46,6 +51,7 @@ class ShipOrderService
         $orderBy = $request->orderBy ?: 'id';
         $sort = $request->sort ?: 'desc';
         $length = $request->length ?: 20;
+
         return $this->preShipOrder->orderBy($orderBy, $sort)->paginate($length);
     }
 

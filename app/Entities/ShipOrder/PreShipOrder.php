@@ -27,6 +27,19 @@ class PreShipOrder extends Model implements Transformable
      */
     protected $fillable = ['supplier_id','sku_id','num','confirmed_num','accepted_num','supply_price','status','created_at','updated_at'];
 
+    const WAIT_CREATE = 1;
+    const PARTY_CREATED  =  2;
+    const CREATED = 3;
+    const DONE = 4;
+
+    public static $allStatus = [
+        self::WAIT_CREATE => '待组单',
+        self::PARTY_CREATED => '部分组单',
+        self::CREATED => '组单完成',
+        self::DONE => '收货完成',
+    ];
+
+
     /**
      * @function 获取sku信息
      * @return \Illuminate\Database\Eloquent\Relations\HasOne
