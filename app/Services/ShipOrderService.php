@@ -11,6 +11,10 @@
 
 namespace App\Services;
 
+use App\Criteria\ShopOrder\PreShipOrder\PreShipOrderCreateTimeCriteria;
+use App\Criteria\ShopOrder\PreShipOrder\PreShipOrderIdCriteria;
+use App\Criteria\ShopOrder\PreShipOrder\PreShipOrderStatusCriteria;
+use App\Criteria\ShopOrder\PreShipOrder\ProductIdCriteria;
 use App\Entities\ShipOrder\GoodSkuLack;
 use App\Repositories\ShipOrder\GoodSkuLackRepository;
 use App\Repositories\ShipOrder\PreShipOrderRepository;
@@ -51,7 +55,10 @@ class ShipOrderService
         $orderBy = $request->orderBy ?: 'id';
         $sort = $request->sort ?: 'desc';
         $length = $request->length ?: 20;
-
+        $this->preShipOrder->pushCriteria(new PreShipOrderCreateTimeCriteria($request->created_at));
+        $this->preShipOrder->pushCriteria(new PreShipOrderIdCriteria($request->id));
+        $this->preShipOrder->pushCriteria(new PreShipOrderStatusCriteria($request->status));
+        $this->preShipOrder->pushCriteria(new ProductIdCriteria($request->good_id));
         return $this->preShipOrder->orderBy($orderBy, $sort)->paginate($length);
     }
 

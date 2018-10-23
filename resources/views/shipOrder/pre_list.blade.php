@@ -54,8 +54,8 @@
                                 <div class="form-group col-sm-4">
                                     <label for="order-id" class="control-label col-sm-4 text-right">订单ID:</label>
                                     <div class="col-sm-8">
-                                        <input type="text" name="order_id" id="order-id" class="input-sm form-control"
-                                               value="{{ old('order_id') }}">
+                                        <input type="text" name="id" id="order-id" class="input-sm form-control"
+                                               value="{{ old('id') }}">
                                     </div>
                                 </div>
                                 <div class="form-group col-sm-4">
