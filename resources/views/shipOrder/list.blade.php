@@ -23,6 +23,7 @@
         .good-info > p {
             padding: 4px;
         }
+        .mt-2{margin-top:20px;}
 
     </style>
     <link rel="stylesheet"
@@ -45,7 +46,7 @@
         </section>
         <!-- Main content -->
         <section class="content">
-            <div class="row">
+            <div class="row col-sm-12">
                 <div class="col-xs-12">
                     <div class="box box-info">
                         <div class="box-header">
@@ -173,15 +174,21 @@
                         </div>
                     </div>
                 </div>
+                <div id="add_note" style="display: none;">
+                    <form id="add-note">
+                        <div class="col-sm-12 mt-2">
+                            <input type="hidden" name="id" value="">
+                            {!! csrf_field() !!}
+                            <span class="col-sm-2">备注：</span>
+                            <textarea name="note" rows="6" class="col-sm-10"></textarea>
+                        </div>
+                        <div class="col-sm-12 text-right mt-2">
+                            <button type="button" class="btn btn-primary submit" onclick="subNote($(this))">确定</button>
+                        </div>
+                    </form>
+                </div>
             </div>
         </section>
-
-        <div id="add_note" style="display: none;">
-            <form>
-                <input type="hidden" name="id">
-                <textarea name="" cols="30" rows="10"></textarea>
-            </form>
-        </div>
     </div>
 @stop
 @section('script')
@@ -206,7 +213,7 @@
             layer.open({
                 type: 1,
                 skin: 'layui-layer-rim', //加上边框
-                area: ['400px','300px'],
+                area: ['475px','300px'],
                 fix: false, //不固定
                 shadeClose: true,
                 maxmin: true,
@@ -214,6 +221,36 @@
                 title: '添加备注',
                 content: $('#add_note').html(),
                 end: function(layero, index) {
+                }
+            });
+        }
+        function subNote(_index)
+        {
+            var id = _index.parents('#add-note').find('input[name=id]').val();
+            var note = _index.parents('#add-note').find('textarea[name=note]').val();
+            $.ajax({
+                type:'post',
+                url:"{{secure_route('shipOrder.addNote')}}",
+                data:{id:id,note:note,_token:"{{csrf_token()}}"},
+                beforeSend:function() {
+                    _index.attr('disabled', true);
+                    _index.html('保存中...');
+                },
+                success:function(data){
+                    if (data.status == 200) {
+                        toastr.success(data.content);
+                        parent.location.reload();
+                    } else {
+                        toastr.error(data.msg);
+                        _index.attr('disabled', false);
+                        _index.html('保存');
+                    }
+                },
+                error:function(data){
+                    var json=eval("("+data.responseText+")");
+                    toastr.error(json.msg);
+                    _index.attr('disabled', false);
+                    _index.html('保存');
                 }
             });
         }
