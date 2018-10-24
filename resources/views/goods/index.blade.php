@@ -56,7 +56,18 @@
                                                     style="width: 100%;">
                                                 <option value="">请选择</option>
                                                 @foreach(\App\Entities\Good\Good::$allStatus as $key => $status)
-                                                    <option value="{{$key}}">{{$status}}</option>
+                                                    <option value="{{$key}}" @if(old('status') == $key) selected @endif>{{$status}}</option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-xs-4">
+                                        <label for="inputPassword3" class="col-sm-4 control-label">供应商：</label>
+                                        <div class="col-sm-8">
+                                            <select class="form-control select2" name="supplier_id">
+                                                <option value="">请选择</option>
+                                                @foreach($suppliers as $supplier)
+                                                    <option value="{{$supplier->id}}" @if(old('supplier_id') == $supplier->id) selected @endif>{{$supplier->name}}</option>
                                                 @endforeach
                                             </select>
                                         </div>

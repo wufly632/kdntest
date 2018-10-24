@@ -2,7 +2,7 @@
 @section('css')
     <link rel="stylesheet"
           href="{{ asset('/assets/admin-lte/bower_components/bootstrap-daterangepicker/daterangepicker.css') }}">
-    <link rel="stylesheet" href="{{ asset('/assets/admin/css/select2.min.css') }}">
+
 @endsection
 @section('content')
     <div class="container" id="banner-box">
@@ -23,9 +23,10 @@
                 </div>
             </div>
             <div class="form-group">
-                <label for="category_id" class="col-sm-2 control-label text-right">类别</label>
+                <label class="col-sm-2 control-label text-right">类别</label>
                 <div class="col-sm-8">
-                    <select name="category_id" id="category_id" class="form-control">
+                    <select name="category_id" class="form-control select2">
+                        <option value="">请选择</option>
                         @foreach($categorys as $category)
                             <option value="{{ $category->id }}">{{ $category->name }}</option>
                         @endforeach
@@ -60,7 +61,7 @@
     <script src="{{ asset('/assets/js/plugincommon.js') }}"></script>
     <script src="{{ asset('/assets/js/bower_components/axios/dist/axios.min.js') }}"></script>
     <script src="{{ asset('/assets/admin/js/vue.min.js') }}"></script>
-    <script src="{{ asset('/assets/admin/js/select2.min.js') }}"></script>
+
     <script>
         var index = parent.layer.getFrameIndex(window.name);
         var bannerBox = new Vue({
@@ -133,7 +134,7 @@
                 }
             }
         });
-        $('#category_id').select2();
+        // $('.select2').select2();
         addDateRangePicker($('#time_duration'));
     </script>
 @endsection

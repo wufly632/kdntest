@@ -22,6 +22,7 @@
     <link rel="stylesheet" href="{{asset('assets/css/reset.css')}}">
     <link rel="stylesheet" href="{{asset('assets/css/style.css')}}">
     <link rel="stylesheet" type="text/css" href="{{asset('assets/plugins/sweetalert/sweetalert.css')}}">
+    <link rel="stylesheet" href="{{ asset('/assets/admin/css/select2.min.css') }}">
 
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -50,6 +51,7 @@
     <script src="{{asset('assets/plugins/layui/layer.js')}}"></script>
     <script src="{{asset('assets/plugins/sweetalert/sweetalert-dev.js')}}"></script>
     <script src="{{asset('assets/plugins/jquery-form/jquery.form.js')}}"></script>
+    <script src="{{ asset('/assets/admin/js/select2.min.js') }}"></script>
     @yield('css')
 </head>
 <!-- ADD THE CLASS fixed TO GET A FIXED HEADER AND SIDEBAR LAYOUT -->
@@ -68,3 +70,6 @@
 </body>
 </html>
 @yield('script')
+<script>
+    $('.select2').select2();
+</script>
