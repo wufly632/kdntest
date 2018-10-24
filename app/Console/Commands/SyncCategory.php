@@ -70,7 +70,7 @@ class SyncCategory extends Command
             // '椅子.xlsx',
             // '本.xlsx',
             '灯具.xlsx',
-            '扩音器.xlsx',
+            // '扩音器.xlsx',
         ];
         foreach ($arr as $i) {
             $excel_path = 'storage'.DIRECTORY_SEPARATOR.'excel'.DIRECTORY_SEPARATOR.'import/attribute'.DIRECTORY_SEPARATOR.$i;
