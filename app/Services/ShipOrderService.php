@@ -25,10 +25,13 @@ use App\Criteria\ShipOrder\ShipOrder\ShipOrderCreatedAtCriteria;
 use App\Criteria\ShipOrder\ShipOrder\ShipOrderIdCriteria;
 use App\Criteria\ShipOrder\ShipOrder\ShipOrderStatusCriteria;
 use App\Entities\ShipOrder\GoodSkuLack;
+use App\Entities\ShipOrder\ShipOrder;
+use App\Entities\ShipOrder\ShipOrderItem;
 use App\Repositories\ShipOrder\GoodSkuLackRepository;
 use App\Repositories\ShipOrder\PreShipOrderRepository;
 use App\Repositories\ShipOrder\ShipOrderRepository;
 use App\Services\Api\ApiResponse;
+use Illuminate\Support\Facades\DB;
 use Request;
 
 class ShipOrderService
@@ -108,6 +111,11 @@ class ShipOrderService
         return $this->goodSkuLack->orderBy($orderBy, $sort)->paginate($length);
     }
 
+    /**
+     * @function 缺货申请审核
+     * @param $request
+     * @return mixed
+     */
     public function auditLack($request)
     {
         if (! $request->id) {
@@ -127,6 +135,41 @@ class ShipOrderService
             \Log::info($e->getMessage());
             ding('缺货审核失败-'.$e->getMessage());
             return ApiResponse::failure(g_API_ERROR, '操作失败');
+        }
+    }
+
+    /**
+     * @function 发货单签收
+     * @param $request
+     * @return mixed
+     */
+    public function sign($request)
+    {
+        try {
+            DB::beginTransaction();
+            $ship_order_id = $request->ship_order_id;
+            $ship_order = ShipOrder::find($ship_order_id);
+            if (! $sku_num = $request->sku_num) {
+                return ApiResponse::failure(g_API_ERROR, '参数错误');
+            }
+            foreach ($sku_num as $sku_id => $accepted) {
+                ShipOrderItem::where(['ship_order_id' => $ship_order_id, 'sku_id' => $sku_id])->update(['accepted' => $accepted]);
+            }
+            $accepted_total = $ship_order->getItems->count('accepted');
+            $ship_order->accepted = $accepted_total;
+            if ($accepted_total >= $ship_order->num) {
+                $ship_order->status = ShipOrder::ACCEPTANCE;
+            } else {
+                $ship_order->status = ShipOrder::PARTLYINHOUSED;
+            }
+            $ship_order->save();
+            DB::commit();
+            return ApiResponse::success('签收成功');
+        } catch (\Exception $e) {
+            \Log::info($e->getMessage());
+            ding('发货单'.$ship_order_id.'签收失败');
+            DB::rollBack();
+            return ApiResponse::failure(g_API_ERROR,'签收失败');
         }
     }
 }

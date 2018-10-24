@@ -135,5 +135,7 @@ Route::group(['middleware' => ['auth', 'web']], function () {
        Route::get('/lackAudit/{lack}', ['as' => 'shipOrder.lackAudit', 'uses' => 'ShipOrderController@lackAudit']);
        Route::post('/lackAudit', ['as' => 'shipOrder.postLackAudit', 'uses' => 'ShipOrderController@postLackAudit']);
        Route::post('/addNote', ['as' => 'shipOrder.addNote', 'uses' => 'ShipOrderController@addNote']);
+       Route::get('/sign/{ship_order}', ['as' => 'shipOrder.sign', 'uses' => 'ShipOrderController@sign']);
+       Route::post('/signPost', ['as' => 'shipOrder.signPost', 'uses' => 'ShipOrderController@signPost']);
     });
 });

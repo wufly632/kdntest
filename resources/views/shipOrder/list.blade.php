@@ -128,6 +128,9 @@
                                         <td>{{ $order->note }}</td>
                                         <td>
                                             <button class="btn btn-primary" onclick="addNote({{$order->id}})">添加备注</button>
+                                            @if($order->status == \App\Entities\ShipOrder\ShipOrder::SHIPPED)
+                                                <button class="btn btn-success" onclick="signOrder({{$order->id}})">签收</button>
+                                            @endif
                                             {{--<button class="btn btn-primary">添加物流</button>
                                             <button class="btn btn-primary">异常关闭</button>--}}
                                         </td>
@@ -223,6 +226,22 @@
                     toastr.error(json.msg);
                     _index.attr('disabled', false);
                     _index.html('保存');
+                }
+            });
+        }
+        //签收
+        function signOrder(id) {
+            layer.open({
+                type: 2,
+                skin: 'layui-layer-rim', //加上边框
+                area: ['80%','600px'],
+                fix: false, //不固定
+                shadeClose: true,
+                maxmin: true,
+                shade:0.4,
+                title: '发货单'+id+'-签收',
+                content: "/shipOrder/sign/"+id,
+                end: function(layero, index) {
                 }
             });
         }

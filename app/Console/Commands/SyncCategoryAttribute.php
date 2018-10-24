@@ -63,7 +63,7 @@ class SyncCategoryAttribute extends Command
             // '居家百货属性.xlsx',
             // '汽车配饰属性.xlsx',
             // '手机数码属性.xlsx',
-            // '美妆个护.xlsx',
+            '美妆个护.xlsx',
             // '服装服饰类目.xlsx',
             // '孕婴童.csv',
             // '箱包配饰.xlsx'
@@ -71,7 +71,7 @@ class SyncCategoryAttribute extends Command
             // '办公用品类目.xlsx',
             // '椅子.xlsx',
             // '本.xlsx',
-            '灯具.xlsx',
+            // '灯具.xlsx',
             // '扩音器.xlsx',
         ];
         foreach ($arr as $i) {
