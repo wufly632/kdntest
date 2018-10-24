@@ -75,7 +75,7 @@
                                 <div class="form-group col-sm-4">
                                     <label for="order-status" class="control-label col-sm-4 text-right">状态:</label>
                                     <div class="col-sm-8">
-                                        <select name="status" id="order-status" class="form-control input-sm">
+                                        <select name="status" id="order-status" class="form-control input-sm select2">
                                             <option value="">全部</option>
                                             @foreach(\App\Entities\ShipOrder\PreShipOrder::$allStatus as $key => $status)
                                                 <option value="{{$key}}">{{$status}}</option>

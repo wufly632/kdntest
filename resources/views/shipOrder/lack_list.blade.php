@@ -35,7 +35,7 @@
         <section class="content-header">
             <h1>
                 发货管理
-                <small>发货单列表</small>
+                <small>缺货申请记录</small>
             </h1>
             <ol class="breadcrumb">
                 <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
@@ -49,20 +49,20 @@
                 <div class="col-xs-12">
                     <div class="box box-info">
                         <div class="box-header">
-                            <form action="{{ secure_route('orders.index') }}" method="get"
+                            <form method="get"
                                   class="form-horizontal clearfix">
                                 <div class="form-group col-sm-4">
-                                    <label for="order-id" class="control-label col-sm-4 text-right">订单号:</label>
+                                    <label for="order-id" class="control-label col-sm-4 text-right">ID:</label>
                                     <div class="col-sm-8">
-                                        <input type="text" name="order_id" id="order-id" class="input-sm form-control"
-                                               value="{{ old('order_id') }}">
+                                        <input type="text" name="id" id="order-id" class="input-sm form-control"
+                                               value="{{ old('id') }}">
                                     </div>
                                 </div>
                                 <div class="form-group col-sm-4">
-                                    <label for="good-name" class="control-label col-sm-4 text-right">商品名称:</label>
+                                    <label for="good-name" class="control-label col-sm-4 text-right">SKU ID:</label>
                                     <div class="col-sm-8">
-                                        <input type="text" name="good_name" id="good-name"
-                                               class="input-sm form-control" value="{{ old('good_name') }}">
+                                        <input type="text" name="sku_id" id="good-name"
+                                               class="input-sm form-control" value="{{ old('sku_id') }}">
                                     </div>
                                 </div>
                                 <div class="form-group col-sm-4">
@@ -72,34 +72,15 @@
                                                value="{{ old('good_id') }}">
                                     </div>
                                 </div>
-                                <div class="form-group col-sm-4">
-                                    <label for="good_code" class="control-label col-sm-4 text-right">货号:</label>
-                                    <div class="col-sm-8">
-                                        <input type="text" name="good_code" id="good_code" class="input-sm form-control"
-                                               value="{{ old('good_code') }}">
-                                    </div>
-                                </div>
-                                <div class="form-group col-sm-4">
-                                    <label for="from-type" class="control-label col-sm-4 text-right">订单来源:</label>
-                                    <div class="col-sm-8">
-                                        <select name="from_type" id="from-type" class="form-control input-sm">
-                                            <option value="0" selected>请选择</option>
-                                            <option value="1">PC</option>
-                                            <option value="2">H5</option>
-                                            <option value="4">APP</option>
-                                        </select>
-                                    </div>
-                                </div>
+
                                 <div class="form-group col-sm-4">
                                     <label for="order-status" class="control-label col-sm-4 text-right">状态:</label>
                                     <div class="col-sm-8">
-                                        <select name="status" id="order-status" class="form-control input-sm">
-                                            <option value="0" selected>全部</option>
-                                            <option value="1">待付款</option>
-                                            <option value="3">待发货</option>
-                                            <option value="4">待收货</option>
-                                            <option value="5">交易完成</option>
-                                            <option value="6">交易取消</option>
+                                        <select name="status" id="order-status" class="form-control input-sm select2">
+                                            <option value="" selected>全部</option>
+                                            @foreach(\App\Entities\ShipOrder\GoodSkuLack::$allStatus as $key => $status)
+                                                <option value="{{$key}}" @if(old('status') == $key) selected @endif>{{$status}}</option>
+                                            @endforeach
                                         </select>
                                     </div>
                                 </div>
@@ -178,7 +159,11 @@
     </div>
 @stop
 @section('script')
+    <script src="{{ asset('/assets/admin-lte/bower_components/moment/min/moment.min.js') }}"></script>
+    <script src="{{ asset('/assets/admin-lte/bower_components/bootstrap-daterangepicker/daterangepicker.js') }}"></script>
+    <script src="{{ asset('/assets/js/plugincommon.js') }}"></script>
     <script>
+        addDateRangePicker($('#created_at'));
         function catShipOrder(id) {
             layer.open({
                 type: 2,

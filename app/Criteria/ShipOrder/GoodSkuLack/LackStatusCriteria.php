@@ -1,22 +1,22 @@
 <?php
 
-namespace App\Criteria\ShopOrder\PreShipOrder;
+namespace App\Criteria\ShipOrder\GoodSkuLack;
 
 use Prettus\Repository\Contracts\CriteriaInterface;
 use Prettus\Repository\Contracts\RepositoryInterface;
 
 /**
- * Class PreShipOrderIdCriteria.
+ * Class LackStatusCriteria.
  *
- * @package namespace App\Criteria\ShopOrder\PreShipOrder;
+ * @package namespace App\Criteria\ShipOrder\GoodSkuLack;
  */
-class PreShipOrderIdCriteria implements CriteriaInterface
+class LackStatusCriteria implements CriteriaInterface
 {
-    protected $id;
+    protected $status;
 
-    public function __construct($id)
+    public function __construct($status)
     {
-        $this->id = $id;
+        $this->status = $status;
     }
 
     /**
@@ -29,8 +29,8 @@ class PreShipOrderIdCriteria implements CriteriaInterface
      */
     public function apply($model, RepositoryInterface $repository)
     {
-        if ($this->id) {
-            $model = $model->where('id', $this->id);
+        if ($this->status) {
+            $model = $model->where('good_sku_lacks.status', $this->status);
         }
         return $model;
     }
