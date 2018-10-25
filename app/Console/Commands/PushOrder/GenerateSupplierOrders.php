@@ -124,7 +124,7 @@ class GenerateSupplierOrders extends Command
                             }
                         }
                         //
-                        Requirement::where([['sku_id', '=', $item->sku_id], ['is_push', '=', 0], ['created_at', '>', $item]])
+                        Requirement::where([['sku_id', '=', $item->sku_id], ['is_push', '=', 0], ['created_at', '<', $time]])
                             ->update(['is_push' => 1]);
                         DB::commit();
                         $this->output->progressAdvance();
