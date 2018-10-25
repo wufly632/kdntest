@@ -122,6 +122,11 @@ class ShipOrderController extends Controller
         return view('shipOrder.sign', compact('ship_order_items', 'ship_order_id'));
     }
 
+    /**
+     * @function  签收
+     * @param Request $request
+     * @return mixed
+     */
     public function signPost(Request $request)
     {
         if (! $request->ship_order_id) {

@@ -7,7 +7,7 @@ use App\Entities\PushOrder\PushOrder;
 use App\Entities\PushOrder\Requirement;
 use App\Entities\PushOrder\Surplus;
 use App\Entities\PushOrder\SurplusRecord;
-use App\Entities\ShiperOrder\PreShipOrder;
+use App\Entities\ShipOrder\PreShipOrder;
 use Carbon\Carbon;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
@@ -119,6 +119,7 @@ class GenerateSupplierOrders extends Command
                                 }
                             } else {
                                 // 推单 需求量
+                                $this->info($item->sku_id.'-'.$item->number);
                                 $this->pushOrder($item->sku_id, $item->number);
                             }
                         }
@@ -135,6 +136,7 @@ class GenerateSupplierOrders extends Command
                     }
                 }
             });
+        ding('推单finish');
         $this->output->progressFinish();
         $this->comment('Finished!');
     }
@@ -151,8 +153,21 @@ class GenerateSupplierOrders extends Command
            'confirmed_num' => 0,
            'accepted_num' => 0,
            'supply_price' => $sku->supply_price,
-           'status' => 1,
+           'status' => PreShipOrder::WAIT_CREATE,
            'created_at' => Carbon::now()->toDateTimeString(),
+        ]);
+        //生成推单表
+        $push_order = PushOrder::create([
+            'sku_id' => $sku->id,
+            'batch_id' => $this->batchId,
+            'good_id' => $sku->good_id,
+            'supplier_id' => $sku->getProduct->supplier_id,
+            'num' => $num,
+            'accepted' => 0,
+            'need_num' => $num,
+            'supply_price' => $sku->supply_price,
+            'status' => 1,//未满足
+            'created_at' => Carbon::now()->toDateTimeString(),
         ]);
     }
 }
