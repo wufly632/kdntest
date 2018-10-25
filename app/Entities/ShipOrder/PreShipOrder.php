@@ -25,7 +25,7 @@ class PreShipOrder extends Model implements Transformable
      *
      * @var array
      */
-    protected $fillable = ['supplier_id','sku_id','num','confirmed_num','accepted_num','supply_price','status','created_at','updated_at'];
+    protected $fillable = ['supplier_id','good_id','sku_id','num','confirmed_num','accepted_num','supply_price','status','created_at','updated_at'];
 
     const WAIT_CREATE = 1;
     const PARTY_CREATED  =  2;

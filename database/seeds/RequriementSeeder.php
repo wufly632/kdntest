@@ -11,7 +11,7 @@ class RequriementSeeder extends Seeder
      */
     public function run()
     {
-        $sku_ids = \App\Entities\Good\GoodSku::all()->pluck('id')->toArray();
+        $sku_ids = \App\Entities\Product\ProductSku::all()->pluck('id')->toArray();
         $data = [];
         for ($i = 0; $i < 100; $i++) {
             $tmp = [];
@@ -19,7 +19,7 @@ class RequriementSeeder extends Seeder
             $tmp['num'] = rand(-20,30);
             $tmp['type'] = rand(1,2);
             $tmp['is_push'] = 0;
-            $tmp['created_at'] = \Carbon\Carbon::now()->toDateTimeString();
+            $tmp['created_at'] = \Carbon\Carbon::now()->subHours(5)->toDateTimeString();
             $data[] = $tmp;
         }
         \DB::table('requirements')->insert($data);

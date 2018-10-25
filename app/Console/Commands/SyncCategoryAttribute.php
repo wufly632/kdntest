@@ -73,7 +73,8 @@ class SyncCategoryAttribute extends Command
             // '本.xlsx',
             // '灯具.xlsx',
             // '扩音器.xlsx',
-            '增加类目.xlsx',
+            // '增加类目.xlsx',
+            '居家百货-厨房电器-电炖锅功率属性值添加.xlsx',
         ];
         foreach ($arr as $i) {
             $excel_path = 'storage'.DIRECTORY_SEPARATOR.'excel'.DIRECTORY_SEPARATOR.'import/attribute'.DIRECTORY_SEPARATOR.$i;

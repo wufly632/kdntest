@@ -26,6 +26,12 @@ function jsonMessage($error, $url='')
     return response()->json($json);
 }
 
+/**
+ * @function 显示切割图
+ * @param $url
+ * @param $size
+ * @return string
+ */
 function ImgResize($url, $size)
 {
     return $url.'?x-oss-process=style/'.$size.'-'.$size;

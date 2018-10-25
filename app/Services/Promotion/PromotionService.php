@@ -337,7 +337,8 @@ class PromotionService
                         throw new CustomException('请重新添加商品，商品id：'.$good_id);
                     }
                     foreach ($request->input('sku_id'.$good_id) as $key => $v) {
-                        $sku_tmp['sku_id'] = $request->input('sku_str'.$good_id)[$key];
+                        // $sku_tmp['sku_id'] = $request->input('sku_str'.$good_id)[$key];
+                        $sku_tmp['sku_id'] = $v;
                         if (empty(floatval($request->input('price'.$v)))) {
                             throw new CustomException('请完善优惠活动的商品信息，商品id：'.$good_id);
                         }

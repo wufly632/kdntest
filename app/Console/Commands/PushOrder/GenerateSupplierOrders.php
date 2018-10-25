@@ -130,7 +130,7 @@ class GenerateSupplierOrders extends Command
                         DB::commit();
                         $this->output->progressAdvance();
                     } catch (\Exception $e) {
-                        Log::info('推单('.$this->batchId.')失败：'.$e->getMessage());
+                        Log::info('推单('.$this->batchId.')失败-'.$item->sku_id.'：'.$e->getMessage());
                         ding('推单('.$this->batchId.')失败：'.$e->getMessage());
                         DB::rollBack();
                         $this->output->progressAdvance();
