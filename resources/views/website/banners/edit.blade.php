@@ -7,7 +7,7 @@
     <div class="container" id="banner-box">
         <form class="form-horizontal"
               id="banner-form">
-            <div class="h3 text-center" style="padding: 10px;">@if(isset($banner->id))banner修改@else banner添加@endif</div>
+            <div class="h3 text-center" style="padding: 10px;">@if(isset($banner->id))banner修改@else banner新建@endif</div>
             <div class="form-group">
                 <label for="title" class="col-sm-2 control-label text-right">标题</label>
                 <div class="col-sm-8">
@@ -145,5 +145,8 @@
             }
         });
         addDateRangePicker($('#time_duration'));
+        @if(isset($banner->type))
+        $('#type').val('{{ $banner->type }}')
+        @endif
     </script>
 @endsection
