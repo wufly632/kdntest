@@ -746,7 +746,7 @@
             name = $("#updateCategoryContainer").find("input[name=name]").val();
             en_name = $("#updateCategoryContainer").find("input[name=en_name]").val();
             sort = $("#updateCategoryContainer").find("input[name=sort]").val();
-            is_final = $("#updateCategoryContainer").find("input[name=is_final]").val();
+            is_final = $("#updateCategoryContainer").find("input[name=is_final]:checked").val();
             category_id = $("#saveUpdateCategoryInfoButton").data('category_id');
 
             if(category_id != undefined && first_level_category < 0){
