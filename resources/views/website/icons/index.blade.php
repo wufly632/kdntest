@@ -106,10 +106,10 @@
     <script src="{{asset('/assets/js/bower_components/axios/dist/axios.min.js')}}"></script>
     <script>
         $('.order-modify').click(function () {
-            showInfo('banner修改', $(this).attr('data-target-uri'))
+            showInfo('ICON修改', $(this).attr('data-target-uri'))
         });
         $('#create-banner').click(function () {
-            showInfo('banner创建', $(this).attr('data-target-uri'))
+            showInfo('ICON创建', $(this).attr('data-target-uri'))
         });
         $('.icons-delete').click(function () {
             let _clickEle = $(this);

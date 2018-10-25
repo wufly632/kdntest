@@ -2,13 +2,12 @@
 @section('css')
     <link rel="stylesheet"
           href="{{ asset('/assets/admin-lte/bower_components/bootstrap-daterangepicker/daterangepicker.css') }}">
-
 @endsection
 @section('content')
     <div class="container" id="banner-box">
         <form class="form-horizontal"
               id="banner-form">
-            <div class="h3 text-center" style="padding: 10px;">@if(isset($icon->id))ICON创建@else ICON添加@endif</div>
+            <div class="h3 text-center" style="padding: 10px;">@if(isset($icon->id))ICON修改@else ICON创建@endif</div>
             <div class="form-group">
                 <label for="title" class="col-sm-2 control-label text-right">标题</label>
                 <div class="col-sm-8">
@@ -23,9 +22,9 @@
                 </div>
             </div>
             <div class="form-group">
-                <label class="col-sm-2 control-label text-right">类别</label>
+                <label for="category_id" class="col-sm-2 control-label text-right">类目</label>
                 <div class="col-sm-8">
-                    <select name="category_id" class="form-control select2">
+                    <select name="category_id" id="category_id" class="form-control select2">
                         <option value="">请选择</option>
                         @foreach($categorys as $category)
                             <option value="{{ $category->id }}">{{ $category->name }}</option>
