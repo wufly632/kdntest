@@ -60,6 +60,7 @@ class GenerateSupplierOrders extends Command
 
     public function handleProgress()
     {
+        ding('调用了推单脚本');
         $time = Carbon::now()->minute(0)->second(0);
         $this->batchId = $time->format('YmdH');
         $time = $time->toDateTimeString();
