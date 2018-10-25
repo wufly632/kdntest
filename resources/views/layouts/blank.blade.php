@@ -18,6 +18,7 @@
          folder instead of downloading all of them to reduce the load. -->
     <link rel="stylesheet" href="{{asset('assets/admin-lte/dist/css/skins/_all-skins.min.css')}}">
     <link rel="stylesheet" href="{{asset('assets/plugins/toastr/toastr.min.css')}}">
+    <link rel="stylesheet" href="{{ asset('/assets/admin/css/select2.min.css') }}">
 
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -44,6 +45,7 @@
     <!-- toastr -->
     <script src="{{asset('assets/plugins/toastr/toastr.min.js')}}"></script>
     <script src="{{asset('assets/plugins/layui/layer.js')}}"></script>
+    <script src="{{ asset('/assets/admin/js/select2.min.js') }}"></script>
     @yield('css')
 </head>
 <!-- ADD THE CLASS fixed TO GET A FIXED HEADER AND SIDEBAR LAYOUT -->
@@ -58,3 +60,6 @@
 </body>
 </html>
 @yield('script')
+<script>
+    $('.select2').select2();
+</script>

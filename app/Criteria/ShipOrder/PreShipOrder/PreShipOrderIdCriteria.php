@@ -1,22 +1,22 @@
 <?php
 
-namespace App\Criteria\ShopOrder\PreShipOrder;
+namespace App\Criteria\ShipOrder\PreShipOrder;
 
 use Prettus\Repository\Contracts\CriteriaInterface;
 use Prettus\Repository\Contracts\RepositoryInterface;
 
 /**
- * Class ProductIdCriteria.
+ * Class PreShipOrderIdCriteria.
  *
- * @package namespace App\Criteria\ShopOrder\PreShipOrder;
+ * @package namespace App\Criteria\ShipOrder\PreShipOrder;
  */
-class ProductIdCriteria implements CriteriaInterface
+class PreShipOrderIdCriteria implements CriteriaInterface
 {
-    protected $product_id;
+    protected $id;
 
-    public function __construct($product_id)
+    public function __construct($id)
     {
-        $this->product_id = $product_id;
+        $this->id = $id;
     }
 
     /**
@@ -29,8 +29,8 @@ class ProductIdCriteria implements CriteriaInterface
      */
     public function apply($model, RepositoryInterface $repository)
     {
-        if ($this->product_id) {
-            $model = $model->where('good_id', $this->product_id);
+        if ($this->id) {
+            $model = $model->where('pre_ship_orders.id', $this->id);
         }
         return $model;
     }

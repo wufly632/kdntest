@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Criteria\ShopOrder\PreShipOrder;
+namespace App\Criteria\ShipOrder\PreShipOrder;
 
 use Prettus\Repository\Contracts\CriteriaInterface;
 use Prettus\Repository\Contracts\RepositoryInterface;
@@ -8,7 +8,7 @@ use Prettus\Repository\Contracts\RepositoryInterface;
 /**
  * Class PreShipOrderStatusCriteria.
  *
- * @package namespace App\Criteria\ShopOrder\PreShipOrder;
+ * @package namespace App\Criteria\ShipOrder\PreShipOrder;
  */
 class PreShipOrderStatusCriteria implements CriteriaInterface
 {
@@ -30,7 +30,7 @@ class PreShipOrderStatusCriteria implements CriteriaInterface
     public function apply($model, RepositoryInterface $repository)
     {
         if ($this->status) {
-            $model = $model->where('status', $this->status);
+            $model = $model->where('pre_ship_orders.status', $this->status);
         }
         return $model;
     }

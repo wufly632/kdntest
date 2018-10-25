@@ -198,10 +198,10 @@ class CategoryService
             return $category_ids;
         }
         if ($category->level == 1) {
-            $category_ids = '0,' . $category_id;
+            $category_ids = '0';
         } else {
             $parent_category = $this->category->find($category->parent_id);
-            $category_ids = $parent_category->category_ids . ',' . $category_id;
+            $category_ids = $parent_category->category_ids . ',' . $category->parent_id;
         }
         return $category_ids;
     }

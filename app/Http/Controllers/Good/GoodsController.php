@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Good;
 
 use App\Entities\CateAttr\Category;
 use App\Entities\Good\Good;
+use App\Entities\Supplier\SupplierUser;
 use App\Repositories\Good\GoodRepositoryEloquent;
 use App\Services\Api\ApiResponse;
 use App\Services\CateAttr\CategoryAttributeService;
@@ -46,15 +47,8 @@ class GoodsController extends Controller
     {
         $request->flash();
         $goods = $this->goodService->getList($request);
-
-        if (request()->wantsJson()) {
-
-            return response()->json([
-                'data' => $goods,
-            ]);
-        }
-
-        return view('goods.index', compact('goods'));
+        $suppliers = SupplierUser::all();
+        return view('goods.index', compact('goods','suppliers'));
     }
 
 

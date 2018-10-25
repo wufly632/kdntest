@@ -12,5 +12,6 @@ class PushOrder extends Model
      *
      * @var array
      */
-    protected $fillable = ['requirement_id','batch_id','pre_ship_order_id','created_at','updated_at'];
+    protected $fillable = ['batch_id','supplier_id','good_id','sku_id','num','supply_price','accepted',
+                           'need_num','status','created_at','updated_at'];
 }

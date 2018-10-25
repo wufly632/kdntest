@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Criteria\ShopOrder\PreShipOrder;
+namespace App\Criteria\ShipOrder\PreShipOrder;
 
 use Prettus\Repository\Contracts\CriteriaInterface;
 use Prettus\Repository\Contracts\RepositoryInterface;
@@ -8,7 +8,7 @@ use Prettus\Repository\Contracts\RepositoryInterface;
 /**
  * Class PreShipOrderCreateTimeCriteria.
  *
- * @package namespace App\Criteria\ShopOrder\PreShipOrder;
+ * @package namespace App\Criteria\ShipOrder\PreShipOrder;
  */
 class PreShipOrderCreateTimeCriteria implements CriteriaInterface
 {
@@ -31,7 +31,7 @@ class PreShipOrderCreateTimeCriteria implements CriteriaInterface
     {
         if ($this->range_time) {
             list($start_at,$end_at) = get_time_range($this->range_time);
-            $model = $model->where('created_at', '>', $start_at)->where('created_at', '<', $end_at);
+            $model = $model->where('pre_ship_orders.created_at', '>', $start_at)->where('pre_ship_orders.created_at', '<', $end_at);
         }
         return $model;
     }

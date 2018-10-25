@@ -50,57 +50,23 @@
                 <div class="col-xs-12">
                     <div class="box box-info">
                         <div class="box-header">
-                            <form action="{{ secure_route('orders.index') }}" method="get"
+                            <form action="" method="get"
                                   class="form-horizontal clearfix">
                                 <div class="form-group col-sm-4">
-                                    <label for="order-id" class="control-label col-sm-4 text-right">订单号:</label>
+                                    <label for="order-id" class="control-label col-sm-4 text-right">发货单ID:</label>
                                     <div class="col-sm-8">
-                                        <input type="text" name="order_id" id="order-id" class="input-sm form-control"
-                                               value="{{ old('order_id') }}">
-                                    </div>
-                                </div>
-                                <div class="form-group col-sm-4">
-                                    <label for="good-name" class="control-label col-sm-4 text-right">商品名称:</label>
-                                    <div class="col-sm-8">
-                                        <input type="text" name="good_name" id="good-name"
-                                               class="input-sm form-control" value="{{ old('good_name') }}">
-                                    </div>
-                                </div>
-                                <div class="form-group col-sm-4">
-                                    <label for="good-id" class="control-label col-sm-4 text-right">商品ID:</label>
-                                    <div class="col-sm-8">
-                                        <input type="text" name="good_id" id="good-id" class="input-sm form-control"
-                                               value="{{ old('good_id') }}">
-                                    </div>
-                                </div>
-                                <div class="form-group col-sm-4">
-                                    <label for="good_code" class="control-label col-sm-4 text-right">货号:</label>
-                                    <div class="col-sm-8">
-                                        <input type="text" name="good_code" id="good_code" class="input-sm form-control"
-                                               value="{{ old('good_code') }}">
-                                    </div>
-                                </div>
-                                <div class="form-group col-sm-4">
-                                    <label for="from-type" class="control-label col-sm-4 text-right">订单来源:</label>
-                                    <div class="col-sm-8">
-                                        <select name="from_type" id="from-type" class="form-control input-sm">
-                                            <option value="0" selected>请选择</option>
-                                            <option value="1">PC</option>
-                                            <option value="2">H5</option>
-                                            <option value="4">APP</option>
-                                        </select>
+                                        <input type="text" name="id" id="order-id" class="input-sm form-control"
+                                               value="{{ old('id') }}">
                                     </div>
                                 </div>
                                 <div class="form-group col-sm-4">
                                     <label for="order-status" class="control-label col-sm-4 text-right">状态:</label>
                                     <div class="col-sm-8">
-                                        <select name="status" id="order-status" class="form-control input-sm">
-                                            <option value="0" selected>全部</option>
-                                            <option value="1">待付款</option>
-                                            <option value="3">待发货</option>
-                                            <option value="4">待收货</option>
-                                            <option value="5">交易完成</option>
-                                            <option value="6">交易取消</option>
+                                        <select name="status" id="order-status" class="form-control input-sm select2">
+                                            <option value="" selected>全部</option>
+                                            @foreach(\App\Entities\ShipOrder\ShipOrder::$allStatus as $key => $status)
+                                                <option value="{{$key}}" @if(old('status') == $key) selected @endif>{{$status}}</option>
+                                            @endforeach
                                         </select>
                                     </div>
                                 </div>
@@ -111,8 +77,10 @@
                                                class="input-sm form-control" value="{{ old('created_at') }}">
                                     </div>
                                 </div>
-                                <div class="form-group col-sm-4 text-right">
-                                    <input type="submit" value="查找" class="btn btn-sm btn-primary">
+                                <div class="col-sm-12">
+                                    <div class="form-group col-sm-11 text-right">
+                                        <input type="submit" value="查找" class="btn btn-sm btn-primary">
+                                    </div>
                                 </div>
                             </form>
                         </div>
@@ -160,8 +128,11 @@
                                         <td>{{ $order->note }}</td>
                                         <td>
                                             <button class="btn btn-primary" onclick="addNote({{$order->id}})">添加备注</button>
-                                            <button class="btn btn-primary">添加物流</button>
-                                            <button class="btn btn-primary">异常关闭</button>
+                                            @if($order->status == \App\Entities\ShipOrder\ShipOrder::SHIPPED)
+                                                <button class="btn btn-success" onclick="signOrder({{$order->id}})">签收</button>
+                                            @endif
+                                            {{--<button class="btn btn-primary">添加物流</button>
+                                            <button class="btn btn-primary">异常关闭</button>--}}
                                         </td>
 
                                     </tr>
@@ -192,7 +163,11 @@
     </div>
 @stop
 @section('script')
+    <script src="{{ asset('/assets/admin-lte/bower_components/moment/min/moment.min.js') }}"></script>
+    <script src="{{ asset('/assets/admin-lte/bower_components/bootstrap-daterangepicker/daterangepicker.js') }}"></script>
+    <script src="{{ asset('/assets/js/plugincommon.js') }}"></script>
     <script>
+        addDateRangePicker($('#created_at'));
         function catShipOrder(id) {
             layer.open({
                 type: 2,
@@ -251,6 +226,22 @@
                     toastr.error(json.msg);
                     _index.attr('disabled', false);
                     _index.html('保存');
+                }
+            });
+        }
+        //签收
+        function signOrder(id) {
+            layer.open({
+                type: 2,
+                skin: 'layui-layer-rim', //加上边框
+                area: ['80%','600px'],
+                fix: false, //不固定
+                shadeClose: true,
+                maxmin: true,
+                shade:0.4,
+                title: '发货单'+id+'-签收',
+                content: "/shipOrder/sign/"+id,
+                end: function(layero, index) {
                 }
             });
         }

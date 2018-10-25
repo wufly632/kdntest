@@ -110,4 +110,29 @@ class ShipOrderController extends Controller
         return ApiResponse::failure(g_API_ERROR, '添加失败');
     }
 
+    /**
+     * @function 发货单签收
+     * @param ShipOrder $ship_order
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
+    public function sign(ShipOrder $ship_order)
+    {
+        $ship_order_items = $ship_order->getItems;
+        $ship_order_id = $ship_order->id;
+        return view('shipOrder.sign', compact('ship_order_items', 'ship_order_id'));
+    }
+
+    /**
+     * @function  签收
+     * @param Request $request
+     * @return mixed
+     */
+    public function signPost(Request $request)
+    {
+        if (! $request->ship_order_id) {
+            return ApiResponse::failure(g_API_ERROR, '请选择要签收的发货单');
+        }
+        return $this->shipOrderService->sign($request);
+    }
+
 }
