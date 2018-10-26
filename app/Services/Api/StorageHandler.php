@@ -101,7 +101,7 @@ class StorageHandler
 
     private static function getOssClint()
     {
-        return new OssClient(env('OSS_ACCESS_ID', ''), env('OSS_ACCESS_SECRET', ''), env('SOO_ENDPOINT', ''));
+        return new OssClient(env('OSS_ACCESS_ID', ''), env('OSS_ACCESS_SECRET', ''), env('OSS_ENDPOINT', ''));
     }
 
     /**
