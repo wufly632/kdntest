@@ -59,8 +59,8 @@ class CouponService
         $this->coupon->pushCriteria(new CouponNameCriteria(Request::input('coupon_title')));
         $this->coupon->pushCriteria(new CouponPurposeCriteria(Request::input('coupon_purpost')));
         $this->coupon->pushCriteria(new CouponStatusCriteria(Request::input('status')));
-        $this->coupon->pushCriteria(new CouponGrantTimeCriteria(Request::input('grant_time')));
-        $this->coupon->pushCriteria(new CouponUseTimeCriteria(Request::input('use_time')));
+        $this->coupon->pushCriteria(new CouponGrantTimeCriteria(Request::input('daterange2')));
+        $this->coupon->pushCriteria(new CouponUseTimeCriteria(Request::input('daterange')));
         return $this->coupon->orderBy($orderBy, $sort)->paginate($length);
     }
 

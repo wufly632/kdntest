@@ -67,7 +67,7 @@ class ShipOrderService
         $orderBy = $request->orderBy ?: 'id';
         $sort = $request->sort ?: 'desc';
         $length = $request->length ?: 20;
-        $this->preShipOrder->pushCriteria(new PreShipOrderCreateTimeCriteria($request->created_at));
+        $this->preShipOrder->pushCriteria(new PreShipOrderCreateTimeCriteria($request->daterange));
         $this->preShipOrder->pushCriteria(new PreShipOrderIdCriteria($request->id));
         $this->preShipOrder->pushCriteria(new PreShipOrderStatusCriteria($request->status));
         $this->preShipOrder->pushCriteria(new ProductIdCriteria($request->good_id));
@@ -86,7 +86,7 @@ class ShipOrderService
         $orderBy = $request->orderBy ?: 'id';
         $sort = $request->sort ?: 'desc';
         $length = $request->length ?: 5;
-        $this->shipOrder->pushCriteria(new ShipOrderCreatedAtCriteria($request->created_at));
+        $this->shipOrder->pushCriteria(new ShipOrderCreatedAtCriteria($request->daterange));
         $this->shipOrder->pushCriteria(new ShipOrderIdCriteria($request->id));
         $this->shipOrder->pushCriteria(new ShipOrderStatusCriteria($request->status));
         return $this->shipOrder->orderBy($orderBy, $sort)->paginate($length);
@@ -103,7 +103,7 @@ class ShipOrderService
         $orderBy = $request->orderBy ?: 'id';
         $sort = $request->sort ?: 'desc';
         $length = $request->length ?: 20;
-        $this->goodSkuLack->pushCriteria(new LackCreatedAtCriteria($request->created_at));
+        $this->goodSkuLack->pushCriteria(new LackCreatedAtCriteria($request->daterange));
         $this->goodSkuLack->pushCriteria(new LackGoodIdCriteria($request->good_id));
         $this->goodSkuLack->pushCriteria(new LackSkuIdCriteria($request->sku_id));
         $this->goodSkuLack->pushCriteria(new LackIdCriteria($request->id));

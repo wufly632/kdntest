@@ -96,7 +96,7 @@ class PromotionService
         $orderBy = $request->orderBy ?? 'id';
         $sort = $request->sort ?? 'desc';
         $length = $request->length ?? 20;
-        $this->promotion->pushCriteria(new PromotionCreateTimeCriteria(Request::input('create_time')));
+        $this->promotion->pushCriteria(new PromotionCreateTimeCriteria(Request::input('daterange')));
         $this->promotion->pushCriteria(new PromotionNameCriteria(Request::input('title')));
         $this->promotion->pushCriteria(new PromotionStatusCriteria(Request::input('status')));
         return $this->promotion->orderBy($orderBy, $sort)->paginate($length);
@@ -109,7 +109,7 @@ class PromotionService
      */
     public function preCreate($request)
     {
-        $time = get_time_range($request->promotion_time);
+        $time = get_time_range($request->daterange2);
         // 判断是否有已存在的活动
         $result = $this->promotion->makeModel()
             ->where([['start_at', '<=', $time[0]],['end_at', '>=', $time[1]]])

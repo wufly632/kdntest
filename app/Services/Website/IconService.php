@@ -31,7 +31,7 @@ class IconService
 
     public function createIcon($data)
     {
-        $time = explode('~', $data['time_duration']);
+        $time = explode('~', $data['daterange']);
         $data['start_at'] = $time[0];
         $data['end_at'] = $time[1];
         $this->iconRepository->create($data);

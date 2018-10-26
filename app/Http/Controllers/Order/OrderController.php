@@ -32,7 +32,7 @@ class OrderController extends Controller
     {
         $option = [];
         $whereoption = [];
-        if ($request->hasAny('order_id', 'good_name', 'good_code', 'from_type', 'status', 'good_id', 'created_at')) {
+        if ($request->hasAny('order_id', 'good_name', 'good_code', 'from_type', 'status', 'good_id', 'daterange')) {
             if ($request->filled('order_id')) {
                 $option = array_merge($option, ['order_id' => $request->input('order_id')]);
             }
@@ -51,8 +51,8 @@ class OrderController extends Controller
             if ($request->filled('good_id')) {
                 $whereoption = array_merge($whereoption, ['id' => $request->input('good_id')]);
             }
-            if ($request->filled('created_at')) {
-                $createAt = explode('~', $request->query('created_at'));
+            if ($request->filled('daterange')) {
+                $createAt = explode('~', $request->query('daterange'));
                 $option = array_merge($option, [
                     ['created_at', '>=', $createAt[0]],
                     ['created_at', '<=', $createAt[1]]

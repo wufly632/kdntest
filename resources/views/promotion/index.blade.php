@@ -5,8 +5,7 @@
 
     <link rel="stylesheet"
           href="{{ asset('/assets/admin-lte/bower_components/datatables.net-bs/css/dataTables.bootstrap.min.css') }}">
-    <link rel="stylesheet"
-          href="{{ asset('/assets/admin-lte/bower_components/bootstrap-daterangepicker/daterangepicker.css') }}">
+
 @endsection
 @section('content')
     <div class="content-wrapper">
@@ -39,7 +38,7 @@
                                         <div class="form-group">
                                             <label for="active_time" class="col-xs-4 control-label">活动时间</label>
                                             <div class="col-xs-4">
-                                                <input type="text" class="form-control create_time" id="active_time" name="promotion_time">
+                                                <input type="text" class="form-control create_time" id="daterange2" name="daterange2">
                                             </div>
                                         </div>
                                         <input type="button" class="btn btn-danger col-xs-offset-4" id="modal-cancel"
@@ -58,14 +57,14 @@
                                     <div class="form-group col-xs-3">
                                         <label for="" class="col-xs-4 control-label">创建时间：</label>
                                         <div class="col-xs-8">
-                                            <input type="text" id="create_time" name="create_time" class="form-control create_time"
-                                                   autocomplete="off">
+                                            <input type="text" id="daterange" name="daterange" class="form-control create_time"
+                                                   autocomplete="off" value="{{old('daterange')}}">
                                         </div>
                                     </div>
                                     <div class="form-group col-xs-3">
                                         <label for="coupon_name" class="col-xs-4 control-label">活动名称：</label>
                                         <div class="col-xs-8">
-                                            <input type="text" name="title" class="form-control">
+                                            <input type="text" name="title" class="form-control" value="{{old('title')}}">
                                         </div>
                                     </div>
                                     <div class="form-group col-xs-3">
@@ -74,7 +73,7 @@
                                             <select name="status" id="status" class="form-control">
                                                 <option value="">全部</option>
                                                 @foreach(\App\Entities\Promotion\Promotion::$allStatus as $key => $status)
-                                                    <option value="{{$key}}">{{$status}}</option>
+                                                    <option value="{{$key}}" @if(old('status') == $key) selected @endif>{{$status}}</option>
                                                 @endforeach
                                             </select>
                                         </div>
@@ -137,59 +136,11 @@
 @stop
 @section('script')
     <script src="{{ asset('/assets/js/bootstrap-modalmanager.js') }}"></script>
-    <script src="{{ asset('/assets/admin-lte/bower_components/moment/min/moment.min.js') }}"></script>
     <script src="{{ asset('/assets/js/bootstrap-modal.js') }}"></script>
-    <script src="{{ asset('/assets/admin-lte/bower_components/datatables.net/js/jquery.dataTables.min.js') }}"></script>
-    <script src="{{ asset('/assets/admin-lte/bower_components/datatables.net-bs/js/dataTables.bootstrap.min.js') }}"></script>
-    <script src="{{ asset('/assets/admin-lte/bower_components/bootstrap-daterangepicker/daterangepicker.js') }}"></script>
+
     <script>
         $('#modal-cancel').click(function () {
             $("#modal-default").modal('hide');
-        });
-        let locale = {
-            "format": 'YYYY-MM-DD hh:mm',
-            "separator": "~",
-            "applyLabel": "确定",
-            "cancelLabel": "取消",
-            "fromLabel": "起始时间",
-            "toLabel": "结束时间'",
-            "customRangeLabel": "自定义",
-            "weekLabel": "W",
-            "daysOfWeek": ["日", "一", "二", "三", "四", "五", "六"],
-            "monthNames": ["一月", "二月", "三月", "四月", "五月", "六月", "七月", "八月", "九月", "十月", "十一月", "十二月"],
-            "firstDay": 1
-        };
-        $('#create_time').daterangepicker({
-            "timePicker": true,
-            "autoApply": true,
-            "timePicker24Hour": true,
-            locale: locale,
-            ranges: {
-                '今日': [moment(), moment()],
-                '昨日': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
-                '最近7日': [moment().subtract(6, 'days'), moment()],
-                '最近30日': [moment().subtract(29, 'days'), moment()],
-                '本月': [moment().startOf('month'), moment().endOf('month')],
-                '上月': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
-            },
-        }, function (start, end, label) {
-            console.log('New date range selected: ' + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD') + ' (predefined range: ' + label + ')');
-        });
-        $('#active_time').daterangepicker({
-            "timePicker": true,
-            "autoApply": true,
-            "timePicker24Hour": true,
-            locale: locale,
-            ranges: {
-                '今日': [moment(), moment()],
-                '昨日': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
-                '最近7日': [moment().subtract(6, 'days'), moment()],
-                '最近30日': [moment().subtract(29, 'days'), moment()],
-                '本月': [moment().startOf('month'), moment().endOf('month')],
-                '上月': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
-            },
-        }, function (start, end, label) {
-            console.log('New date range selected: ' + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD') + ' (predefined range: ' + label + ')');
         });
         $('.modal-content').css({'box-shadow': 'none'});
         $(function () {

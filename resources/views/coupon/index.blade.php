@@ -2,12 +2,6 @@
 @section('css')
     <link rel="stylesheet" href="{{ asset('/assets/css/bootstrap-modal.css') }}">
     <link rel="stylesheet" href="{{ asset('/assets/css/bootstrap-modal-bs3patch.css') }}">
-    <link rel="stylesheet"
-          href="{{ asset('/assets/admin-lte/bower_components/datatables.net-bs/css/dataTables.bootstrap.min.css') }}">
-    <link rel="stylesheet"
-          href="{{ asset('/assets/admin-lte/bower_components/bootstrap-datepicker/dist/css/bootstrap-datepicker.min.css') }}">
-    <link rel="stylesheet"
-          href="{{ asset('/assets/admin-lte/bower_components/bootstrap-daterangepicker/daterangepicker.css') }}">
     <style>
         .dis-no{display: none;}
     </style>
@@ -243,10 +237,10 @@
                                     <div class="form-group col-xs-3">
                                         <label for="coupon_usage" class="col-sm-4 control-label">用途：</label>
                                         <div class="col-sm-8">
-                                            <select name="coupon_purpose" id="coupon_usage" class="form-control">
+                                            <select name="coupon_purpose" id="coupon_usage" class="form-control select2">
                                                 <option value="">全部</option>
                                                 @foreach(\App\Entities\Coupon\Coupon::$allPurpose as $id => $purpose)
-                                                    <option value="{{$id}}">{{$purpose}}</option>
+                                                    <option value="{{$id}}" @if(old('coupon_purpose') == $id) selected @endif>{{$purpose}}</option>
                                                 @endforeach
                                             </select>
                                         </div>
@@ -254,10 +248,10 @@
                                     <div class="form-group col-xs-3">
                                         <label for="coupon_status" class="col-sm-4 control-label">状态：</label>
                                         <div class="col-sm-8">
-                                            <select name="status" id="coupon_status" class="form-control">
+                                            <select name="status" id="coupon_status" class="form-control select2">
                                                 <option value="">全部</option>
                                                 @foreach(\App\Entities\Coupon\Coupon::$allStatus as $key => $status)
-                                                    <option value="{{$key}}">{{$status}}</option>
+                                                    <option value="{{$key}}" @if(old('status') == $key) selected @endif>{{$status}}</option>
                                                 @endforeach
                                             </select>
                                         </div>
@@ -266,18 +260,18 @@
                                 <!-- 第四行 -->
                                 <div class="col-xs-12">
                                     <div class="form-group col-xs-3">
-                                        <label for="use_time" class="col-sm-4 control-label date_choice">使用时间：</label>
+                                        <label for="daterange" class="col-sm-4 control-label date_choice">使用时间：</label>
                                         <div class="col-sm-8">
-                                            <input type="text" id="use_time" class="form-control use_time rangetime"
-                                                   name="use_time" autocomplete="off">
+                                            <input type="text" id="daterange" class="form-control use_time rangetime"
+                                                   name="daterange" autocomplete="off">
                                         </div>
                                     </div>
 
                                     <div class="form-group col-xs-3">
-                                        <label for="take_time" class="col-sm-4 control-label date_choice">发放时间：</label>
+                                        <label for="daterange2" class="col-sm-4 control-label date_choice">发放时间：</label>
                                         <div class="col-sm-8">
-                                            <input type="text" class="form-control take_time rangetime"
-                                                   name="grant_time" autocomplete="off">
+                                            <input type="text" id="daterange2" class="form-control take_time rangetime"
+                                                   name="daterange2" autocomplete="off">
                                         </div>
                                     </div>
                                 </div>
@@ -370,59 +364,9 @@
     <!-- /.content-wrapper -->
 @stop
 @section('script')
-    <script src="{{ asset('/assets/admin-lte/bower_components/moment/min/moment.min.js') }}"></script>
-    <script src="{{ asset('/assets/admin-lte/bower_components/bootstrap-daterangepicker/daterangepicker.js') }}"></script>
     <script src="{{ asset('/assets/js/bootstrap-modalmanager.js') }}"></script>
     <script src="{{ asset('/assets/js/bootstrap-modal.js') }}"></script>
-    <script src="{{ asset('/assets/admin-lte/bower_components/datatables.net/js/jquery.dataTables.min.js') }}"></script>
-    <script src="{{ asset('/assets/admin-lte/bower_components/bootstrap-datepicker/js/bootstrap-datepicker.js') }}"></script>
-    <script src="{{ asset('/assets/admin-lte/bower_components/datatables.net-bs/js/dataTables.bootstrap.min.js') }}"></script>
     <script>
-        $.fn.datepicker.dates['zh-cn'] = {
-            days: ["星期日", "星期一", "星期二", "星期三", "星期四", "星期五", "星期六"],
-            daysShort: ["日", "一", "二", "三", "四", "五", "六"],
-            daysMin: ["日", "一", "二", "三", "四", "五", "六"],
-            months: ["一月", "二月", "三月", "四月", "五月", "六月", "七月", "八月", "九月", "十月", "十一月", "十二月"],
-            monthsShort: ["一月", "二月", "三月", "四月", "五月", "六月", "七月", "八月", "九月", "十月", "十一月", "十二月"],
-            today: "今日",
-            clear: "清除",
-            weekStart: 0
-        };
-        $('#take_time').datepicker({
-            format: 'yyyy-mm-dd',
-            autoclose: true,
-            language: 'zh-cn',
-
-        });
-        let locale = {
-            "format": 'YYYY-MM-DD hh:mm:ss',
-            "separator": "~",
-            "applyLabel": "确定",
-            "cancelLabel": "取消",
-            "fromLabel": "起始时间",
-            "toLabel": "结束时间'",
-            "customRangeLabel": "自定义",
-            "weekLabel": "W",
-            "daysOfWeek": ["日", "一", "二", "三", "四", "五", "六"],
-            "monthNames": ["一月", "二月", "三月", "四月", "五月", "六月", "七月", "八月", "九月", "十月", "十一月", "十二月"],
-            "firstDay": 1
-        };
-        $('.rangetime').daterangepicker({
-            "timePicker": true,
-            "autoApply": true,
-            "timePicker24Hour": true,
-            locale: locale,
-            ranges: {
-                '今日': [moment(), moment()],
-                '昨日': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
-                '最近7日': [moment().subtract(6, 'days'), moment()],
-                '最近30日': [moment().subtract(29, 'days'), moment()],
-                '本月': [moment().startOf('month'), moment().endOf('month')],
-                '上月': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
-            },
-        }, function (start, end, label) {
-            console.log('New date range selected: ' + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD') + ' (predefined range: ' + label + ')');
-        });
         $('#modal-cancel').click(function () {
             $("#responsive").modal('hide');
         });
@@ -444,31 +388,6 @@
             $('.show-info').text('');
             $('#coupon_key').removeClass('dis-no');
         });
-        /*$('#coupon_table').DataTable({
-            language: {
-                paginate: {
-                    first: '首页',
-                    previous: '上一页',
-                    next: '下一页',
-                    last: '末页'
-                },
-                aria: {
-                    paginate: {
-                        first: 'First',
-                        previous: 'Previous',
-                        next: 'Next',
-                        last: 'Last'
-                    }
-                },
-                info: '显示 _START_ 到 _END_ 条，共 _TOTAL_ 条'
-            },
-            'paging': true,
-            'lengthChange': false,
-            'searching': false,
-            'ordering': true,
-            'info': true,
-            'autoWidth': false,
-        });*/
         $('.modal-content').css({'box-shadow': 'none'});
         $(function () {
             $('#coupon-create').on('click', '.save', function () {

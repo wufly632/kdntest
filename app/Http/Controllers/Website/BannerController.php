@@ -35,8 +35,8 @@ class BannerController extends Controller
         if (\request()->filled('title')) {
             $option = array_merge($option, [['title', 'like', '%' . \request()->get('title') . '%']]);
         }
-        if (\request()->filled('time_duration')) {
-            $time = explode('~', \request()->query('time_duration'));
+        if (\request()->filled('daterange')) {
+            $time = explode('~', \request()->query('daterange'));
 
             $option = array_merge($option, [['start_at', '>=', $time[0]]]);
 

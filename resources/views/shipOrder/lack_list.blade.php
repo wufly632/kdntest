@@ -25,8 +25,6 @@
         }
 
     </style>
-    <link rel="stylesheet"
-          href="{{ asset('/assets/admin-lte/bower_components/bootstrap-daterangepicker/daterangepicker.css') }}">
 @stop
 @extends('layouts.default')
 @section('content')
@@ -85,10 +83,10 @@
                                     </div>
                                 </div>
                                 <div class="form-group col-sm-4">
-                                    <label for="created_at" class="control-label col-sm-4 text-right">创建时间:</label>
+                                    <label for="daterange" class="control-label col-sm-4 text-right">创建时间:</label>
                                     <div class="col-sm-8">
-                                        <input type="text" name="created_at" id="created_at" autocomplete="off"
-                                               class="input-sm form-control" value="{{ old('created_at') }}">
+                                        <input type="text" name="daterange" id="daterange" autocomplete="off"
+                                               class="input-sm form-control" value="{{ old('daterange') }}">
                                     </div>
                                 </div>
                                 <div class="form-group col-sm-4 text-right">
@@ -159,11 +157,7 @@
     </div>
 @stop
 @section('script')
-    <script src="{{ asset('/assets/admin-lte/bower_components/moment/min/moment.min.js') }}"></script>
-    <script src="{{ asset('/assets/admin-lte/bower_components/bootstrap-daterangepicker/daterangepicker.js') }}"></script>
-    <script src="{{ asset('/assets/js/plugincommon.js') }}"></script>
     <script>
-        addDateRangePicker($('#created_at'));
         function catShipOrder(id) {
             layer.open({
                 type: 2,

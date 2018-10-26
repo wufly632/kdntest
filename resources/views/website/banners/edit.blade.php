@@ -1,7 +1,6 @@
 @extends('layouts.blank')
 @section('css')
-    <link rel="stylesheet"
-          href="{{ asset('/assets/admin-lte/bower_components/bootstrap-daterangepicker/daterangepicker.css') }}">
+
 @endsection
 @section('content')
     <div class="container" id="banner-box">
@@ -36,9 +35,9 @@
                 </div>
             </div>
             <div class="form-group">
-                <label for="time_duration" class="col-sm-2 control-label text-right">起止时间</label>
+                <label for="daterange2" class="col-sm-2 control-label text-right">起止时间</label>
                 <div class="col-sm-8">
-                    <input autocomplete="off" type="text" name="time_duration" id="time_duration" class="form-control"
+                    <input autocomplete="off" type="text" name="daterange2" id="daterange2" class="form-control"
                            value="@if(isset($banner->start_at)){{ $banner->start_at.'~'.$banner->end_at }}@endif">
                 </div>
             </div>
@@ -67,9 +66,6 @@
     </div>
 @stop
 @section('script')
-    <script src="{{ asset('/assets/admin-lte/bower_components/moment/min/moment.min.js') }}"></script>
-    <script src="{{ asset('/assets/admin-lte/bower_components/bootstrap-daterangepicker/daterangepicker.js') }}"></script>
-    <script src="{{ asset('/assets/js/plugincommon.js') }}"></script>
     <script src="{{asset('/assets/js/bower_components/axios/dist/axios.min.js')}}"></script>
     <script src="{{asset('/assets/admin/js/vue.min.js')}}"></script>
     <script>
@@ -144,7 +140,6 @@
                 }
             }
         });
-        addDateRangePicker($('#time_duration'));
         @if(isset($banner->type))
         $('#type').val('{{ $banner->type }}')
         @endif

@@ -53,10 +53,10 @@ class ShipOrder extends Model implements Transformable
      * @function 获取发货单快递信息
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
-    public function getExpress()
+    /*public function getExpress()
     {
         return $this->hasMany(ShipOrderExpress::class, 'ship_order_id', 'id');
-    }
+    }*/
 
     /**
      * @function 获取明细

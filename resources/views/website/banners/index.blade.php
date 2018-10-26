@@ -5,7 +5,6 @@
             vertical-align: middle;
         }
     </style>
-    <link rel="stylesheet" href="{{ asset('/assets/admin-lte/bower_components/bootstrap-daterangepicker/daterangepicker.css') }}">
 @endsection
 @extends('layouts.default')
 @section('content')
@@ -45,9 +44,9 @@
                                     </div>
                                 </div>
                                 <div class="form-group col-sm-3">
-                                    <label for="time_duration" class="control-label col-sm-4">起止时间</label>
+                                    <label for="daterange" class="control-label col-sm-4">起止时间</label>
                                     <div class="col-sm-8">
-                                        <input type="text" class="form-control time_duration" id="time_duration" name="time_duration">
+                                        <input type="text" class="form-control time_duration" id="daterange" name="daterange">
                                     </div>
                                 </div>
                                 <div class="col-sm-1">
@@ -119,17 +118,14 @@
     </div>
 @stop
 @section('script')
-    <script src="{{ asset('/assets/admin-lte/bower_components/moment/min/moment.min.js') }}"></script>
-    <script src="{{ asset('/assets/admin-lte/bower_components/bootstrap-daterangepicker/daterangepicker.js') }}"></script>
-    <script src="{{ asset('/assets/js/plugincommon.js') }}"></script>
     <script src="{{asset('/assets/js/bower_components/axios/dist/axios.min.js')}}"></script>
 
     <script>
         $('.order-modify').click(function () {
-            showInfo('banner修改', $(this).attr('data-target-uri'))
+            showInfo('banner修改', $(this).attr('data-target-uri'),"65%")
         });
         $('#create-banner').click(function () {
-            showInfo('banner创建', $(this).attr('data-target-uri'))
+            showInfo('banner创建', $(this).attr('data-target-uri'), "65%")
         });
         $('.banner-delete').click(function () {
             let _clickEle = $(this);
@@ -154,6 +150,5 @@
 
             })
         });
-        addDateRangePicker($('#time_duration'));
     </script>
 @endsection

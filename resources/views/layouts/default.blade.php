@@ -23,6 +23,7 @@
     <link rel="stylesheet" href="{{asset('assets/css/style.css')}}">
     <link rel="stylesheet" type="text/css" href="{{asset('assets/plugins/sweetalert/sweetalert.css')}}">
     <link rel="stylesheet" href="{{ asset('/assets/admin/css/select2.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('/assets/admin-lte/bower_components/bootstrap-daterangepicker/daterangepicker.css') }}">
 
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -54,7 +55,7 @@
     <script src="{{ asset('/assets/admin/js/select2.min.js') }}"></script>
     <script src="{{ asset('/assets/admin-lte/bower_components/moment/min/moment.min.js') }}"></script>
     <script src="{{ asset('/assets/admin-lte/bower_components/bootstrap-daterangepicker/daterangepicker.js?v=3') }}"></script>
-    <script src="{{ asset('/assets/js/plugincommon.js?v=2') }}"></script>
+    <script src="{{ asset('/assets/js/plugincommon.js?v=3') }}"></script>
     @yield('css')
 </head>
 <!-- ADD THE CLASS fixed TO GET A FIXED HEADER AND SIDEBAR LAYOUT -->
@@ -75,8 +76,16 @@
 @yield('script')
 <script>
     $('.select2').select2();
-    addDateRangePicker($('#created_at'));
+    addDateRangePicker($('#daterange'));
+    addDateRangePicker($('#daterange2'));
     $(function () {
-
+        var daterange = "{{old('daterange')}}";
+        if (daterange) {
+            $('#daterange').val(daterange);
+        }
+        var daterange2 = "{{old('daterange2')}}";
+        if (daterange2) {
+            $('#daterange2').val(daterange2);
+        }
     })
 </script>

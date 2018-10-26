@@ -80,11 +80,11 @@ function createDatePicker(ele) {
     });
 }
 
-function showInfo(title, content) {
+function showInfo(title, content,width="60%") {
     layer.open({
         type: 2,
         skin: 'layui-layer-rim', //加上边框
-        area: ['60%', '500px'],
+        area: [width, '500px'],
         fix: true, //不固定
         shadeClose: true,
         maxmin: true,

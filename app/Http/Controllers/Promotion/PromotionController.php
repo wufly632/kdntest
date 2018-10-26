@@ -51,7 +51,7 @@ class PromotionController extends Controller
         if (! $request->title) {
             return ApiResponse::failure(g_API_ERROR, '请填写活动名称');
         }
-        if (! $request->promotion_time) {
+        if (! $request->daterange2) {
             return ApiResponse::failure(g_API_ERROR, '请完善活动时间');
         }
         $result = $this->promotionService->preCreate($request);
