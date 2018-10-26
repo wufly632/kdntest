@@ -54,7 +54,7 @@ class ExportProduct extends Command
 
     public function handleProgress()
     {
-        \Excel::create('online_product.xlsx', function (LaravelExcelWriter $writer) {
+        \Excel::create('online_product'.date('md').'.xlsx', function (LaravelExcelWriter $writer) {
             $this->info('start...');
             $writer->sheet('Sheet1', function(LaravelExcelWorksheet $sheet) {
                 $heading = array(

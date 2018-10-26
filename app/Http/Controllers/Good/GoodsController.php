@@ -132,11 +132,7 @@ class GoodsController extends Controller
         if (! $id = $request->id) {
             return ApiResponse::failure(g_API_ERROR, '请选择要修改的商品');
         }
-        $result = $this->goodService->editPost($request);
-        if ($result) {
-            return ApiResponse::success('编辑成功');
-        }
-        return ApiResponse::failure(g_API_ERROR, '编辑失败');
+        return $this->goodService->editPost($request);
     }
 
 }

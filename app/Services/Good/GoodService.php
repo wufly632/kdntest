@@ -23,6 +23,7 @@ use App\Entities\Product\Product;
 use App\Entities\Product\ProductAttrValue;
 use App\Entities\Product\ProductSku;
 use App\Entities\Product\ProductSkuImages;
+use App\Exceptions\CustomException;
 use App\Repositories\Good\GoodRepository;
 use App\Repositories\Product\ProductRepository;
 use App\Services\Api\ApiResponse;
@@ -312,6 +313,9 @@ class GoodService{
             }
             //修改sku价格
             foreach ($request->good_sku['price'] as $sku_id => $price) {
+                if (! $price) {
+                    return ApiResponse::failure(g_API_ERROR, '请先完善商品价格');
+                }
                 GoodSku::where(['id' => $sku_id])->update(['price' => $price]);
                 ProductSku::where(['id' => $sku_id])->update(['price' => $price]);
             }
@@ -320,11 +324,11 @@ class GoodService{
             $this->product->update(['good_en_title' => $request->good_en_title, 'price' => $price], $request->id);
             $this->good->update(['status' => Good::EDITED], $request->id);
             DB::commit();
-            return true;
+            return ApiResponse::success('编辑成功');
         } catch (\Exception $e) {
             Log::error($e->getMessage());
             DB::rollback();
-            return false;
+            return ApiResponse::failure(g_API_ERROR, '编辑失败');
         }
     }
 
