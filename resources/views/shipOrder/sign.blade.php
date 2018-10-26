@@ -18,7 +18,6 @@
                                     <th>商家SKU编码</th>
                                     <th>图片</th>
                                     <th>订单需求量</th>
-                                    <th>实际发货数量</th>
                                     <th>到货数量</th>
                                 </tr>
                                 @foreach($ship_order_items as $item)
@@ -42,9 +41,12 @@
                                             </div>
                                         </td>
                                         <td>{{$item->num}}</td>
-                                        <td>{{$item->released}}</td>
                                         <td>
-                                            <input type="number" class="sign_num" data-sku_id="{{$item->sku_id}}" name="sku_num[{{$item->sku_id}}]">
+                                            <input type="number" class="sign_num"
+                                                   data-sku_id="{{$item->sku_id}}"
+                                                   name="sku_num[{{$item->sku_id}}]"
+                                                   data-num="{{$item->num}}"
+                                            >
                                         </td>
                                     </tr>
                                 @endforeach
@@ -69,6 +71,11 @@
                 $('.sign_num').each(function () {
                     if($(this).val() === '') {
                         toastr.warning('请填写sku_id-'+$(this).data('sku_id')+'的签收数量');
+                        err = true;
+                        return false;
+                    }
+                    if ($(this).val() > $(this).data('num')) {
+                        toastr.warning('sku_id-'+$(this).data('sku_id')+'签收数量不能大于需求量');
                         err = true;
                         return false;
                     }

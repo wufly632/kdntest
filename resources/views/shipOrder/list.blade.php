@@ -116,12 +116,10 @@
                                         </td>
                                         <td>{{ $order->created_at }}</td>
                                         <td>
-                                            {{--@if($order->getExpress)
-                                                @foreach($order->getExpress as $express)
-                                                <span>{{$express->shipper_code}}</span>
-                                                <span>{{$express->waybill_id}}</span>
-                                                @endforeach
-                                            @endif--}}
+                                            @if($order->waybill_id)
+                                                <span>{{$order->shipper_code}}</span>
+                                                <span>{{$order->waybill_id}}</span>
+                                            @endif
                                         </td>
                                         <td>{{ $order->note }}</td>
                                         <td>

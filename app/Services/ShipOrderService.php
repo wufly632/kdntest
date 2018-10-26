@@ -25,6 +25,7 @@ use App\Criteria\ShipOrder\ShipOrder\ShipOrderCreatedAtCriteria;
 use App\Criteria\ShipOrder\ShipOrder\ShipOrderIdCriteria;
 use App\Criteria\ShipOrder\ShipOrder\ShipOrderStatusCriteria;
 use App\Entities\ShipOrder\GoodSkuLack;
+use App\Entities\ShipOrder\PreShipOrder;
 use App\Entities\ShipOrder\ShipOrder;
 use App\Entities\ShipOrder\ShipOrderItem;
 use App\Repositories\ShipOrder\GoodSkuLackRepository;
@@ -125,10 +126,23 @@ class ShipOrderService
             return ApiResponse::failure(g_API_ERROR, '请通过或拒绝');
         }
         try {
+            $good_sku_lack = $this->goodSkuLack->find($request->id);
             if ($request->type == 'pass') {
-                $this->goodSkuLack->update(['status' => GoodSkuLack::PASS_AUDIT],$request->id);
+                $good_sku_lack->status = GoodSkuLack::PASS_AUDIT;
+                $good_sku_lack->save();
             } else {
-                $this->goodSkuLack->update(['status' => GoodSkuLack::REJECT, 'reject_note' => $request->reject_note],$request->id);
+                $good_sku_lack->status = GoodSkuLack::REJECT;
+                $good_sku_lack->reject_note = $request->reject_note;
+                $good_sku_lack->save();
+                // 待发货需求退回
+                $pre_ship = $this->preShipOrder->find($good_sku_lack->pre_ship_order_id);
+                if ($pre_ship->confirmed_num > 0) {
+                    $pre_ship->status = PreShipOrder::PARTY_CREATED;
+                } else {
+                    $pre_ship->status = PreShipOrder::WAIT_CREATE;
+                }
+                $pre_ship->lack_num -= $good_sku_lack->num;
+                $pre_ship->save();
             }
             return ApiResponse::success('操作成功');
         } catch (\Exception $e) {
@@ -155,7 +169,7 @@ class ShipOrderService
             foreach ($sku_num as $sku_id => $accepted) {
                 ShipOrderItem::where(['ship_order_id' => $ship_order_id, 'sku_id' => $sku_id])->update(['accepted' => $accepted]);
             }
-            $accepted_total = $ship_order->getItems->count('accepted');
+            $accepted_total = $ship_order->getItems->sum('accepted');
             $ship_order->accepted = $accepted_total;
             if ($accepted_total >= $ship_order->num) {
                 $ship_order->status = ShipOrder::ACCEPTANCE;
