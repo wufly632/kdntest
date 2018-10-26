@@ -32,6 +32,7 @@ use App\Repositories\ShipOrder\GoodSkuLackRepository;
 use App\Repositories\ShipOrder\PreShipOrderRepository;
 use App\Repositories\ShipOrder\ShipOrderRepository;
 use App\Services\Api\ApiResponse;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Request;
 
@@ -133,6 +134,7 @@ class ShipOrderService
             } else {
                 $good_sku_lack->status = GoodSkuLack::REJECT;
                 $good_sku_lack->reject_note = $request->reject_note;
+                $good_sku_lack->rejected_at = Carbon::now()->toDateTimeString();
                 $good_sku_lack->save();
                 // 待发货需求退回
                 $pre_ship = $this->preShipOrder->find($good_sku_lack->pre_ship_order_id);
