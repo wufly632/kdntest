@@ -11,6 +11,7 @@
 
 namespace App\Http\Controllers\Product;
 
+use App\Entities\Product\Product;
 use App\Http\Controllers\Controller;
 use App\Services\Api\ApiResponse;
 use App\Services\Product\ProductService;
@@ -35,7 +36,7 @@ class ProductController extends Controller
         if (! $request->id) {
             return ApiResponse::failure(g_API_ERROR, '请选择要上架的商品');
         }
-        return $this->productService->onshelf($request->id);
+        return $this->productService->onshelf($request->id,$request);
     }
 
     /**
@@ -49,5 +50,14 @@ class ProductController extends Controller
             return ApiResponse::failure(g_API_ERROR, '请选择要下架的商品');
         }
         return $this->productService->offshelf($request->id);
+    }
+
+    /**
+     * @function 设置返利
+     * @param Product $product
+     */
+    public function rebate(Product $product)
+    {
+        return view("goods.rebate", compact('product'));
     }
 }

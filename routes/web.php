@@ -68,6 +68,7 @@ Route::group(['middleware' => ['auth', 'web']], function () {
     Route::group(['prefix' => 'product', 'namespace' => 'Product'], function () {
         Route::post('/onshelf', ['as' => 'product.onshelf', 'uses' => 'ProductController@onshelf']);
         Route::post('/offshelf', ['as' => 'product.offshelf', 'uses' => 'ProductController@offshelf']);
+        Route::get('/rebate/{product}', ['as' => 'product.rebate', 'uses' => 'ProductController@rebate']);
     });
 
     //促销活动模块

@@ -26,7 +26,7 @@ class Product extends Model implements Transformable
      */
     protected $fillable = ['id', 'category_id', 'category_path', 'supplier_id', 'good_code', 'brand_name', 'price','video', 'supply_price',
                            'good_stock', 'orders', 'good_title', 'good_en_title', 'good_summary', 'good_en_summary', 'main_pic', 'pic',
-                           'content', 'status', 'created_at', 'shelf_at', 'deleted_at', 'updated_at'];
+                           'content', 'status', 'rebate_level_one', 'rebate_level_two', 'rebate_level_three', 'created_at', 'shelf_at', 'deleted_at', 'updated_at'];
 
 
     const ONLINE  = 1;   //上架

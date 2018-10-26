@@ -2,12 +2,6 @@
 @section('css')
     <link rel="stylesheet" href="{{ asset('/assets/css/bootstrap-modal.css') }}">
     <link rel="stylesheet" href="{{ asset('/assets/css/bootstrap-modal-bs3patch.css') }}">
-    <link rel="stylesheet"
-          href="{{ asset('/assets/admin-lte/bower_components/datatables.net-bs/css/dataTables.bootstrap.min.css') }}">
-    <link rel="stylesheet"
-          href="{{ asset('/assets/admin-lte/bower_components/bootstrap-datepicker/dist/css/bootstrap-datepicker.min.css') }}">
-    <link rel="stylesheet"
-          href="{{ asset('/assets/admin-lte/bower_components/bootstrap-daterangepicker/daterangepicker.css') }}">
     <style>
         .dis-no{display: none;}
     </style>

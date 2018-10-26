@@ -218,29 +218,22 @@
 <script>
     function onshelf(id) {
         var _index = $(this);
-        $.ajax({
-            type:'post',
-            url:"{{secure_route('product.onshelf')}}",
-            data:{id:id,_token:"{{csrf_token()}}"},
-            beforeSend:function() {
-                _index.attr('disabled', true);
-            },
-            success:function(data){
-                if (data.status == 200) {
-                    toastr.success(data.content);
-                    parent.location.reload();
-                } else {
-                    toastr.error(data.msg);
-                    _index.attr('disabled', false);
-                }
-            },
-            error:function(data){
-                var json=eval("("+data.responseText+")");
-                toastr.error(json.msg);
-                _index.attr('disabled', false);
-                _index.html('保存');
-            },
+        layer.open({
+            type: 2,
+            skin: 'layui-layer-rim', //加上边框
+            area: ['40%','400px'],
+            fix: false, //不固定
+            shadeClose: true,
+            maxmin: true,
+            shade:0.4,
+            title: '设置返现比例',
+            content: "/product/rebate/"+id,
+            end: function(layero, index){
+            }
         });
+
+
+
     }
     function offshelf(id) {
         var _index = $(this);
