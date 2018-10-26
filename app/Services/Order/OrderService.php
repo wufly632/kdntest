@@ -155,6 +155,9 @@ class OrderService
         $status = self::ORDER_STATUS['waitting_recieve'];
         try {
             DB::beginTransaction();
+
+            $this->trackingMoreService->createTracking($shipper_code, $waybill_id);
+
             $this->order->update(['status' => $status, 'waybill_id' => $waybill_id, 'shipper_code' => $shipper_code, 'delivery_at' => $delivery_at], $id);
             DB::commit();
             return ApiResponse::success();
@@ -178,10 +181,10 @@ class OrderService
     {
         $status = self::ORDER_STATUS['trade_cancle'];
         try {
-            $this->order->update(['status' => $status,],$id);
+            $this->order->update(['status' => $status,], $id);
             return ApiResponse::success();
         } catch (\Exception $e) {
-            return ApiResponse::failure(g_API_ERROR,'修改失败');
+            return ApiResponse::failure(g_API_ERROR, '修改失败');
         }
     }
 
