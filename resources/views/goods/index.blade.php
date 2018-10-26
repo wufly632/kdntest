@@ -50,6 +50,12 @@
                                 </div>
                                 <div class="col-xs-12">
                                     <div class="form-group col-xs-4">
+                                        <label for="daterange" class="col-sm-4 control-label">创建时间：</label>
+                                        <div class="col-sm-8">
+                                            <input type="text" class="form-control" id="daterange" name="daterange" value="{{old('daterange')}}">
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-xs-4">
                                         <label for="inputPassword3" class="col-sm-4 control-label">商品状态：</label>
                                         <div class="col-sm-8">
                                             <select class="form-control select2" name="status"
@@ -73,33 +79,36 @@
                                         </div>
                                     </div>
                                 </div>
-
-                                <!-- 第四行 -->
-                                {{--<div class="col-xs-12">
+                                <div class="col-xs-12">
                                     <div class="form-group col-xs-4">
-                                        <label for="inputPassword3" class="col-sm-4 control-label">创建时间：</label>
+                                        <label for="inputPassword3" class="col-sm-4 control-label">一级类目：</label>
                                         <div class="col-sm-8">
-                                            <select class="form-control select2" name="goods_status"
+                                            <select id="category_one" class="form-control select2" name="category_one"
                                                     style="width: 100%;">
-                                                <option selected="selected">最近7天</option>
-                                                <option>最近15天</option>
-                                                <option>最近一个月</option>
-                                                <option>自定义</option>
+                                                <option value="">请选择分类</option>
+                                                @foreach($category as $id => $name)
+                                                    <option value="{{$id}}" @if(old('category_one') == $id) selected @endif>{{$name}}</option>
+                                                @endforeach
                                             </select>
                                         </div>
                                     </div>
-
                                     <div class="form-group col-xs-4">
-                                        <div class="col-sm-9">
-                                            <div class="input-group">
-                                                <div class="input-group-addon">
-                                                    <i class="fa fa-clock-o"></i>
-                                                </div>
-                                                <input type="text" class="form-control pull-right" id="reservationtime">
-                                            </div>
+                                        <label for="inputPassword3" class="col-sm-4 control-label">二级类目：</label>
+                                        <div class="col-sm-8">
+                                            <select class="form-control select2" name="category_two" id="category_two">
+
+                                            </select>
                                         </div>
                                     </div>
-                                </div>--}}
+                                    <div class="form-group col-xs-4">
+                                        <label for="inputPassword3" class="col-sm-4 control-label">三级类目：</label>
+                                        <div class="col-sm-8">
+                                            <select class="form-control select2" name="category_three" id="category_three">
+
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
 
                             </div>
                             <!-- /.box-body -->
@@ -259,5 +268,33 @@
             },
         });
     }
+    $(function () {
+        $("#category_one").change(function() {
+            $("#category_two").html("<option value=''>请选择分类</option>");
+            $("#category_three").html("<option value=''>请选择分类</option>");
+            getSubCategories($(this).val(), 'category_two');
+        });
+        $("#category_two").change(function() {
+            $("#category_three").html("<option value=''>请选择分类</option>");
+            getSubCategories($(this).val(), 'category_three');
+        });
+        var select_category_one = "{{old('category_one')}}";
+        var getSubCategories = function(category_id, select_id){
+            $.ajax({
+                type: "post",
+                url: "{{secure_route('category.nextLevel')}}",
+                data: {id:category_id,_token:"{{csrf_token()}}"},
+                dataType: "json",
+                success: function(data) {
+                    $("#"+select_id).html("<option value=''>请选择分类</option>");
+                    $.each(data.content, function(i, item) {
+                        var selected_html = "";
+                        selected_html = item.id == select_category_one ? "selected=selected" : '';
+                        $("#"+select_id).append("<option value='" + item.id + "' "+selected_html+">" + item.name + "</option>");
+                    });
+                }
+            });
+        };
+    })
 </script>
 @endsection

@@ -176,4 +176,19 @@ class CategoryController extends Controller
         }
         return ApiResponse::success('');
     }
+
+    /**
+     * @function 获取类目下一级
+     * @param Request $request
+     * @return mixed
+     */
+    public function getNextLevel(Request $request)
+    {
+        $id = $request->id ?: 0;
+        $category = $this->categoryService->getCategoryRepository()->makeModel()->where(['parent_id' => $id])->get(['id','name']);
+        if ($category) {
+            return ApiResponse::success($category);
+        }
+        return ApiResponse::failure(g_API_ERROR, '获取下一级类目失败');
+    }
 }
