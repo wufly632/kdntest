@@ -1208,7 +1208,15 @@
             this.chosenLabel = label;
             if (label == this.locale.customRangeLabel) {
                 this.showCalendars();
+                // } else {
+            } else if (!this.endDate && date.isBefore(this.startDate)) {//源码修改
+                this.autoUpdateInput=true;
+                //special case: clicking the same date for start/end,
+                //but the time of the end date is before the start date
+                this.setEndDate(this.startDate.clone());
             } else {
+                this.autoUpdateInput=true;
+
                 var dates = this.ranges[label];
                 this.startDate = dates[0];
                 this.endDate = dates[1];
@@ -1333,10 +1341,12 @@
                 this.endDate = null;
                 this.setStartDate(date.clone());
             } else if (!this.endDate && date.isBefore(this.startDate)) {
+                this.autoUpdateInput=true;//源码修改
                 //special case: clicking the same date for start/end,
                 //but the time of the end date is before the start date
                 this.setEndDate(this.startDate.clone());
             } else { // picking end
+                this.autoUpdateInput=true;
                 if (this.timePicker) {
                     var hour = parseInt(this.container.find('.right .hourselect').val(), 10);
                     if (!this.timePicker24Hour) {
@@ -1403,6 +1413,7 @@
         },
 
         clickApply: function(e) {
+            this.autoUpdateInput=true;//源码修改
             this.hide();
             this.element.trigger('apply.daterangepicker', this);
         },

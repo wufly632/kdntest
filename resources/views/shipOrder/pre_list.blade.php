@@ -154,12 +154,12 @@
 @section('script')
     <script src="{{ asset('/assets/js/bootstrap-modalmanager.js') }}"></script>
     <script src="{{ asset('/assets/js/bootstrap-modal.js') }}"></script>
-    <script src="{{ asset('/assets/admin-lte/bower_components/moment/min/moment.min.js') }}"></script>
-    <script src="{{ asset('/assets/admin-lte/bower_components/bootstrap-daterangepicker/daterangepicker.js') }}"></script>
-    <script src="{{ asset('/assets/js/plugincommon.js') }}"></script>
+
+
+
     <script src="{{asset('/assets/js/bower_components/axios/dist/axios.min.js')}}"></script>
     <script>
-        addDateRangePicker($('#created_at'));
+
         if ("{{ old('from_type') }}") {
             $('#from-type').val("{{ old('from_type') }}");
         }

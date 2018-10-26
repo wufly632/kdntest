@@ -52,6 +52,9 @@
     <script src="{{asset('assets/plugins/sweetalert/sweetalert-dev.js')}}"></script>
     <script src="{{asset('assets/plugins/jquery-form/jquery.form.js')}}"></script>
     <script src="{{ asset('/assets/admin/js/select2.min.js') }}"></script>
+    <script src="{{ asset('/assets/admin-lte/bower_components/moment/min/moment.min.js') }}"></script>
+    <script src="{{ asset('/assets/admin-lte/bower_components/bootstrap-daterangepicker/daterangepicker.js?v=3') }}"></script>
+    <script src="{{ asset('/assets/js/plugincommon.js?v=2') }}"></script>
     @yield('css')
 </head>
 <!-- ADD THE CLASS fixed TO GET A FIXED HEADER AND SIDEBAR LAYOUT -->
@@ -72,4 +75,8 @@
 @yield('script')
 <script>
     $('.select2').select2();
+    addDateRangePicker($('#created_at'));
+    $(function () {
+
+    })
 </script>

@@ -12,12 +12,13 @@ function addDateRangePicker(ele) {
         "weekLabel": "W",
         "daysOfWeek": ["日", "一", "二", "三", "四", "五", "六"],
         "monthNames": ["一月", "二月", "三月", "四月", "五月", "六月", "七月", "八月", "九月", "十月", "十一月", "十二月"],
-        "firstDay": 1
+        "firstDay": 1,
     };
     ele.daterangepicker({
         "timePicker": true,
         "autoApply": true,
         "timePicker24Hour": true,
+        "autoUpdateInput": false,
         locale: locale,
         ranges: {
             '今日': [moment(), moment()],
@@ -30,6 +31,7 @@ function addDateRangePicker(ele) {
     }, function (start, end, label) {
         console.log('New date range selected: ' + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD') + ' (predefined range: ' + label + ')');
     });
+
 }
 
 function createDataTable(ele, data) {
