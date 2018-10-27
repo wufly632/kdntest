@@ -28,7 +28,11 @@
                                     </select>
                                     <span class="fl">件</span>
                                 </div>
-                                <button class="btn btn-primary fr" style="margin-left: 30px;" data-toggle="modal" data-target="">一键设置</button>
+                                <button class="btn btn-primary fr good-sku-set" style="margin-left: 30px;"
+                                        data-toggle="modal"
+                                        data-target="@if($type == 'quantity')#myModal-two @else #myModal-three @endif"
+                                        data-good="{{$val->id}}"
+                                >一键设置</button>
                             </div>
                         </div>
                     </div>
@@ -92,7 +96,7 @@
     <script type="text/javascript">
         $('.good-sku-set').on('click', function(){
             var id = $(this).data('good');
-            var target = $(this).data('target');
+            var target = $.trim($(this).data('target'));
             $(target+'-goodid').val(id);
         });
     </script>

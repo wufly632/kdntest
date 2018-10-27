@@ -86,6 +86,7 @@
             height: 100%;
             opacity: 0;
         }
+        .clearfix{margin-top:30px;}
     </style>
 @endsection
 @extends('layouts.default')
@@ -110,6 +111,63 @@
                     <div id="myModal-one" class="modal fade" tabindex="-1" data-width="1200" style="display: none;">
                         <form class="seckill-modal" method="get" onsubmit="return getGoods(this);" action="{{secure_route('promotion.getGoods')}}">
                             {!! $promotion_goods !!}
+                        </form>
+                    </div>
+                    <div class="modal sec-modal fade dis-no" id="myModal-two" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" style="width: 600px;height:350px;padding: 50px 0">
+                        <form class="seckill-modal" method="get" onsubmit="return skuset(this);">
+                            <input type="hidden" id="myModal-two-goodid" value="">
+                            <div class="col-xs-12 clearfix">
+                                <span class="fl sec-price col-xs-5 text-right">秒杀价：</span>
+                                <input type="text" class="fl se-price col-xs-3" name="price"/>
+                                <span class="fl col-xs-2">元</span>
+                            </div>
+                            <div class="col-xs-12 clearfix">
+                                <p class="fl sec-num col-xs-5 text-right">秒杀数量：</p>
+                                <input type="text" class="fl se-num col-xs-3" name="num"/>
+                                <span class="fl col-xs-3">件</span>
+                            </div>
+                            <div class="col-xs-12 clearfix">
+                                <span class="fl sec-num col-xs-5 text-right">限购数量：</span>
+                                <span class="fl">每人限购</span>
+                                <select class="fl" name="per_num">
+                                    <option value="0">不限</option>
+                                    <option value="1">1</option>
+                                    <option value="2">2</option>
+                                    <option value="3">3</option>
+                                    <option value="5">5</option>
+                                </select>
+                                <span class="fl">件</span>
+                            </div>
+                            <div class="col-xs-12 clearfix last-row">
+                                <button type="submit" data-dismiss="modal" class="cancel btn btn-danger col-xs-offset-4">取消</button>
+                                <button type="submit" class="save btn btn-success col-xs-offset-2">保存</button>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal sec-modal fade dis-no" id="myModal-three" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" style="width: 600px;height:320px;padding: 50px 0">
+                        <form class="seckill-modal" method="get" onsubmit="return skuset(this);">
+                            <div class="col-xs-12 clearfix">
+                                <span class="fl sec-price col-xs-5 text-right">限时特价：</span>
+                                <input type="hidden" id="myModal-three-goodid" value="">
+                                <input type="text" class="fl se-price col-xs-3" name="price"/>
+                                <span class="fl col-xs-2">元</span>
+                            </div>
+                            <div class="col-xs-12 clearfix">
+                                <sapn class="fl sec-num col-xs-5 text-right">限购数量：</sapn>
+                                <span class="fl">每人限购</span>
+                                <select class="fl" name="per_num">
+                                    <option value="0">不限</option>
+                                    <option value="1">1</option>
+                                    <option value="2">2</option>
+                                    <option value="3">3</option>
+                                    <option value="5">5</option>
+                                </select>
+                                <span class="fl">件</span>
+                            </div>
+                            <div class="col-xs-12 clearfix last-row">
+                                <button type="submit" data-dismiss="modal" class="cancel btn btn-danger col-xs-offset-4">取消</button>
+                                <button type="submit" class="save btn btn-success col-xs-offset-2">保存</button>
+                            </div>
                         </form>
                     </div>
                     <!-- Modal4-->
@@ -448,7 +506,7 @@
                                                 </div>
                                                 <div class="col-xs-1 control-label" style="width: 110px;margin-left: -30px">每人限购件</div>
                                                 <div class="col-xs-2 no-padding">
-                                                    <select name="" class="form-control" style="width: 90px;">
+                                                    <select name="limit_per_num" class="form-control" style="width: 90px;">
                                                         <option value="">不限</option>
                                                         <option value="1">1</option>
                                                         <option value="2">2</option>
@@ -507,7 +565,9 @@
                                                                         </select>
                                                                         <span class="fl">件</span>
                                                                     </div>
-                                                                    <button class="btn btn-primary fr" style="margin-left: 30px;" data-toggle="modal" data-target="">一键设置</button>
+                                                                    <button class="btn btn-primary fr good-sku-set" style="margin-left: 30px;" data-toggle="modal"
+                                                                            data-target="@if($promotion->activity_type == 'quantity')#myModal-two @else #myModal-three @endif"
+                                                                            data-good="{{$good->id}}">一键设置</button>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -567,13 +627,13 @@
                                                 @endforeach
                                                 </tbody>
                                             </table>
-                                                <script type="text/javascript">
+                                                {{--<script type="text/javascript">
                                                     $('.good-sku-set').on('click', function(){
                                                         var id = $(this).data('good');
                                                         var target = $(this).data('target');
                                                         $(target+'-goodid').val(id);
                                                     });
-                                                </script>
+                                                </script>--}}
                                             @endforeach
                                         {{--</tbody>--}}
                                         @endif
@@ -663,6 +723,11 @@
                     $('.promotion-activity-type1').addClass('dis-no');
                 }
             });
+        });
+        $('.good-sku-set').on('click', function(){
+            var id = $(this).data('good');
+            var target = $.trim($(this).data('target'));
+            $(target+'-goodid').val(id);
         });
         addDateRangePicker($('#promotion_time'));
         createDataTable($('#select_coupon_table'));
@@ -1017,7 +1082,7 @@
         function setGoodInfo(obj){
             var _this = $(obj);
             var type = $('input[name=activity_type]:checked').val();
-            var perNum = $('select[name=limit_per_num] option:checked').val();
+            var perNum = _this.parents('.detail').find('select[name=limit_per_num] option:checked').val();
             console.log(perNum);
             $('.promotion-per-num').each(function(){
                 $(this).val(perNum);
@@ -1208,5 +1273,44 @@
 
             event.stopPropagation();
         });
+
+        function skuset(obj){
+            var event = event || window.event;
+            event.preventDefault(); // 兼容标准浏览器
+            window.event.returnValue = false; // 兼容IE6~8
+            var _this = $(obj);
+            var id = _this.parents('div').attr('id');
+            var good_id = $('#'+id+'-goodid').val();
+            var priceObj = _this.find('input[name=price]');
+            var numObj = _this.find('input[name=num]');
+            var perNum = _this.find('select[name=per_num]').val();
+            if(priceObj.length > 0) {
+                var price = priceObj.val();
+                if( ! /^\d+(\.\d{0,2})?$/.test(price)){
+                    toastr.warning('价格只能是数字');
+                    return false;
+                }
+            }
+            if(numObj.length > 0) {
+                var num = numObj.val();
+                if( ! /^\d+$/.test(num)){
+                    toastr.warning('数量只能是数字');
+                    return false;
+                }
+                var stock = $('#good-list'+good_id).data('stock');
+                if(num > stock){
+                    toastr.warning('秒杀的商品数量不能大于商品的总库存');
+                    num = stock;
+                }
+            }
+
+            if(price) $('#good-list'+good_id).find('.promotion-price').val(price);
+            if(num) $('#good-list'+good_id).find('.promotion-num').val(num);
+            if(perNum) $('#good-list'+good_id).find('select[name=per_num'+good_id+']').val(perNum);
+            if(priceObj.length > 0) priceObj.val('');
+            if(numObj.length > 0) numObj.val('');
+            $('#'+id).modal('hide');
+            return false;
+        }
     </script>
 @endsection
