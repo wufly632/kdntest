@@ -26,6 +26,7 @@ class PromotionAddGoodRequest extends Request
         return [
             'activity_id'      => 'required',
             'good_id'          => 'required',
+            'type'             => 'required'
         ];
     }
 
@@ -37,8 +38,9 @@ class PromotionAddGoodRequest extends Request
     public function messages()
     {
         return [
-            'activity_id.required' => '请选择活动类型',
+            'activity_id.required' => '请选择活动',
             'good_id.required'     => '请重新选择要添加的商品',
+            'type.required'        => '请选择活动类型'
         ];
     }
 }

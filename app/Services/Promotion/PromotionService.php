@@ -187,6 +187,7 @@ class PromotionService
         $promotion_goods = $this->getPromotionGoods($request, $activity_goods);
         $sku_info = ProductSku::whereIn('good_id', $promotion_goods['good_ids'])->get();
         $promotion['promotion']['style'] = count($activity_goods);//活动-款式(商品总数)
+        $promotion['promotion']['stock'] = $promotion_goods['stock'];
         if ($request->activity_type == 'quantity') {
             // 货值（商品最高sku供货价*秒杀数量）
             $goodsValue = $activity_goods->map(function ($activity_good) {
@@ -381,7 +382,7 @@ class PromotionService
                 }
                 break;
         }
-        return compact('promotion_goods', 'promotion_goods_sku', 'good_ids');
+        return compact('promotion_goods', 'promotion_goods_sku', 'good_ids','stock');
     }
 
     /**
@@ -403,6 +404,7 @@ class PromotionService
                 $data[] = $tmp;
                 $this->promotionGood->create($tmp);
             }
+            $this->promotion->update(['activity_type' => $request->type], $request->activity_id);
             DB::commit();
             $type = $request->type;
             $view = view('promotion.good_sku_list', compact('good_info', 'type'));
