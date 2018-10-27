@@ -306,7 +306,7 @@
                                                     <div class="pull-left text-padding-top">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;满</div>
                                                     <div class="col-xs-2">
                                                         <div class="input-group">
-                                                            <input type="text" class="form-control" name="reduce_name[]" value=""@if($promotion->activity_type == 'reduce' && isset($promotion_rule[1])) {{$promotion_rule[1]->money}} @endif">
+                                                            <input type="text" class="form-control" name="reduce_name[]" value="@if($promotion->activity_type == 'reduce' && isset($promotion_rule[1])) {{$promotion_rule[1]->money}} @endif">
                                                             <span class="input-group-addon">元</span>
                                                         </div>
                                                     </div>
@@ -444,8 +444,8 @@
                                                 </div>
                                                 <div class="col-xs-2">
                                                     <select name="limit_type" class="form-control active-select">
-                                                        <option value="1">立减</option>
-                                                        <option value="2">立享</option>
+                                                        <option value="1" @if($promotion->activity_type == 'limit' && $promotion->rule_type == 1) selected @endif>立减</option>
+                                                        <option value="2" @if($promotion->activity_type == 'limit' && $promotion->rule_type == 2) selected @endif>立享</option>
                                                     </select>
                                                 </div>
                                                 <div class="col-xs-2">
@@ -536,6 +536,7 @@
                                     ">
                                         @if(in_array($promotion->activity_type, ['limit','quantity']))
                                         {{--<tbody class="tableTbody">--}}
+                                            <?php $promotionProducts = $promotion->getPromotionGoods->pluck('num', 'goods_id')->toArray();?>
                                             @foreach($promotion->getPromotionGoods as $promotionGood)
                                             <?php $good = $promotionGood->getProduct;?>
                                             <?php $displayAttr          = $goodPresenter->displayAttr($good->productSku);?>
@@ -607,19 +608,19 @@
                                                             {{$kv->supply_price}}
                                                         </td>
                                                         <td data-price="10">
-                                                            10
+                                                            {{$kv->price}}
                                                         </td>
                                                         @if($promotion->activity_type == 'quantity')
                                                             <td>
-                                                                <input class="table-into-input promotion-price" name="price{{$kv->id}}" value="">
+                                                                <input class="table-into-input promotion-price" name="price{{$kv->id}}" value="{{$promotion_skus[$kv->id] ?? ''}}">
                                                             </td>
                                                             @if($key == 0)
-                                                                <td rowspan="{{$val->productSku->count()}}">
-                                                                    <input class="table-into-input promotion-num" name="num{{$val->id}}" value="">
+                                                                <td rowspan="{{$good->productSku->count()}}">
+                                                                    <input class="table-into-input promotion-num" name="num{{$good->id}}" value="{{$promotionProducts[$good->id] ?? ''}}">
                                                                 </td>
                                                             @endif
                                                         @elseif($promotion->activity_type == 'limit')
-                                                            <td><input class="table-into-input promotion-price" name="price{{$kv->id}}" value=""></td>
+                                                            <td><input class="table-into-input promotion-price" name="price{{$kv->id}}" value="{{$promotion_skus[$kv->id] ?? ''}}"></td>
                                                         @endif
                                                         <td>{{$kv->good_stock}}</td>
                                                         <td>{{$kv->supplier_code}}</td>
@@ -639,7 +640,7 @@
                                         @endif
                                     </div>
                                     <table class="table promotion_good_table table-bordered table-hover text-center promotion-activity-type2
-                                    @if(! in_array($promotion->activity_type, ['reduce','return','discount','wholesale'])) dis-no @endif
+                                    @if(! in_array($promotion->activity_type, ['reduce','return','discount','wholesale','give'])) dis-no @endif
                                     ">
                                         <thead>
                                         <tr>
@@ -707,8 +708,8 @@
     <script src="{{ asset('/assets/admin-lte/bower_components/datatables.net-bs/js/dataTables.bootstrap.min.js') }}"></script>
     <script>
         $(function () {
-            console.log("{{$promotion->activity_type}}");
-            if ("{{$promotion->activity_type != 0}}") {
+            var dis = "{{in_array($promotion->activity_type , array_keys(\App\Entities\Promotion\Promotion::$allType))}}" ? true : false;
+            if (dis) {
                 $('input[name=activity_type]').attr('disabled', true);
             }
             $('input[name=activity_type]').change(function () {
@@ -812,8 +813,8 @@
                     _index.html('添加中...');
                 },
                 success:function(data){
-                    console.log(data);
                     if (data.status == 200) {
+                        $('input[name=activity_type]').attr('disabled', true);
                         if(type == 'quantity' || type == 'limit'){
                             $('.promotion-activity-type1').append(data.content);
                             $('.promotion-activity-type1').removeClass('dis-no');
@@ -903,6 +904,7 @@
             });
             $('#promotion-form').on('click', '.submit', function (event) {
                 var _index = $(this);
+                $('input[name=activity_type]').attr('disabled', false);
                 $.ajax({
                     type:'post',
                     url:"{{secure_route('promotion.editPost')}}",
@@ -917,12 +919,14 @@
                             toastr.success(data.content);
                             window.location.href = "{{secure_route('promotion.index')}}";
                         } else {
+                            $('input[name=activity_type]').attr('disabled', true);
                             toastr.error(data.msg);
                             _index.attr('disabled', false);
                             _index.text('保存');
                         }
                     },
                     error:function(data){
+                        $('input[name=activity_type]').attr('disabled', true);
                         var json=eval("("+data.responseText+")");
                         toastr.error(json.msg);
                         _index.attr('disabled', false);

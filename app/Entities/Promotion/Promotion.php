@@ -36,8 +36,34 @@ class Promotion extends Model implements Transformable
         self::AFTER     => '已结束'
     ];
 
+    const REDUCE = 'reduce';
+    const RETURN = 'return';
+    const DISCOUNT = 'discount';
+    const WHOLESALE = 'wholesale';
+    const GIVE = 'give';
+    const LIMIT = 'limit';
+    const QUANTITY = 'quantity';
+    public static $allType = [
+        self::REDUCE => '满减',
+        self::RETURN => '满返',
+        self::DISCOUNT => '多件多折',
+        self::WHOLESALE => 'X元n件',
+        self::GIVE      => '买n免一',
+        self::LIMIT => '限时特价',
+        self::QUANTITY => '限量秒杀',
+    ];
+
     public function getPromotionGoods()
     {
         return $this->hasMany(PromotionGood::class, 'activity_id', 'id');
+    }
+
+    /**
+     * @function 获取促销活动的sku信息
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function getPromotionSkus()
+    {
+        return $this->hasMany(PromotionGoodSku::class, 'activity_id', 'id');
     }
 }

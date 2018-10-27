@@ -16,6 +16,7 @@ Route::get('/logout', ['as' => 'logout', 'uses' => 'LoginController@logout']);
 Route::post('/loginPost', ['as' => 'login.post', 'uses' => 'LoginController@postLogin']);
 //验证码
 Route::get('/captcha', ['as' => 'captcha', 'uses' => 'LoginController@captcha']);
+Route::get('/test', ['as' => 'captcha', 'uses' => 'TestController@test']);
 
 
 Route::group(['middleware' => ['auth', 'web']], function () {
@@ -127,19 +128,21 @@ Route::group(['middleware' => ['auth', 'web']], function () {
             'banners' => 'BannerController',
             'icons' => 'IconController'
         ]);
+        //PC首页
+        Route::get('/homepage', 'HomePageController@index')->name('homepage.index');
     });
 
     //发货管理
-    Route::group(['namespace' => 'ShipOrder', 'prefix' => 'shipOrder'], function(){
-       Route::get('/preList', ['as' => 'shipOrder.prelist', 'uses' => 'ShipOrderController@preIndex']);
-       Route::get('/list', ['as' => 'shipOrder.list', 'uses' => 'ShipOrderController@index']);
-       Route::get('/detail/{shipOrder}', ['as' => 'shipOrder.detail', 'uses' => 'ShipOrderController@shipOrderDetail']);
-       Route::get('/lacklist', ['as' => 'shipOrder.lacklist', 'uses' => 'ShipOrderController@lackList']);
-       Route::get('/lackAudit/{lack}', ['as' => 'shipOrder.lackAudit', 'uses' => 'ShipOrderController@lackAudit']);
-       Route::post('/lackAudit', ['as' => 'shipOrder.postLackAudit', 'uses' => 'ShipOrderController@postLackAudit']);
-       Route::post('/addNote', ['as' => 'shipOrder.addNote', 'uses' => 'ShipOrderController@addNote']);
-       Route::get('/sign/{ship_order}', ['as' => 'shipOrder.sign', 'uses' => 'ShipOrderController@sign']);
-       Route::post('/signPost', ['as' => 'shipOrder.signPost', 'uses' => 'ShipOrderController@signPost']);
+    Route::group(['namespace' => 'ShipOrder', 'prefix' => 'shipOrder'], function () {
+        Route::get('/preList', ['as' => 'shipOrder.prelist', 'uses' => 'ShipOrderController@preIndex']);
+        Route::get('/list', ['as' => 'shipOrder.list', 'uses' => 'ShipOrderController@index']);
+        Route::get('/detail/{shipOrder}', ['as' => 'shipOrder.detail', 'uses' => 'ShipOrderController@shipOrderDetail']);
+        Route::get('/lacklist', ['as' => 'shipOrder.lacklist', 'uses' => 'ShipOrderController@lackList']);
+        Route::get('/lackAudit/{lack}', ['as' => 'shipOrder.lackAudit', 'uses' => 'ShipOrderController@lackAudit']);
+        Route::post('/lackAudit', ['as' => 'shipOrder.postLackAudit', 'uses' => 'ShipOrderController@postLackAudit']);
+        Route::post('/addNote', ['as' => 'shipOrder.addNote', 'uses' => 'ShipOrderController@addNote']);
+        Route::get('/sign/{ship_order}', ['as' => 'shipOrder.sign', 'uses' => 'ShipOrderController@sign']);
+        Route::post('/signPost', ['as' => 'shipOrder.signPost', 'uses' => 'ShipOrderController@signPost']);
     });
 
     Route::group(['namespace' => 'Common', 'prefix' => 'common'], function(){

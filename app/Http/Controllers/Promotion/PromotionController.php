@@ -75,7 +75,9 @@ class PromotionController extends Controller
         $promotion_goods = $this->promotionService->getAblePromotionActivityGoods($promotion->id, $request);
         //获取优惠券
         $coupon_list = app(CouponService::class)->getPromotionCoupons();
-        return view('promotion.edit', compact('promotion','promotion_goods', 'coupon_list'));
+        //获取所有促销活动sku
+        $promotion_skus = $promotion->getPromotionSkus->pluck('price', 'sku_id')->toArray();
+        return view('promotion.edit', compact('promotion','promotion_goods', 'coupon_list', 'promotion_skus'));
     }
 
     /**
