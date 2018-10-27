@@ -138,6 +138,7 @@
                                     <th>创建时间</th>
                                     <th>商品状态</th>
                                     <th>操作</th>
+                                    <th style="width: 50px;">排序</th>
                                 </tr>
                                 </thead>
                                 <tbody>
@@ -193,6 +194,9 @@
                                                     <a href="javascript:;" onclick="offshelf({{$good->id}})">下架</a><br>
                                                 @endif
                                             @endif
+                                        </td>
+                                        <td>
+                                            <input  data-id="{{$good->id}}" type="number" class="sort" value="{{$good->sort}}"  style="width: 50px;">
                                         </td>
                                     </tr>
                                 @endforeach
@@ -288,6 +292,22 @@
                 }
             });
         };
+        $('.sort').on('change', function () {
+            var _index = $(this);
+            $.ajax({
+                type: "post",
+                url: "{{secure_route('good.sort')}}",
+                data: {id:_index.data('id'),sort:_index.val(),_token:"{{csrf_token()}}"},
+                dataType: "json",
+                success: function(data) {
+                    if (data.status == 200) {
+                        toastr.success(data.content);
+                    } else {
+                        toastr.warning(data.msg);
+                    }
+                }
+            });
+        });
     })
 </script>
 @endsection

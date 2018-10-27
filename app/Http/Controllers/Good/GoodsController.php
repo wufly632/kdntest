@@ -135,4 +135,16 @@ class GoodsController extends Controller
         return $this->goodService->editPost($request);
     }
 
+    /**
+     * @function 商品排序
+     * @param Request $request
+     */
+    public function sort(Request $request)
+    {
+        if (! $id = $request->id) {
+            return ApiResponse::failure(g_API_ERROR, '请选择要排序的商品');
+        }
+        return $this->goodService->sortGood($request);
+    }
+
 }

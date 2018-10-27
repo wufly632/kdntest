@@ -332,4 +332,28 @@ class GoodService{
         }
     }
 
+    /**
+     * @function 商品排序
+     * @param $request
+     * @return mixed
+     */
+    public function sortGood($request)
+    {
+        try {
+        	DB::beginTransaction();
+            $this->good->update(['sort' => $request->sort], $request->id);
+            $product = $this->product->findWhere(['id' => $request->id])->first();
+            if ($product) {
+                $product->sort = $request->sort;
+                $product->save();
+            }
+            DB::commit();
+            return ApiResponse::success('商品'.$request->id.'排序成功');
+        } catch (\Exception $e) {
+            Log::info($e->getMessage());
+            DB::rollBack();
+            return ApiResponse::failure(g_API_ERROR, '商品'.$request->id.'排序失败');
+        }
+    }
+
 }
