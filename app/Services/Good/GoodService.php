@@ -313,20 +313,25 @@ class GoodService{
             }
             //修改sku价格
             foreach ($request->good_sku['price'] as $sku_id => $price) {
-                if (! $price) {
+                if (! $price['price'] || ! $price['origin_price']) {
                     return ApiResponse::failure(g_API_ERROR, '请先完善商品价格');
                 }
-                GoodSku::where(['id' => $sku_id])->update(['price' => $price]);
-                ProductSku::where(['id' => $sku_id])->update(['price' => $price]);
+                if ($price['price'] > $price['origin_price']) {
+                    return ApiResponse::failure(g_API_ERROR, '商品售价不能大于商品原价');
+                }
+                GoodSku::where(['id' => $sku_id])->update(['price' => $price['price']]);
+                ProductSku::where(['id' => $sku_id])->update(['price' => $price['price'], 'origin_price' => $price['origin_price']]);
             }
-            $price = collect($request->good_sku['price'])->min();
+            $price = collect($request->good_sku['price'])->min('price');
+            $origin_price = collect($request->good_sku['price'])->min('origin_price');
             $this->good->update(['good_en_title' => $request->good_en_title, 'price' => $price], $request->id);
-            $this->product->update(['good_en_title' => $request->good_en_title, 'price' => $price], $request->id);
+            $this->product->update(['good_en_title' => $request->good_en_title, 'price' => $price, 'origin_price' => $origin_price], $request->id);
             $this->good->update(['status' => Good::EDITED], $request->id);
             DB::commit();
             return ApiResponse::success('编辑成功');
         } catch (\Exception $e) {
             Log::error($e->getMessage());
+            ding('商品审核失败'.$e->getMessage());
             DB::rollback();
             return ApiResponse::failure(g_API_ERROR, '编辑失败');
         }

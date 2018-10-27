@@ -116,7 +116,7 @@
                     <div class="col-xs-7 text-left">{{$good->good_code}}</div>
                 </div>
             </td>
-            <td>{{$good->stock_price}}起</td>
+            <td>{{$good->price}}起</td>
             <td>¥{{$good->supply_price}}起</td>
             <td>{{$good->orders}}</td>
             <td>{{$good->good_stock}}</td>

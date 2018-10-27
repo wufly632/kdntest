@@ -476,6 +476,7 @@
                                     <div class="table promotion_good_table table-hover text-center promotion-activity-type1
                                         @if(! in_array($promotion->activity_type, ['limit','quantity'])) dis-no @endif
                                     ">
+                                        @if(in_array($promotion->activity_type, ['limit','quantity']))
                                         {{--<tbody class="tableTbody">--}}
                                             @foreach($promotion->getPromotionGoods as $promotionGood)
                                             <?php $good = $promotionGood->getProduct;?>
@@ -575,6 +576,7 @@
                                                 </script>
                                             @endforeach
                                         {{--</tbody>--}}
+                                        @endif
                                     </div>
                                     <table class="table promotion_good_table table-bordered table-hover text-center promotion-activity-type2
                                     @if(! in_array($promotion->activity_type, ['reduce','return','discount','wholesale'])) dis-no @endif
@@ -645,7 +647,8 @@
     <script src="{{ asset('/assets/admin-lte/bower_components/datatables.net-bs/js/dataTables.bootstrap.min.js') }}"></script>
     <script>
         $(function () {
-            if ("{{$promotion->activity_type}}") {
+            console.log("{{$promotion->activity_type}}");
+            if ("{{$promotion->activity_type != 0}}") {
                 $('input[name=activity_type]').attr('disabled', true);
             }
             $('input[name=activity_type]').change(function () {
@@ -973,7 +976,7 @@
                     }
                 });
             });
-            $('#promotion-activity-type1,#promotion-activity-type2').on('click', '.promotion-goods-single-clear', function(){
+            $('.promotion-activity-type1,.promotion-activity-type2').on('click', '.promotion-goods-single-clear', function(){
                 $(this).parents('td.add_Table').parent().prev().find('.promotion-goods-single').attr('data-toggle', true);
                 $(this).parents('td.add_Table').parent().remove();
             });
@@ -1014,7 +1017,11 @@
         function setGoodInfo(obj){
             var _this = $(obj);
             var type = $('input[name=activity_type]:checked').val();
-            var perNum = $('input[name=limit_per_num]').val();
+            var perNum = $('select[name=limit_per_num] option:checked').val();
+            console.log(perNum);
+            $('.promotion-per-num').each(function(){
+                $(this).val(perNum);
+            });
             if(type == 'limit'){
                 var activity_type = $('select[name='+type+'_type]').val();
                 var num = $('input[name='+type+'_num]').val();

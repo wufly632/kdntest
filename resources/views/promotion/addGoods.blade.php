@@ -76,7 +76,7 @@
                             </div>
                         </td>
                         <td>{{$product->supply_price}}</td>
-                        <td>{{$product->stock_price}}</td>
+                        <td>{{$product->price}}</td>
                         <td>{{$product->orders}}</td>
                         <td>{{$product->good_stock}}</td>
                     </tr>

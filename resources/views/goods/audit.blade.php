@@ -176,6 +176,7 @@
                                             <tr>
                                                 {!! $displayAttr['sku_th_names'] !!}
                                                 <th class="table-center">供货价（￥）</th>
+                                                <th class="table-center">原价（$）</th>
                                                 <th class="table-center">售价（$）</th>
                                                 <th class="table-center">库存（件）</th>
                                                 <th class="table-center">商家编码</th>
@@ -195,7 +196,15 @@
                                                     <td class="table-center col-sm-2">
                                                         <div class="col-sm-12">
                                                             <input type="text" class="form-control"
-                                                                   placeholder="" name="good_sku[price][{{$sku->id}}]"
+                                                                   placeholder="" name="good_sku[price][{{$sku->id}}][origin_price]"
+                                                                   value="{{$sku->productSku? $sku->productSku->origin_price : 0}}"
+                                                            >
+                                                        </div>
+                                                    </td>
+                                                    <td class="table-center col-sm-2">
+                                                        <div class="col-sm-12">
+                                                            <input type="text" class="form-control"
+                                                                   placeholder="" name="good_sku[price][{{$sku->id}}][price]"
                                                                 value="{{$sku->productSku? $sku->productSku->price : 0}}"
                                                             >
                                                         </div>
