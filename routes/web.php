@@ -141,4 +141,8 @@ Route::group(['middleware' => ['auth', 'web']], function () {
        Route::get('/sign/{ship_order}', ['as' => 'shipOrder.sign', 'uses' => 'ShipOrderController@sign']);
        Route::post('/signPost', ['as' => 'shipOrder.signPost', 'uses' => 'ShipOrderController@signPost']);
     });
+
+    Route::group(['namespace' => 'Common', 'prefix' => 'common'], function(){
+        Route::post('/getToken', ['as' => 'common.sts_token', 'uses' => 'AliyunController@getAliStsToken']);
+    });
 });

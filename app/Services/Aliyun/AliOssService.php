@@ -3,6 +3,10 @@
 namespace App\Services\Aliyun;
 
 
+use Illuminate\Log\Logger;
+use OSS\Core\OssException;
+use OSS\OssClient;
+
 class AliOssService
 {
     public static function uploadToAliOss($filePath, $folder, $bucket)
