@@ -1,13 +1,6 @@
 @section('css')
     <link rel="stylesheet" href="{{ asset('/assets/css/bootstrap-modal.css') }}">
     <link rel="stylesheet" href="{{ asset('/assets/css/bootstrap-modal-bs3patch.css') }}">
-
-    <link rel="stylesheet"
-          href="{{ asset('/assets/admin-lte/bower_components/datatables.net-bs/css/dataTables.bootstrap.min.css') }}">
-    <link rel="stylesheet"
-          href="{{ asset('/assets/admin-lte/bower_components/bootstrap-datepicker/dist/css/bootstrap-datepicker.min.css') }}">
-    <link rel="stylesheet"
-          href="{{ asset('/assets/admin-lte/bower_components/bootstrap-daterangepicker/daterangepicker.css') }}">
     <style>
         .text-padding-top {
             padding-top: 6px;
@@ -633,8 +626,8 @@
                                         </tbody>
                                     </table>
                                     <div>
-                                        <input type="button" class="btn btn-success col-xs-offset-4 submit" value="保存">
-                                        <input type="button" class="btn btn-danger col-xs-offset-2" value="取消">
+                                        <input type="button" class="btn btn-danger col-xs-offset-4" value="取消">
+                                        <input type="button" class="btn btn-success col-xs-offset-2 submit" value="保存">
                                     </div>
                                 </div>
                             </div>
@@ -646,16 +639,15 @@
     </div>
 @stop
 @section('script')
-    <script src="{{ asset('/assets/admin-lte/bower_components/moment/min/moment.min.js') }}"></script>
-    <script src="{{ asset('/assets/admin-lte/bower_components/bootstrap-daterangepicker/daterangepicker.js') }}"></script>
-    <script src="{{ asset('/assets/admin-lte/bower_components/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js') }}"></script>
     <script src="{{ asset('/assets/js/bootstrap-modalmanager.js') }}"></script>
     <script src="{{ asset('/assets/js/bootstrap-modal.js') }}"></script>
     <script src="{{ asset('/assets/admin-lte/bower_components/datatables.net/js/jquery.dataTables.min.js') }}"></script>
     <script src="{{ asset('/assets/admin-lte/bower_components/datatables.net-bs/js/dataTables.bootstrap.min.js') }}"></script>
-    <script src="{{ asset('/assets/js/plugincommon.js') }}"></script>
     <script>
         $(function () {
+            if ("{{$promotion->activity_type}}") {
+                $('input[name=activity_type]').attr('disabled', true);
+            }
             $('input[name=activity_type]').change(function () {
                 var val = $(this).val();
                 $('.detail-box').find('.detail').addClass('hidden');
@@ -683,6 +675,49 @@
             }
         });*/
 
+        //促销活动商品搜索
+        $('#myModal-one').on('click', '.search', function (event) {
+            var event = event || window.event;
+            event.preventDefault(); // 兼容标准浏览器
+            window.event.returnValue = false; // 兼容IE6~8
+            var _index = $(this);
+            var search_form = _index.parents('#addGood-search-form');
+            var activity_id = "{{$promotion->id}}";
+            var good_title = search_form.find('input[name=good_title]').val();
+            var good_id = search_form.find('input[name=good_id]').val();
+            var good_code = search_form.find('input[name=good_code]').val();
+            var category_one = search_form.find('#category_one option:checked').val();
+            var category_two = search_form.find('#category_two option:checked').val();
+            var category_three = search_form.find('#category_three option:checked').val();
+            var formData = {
+                activity_id:activity_id,
+                good_title:good_title,
+                good_id:good_id,
+                good_code:good_code,
+                category_one:category_one,
+                category_two:category_two,
+                category_three:category_three,
+                page:1,
+            };
+            $.ajax({
+                type:'get',
+                url:"{{secure_route('promotion.getGoods')}}",
+                data:formData,
+                beforeSend:function() {
+                    _index.attr('disabled', true);
+                },
+                success:function(data){
+                    _index.attr('disabled', false);
+                    $('#myModal-one').find('.seckill-modal').html(data);
+                    $('#myModal-one').modal('show');
+                },
+                error:function(data){
+                    var json=eval("("+data.responseText+")");
+                    toastr.error(json.msg);
+                    _index.attr('disabled', false);
+                }
+            });
+        });
         //添加促销商品
         $('#myModal-one').on('click', '.submit', function (event) {
             var event = event || window.event;

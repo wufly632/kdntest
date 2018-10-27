@@ -11,6 +11,7 @@
 
 namespace App\Services\Promotion;
 
+use App\Criteria\Product\ProductCategoryCriteria;
 use App\Criteria\Product\ProductCodeCriteria;
 use App\Criteria\Product\ProductIdCriteria;
 use App\Criteria\Product\ProductNotIdCriteria;
@@ -440,6 +441,12 @@ class PromotionService
      */
     public function getAblePromotionActivityGoods($activity_id, $request)
     {
+        $request->flash();
+        $category = [
+            'one' => $request->category_one,
+            'two' => $request->category_two,
+            'three' => $request->category_three,
+        ];
         //获取所有已参加活动的商品
         $activity_good_ids = $this->promotionGood->findWhere(['activity_id' => $activity_id])->pluck('goods_id')->toArray();
         //获取所有商品列表
@@ -448,8 +455,9 @@ class PromotionService
         $this->product->pushCriteria(new ProductCodeCriteria($request->good_code));
         $this->product->pushCriteria(new ProductNotIdCriteria($activity_good_ids));
         $this->product->pushCriteria(new ProductStatusCriteria(Product::ONLINE));
+        $this->product->pushCriteria(new ProductCategoryCriteria($category));
         $goods = $this->product->orderBy('id', 'desc')->paginate(10);
-        $addGoods = view('promotion.addGoods', compact('goods'));
+        $addGoods = view('promotion.addGoods', compact('goods','activity_id'));
         $goodStr = response($addGoods)->getContent();
         return $goodStr;
     }

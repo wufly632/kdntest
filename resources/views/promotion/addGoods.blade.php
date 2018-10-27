@@ -2,45 +2,45 @@
     <div class="modal-content">
         <div class="modal-body col-sm-12">
             <h2 class="text-center" style="margin: 20px;">添加商品</h2>
-            <form action="" class="form-inline">
-                <div>
-                    <div class="form-group col-sm-3">
+            <div class="form-inline" id="addGood-search-form">
+                <div class="col-sm-12">
+                    <div class="form-group col-sm-4">
                         <label for="" style="float: left;">商品名称：</label>
-                        <input type="text" class="col-sm-8">
+                        <input type="text" class="col-sm-8" name="good_title" value="{{old('good_title')}}">
                     </div>
-                    <div class="form-group col-sm-3">
+                    <div class="form-group col-sm-4">
                         <label for="" style="float: left;">商品ID：</label>
-                        <input type="text" class="col-sm-8" id="">
+                        <input type="text" class="col-sm-8" name="good_id" value="{{old('good_id')}}">
                     </div>
-                    <div class="form-group col-sm-3">
+                    <div class="form-group col-sm-4">
                         <label for="" style="float: left;">商品货号：</label>
-                        <input type="text" class="col-sm-8" id="">
+                        <input type="text" class="col-sm-8" name="good_code" value="{{old('good_code')}}">
                     </div>
                 </div>
-                <div>
+                <div class="col-sm-12" style="margin: 20px 0;">
                     <div class="form-group col-sm-3">
                         <label for="" style="float: left;">一级类目：</label>
-                        <select name="category_one">
-                            <option value="">请选择</option>
+                        <select name="category_one" class="select2" id="category_one">
+                            <option value="">请选择分类</option>
                         </select>
                     </div>
                     <div class="form-group col-sm-3">
                         <label for="" style="float: left;">二级类目：</label>
-                        <select name="category_two">
-                            <option value="">请选择</option>
+                        <select name="category_two" class="select2" id="category_two">
+                            <option value="">请选择分类</option>
                         </select>
                     </div>
                     <div class="form-group col-sm-3">
                         <label for="" style="float: left;">三级类目：</label>
-                        <select name="category_two">
-                            <option value="">请选择</option>
+                        <select name="category_three" class="select2" id="category_three">
+                            <option value="">请选择分类</option>
                         </select>
                     </div>
                     <div class="form-group col-sm-3 text-right">
-                        <button type="button" class="btn btn-success">查找</button>
+                        <button type="button" class="btn btn-success search">查找</button>
                     </div>
                 </div>
-            </form>
+            </div>
             <table
                    class="table table-hover table-striped table-bordered text-center">
                 <thead>
@@ -94,9 +94,38 @@
     </div>
 </div>
 <script>
+
     $(function () {
         $('#checkAll').click(function () {
             $('.good-id').prop("checked", $(this).prop('checked'));
-        })
+        });
+        //获取类目
+        var select_category_one = "{{old('category_one')}}";
+        var getSubCategories = function(category_id, select_id){
+            $.ajax({
+                type: "post",
+                url: "{{secure_route('category.nextLevel')}}",
+                data: {id:category_id,_token:"{{csrf_token()}}"},
+                dataType: "json",
+                success: function(data) {
+                    $("#"+select_id).html("<option value=''>请选择分类</option>");
+                    $.each(data.content, function(i, item) {
+                        var selected_html = "";
+                        selected_html = item.id == select_category_one ? "selected=selected" : '';
+                        $("#"+select_id).append("<option value='" + item.id + "' "+selected_html+">" + item.name + "</option>");
+                    });
+                }
+            });
+        };
+        getSubCategories(0,'category_one');
+        $("#category_one").change(function() {
+            $("#category_two").html("<option value=''>请选择分类</option>");
+            $("#category_three").html("<option value=''>请选择分类</option>");
+            getSubCategories($(this).val(), 'category_two');
+        });
+        $("#category_two").change(function() {
+            $("#category_three").html("<option value=''>请选择分类</option>");
+            getSubCategories($(this).val(), 'category_three');
+        });
     })
 </script>
