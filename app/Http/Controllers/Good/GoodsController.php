@@ -48,9 +48,7 @@ class GoodsController extends Controller
         $request->flash();
         $goods = $this->goodService->getList($request);
         $suppliers = SupplierUser::all();
-        //获取所有的一级类目
-        $category = Category::where('level', 1)->get()->pluck('name','id');
-        return view('goods.index', compact('goods','suppliers','category'));
+        return view('goods.index', compact('goods','suppliers'));
     }
 
 

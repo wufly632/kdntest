@@ -86,9 +86,6 @@
                                             <select id="category_one" class="form-control select2" name="category_one"
                                                     style="width: 100%;">
                                                 <option value="">请选择分类</option>
-                                                @foreach($category as $id => $name)
-                                                    <option value="{{$id}}" @if(old('category_one') == $id) selected @endif>{{$name}}</option>
-                                                @endforeach
                                             </select>
                                         </div>
                                     </div>
@@ -96,7 +93,7 @@
                                         <label for="inputPassword3" class="col-sm-4 control-label">二级类目：</label>
                                         <div class="col-sm-8">
                                             <select class="form-control select2" name="category_two" id="category_two">
-
+                                                <option value="">请选择分类</option>
                                             </select>
                                         </div>
                                     </div>
@@ -104,7 +101,7 @@
                                         <label for="inputPassword3" class="col-sm-4 control-label">三级类目：</label>
                                         <div class="col-sm-8">
                                             <select class="form-control select2" name="category_three" id="category_three">
-
+                                                <option value="">请选择分类</option>
                                             </select>
                                         </div>
                                     </div>
@@ -276,7 +273,9 @@
             getSubCategories($(this).val(), 'category_three');
         });
         var select_category_one = "{{old('category_one')}}";
-        var getSubCategories = function(category_id, select_id){
+        var select_category_two = "{{old('category_two')}}";
+        var select_category_three = "{{old('category_three')}}";
+        var getSubCategories = function(category_id, select_id, select_category){
             $.ajax({
                 type: "post",
                 url: "{{secure_route('category.nextLevel')}}",
@@ -286,12 +285,19 @@
                     $("#"+select_id).html("<option value=''>请选择分类</option>");
                     $.each(data.content, function(i, item) {
                         var selected_html = "";
-                        selected_html = item.id == select_category_one ? "selected=selected" : '';
+                        selected_html = item.id == select_category ? "selected=selected" : '';
                         $("#"+select_id).append("<option value='" + item.id + "' "+selected_html+">" + item.name + "</option>");
                     });
                 }
             });
         };
+        getSubCategories(0,'category_one', select_category_one);
+        if (select_category_two) {
+            getSubCategories(select_category_one,'category_two', select_category_two);
+            if (select_category_three) {
+                getSubCategories(select_category_two,'category_three', select_category_three);
+            }
+        }
         $('.sort').on('change', function () {
             var _index = $(this);
             $.ajax({
