@@ -22,7 +22,7 @@ class ProductTitleCriteria implements CriteriaInterface
     /**
      * Apply criteria in query repository
      *
-     * @param string              $model
+     * @param string $model
      * @param RepositoryInterface $repository
      *
      * @return mixed
@@ -30,7 +30,7 @@ class ProductTitleCriteria implements CriteriaInterface
     public function apply($model, RepositoryInterface $repository)
     {
         if ($this->good_title) {
-            $model = $model->where('good_title', 'like', $this->good_title);
+            $model = $model->where('good_title', 'like', '%' . $this->good_title . '%');
         }
         return $model;
     }

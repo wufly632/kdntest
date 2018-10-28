@@ -19,6 +19,7 @@ function addDateRangePicker(ele) {
         "autoApply": true,
         "timePicker24Hour": true,
         "autoUpdateInput": false,
+        "opens": 'center',
         locale: locale,
         ranges: {
             '今日': [moment(), moment()],

@@ -44,7 +44,7 @@ class BannerService
 
     public function createBannerInfo($data)
     {
-        $time = explode('~', $data['daterange2']);
+        $time = explode('~', $data['time_duration']);
         $data['start_at'] = $time[0];
         $data['end_at'] = $time[1];
         $this->bannerRepository->create($data);

@@ -33,10 +33,10 @@ class ProductController extends Controller
      */
     public function onshelf(Request $request)
     {
-        if (! $request->id) {
+        if (!$request->id) {
             return ApiResponse::failure(g_API_ERROR, '请选择要上架的商品');
         }
-        return $this->productService->onshelf($request->id,$request);
+        return $this->productService->onshelf($request->id, $request);
     }
 
     /**
@@ -46,7 +46,7 @@ class ProductController extends Controller
      */
     public function offshelf(Request $request)
     {
-        if (! $request->id) {
+        if (!$request->id) {
             return ApiResponse::failure(g_API_ERROR, '请选择要下架的商品');
         }
         return $this->productService->offshelf($request->id);
@@ -59,5 +59,10 @@ class ProductController extends Controller
     public function rebate(Product $product)
     {
         return view("goods.rebate", compact('product'));
+    }
+
+    public function getALL()
+    {
+        return $this->productService->getAllProduct(request());
     }
 }

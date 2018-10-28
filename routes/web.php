@@ -68,6 +68,7 @@ Route::group(['middleware' => ['auth', 'web']], function () {
     });
 
     Route::group(['prefix' => 'product', 'namespace' => 'Product'], function () {
+        Route::get('getall', 'ProductController@getALL')->name('product.getall');
         Route::post('/onshelf', ['as' => 'product.onshelf', 'uses' => 'ProductController@onshelf']);
         Route::post('/offshelf', ['as' => 'product.offshelf', 'uses' => 'ProductController@offshelf']);
         Route::get('/rebate/{product}', ['as' => 'product.rebate', 'uses' => 'ProductController@rebate']);
@@ -123,6 +124,8 @@ Route::group(['middleware' => ['auth', 'web']], function () {
 
     //网站设置
     Route::group(['namespace' => 'Website'], function () {
+        Route::post('/updatecenterimage/{id?}', 'HomePageController@updateJsonFields')->name('homepage.updatecenterimage');
+        Route::post('/update/{id?}', 'HomePageController@update')->name('homepage.update');
         Route::post('banners.uploadImages', 'BannerController@uploadImages')->name('banners.upload');
         Route::resources([
             'banners' => 'BannerController',
