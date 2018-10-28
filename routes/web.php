@@ -16,8 +16,6 @@ Route::get('/logout', ['as' => 'logout', 'uses' => 'LoginController@logout']);
 Route::post('/loginPost', ['as' => 'login.post', 'uses' => 'LoginController@postLogin']);
 //验证码
 Route::get('/captcha', ['as' => 'captcha', 'uses' => 'LoginController@captcha']);
-Route::get('/test', ['as' => 'captcha', 'uses' => 'TestController@test']);
-
 
 Route::group(['middleware' => ['auth', 'web']], function () {
     Route::get('/', ['as' => 'home.dashboard', 'uses' => 'LoginController@dashboard']);
@@ -125,6 +123,7 @@ Route::group(['middleware' => ['auth', 'web']], function () {
     //网站设置
     Route::group(['namespace' => 'Website'], function () {
         Route::post('/updatecenterimage/{id?}', 'HomePageController@updateJsonFields')->name('homepage.updatecenterimage');
+        Route::post('/updateleftimage/{id?}', 'HomePageController@updateLeft')->name('homepage.updateleftimage');
         Route::post('/update/{id?}', 'HomePageController@update')->name('homepage.update');
         Route::post('banners.uploadImages', 'BannerController@uploadImages')->name('banners.upload');
         Route::resources([

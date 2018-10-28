@@ -119,4 +119,9 @@ class ProductService
 
         return $goods;
     }
+
+    public function getByIds(Array $ids)
+    {
+        return $this->product->findWhereIn('id', $ids);
+    }
 }

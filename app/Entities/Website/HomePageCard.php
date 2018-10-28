@@ -22,6 +22,6 @@ class HomePageCard extends Model implements Transformable
      *
      * @var array
      */
-    protected $fillable = [];
+    protected $fillable = ['title', 'link', 'left_image', 'center_image', 'product_category_id'];
 
 }

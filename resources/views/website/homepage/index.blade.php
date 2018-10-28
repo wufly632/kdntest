@@ -88,7 +88,12 @@
                         </div>
                         <div class="panel-body text-center">
                             <div class="col-sm-12" style="padding:2rem 0">
-
+                                @foreach($goods as $good)
+                                    <div class="col-sm-2">
+                                        <img src="{{ $good->main_pic }}" alt="" style="width: 200px;height: 200px;">
+                                        <span>{{ $good->good_title }}</span>
+                                    </div>
+                                @endforeach
                             </div>
                             <input type="button" class="btn btn-lg btn-success" value="添加商品" @click="addGoods">
                         </div>
@@ -107,7 +112,7 @@
                                 <input @click="modifyTitle"
                                        style="margin-left: 10px;border-radius: 15px;" type="button"
                                        class="btn btn-sm btn-primary"
-                                       value="编辑" :data-index="cardData.id"></h2>
+                                       value="编辑" :data-id="cardData.id" :data-index="index"></h2>
                             <h2 class="col-sm-6 h4 pull-right text-right">@{{ cardData.link }}
                                 <input class="form-control my-form-control"
                                        type="text"
@@ -115,7 +120,7 @@
                                 <input @click="modifyLink"
                                        style="margin-left: 10px;border-radius: 15px;" type="button"
                                        class="btn btn-sm btn-primary"
-                                       value="编辑" :data-index="cardData.id"></h2>
+                                       value="编辑" :data-id="cardData.id" :data-index="index"></h2>
                         </div>
                         <div class="panel-body">
                             <div class="col-sm-3" style="position: relative">
@@ -126,14 +131,16 @@
                                     <form action="" class="form-horizontal col-sm-12" style="padding: 50px;">
                                         <div class="form-group">
                                             <label for="">图片上传</label>
-                                            <input type="file" class="form-control">
+                                            <input type="file" class="form-control" @change="uploadLeftImage"
+                                                   :data-index="index">
                                         </div>
                                         <div class="form-group">
                                             <label for="">链接地址</label>
-                                            <input type="text" class="form-control">
+                                            <input type="text" class="form-control" v-model="cardData.leftImg.link">
                                         </div>
                                         <div class="text-center">
-                                            <input type="button" class="btn btn-primary" value="确定"
+                                            <input @click="modifyLeftInfo" type="button" class="btn btn-primary"
+                                                   value="确定"
                                                    :data-id="cardData.id">
                                             <input type="button" class="btn btn-primary" @click="showCancel" value="取消"
                                                    :data-index="index">
@@ -157,11 +164,13 @@
                                                   style="padding: 30px;border-radius: 25px;">
                                                 <div class="form-group">
                                                     <label for="">图片上传</label>
-                                                    <input type="file" class="form-control">
+                                                    <input type="file" class="form-control" @change="uploadCenterImage"
+                                                           :data-index="index"
+                                                           :data-inner-index="innerIndex">
                                                 </div>
                                                 <div class="form-group">
                                                     <label for="">路径地址</label>
-                                                    <input type="text" class="form-control">
+                                                    <input type="text" class="form-control" v-model="centerData.link">
                                                 </div>
                                                 <div class="text-center">
                                                     <input @click="modifyCenterInfo" type="button"
@@ -214,30 +223,28 @@
                             </div>
                             <div class="col-sm-2">
                                 <div v-if="cardData.rightImg.show" class="" @click="showCancel" :data-index="index"
-                                     style="position: absolute;left: 20px;opacity: 0.6;width: 100%;height: 100%;background-color: #000000;z-index: 9998"></div>
+                                     style="position: absolute;left: 30px;right:0;opacity: 0.6;width: 100%;height: 100%;background-color: #000000;z-index: 9998"
+                                     data-direction="right"></div>
                                 <div v-if="cardData.rightImg.show" class=""
-                                     style="position: absolute;left: 40px;top:20%;right: 0;bottom: 20%;background-color:#FFFFff;z-index: 9999">
+                                     style="position: absolute;left: 60px;top:20%;right: 0;bottom: 20%;background-color:#FFFFff;z-index: 9999">
                                     <form action="" class="form-horizontal col-sm-12" style="padding: 50px;">
                                         <div class="form-group">
-                                            <label for="">图片上传</label>
-                                            <input type="file" class="form-control">
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="">路径地址</label>
-                                            <select name="" id="select2">
+                                            <label for="">catagory</label>
+                                            <select name="" id="select2" class="form-control my-form-control"
+                                                    style="width: 120px;">
                                                 <option value="">1</option>
                                                 <option value="">2</option>
                                                 <option value="">3</option>
                                                 <option value="">4</option>
                                             </select>
-                                            <input type="text" class="form-control">
                                         </div>
                                         <input type="button" class="btn btn-primary" value="确定" :data-index="index">
                                         <input type="button" class="btn btn-primary" @click="showCancel" value="取消"
-                                               :data-index="index">
+                                               :data-index="index" data-direction="right">
                                     </form>
                                 </div>
-                                <div class="image-wrapper col-sm-12" @click="appendChild">
+                                <div class="image-wrapper col-sm-12" @click="appendChild" data-direction="right"
+                                     :data-index="index">
                                     <img :src="cardData.rightImg.src" alt=""
                                          style="height: 100%;">
                                 </div>
@@ -402,6 +409,13 @@
         });
         var panelDaily = new Vue({
             el: '#panel-daily',
+            data: {
+                checkedProduct: [
+                    @foreach($good_ids as $good_id)
+                    {{ $good_id }},
+                    @endforeach
+                ],
+            },
             methods: {
                 addGoods: function () {
                     let content =
@@ -461,7 +475,7 @@
                         '                                    </thead>\n' +
                         '                                    <tbody>\n' +
                         '                                    <tr v-for="product in pageData.data">\n' +
-                        '                                        <td><input type="checkbox" name="good_id" :value="product.id" v-model="checkedProduct"><img :src="product.main_pic" alt="" style="width:80px;"></td>\n' +
+                        '                                        <td><input type="checkbox" name="good_id" :value="product.id" v-model="panelDaily.checkedProduct"><img :src="product.main_pic" alt="" style="width:80px;"></td>\n' +
                         '                                        <td>' +
                         ' <p>ID：@{{ product.id }}</p>\n' +
                         ' <p>名称：@{{ product.good_title }}</p>\n' +
@@ -484,6 +498,8 @@
                         '                                    <li><a @click="redirectPage" :data-target-page="pageData.next_page_url" href="javascript:void(0);">下一页</a></li>\n' +
                         '                                    <li><a @click="redirectPage" :data-target-page="pageData.last_page_url" href="javascript:void(0);">末页</a></li>\n' +
                         '                                </ul>' +
+                        '                                <input type="button" @click="confirmChoice" class="btn btn-primary" value="submit">' +
+
                         '</div>';
                     layer.open({
                         type: 1,
@@ -506,7 +522,6 @@
                             categoryTwoItems: [],
                             categoryThree: '',
                             categoryThreeItems: [],
-                            checkedProduct: [],
                             pageData: {}
                         },
                         created: function () {
@@ -584,6 +599,15 @@
                                     }
                                 });
                             },
+                            confirmChoice: function () {
+                                let data = {
+                                    index: 5,
+                                    left: panelDaily.checkedProduct,
+                                };
+                                axios.post('{{ secure_route('homepage.updateleftimage') }}' + '/5', data).then(function (res) {
+                                    layer.closeAll();
+                                });
+                            }
                         }
                     });
                 }
@@ -623,8 +647,12 @@
                 appendChild: function (event) {
                     let _elIndex = event.currentTarget.getAttribute('data-index');
                     let _elIndexTwo = event.currentTarget.getAttribute('data-index-two');
+                    let _elDirection = event.currentTarget.getAttribute('data-direction');
                     if (_elIndexTwo) {
                         this.cardDatas[_elIndex].centerImg[_elIndexTwo].show = true;
+                    }
+                    else if (_elDirection) {
+                        this.cardDatas[_elIndex].rightImg.show = true;
                     } else {
                         this.cardDatas[_elIndex].leftImg.show = true;
                     }
@@ -633,23 +661,72 @@
                 showCancel: function (event) {
                     let _elIndex = event.currentTarget.getAttribute('data-index');
                     let _elIndexTwo = event.currentTarget.getAttribute('data-index-two');
+                    let _elDirection = event.currentTarget.getAttribute('data-direction');
                     if (_elIndexTwo) {
                         this.cardDatas[_elIndex].centerImg[_elIndexTwo].show = false;
+                    } else if (_elDirection) {
+                        this.cardDatas[_elIndex].rightImg.show = false;
                     } else {
                         this.cardDatas[_elIndex].leftImg.show = false;
                     }
                 },
                 modifyTitle: function (event) {
                     let _thisEl = event.currentTarget;
+                    let elId = _thisEl.getAttribute('data-id');
                     let index = _thisEl.getAttribute('data-index');
                     let data = this.cardDatas[index].title;
+                    axios.post('{{ secure_route('homepage.update') }}' + '/' + elId, {
+                        title: data
+                    }).then(function (res) {
+                        if (res.data.status === 200) {
+                            toastr.options.timeOut = 0.5;
+                            toastr.options.onHidden = function () {
 
+                            };
+                            toastr.success('modify 成功');
+                        } else {
+                            toastr.error(res.data.msg);
+                        }
+                    });
                 },
                 modifyLink: function (event) {
                     let _thisEl = event.currentTarget;
+                    let elId = _thisEl.getAttribute('data-id');
                     let index = _thisEl.getAttribute('data-index');
                     let data = this.cardDatas[index].link;
-                    axios.post();
+                    axios.post('{{ secure_route('homepage.update') }}' + '/' + elId, {
+                        link: data
+                    }).then(function (res) {
+                        if (res.data.status === 200) {
+                            toastr.options.timeOut = 0.5;
+                            toastr.options.onHidden = function () {
+
+                            };
+                            toastr.success('modify 成功');
+                        } else {
+                            toastr.error(res.data.msg);
+                        }
+                    });
+                },
+                modifyLeftInfo: function (event) {
+                    let _thisEl = event.currentTarget;
+                    let elId = _thisEl.getAttribute('data-id');
+                    let _thisVue = this;
+                    let leftImg = _thisVue.cardDatas[index].leftImg;
+                    leftImg.show = false;
+                    axios.post('{{ secure_route('homepage.updateleftimage') }}' + '/' + elId, {
+                        left: leftImg
+                    }).then(function (res) {
+                        if (res.data.status === 200) {
+                            toastr.options.timeOut = 0.5;
+                            toastr.options.onHidden = function () {
+
+                            };
+                            toastr.success('modify 成功');
+                        } else {
+                            toastr.error(res.data.msg);
+                        }
+                    });
                 },
                 modifyCenterInfo: function (event) {
                     let _thisEl = event.currentTarget;
@@ -657,10 +734,65 @@
                     let elInnerIndex = _thisEl.getAttribute('data-inner-index');
                     let _thisVue = this;
                     axios.post('{{ secure_route('homepage.updatecenterimage') }}' + '/' + elId, {
-                        index: elInnerIndex,
-                        center_image: JSON.stringify(_thisVue.cardDatas[elInnerIndex].centerImg)
+                        index: elId,
+                        center_image: _thisVue.cardDatas[elInnerIndex].centerImg
                     }).then(function (res) {
-                        console.log(res);
+                        if (res.status === 200) {
+                            if (res.data.status === 200) {
+
+                                _that.cardDatas[index].leftImg.src = res.data.content;
+                                toastr.success('上传 success');
+                            } else {
+                                toastr.error('上传失败');
+                            }
+                        } else {
+                            toastr.error('上传失败');
+                        }
+                    });
+                },
+                uploadLeftImage: function (event) {
+                    let _eventEl = event.currentTarget;
+                    let index = _eventEl.getAttribute('data-index');
+                    let image = _eventEl.files[0];
+                    let formData = new FormData();
+                    let src = '';
+                    formData.append('banners', image);
+                    formData.append('dir_name', 'banners');
+                    let _that = this;
+                    axios.post("{{ secure_route('banners.upload') }}", formData, {headers: {'Content-Type': 'multipart/form-data'}}).then(function (res) {
+                        if (res.status === 200) {
+                            if (res.data.status === 200) {
+
+                                _that.cardDatas[index].leftImg.src = res.data.content;
+                                toastr.success('上传 success');
+                            } else {
+                                toastr.error('上传失败');
+                            }
+                        } else {
+                            toastr.error('上传失败');
+                        }
+                    });
+                },
+                uploadCenterImage: function (event) {
+                    let _eventEl = event.currentTarget;
+                    let index = _eventEl.getAttribute('data-index');
+                    let innerIndex = _eventEl.getAttribute('data-inner-index');
+                    let image = _eventEl.files[0];
+                    let formData = new FormData();
+                    let src = '';
+                    formData.append('banners', image);
+                    formData.append('dir_name', 'banners');
+                    let _that = this;
+                    axios.post("{{ secure_route('banners.upload') }}", formData, {headers: {'Content-Type': 'multipart/form-data'}}).then(function (res) {
+                        if (res.status === 200) {
+                            if (res.data.status === 200) {
+                                _that.cardDatas[index].centerImg[innerIndex].src = res.data.content;
+                            } else {
+                                toastr.error('上传失败');
+                            }
+                        } else {
+                            toastr.error('上传失败');
+                        }
                     });
                 }
             }
