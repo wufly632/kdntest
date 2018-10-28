@@ -67,6 +67,7 @@
 @stop
 @section('script')
     <script src="{{asset('/assets/js/bower_components/axios/dist/axios.min.js')}}"></script>
+    <script src="{{asset('/assets/js/aliyun-oss-sdk.js')}}"></script>
     <script src="{{asset('/assets/admin/js/vue.min.js')}}"></script>
     <script>
         var index = parent.layer.getFrameIndex(window.name);
@@ -120,23 +121,29 @@
                     });
                 }, uploadImg: function (event) {
                     let that = this;
-                    let elSrc = $('#src');
-                    let src = elSrc[0].files[0];
-                    let formData = new FormData();
-                    formData.append('banners', src);
-                    formData.append('_token', '{{ csrf_token() }}');
-                    formData.append('dir_name', 'banners');
-
-                    axios.post("{{ secure_route('banners.upload') }}", formData, {headers: {'Content-Type': 'multipart/form-data'}}).then(function (res) {
+                    axios.post("{{ secure_route('common.sts_token')}}", {'_token' : '{{ csrf_token() }}'}, {headers: {'Content-Type': 'multipart/form-data'}}).then(function (res) {
                         if (res.status === 200) {
-
                             if (res.data.status === 200) {
-                                that.src = res.data.content;
+                                result = res.data.content;
+                                let file = event.target.files[0];
+                                let storeAs = 'baners/banner.jpg';
+                                let client = new OSS.Wrapper({
+                                    accessKeyId: result.AccessKeyId,
+                                    accessKeySecret: result.AccessKeySecret,
+                                    stsToken: result.SecurityToken,
+                                    endpoint: '{{env('OSS_ENDPOINT')}}',
+                                    bucket: '{{env('OSS_BUCKET')}}'
+                                });
+                                client.multipartUpload(storeAs, file).then(function (result) {
+                                    that.src = result.url;
+                                }).catch(function (err) {
+                                    console.log(err);
+                                });
                             } else {
                                 toastr.error(res.data.msg);
                             }
                         }
-                    })
+                    });
                 }
             }
         });

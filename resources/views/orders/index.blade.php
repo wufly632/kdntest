@@ -216,14 +216,14 @@
                                                             @default
                                                         @endswitch
                                                     </p>
-                                                    @if($orderlist->status!=6)
+                                                    {{--@if($orderlist->status!=6)
                                                         <p style="padding: 5px;">
                                                             <button class="btn btn-sm btn-danger order-cancel"
                                                                     data-target-uri="{{ secure_route('orders.cancel',['id'=>$orderlist->id]) }}">
                                                                 取消订单
                                                             </button>
                                                         </p>
-                                                    @endif
+                                                    @endif--}}
                                                 </td>
                                             @endif
                                         </tr>

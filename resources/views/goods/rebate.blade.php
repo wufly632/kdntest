@@ -22,23 +22,11 @@
 
                 <div class="form-group">
                     <label for="coupon_count" class="col-xs-4 control-label text-right">
-                        二级分销：
+                        二/三级分销：
                     </label>
                     <div class="col-xs-6">
                         <div class="input-group">
                             <input type="text" id="rebate_level_two" class="form-control" name="rebate_level_two" value="{{$product->rebate_level_two}}">
-                            <span class="input-group-addon">%</span>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <label for="coupon_count" class="col-xs-4 control-label text-right">
-                        三级分销：
-                    </label>
-                    <div class="col-xs-6">
-                        <div class="input-group">
-                            <input type="text" id="rebate_level_three" class="form-control" name="rebate_level_three" value="{{$product->rebate_level_three}}">
                             <span class="input-group-addon">%</span>
                         </div>
                     </div>
