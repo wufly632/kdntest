@@ -127,12 +127,12 @@
                                 <tr class="text-center">
                                     <th>商品图片</th>
                                     <th>供应商</th>
-                                    <th>商品信息</th>
+                                    <th style="width: 25%;">商品信息</th>
                                     <th>采购价(￥)</th>
                                     <th>售价($)</th>
                                     <th>历史销量</th>
                                     <th>库存数量</th>
-                                    <th>创建时间</th>
+                                    <th style="width: 10%;">创建时间</th>
                                     <th>商品状态</th>
                                     <th>操作</th>
                                     <th style="width: 50px;">排序</th>

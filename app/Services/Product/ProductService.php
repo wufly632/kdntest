@@ -56,7 +56,6 @@ class ProductService
             $product->status = Product::ONLINE;
             $product->rebate_level_one = $request->rebate_level_one;
             $product->rebate_level_two = $request->rebate_level_two;
-            $product->rebate_level_three = $request->rebate_level_three;
             $product->save();
             DB::commit();
             return ApiResponse::success('上架成功');
