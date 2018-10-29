@@ -135,6 +135,7 @@
                                     bucket: '{{env('OSS_BUCKET')}}'
                                 });
                                 client.multipartUpload(storeAs, file).then(function (result) {
+                                    console.log(result);
                                     that.src = result.url;
                                 }).catch(function (err) {
                                     console.log(err);
