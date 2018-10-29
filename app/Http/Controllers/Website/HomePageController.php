@@ -43,7 +43,6 @@ class HomePageController extends Controller
             $this->homePageCardService->update($option, $id);
             return ApiResponse::success();
         } catch (\Exception $e) {
-            dd($e);
             return ApiResponse::failure(g_API_STATUS, 'modify failed');
         }
     }
@@ -68,7 +67,6 @@ class HomePageController extends Controller
             $this->homePageCardService->update(['left_image' => json_encode($option['left'])], $id);
             return ApiResponse::success();
         } catch (\Exception $e) {
-            dd($e);
             return ApiResponse::failure(g_API_STATUS, 'modify failed');
         }
     }

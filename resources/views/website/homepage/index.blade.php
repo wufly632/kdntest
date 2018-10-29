@@ -151,7 +151,7 @@
                                 </div>
                                 <div class="image-wrapper col-sm-12" @click="appendChild" :data-index="index">
                                     <img :src="cardData.leftImg.src" alt=""
-                                         style="height: 100%;">
+                                         style="height: 100%;max-height: 600px;">
                                 </div>
                             </div>
                             <div class="col-sm-6" style="margin-left:3em;">
@@ -187,7 +187,7 @@
                                         <div @click="appendChild" :data-index="index"
                                              :data-index-two="innerIndex">
                                             <img :src="centerData.src" title="" alt=""
-                                                 style="height: 100%">
+                                                 style="height: 100%;max-height: 300px;">
                                         </div>
                                     </div>
                                     <div v-else class="image-wrapper col-sm-12">
@@ -221,7 +221,7 @@
                                         <div @click="appendChild" :data-index="index"
                                              :data-index-two="innerIndex">
                                             <img :src="centerData.src" title="" alt=""
-                                                 style="height: 100%">
+                                                 style="height: 100%;max-height: 300px;">
                                         </div>
                                     </div>
                                 </div>
@@ -291,7 +291,7 @@
                                 <div class="image-wrapper col-sm-12" @click="appendChild" data-direction="right"
                                      :data-index="index">
                                     <img :src="cardData.rightImg.src" alt=""
-                                         style="height: 100%;">
+                                         style="height: 100%;max-height: 600px;">
                                 </div>
                             </div>
                         </div>
