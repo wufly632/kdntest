@@ -81,8 +81,9 @@ class SyncCategoryAttribute extends Command
             // '10-26/数码-硬件外设-鼠标增加商品属性.xlsx',
             // '10-26/U盘.xlsx',
             // '10-26/增加二级类目雨具.xlsx',
-            '10-29/孕婴童1029.xlsx',
-            '10-29/增加类目.xlsx',
+            // '10-29/孕婴童1029.xlsx',
+            // '10-29/增加类目.xlsx',
+            '10-29/户外运动增加三级类目.xlsx'
         ];
         foreach ($arr as $i) {
             $excel_path = 'storage'.DIRECTORY_SEPARATOR.'excel'.DIRECTORY_SEPARATOR.'import/attribute'.DIRECTORY_SEPARATOR.$i;
