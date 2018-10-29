@@ -126,7 +126,8 @@
                             if (res.data.status === 200) {
                                 result = res.data.content;
                                 let file = event.target.files[0];
-                                let storeAs = 'baners/banner.jpg';
+                                let storeAs = 'banners/'+'{{Auth::id()}}'+Date.parse(new Date())+'.jpg';
+                                let size=file.size;
                                 let client = new OSS.Wrapper({
                                     accessKeyId: result.AccessKeyId,
                                     accessKeySecret: result.AccessKeySecret,
@@ -136,8 +137,14 @@
                                 });
                                 client.multipartUpload(storeAs, file).then(function (result) {
                                     console.log(result);
-                                    that.src = result.url;
+                                    if(size>=100*1024){
+                                        that.src =  results.res.requestUrls[0].split("?")[0];
+                                    }else{
+                                        that.src = result.url;
+                                    }
                                 }).catch(function (err) {
+                                    that.src = '';
+                                    toastr.error('图片上传失败，稍后重试');
                                     console.log(err);
                                 });
                             } else {
