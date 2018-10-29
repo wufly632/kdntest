@@ -80,7 +80,8 @@
                                 </form>
                             </div>
                             <div @click="editShow">
-                                <img src="{{ url('uploads/home/banner.png') }}" alt="">
+                                <img src="http://weiweimao-image.oss-ap-south-1.aliyuncs.com/product/000001000218/5bd6fce70a64d.png"
+                                     alt="">
                             </div>
                         </div>
                     </div>
