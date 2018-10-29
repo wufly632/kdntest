@@ -745,7 +745,7 @@
                                 @endforeach
                             ],
                         rightImg: {
-                            src: "{{ url('/uploads/home/home/right.png') }}",
+                            src: "http://weiweimao-image.oss-ap-south-1.aliyuncs.com/product/000001000218/5bd6fde57af6a.png",
                             link: "https://www.tmall.com",
                             show: false,
                             catagory: '{{ $card->product_category_id }}',
