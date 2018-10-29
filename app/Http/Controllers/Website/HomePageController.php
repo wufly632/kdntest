@@ -31,17 +31,19 @@ class HomePageController extends Controller
         $banners = $this->bannerService->getAllBanner(['type' => 1]);
         $dailySelect = HomePageCard::find(5);
         $good_ids = json_decode($dailySelect->left_image, true);
+
         $goods = $this->productService->getByIds($good_ids);
         return view('website.homepage.index', ['cards' => HomePageCard::limit(4)->get(), 'banners' => $banners, 'goods' => $goods, 'good_ids' => $good_ids]);
     }
 
     public function update($id)
     {
-        $option = \request()->only(['link', 'title']);
+        $option = \request()->only(['link', 'title','product_category_id']);
         try {
             $this->homePageCardService->update($option, $id);
             return ApiResponse::success();
         } catch (\Exception $e) {
+            dd($e);
             return ApiResponse::failure(g_API_STATUS, 'modify failed');
         }
     }
@@ -62,7 +64,6 @@ class HomePageController extends Controller
     public function updateLeft($id)
     {
         $option = \request()->only(['left', 'index']);
-        $index = $option['index'];
         try {
             $this->homePageCardService->update(['left_image' => json_encode($option['left'])], $id);
             return ApiResponse::success();

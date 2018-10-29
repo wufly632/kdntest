@@ -88,12 +88,14 @@
                         </div>
                         <div class="panel-body text-center">
                             <div class="col-sm-12" style="padding:2rem 0">
-                                @foreach($goods as $good)
-                                    <div class="col-sm-2">
-                                        <img src="{{ $good->main_pic }}" alt="" style="width: 200px;height: 200px;">
-                                        <span>{{ $good->good_title }}</span>
+                                <div class="col-sm-2" v-for="(good,goodindex) in goods">
+                                    <img :src="good.main_pic" alt="" style="width: 200px;height: 200px;">
+                                    <div>@{{ good.good_title }}</div>
+                                    <div>
+                                        <input type="checkbox" name="good_id" :value="good.id"
+                                               v-model="checkedProduct">
                                     </div>
-                                @endforeach
+                                </div>
                             </div>
                             <input type="button" class="btn btn-lg btn-success" value="添加商品" @click="addGoods">
                         </div>
@@ -141,7 +143,7 @@
                                         <div class="text-center">
                                             <input @click="modifyLeftInfo" type="button" class="btn btn-primary"
                                                    value="确定"
-                                                   :data-id="cardData.id">
+                                                   :data-id="cardData.id" :data-index="index">
                                             <input type="button" class="btn btn-primary" @click="showCancel" value="取消"
                                                    :data-index="index">
                                         </div>
@@ -175,7 +177,7 @@
                                                 <div class="text-center">
                                                     <input @click="modifyCenterInfo" type="button"
                                                            class="btn btn-primary" value="确定" :data-id="cardData.id"
-                                                           :data-inner-index="innerIndex">
+                                                           :data-inner-index="innerIndex" :data-index="index">
                                                     <input type="button" class="btn btn-primary" @click="showCancel"
                                                            value="取消"
                                                            :data-index="index" :data-index-two="innerIndex">
@@ -198,15 +200,18 @@
                                                   style="padding: 30px;border-radius: 25px;">
                                                 <div class="form-group">
                                                     <label for="">图片上传</label>
-                                                    <input type="file" class="form-control">
+                                                    <input type="file" class="form-control" @change="uploadCenterImage"
+                                                           :data-index="index"
+                                                           :data-inner-index="innerIndex">
                                                 </div>
                                                 <div class="form-group">
                                                     <label for="">路径地址</label>
-                                                    <input type="text" class="form-control">
+                                                    <input type="text" class="form-control" v-model="centerData.link">
                                                 </div>
                                                 <div class="text-center">
-                                                    <input type="button" class="btn btn-primary" value="确定"
-                                                           :data-index="index">
+                                                    <input @click="modifyCenterInfo" type="button"
+                                                           class="btn btn-primary" value="确定" :data-id="cardData.id"
+                                                           :data-inner-index="innerIndex" :data-index="index">
                                                     <input type="button" class="btn btn-primary" @click="showCancel"
                                                            value="取消"
                                                            :data-index="index" :data-index-two="innerIndex">
@@ -229,18 +234,58 @@
                                      style="position: absolute;left: 60px;top:20%;right: 0;bottom: 20%;background-color:#FFFFff;z-index: 9999">
                                     <form action="" class="form-horizontal col-sm-12" style="padding: 50px;">
                                         <div class="form-group">
-                                            <label for="">catagory</label>
-                                            <select name="" id="select2" class="form-control my-form-control"
-                                                    style="width: 120px;">
-                                                <option value="">1</option>
-                                                <option value="">2</option>
-                                                <option value="">3</option>
-                                                <option value="">4</option>
-                                            </select>
+                                            <div class="form-group">
+                                                当前选择:@{{ cardData.rightImg.catagory_name }}
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="category_one">一级类目：</label>
+
+                                                <select @change="panelDaily.showCategoryTwo"
+                                                        @click="panelDaily.showCategoryOne" data-ready="no"
+                                                        v-model="cardData.rightImg.catagoryOne"
+                                                        name="category_one"
+                                                        id="category_one" class="form-control my-form-control-sm"
+                                                        data-out="yes" :data-index="index">
+                                                    <option value="">请选择</option>
+                                                    <option :value="categoryItem.id"
+                                                            v-for="categoryItem in panelDaily.categoryItems">@{{
+                                                        categoryItem.name }}
+                                                    </option>
+                                                </select>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="category_two">二级类目：</label>
+                                                <select @change="panelDaily.showCategoryThree"
+                                                        v-model="cardData.rightImg.catagoryTwo"
+                                                        name="category_two"
+                                                        id="category_two" class="form-control my-form-control-sm"
+                                                        data-out="yes" :data-index="index">
+                                                    <option value="">请选择</option>
+                                                    <option :value="categoryTwoItem.id"
+                                                            v-for="categoryTwoItem in panelDaily.categoryTwoItems">@{{
+                                                        categoryTwoItem.name }}
+                                                    </option>
+                                                </select>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="category_three">三级类目：</label>
+                                                <select v-model="cardData.rightImg.categoryThree"
+                                                        name="category_three"
+                                                        id="category_three" class="form-control my-form-control-sm">
+                                                    <option value="">请选择</option>
+                                                    <option :value="categoryThreeItem.id"
+                                                            v-for="categoryThreeItem in panelDaily.categoryThreeItems">
+                                                        @{{ categoryThreeItem.name }}
+                                                    </option>
+                                                </select>
+                                            </div>
+                                            <input type="button" class="btn btn-primary" @click="modifyRightInfo"
+                                                   value="确定"
+                                                   :data-index="index" :data-id="cardData.id">
+                                            <input type="button" class="btn btn-primary" @click="showCancel" value="取消"
+                                                   :data-index="index" data-direction="right">
                                         </div>
-                                        <input type="button" class="btn btn-primary" value="确定" :data-index="index">
-                                        <input type="button" class="btn btn-primary" @click="showCancel" value="取消"
-                                               :data-index="index" data-direction="right">
+
                                     </form>
                                 </div>
                                 <div class="image-wrapper col-sm-12" @click="appendChild" data-direction="right"
@@ -386,7 +431,6 @@
                     let successMsg = '';
                     let errorMsg = '';
                     postData = this.banners[index];
-                    console.log(postData);
                     if (postData._method === 'post') {
                         successMsg = '添加成功';
                         errorMsg = '添加失败';
@@ -403,20 +447,93 @@
                     });
                 },
                 modifyTime: function (event) {
-                    console.log(this.banners);
                 }
             }
         });
         var panelDaily = new Vue({
             el: '#panel-daily',
             data: {
+                catagoryReady: false,
+                categoryOne: '',
+                categoryItems: [],
+                categoryTwo: '',
+                categoryTwoItems: [],
+                categoryThree: '',
+                categoryThreeItems: [],
                 checkedProduct: [
                     @foreach($good_ids as $good_id)
                     {{ $good_id }},
                     @endforeach
                 ],
+                goods: [
+                        @foreach($goods as $good)
+                    {
+                        id: '{{ $good->id }}',
+                        main_pic: '{{ $good->main_pic }}',
+                        good_title: '{{ $good->good_title }}',
+                    },
+                    @endforeach
+                ]
             },
             methods: {
+                checkIsOut: function (el) {
+                    let isOut = el.getAttribute('data-out');
+                    return isOut === 'yes';
+                },
+                showCategoryOne: function (event) {
+                    if (!this.catagoryReady) {
+                        this.getCatagories(0, 1);
+                        this.catagoryReady = true;
+                    }
+                },
+                showCategoryTwo: function (event) {
+                    let _thisEl = event.currentTarget;
+                    let index = _thisEl.getAttribute('data-index');
+                    if (this.checkIsOut(_thisEl)) {
+                        if (homeCard.cardDatas[index].rightImg.catagoryOne !== '') {
+                            this.getCatagories(homeCard.cardDatas[index].rightImg.catagoryOne, 2);
+                        }
+                    } else {
+                        if (this.categoryOne !== '') {
+                            this.getCatagories(this.categoryOne, 2);
+                        }
+
+                    }
+                },
+                showCategoryThree: function (event) {
+                    let _thisEl = event.currentTarget;
+                    let index = _thisEl.getAttribute('data-index');
+                    if (this.checkIsOut(_thisEl)) {
+                        if (homeCard.cardDatas[index].rightImg.catagoryTwo !== '') {
+                            this.getCatagories(homeCard.cardDatas[index].rightImg.catagoryTwo, 3);
+                        }
+                    } else {
+                        if (this.categoryTwo !== '') {
+                            this.getCatagories(this.categoryTwo, 3);
+                        }
+                    }
+                },
+                getCatagories: function (category_id, el) {
+                    let _thisVue = this;
+                    axios.post('{{ secure_route('category.nextLevel') }}', {id: category_id}).then(function (res) {
+                        if (res.data.status === 200) {
+                            switch (el) {
+                                case(1):
+                                    _thisVue.categoryItems = res.data.content;
+                                    break;
+                                case(2):
+                                    _thisVue.categoryTwoItems = res.data.content;
+                                    break;
+                                case(3):
+                                    _thisVue.categoryThreeItems = res.data.content;
+                                    break;
+                                default:
+                                    _thisVue.categoryItems = res.data.content;
+                                    break;
+                            }
+                        }
+                    });
+                },
                 addGoods: function () {
                     let content =
                         '<div style="padding:20px;" id="product-list">' +
@@ -440,23 +557,23 @@
                         '<div class="form-group col-sm-4">' +
                         '                                    <label for="category_one">一级类目：</label>\n' +
 
-                        '                                    <select @click="showCategoryOne" data-ready="no" v-model="categoryOne" name="category_one" id="category_one" class="form-control my-form-control-sm">\n' +
+                        '                                    <select @change="panelDaily.showCategoryTwo" @click="panelDaily.showCategoryOne" data-ready="no" v-model="panelDaily.categoryOne" name="category_one" id="category_one" class="form-control my-form-control-sm">\n' +
                         '<option value="">请选择</option>' +
-                        '                                        <option :value="categoryItem.id" v-for="categoryItem in categoryItems" >@{{ categoryItem.name }}</option>\n' +
+                        '                                        <option :value="categoryItem.id" v-for="categoryItem in panelDaily.categoryItems" >@{{ categoryItem.name }}</option>\n' +
                         '                                    </select>\n' +
                         '</div>' +
                         '<div class="form-group col-sm-4">' +
                         '                                    <label for="category_two">二级类目：</label>\n' +
-                        '                                    <select @click="showCategoryTwo" v-model="categoryTwo" name="category_two" id="category_two" class="form-control my-form-control-sm">\n' +
+                        '                                    <select @change="panelDaily.showCategoryThree" v-model="panelDaily.categoryTwo" name="category_two" id="category_two" class="form-control my-form-control-sm">\n' +
                         '<option value="">请选择</option>' +
-                        '                                        <option :value="categoryTwoItem.id" v-for="categoryTwoItem in categoryTwoItems" >@{{ categoryTwoItem.name }}</option>\n' +
+                        '                                        <option :value="categoryTwoItem.id" v-for="categoryTwoItem in panelDaily.categoryTwoItems" >@{{ categoryTwoItem.name }}</option>\n' +
                         '                                    </select>\n' +
                         '</div>' +
                         '<div class="form-group col-sm-4">' +
                         '                                    <label for="category_three">三级类目：</label>\n' +
-                        '                                    <select @click="showCategoryThree" v-model="categoryThree" name="category_three" id="category_three" class="form-control my-form-control-sm">\n' +
+                        '                                    <select v-model="panelDaily.categoryThree" name="category_three" id="category_three" class="form-control my-form-control-sm">\n' +
                         '<option value="">请选择</option>' +
-                        '                                        <option :value="categoryThreeItem.id" v-for="categoryThreeItem in categoryThreeItems" >@{{ categoryThreeItem.name }}</option>\n' +
+                        '                                        <option :value="categoryThreeItem.id" v-for="categoryThreeItem in panelDaily.categoryThreeItems" >@{{ categoryThreeItem.name }}</option>\n' +
                         '                                    </select>\n' +
                         '</div>' +
                         ' <input type="button" class="btn btn-success" @click="search" value="查找">' +
@@ -489,7 +606,7 @@
                         '                                    </tr>\n' +
                         '                                    </tbody>\n' +
                         '                                </table>' +
-                        '<ul class="pagination pull-right">\n' +
+                        '<div class="clearfix"><ul class="pagination pull-right">\n' +
                         '                                    <li><a @click="redirectPage" :data-target-page="pageData.first_page_url" href="javascript:void(0);">首页</a></li>\n' +
                         '                                    <li><a @click="redirectPage" :data-target-page="pageData.prev_page_url" href="javascript:void(0);">上一页</a></li>\n' +
                         '                                    <li><input v-model="pageData.current_page" type="number" class="form-control"\n' +
@@ -497,8 +614,8 @@
                         '                                                href="javascript:void(0);" :data-target-num="pageData.current_page">跳转</a></li>\n' +
                         '                                    <li><a @click="redirectPage" :data-target-page="pageData.next_page_url" href="javascript:void(0);">下一页</a></li>\n' +
                         '                                    <li><a @click="redirectPage" :data-target-page="pageData.last_page_url" href="javascript:void(0);">末页</a></li>\n' +
-                        '                                </ul>' +
-                        '                                <input type="button" @click="confirmChoice" class="btn btn-primary" value="submit">' +
+                        '                                </ul></div>' +
+                        '                                <div class="text-center"><input style="width:200px;" type="button" @click="confirmChoice" class="btn btn-lg btn-success" value="确认"></div>' +
 
                         '</div>';
                     layer.open({
@@ -516,12 +633,6 @@
                             goodId: '',
                             goodTitle: '',
                             goodCode: '',
-                            categoryOne: '',
-                            categoryItems: [],
-                            categoryTwo: '',
-                            categoryTwoItems: [],
-                            categoryThree: '',
-                            categoryThreeItems: [],
                             pageData: {}
                         },
                         created: function () {
@@ -559,46 +670,6 @@
                                 let uri = '{{ secure_route('product.getall') }}' + '?page=' + event.currentTarget.getAttribute('data-target-num') + '&' + $('#product-search').serialize();
                                 this.getData(uri);
                             },
-                            showCategoryOne: function (event) {
-                                let _thisEl = event.currentTarget;
-                                let dataReady = _thisEl.getAttribute('data-ready');
-                                if (dataReady !== 'yes') {
-                                    this.getCatagories(0, 1);
-                                    _thisEl.setAttribute('data-ready', 'yes');
-                                }
-                            },
-                            showCategoryTwo: function () {
-                                if (this.categoryOne !== '') {
-                                    this.getCatagories(this.categoryOne, 2);
-                                }
-                            },
-                            showCategoryThree: function () {
-                                if (this.categoryTwo !== '') {
-                                    this.getCatagories(this.categoryTwo, 3);
-                                }
-                            },
-                            getCatagories: function (category_id, el) {
-                                let _thisVue = this;
-                                axios.post('{{ secure_route('category.nextLevel') }}', {id: category_id}).then(function (res) {
-                                    if (res.data.status === 200) {
-                                        switch (el) {
-                                            case(1):
-                                                _thisVue.categoryItems = res.data.content;
-                                                console.log(_thisVue.categoryItems);
-                                                break;
-                                            case(2):
-                                                _thisVue.categoryTwoItems = res.data.content;
-                                                break;
-                                            case(3):
-                                                _thisVue.categoryThreeItems = res.data.content;
-                                                break;
-                                            default:
-                                                _thisVue.categoryItems = res.data.content;
-                                                break;
-                                        }
-                                    }
-                                });
-                            },
                             confirmChoice: function () {
                                 let data = {
                                     index: 5,
@@ -606,6 +677,7 @@
                                 };
                                 axios.post('{{ secure_route('homepage.updateleftimage') }}' + '/5', data).then(function (res) {
                                     layer.closeAll();
+                                    location.reload();
                                 });
                             }
                         }
@@ -637,7 +709,14 @@
                                 @endforeach
                             ],
                         rightImg: {
-                            src: "{{ url('/uploads/home/home/right.png') }}", link: "https://www.tmall.com", show: false
+                            src: "{{ url('/uploads/home/home/right.png') }}",
+                            link: "https://www.tmall.com",
+                            show: false,
+                            catagory: '{{ $card->product_category_id }}',
+                            catagory_name: '{{ $card->category->name }}',
+                            catagoryOne: '',
+                            catagoryTwo: '',
+                            catagoryThree: '',
                         }
                     },
                     @endforeach
@@ -711,6 +790,7 @@
                 modifyLeftInfo: function (event) {
                     let _thisEl = event.currentTarget;
                     let elId = _thisEl.getAttribute('data-id');
+                    let index = _thisEl.getAttribute('data-index');
                     let _thisVue = this;
                     let leftImg = _thisVue.cardDatas[index].leftImg;
                     leftImg.show = false;
@@ -720,7 +800,7 @@
                         if (res.data.status === 200) {
                             toastr.options.timeOut = 0.5;
                             toastr.options.onHidden = function () {
-
+                                _thisVue.cardDatas[index].leftImg.show = false;
                             };
                             toastr.success('modify 成功');
                         } else {
@@ -732,21 +812,52 @@
                     let _thisEl = event.currentTarget;
                     let elId = _thisEl.getAttribute('data-id');
                     let elInnerIndex = _thisEl.getAttribute('data-inner-index');
+                    let index = _thisEl.getAttribute('data-index');
                     let _thisVue = this;
                     axios.post('{{ secure_route('homepage.updatecenterimage') }}' + '/' + elId, {
                         index: elId,
-                        center_image: _thisVue.cardDatas[elInnerIndex].centerImg
+                        center_image: _thisVue.cardDatas[index].centerImg
                     }).then(function (res) {
                         if (res.status === 200) {
                             if (res.data.status === 200) {
-
-                                _that.cardDatas[index].leftImg.src = res.data.content;
+                                _thisVue.cardDatas[index].centerImg[elInnerIndex].show = false;
                                 toastr.success('上传 success');
                             } else {
                                 toastr.error('上传失败');
                             }
                         } else {
                             toastr.error('上传失败');
+                        }
+                    });
+                },
+                modifyRightInfo: function (event) {
+                    let _thisEl = event.currentTarget;
+                    let elId = _thisEl.getAttribute('data-id');
+                    let index = _thisEl.getAttribute('data-index');
+                    let _thisVue = this;
+                    let rightImg = _thisVue.cardDatas[index].rightImg;
+                    rightImg.show = false;
+                    let initData = 0;
+                    if (rightImg.catagoryOne !== '') {
+                        initData = rightImg.catagoryOne;
+                    }
+                    if (rightImg.catagoryTwo !== '') {
+                        initData = rightImg.catagoryTwo;
+                    }
+                    if (rightImg.categoryThree !== '') {
+                        initData = rightImg.categoryThree;
+                    }
+                    axios.post('{{ secure_route('homepage.update') }}' + '/' + elId, {
+                        product_category_id: initData
+                    }).then(function (res) {
+                        if (res.data.status === 200) {
+                            toastr.options.timeOut = 0.5;
+                            toastr.options.onHidden = function () {
+
+                            };
+                            toastr.success('modify 成功');
+                        } else {
+                            toastr.error(res.data.msg);
                         }
                     });
                 },
