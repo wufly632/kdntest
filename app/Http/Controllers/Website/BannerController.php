@@ -76,8 +76,8 @@ class BannerController extends Controller
                     'time_duration' => 'required'
                 ]
             );
-            $this->bannerService->createBannerInfo($validator);
-            return ApiResponse::success();
+            $banner = $this->bannerService->createBannerInfo($validator);
+            return ApiResponse::success(['id' => $banner->id]);
         } catch (\Exception $e) {
             return ApiResponse::failure(g_API_ERROR, $e->getMessage());
         }

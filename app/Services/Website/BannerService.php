@@ -47,7 +47,7 @@ class BannerService
         $time = explode('~', $data['time_duration']);
         $data['start_at'] = $time[0];
         $data['end_at'] = $time[1];
-        $this->bannerRepository->create($data);
+        return $this->bannerRepository->create($data);
     }
 
     public function deleteBannerInfo($id)

@@ -72,6 +72,8 @@
                                                    :data-target-uri="banner.dataTargetUri" :data-index="index"
                                                    @click="createOrUpdateBanner" @change="modifyTime"
                                                    :data-method="banner.method">
+                                            <input type="button" class="btn btn-danger" value="删除" :data-index="index"
+                                                   @click="deleteBanner" :data-id="banner.id">
                                         </li>
                                         <input type="file" class="form-control my-form-control-sm" @change="addFiles">
                                     </ol>
@@ -85,6 +87,9 @@
                     <div class="panel" id="panel-daily">
                         <div class="panel-heading text-center">
                             <h2 class="h3">每日特价</h2>
+                        </div>
+                        <div class="pull-right"><a href="javascript:void(0);" @click="keepChoice"
+                                                   class="btn btn-sm btn-primary" style="margin-right:20px;">保留选中</a>
                         </div>
                         <div class="panel-body text-center">
                             <div class="col-sm-12" style="padding:2rem 0">
@@ -114,7 +119,7 @@
                                 <input @click="modifyTitle"
                                        style="margin-left: 10px;border-radius: 15px;" type="button"
                                        class="btn btn-sm btn-primary"
-                                       value="编辑" :data-id="cardData.id" :data-index="index"></h2>
+                                       value="保存" :data-id="cardData.id" :data-index="index"></h2>
                             <h2 class="col-sm-6 h4 pull-right text-right">@{{ cardData.link }}
                                 <input class="form-control my-form-control"
                                        type="text"
@@ -122,7 +127,7 @@
                                 <input @click="modifyLink"
                                        style="margin-left: 10px;border-radius: 15px;" type="button"
                                        class="btn btn-sm btn-primary"
-                                       value="编辑" :data-id="cardData.id" :data-index="index"></h2>
+                                       value="保存" :data-id="cardData.id" :data-index="index"></h2>
                         </div>
                         <div class="panel-body">
                             <div class="col-sm-3" style="position: relative">
@@ -430,6 +435,7 @@
                     let uri = _eventEl.getAttribute('data-target-uri');
                     let successMsg = '';
                     let errorMsg = '';
+                    let _thisVue = this;
                     postData = this.banners[index];
                     if (postData._method === 'post') {
                         successMsg = '添加成功';
@@ -440,6 +446,10 @@
                     }
                     axios.post(uri, postData).then(function (res) {
                         if (res.status === 200 && res.data.status === 200) {
+                            if (postData._method === 'post') {
+                                _thisVue.banners[index].id = res.data.content.id;
+                                _thisVue.banners[index].btn = '修改';
+                            }
                             toastr.success(successMsg);
                         } else {
                             toastr.error(errorMsg);
@@ -447,6 +457,22 @@
                     });
                 },
                 modifyTime: function (event) {
+
+                },
+                deleteBanner: function (event) {
+                    let _eventEl = event.currentTarget;
+                    let index = _eventEl.getAttribute('data-index');
+                    let id = _eventEl.getAttribute('data-id');
+                    console.log(1);
+                    axios.delete('{{ secure_route('banners.destroy',['id'=>1]) }}'.replace(1, id)).then(function (res) {
+                        if (res.status === 200 && res.data.status === 200) {
+                            panelBanner.banners.splice(index, 1)
+                            toastr.success('删除成功');
+                        } else {
+                            toastr.error('删除失败');
+                        }
+                    });
+
                 }
             }
         });
@@ -512,6 +538,16 @@
                             this.getCatagories(this.categoryTwo, 3);
                         }
                     }
+                },
+                keepChoice: function () {
+                    let data = {
+                        index: 5,
+                        left: panelDaily.checkedProduct,
+                    };
+                    axios.post('{{ secure_route('homepage.updateleftimage') }}' + '/5', data).then(function (res) {
+                        layer.closeAll();
+                        location.reload();
+                    });
                 },
                 getCatagories: function (category_id, el) {
                     let _thisVue = this;
