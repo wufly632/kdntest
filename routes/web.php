@@ -125,7 +125,7 @@ Route::group(['middleware' => ['auth', 'web']], function () {
         Route::post('/updatecenterimage/{id?}', 'HomePageController@updateJsonFields')->name('homepage.updatecenterimage');
         Route::post('/updateleftimage/{id?}', 'HomePageController@updateLeft')->name('homepage.updateleftimage');
         Route::post('/update/{id?}', 'HomePageController@update')->name('homepage.update');
-        Route::post('banners.uploadImages', 'BannerController@uploadImages')->name('banners.upload');
+        Route::post('banners/upload', 'BannerController@uploadImages')->name('banners.upload');
         Route::resources([
             'banners' => 'BannerController',
             'icons' => 'IconController'
