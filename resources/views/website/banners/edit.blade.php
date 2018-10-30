@@ -138,7 +138,7 @@
                                 client.multipartUpload(storeAs, file).then(function (result) {
                                     console.log(result);
                                     if(size>=100*1024){
-                                        that.src =  results.res.requestUrls[0].split("?")[0];
+                                        that.src =  result.res.requestUrls[0].split("?")[0];
                                     }else{
                                         that.src = result.url;
                                     }
