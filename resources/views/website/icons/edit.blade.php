@@ -129,6 +129,9 @@
                 }
             }
         });
+        @if((isset($icon->category_id)))
+        $('#category_id').val({{ $icon->category_id }});
         // $('.select2').select2();
+        @endif
     </script>
 @endsection
