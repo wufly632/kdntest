@@ -2,7 +2,7 @@
 // +----------------------------------------------------------------------
 // | PromotionService.php
 // +----------------------------------------------------------------------
-// | Description: 
+// | Description:
 // +----------------------------------------------------------------------
 // | Time: 2018/9/20 上午11:24
 // +----------------------------------------------------------------------
@@ -112,13 +112,13 @@ class PromotionService
     {
         $time = get_time_range($request->daterange2);
         // 判断是否有已存在的活动
-        $result = $this->promotion->makeModel()
+        /*$result = $this->promotion->makeModel()
             ->where([['start_at', '<=', $time[0]],['end_at', '>=', $time[1]]])
             ->orWhere([['start_at', '<=', $time[1]], ['end_at', '>=', $time[1]]])
             ->first();
         if ($result) {
             return ApiResponse::failure(g_API_ERROR, '该时间段已有活动');
-        }
+        }*/
         $data['title'] = $request->title;
         $data['start_at'] = $time[0];
         $data['end_at'] = $time[1];
