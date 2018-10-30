@@ -196,8 +196,11 @@ class PromotionController extends Controller
             }
         }
         $directory = 'promotion';
-        $ali = env('APP_ENV', 'local') == 'production';
-        $urlInfo = app(CommonService::class)->uploadFile($file = $img_name, $bucket = 'cucoe', $directory, $ali, false, false);
+        $ali = false;
+        if(env('APP_ENV', 'local') == 'production'){
+            $ali = true;
+        }
+        $urlInfo = app(CommonService::class)->uploadFile($file = $img_name, $directory, $ali, false, false);
         if ($urlInfo) {
             if ($ali) {
                 return ApiResponse::success($urlInfo['oss-request-url'], '图片上传成功');
