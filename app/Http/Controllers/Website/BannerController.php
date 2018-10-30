@@ -165,8 +165,13 @@ class BannerController extends Controller
                 return ApiResponse::failure(g_API_ERROR, '图片格式不正确，请检查!');
             }
             $directory = $dirName;
-            $ali = env('APP_ENV', 'local') == 'production';
-            $urlInfo = app(CommonService::class)->uploadFile($file = $dirName, $bucket = 'cucoe', $directory, $ali, false, false);
+            $ali = false;
+            $bucket = null;
+            if(env('APP_ENV', 'local') == 'production'){
+                $ali = true;
+                $bucket = env('OSS_BUCKET', '');
+            }
+            $urlInfo = app(CommonService::class)->uploadFile($file = $dirName, $bucket, $directory, $ali, false, false);
             if ($urlInfo) {
                 if ($ali) {
                     return ApiResponse::success($urlInfo['oss-request-url'], '图片上传成功');

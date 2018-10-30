@@ -34,7 +34,7 @@
             <div class="form-group">
                 <label for="daterange" class="col-sm-2 control-label text-right">起止时间</label>
                 <div class="col-sm-8">
-                    <input autocomplete="off" type="text" name="daterange" id="daterange" class="form-control"
+                    <input autocomplete="off" type="text" name="time_duration" id="daterange" class="form-control"
                            value="@if(isset($icon->start_at)){{ $icon->start_at.'~'.$icon->end_at }}@endif">
                 </div>
             </div>
