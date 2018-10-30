@@ -31,7 +31,7 @@ class GoodCodeCriteria implements CriteriaInterface
     public function apply($model, RepositoryInterface $repository)
     {
         if ($this->good_code) {
-            $model = $model->where('good_code', $this->good_code);
+            $model = $model->where('audit_goods.good_code', $this->good_code);
         }
         return $model;
     }

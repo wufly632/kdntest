@@ -29,8 +29,9 @@ class GoodIdCriteria implements CriteriaInterface
      */
     public function apply($model, RepositoryInterface $repository)
     {
+        $model = $model->selectRaw('audit_goods.*');
         if ($this->id) {
-            $model = $model->where('id', $this->id);
+            $model = $model->where('audit_goods.id', $this->id);
         }
         return $model;
     }

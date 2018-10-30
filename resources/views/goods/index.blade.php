@@ -64,6 +64,8 @@
                                                 @foreach(\App\Entities\Good\Good::$allStatus as $key => $status)
                                                     <option value="{{$key}}" @if(old('status') == $key) selected @endif>{{$status}}</option>
                                                 @endforeach
+                                                <option value="offline" @if(old('status') == 'offline') selected @endif>下架</option>
+                                                <option value="online" @if(old('status') == 'online') selected @endif>上架</option>
                                             </select>
                                         </div>
                                     </div>

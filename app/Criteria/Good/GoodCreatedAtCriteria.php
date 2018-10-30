@@ -30,7 +30,7 @@ class GoodCreatedAtCriteria implements CriteriaInterface
     {
         if ($this->create_time) {
             list($start_at, $end_at) = get_time_range($this->create_time);
-            $model = $model->where('created_at', '>=', $start_at)
+            $model = $model->where('audit_goods.created_at', '>=', $start_at)
                 ->where('created_at', '<=', $end_at);
         }
         return $model;
