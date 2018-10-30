@@ -64,6 +64,8 @@
                                                 @foreach(\App\Entities\Good\Good::$allStatus as $key => $status)
                                                     <option value="{{$key}}" @if(old('status') == $key) selected @endif>{{$status}}</option>
                                                 @endforeach
+                                                <option value="offline" @if(old('status') == 'offline') selected @endif>下架</option>
+                                                <option value="online" @if(old('status') == 'online') selected @endif>上架</option>
                                             </select>
                                         </div>
                                     </div>
@@ -143,7 +145,7 @@
                                     <tr>
                                         <td class="table-center text-center">
                                             <div class="mailbox-attachment-icon has-img" style="width: 80px;">
-                                                <img src="{{$good->main_pic}}" alt="" width="60px" height="60px">
+                                                <img src="{{ImgResize($good->main_pic,100)}}" alt="" width="60px" height="60px">
                                             </div>
                                         </td>
                                         <td class="table-center">

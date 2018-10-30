@@ -70,7 +70,7 @@ class GoodService{
 
     public function getList($request)
     {
-        $orderBy = $request->orderBy ?? 'id';
+        $orderBy = $request->orderBy ?? 'audit_goods.id';
         $sort = $request->sort ?? 'desc';
         $length = $request->length ?? 20;
         $category_ids = '';

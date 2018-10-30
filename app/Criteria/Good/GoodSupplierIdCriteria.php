@@ -30,7 +30,7 @@ class GoodSupplierIdCriteria implements CriteriaInterface
     public function apply($model, RepositoryInterface $repository)
     {
         if ($this->supplier_id) {
-            $model = $model->where('supplier_id', $this->supplier_id);
+            $model = $model->where('audit_goods.supplier_id', $this->supplier_id);
         }
         return $model;
     }
