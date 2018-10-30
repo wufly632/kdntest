@@ -24,13 +24,13 @@ class CommonService
      * @param string $contentType
      * @return mixed
      */
-    public function uploadFile($file = "file", $bucket = 'cucoe', $directory = "uploads", $ali = true, $keep_original_name = false, $use_timestamp = false, $contentType = 'image/jpeg')
+    public function uploadFile($file = "file", $directory = "uploads", $ali = true, $keep_original_name = false, $use_timestamp = false, $contentType = 'image/jpeg')
     {
         if ($ali) {
             $file = \request()->file($file);
             $extension = $file->getClientOriginalExtension();
             $fileName = uniqid(). '.' .$extension;
-            return StorageHandler::uploadToAliOss( $file->getRealPath(), $directory.'/'.$fileName, $bucket);
+            return StorageHandler::uploadToAliOss( $file->getRealPath(), $directory.'/'.$fileName, env('OSS_BUCKET', ''));
         } else {
             return StorageHandler::uploadToLocal($file, $directory, $keep_original_name, null);
         }

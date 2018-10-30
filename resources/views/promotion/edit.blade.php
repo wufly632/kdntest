@@ -186,14 +186,14 @@
                                     <div class="col-xs-3">
                                         <input type="hidden" class="poster_pic" name="poster_pic" value="{{$promotion->poster_pic}}">
                                         <div class="add-upload">
-                                            <img src="{{$promotion->poster_pic ?: 'http://placehold.it/150x100'}}" alt="" class="promotion-pic" width="150px" height="150px">
+                                            <img src="{{$promotion->poster_pic ?: asset('images/3840x1066.png')}}" alt="" class="promotion-pic" width="150px" height="150px">
                                             <input type="file" class="png-add" name="img_file">
                                         </div>
                                     </div>
                                     <div class="col-xs-3" style="margin-left: -60px;">
                                         <input type="hidden"  class="poster_pic" name="h5_poster_pic" value="{{$promotion->poster_pic}}">
                                         <div class="add-upload">
-                                            <img src="{{$promotion->h5_poster_pic ?: 'http://placehold.it/150x100'}}" alt="" class="promotion-pic" width="150px" height="150px">
+                                            <img src="{{$promotion->h5_poster_pic ?: asset('images/1500x760.png')}}" alt="" class="promotion-pic" width="150px" height="150px">
                                             <input type="file" class="png-add" name="img_file">
                                         </div>
                                     </div>
