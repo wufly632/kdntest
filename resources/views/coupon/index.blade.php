@@ -132,7 +132,7 @@
                                                 起止时间：
                                             </label>
                                             <div class="col-xs-7">
-                                                <input type="text" autocomplete="off" class="form-control date_choice rangetime" name="coupon_use">
+                                                <input type="text" autocomplete="off" class="form-control date_choice rangetime" id="daterange" name="coupon_use">
                                             </div>
                                         </div>
                                         <div class="form-group">
@@ -141,8 +141,8 @@
                                                 发放时间：
                                             </label>
                                             <div class="col-xs-7">
-                                                <input type="text" id="create_take_time" autocomplete="off"
-                                                       class="form-control date_choice rangetime" name="coupon_grant">
+                                                <input type="text" id="daterange2" autocomplete="off"
+                                                       class="form-control date_choice" name="coupon_grant">
                                             </div>
                                         </div>
                                         <div class="form-group">
