@@ -165,6 +165,7 @@
                             @endforeach
 
                             <div class="col-lg-12">
+                                <span class="text-right col-lg-offset-10 btn btn-info" style="margin-bottom: 5px;" data-toggle="modal" data-target="#modal-setPrice">批量设置价格</span>
                                 <hr>
                             </div>
 
@@ -256,6 +257,39 @@
                                                                 </div>
                                                             </div>
                                                         @endforeach
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <button type="button" class="btn btn-default pull-left" data-dismiss="modal">取消</button>
+                                                        <button type="button" class="btn btn-primary save">保存</button>
+                                                    </div>
+                                                </div>
+                                                <!-- /.modal-content -->
+                                            </div>
+                                            <!-- /.modal-dialog -->
+                                        </div>
+                                        <div class="modal fade in" id="modal-setPrice" style="display: none;">
+                                            <div class="modal-dialog">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                            <span aria-hidden="true">×</span></button>
+                                                        <h4 class="modal-title">价格批量设置</h4>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        <div class="col-xs-12">
+                                                            <div class="form-group col-xs-12">
+                                                                <label for="inputEmail3" class="col-sm-2 control-label">原价：</label>
+                                                                <div class="col-sm-10">
+                                                                    <input type="text" class="form-control origin_price" value="">
+                                                                </div>
+                                                            </div>
+                                                            <div class="form-group col-xs-12">
+                                                                <label for="inputEmail3" class="col-sm-2 control-label">售价：</label>
+                                                                <div class="col-sm-10">
+                                                                    <input type="text" class="form-control sale_price"  value="">
+                                                                </div>
+                                                            </div>
+                                                        </div>
                                                     </div>
                                                     <div class="modal-footer">
                                                         <button type="button" class="btn btn-default pull-left" data-dismiss="modal">取消</button>
@@ -436,6 +470,13 @@
 
             }
         })
+    });
+    $('#modal-setPrice').on('click', '.save', function () {
+        var origin_price = $('#modal-setPrice').find('.origin_price').val();
+        var sale_price = $('#modal-setPrice').find('.sale_price').val();
+        $('#edit-form').find("input[name$='[origin_price]']").val(origin_price);
+        $('#edit-form').find("input[name$='[price]']").val(sale_price);
+        $('#modal-setPrice').modal('hide');
     });
     /**
      * 审核通过
