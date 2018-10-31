@@ -169,9 +169,8 @@ class BannerController extends Controller
             $bucket = null;
             if(env('APP_ENV', 'local') == 'production'){
                 $ali = true;
-                $bucket = env('OSS_BUCKET', '');
             }
-            $urlInfo = app(CommonService::class)->uploadFile($file = $dirName, $bucket, $directory, $ali, false, false);
+            $urlInfo = app(CommonService::class)->uploadFile($file = $dirName, $directory, $ali, false, false);
             if ($urlInfo) {
                 if ($ali) {
                     return ApiResponse::success($urlInfo['oss-request-url'], '图片上传成功');

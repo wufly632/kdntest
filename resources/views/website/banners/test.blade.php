@@ -8,8 +8,7 @@
               id="banner-form">
             <div class="h3 text-center" style="padding: 10px;">@if(isset($banner->id))banner修改@else banner新建@endif</div>
             <div class="form-group">
-                <label for="title" class="col-sm-2 control-label text-right">标题<span
-                            class="text-danger">*</span></label>
+                <label for="title" class="col-sm-2 control-label text-right">标题<span class="text-danger">*</span></label>
                 <div class="col-sm-8">
                     <input type="text" name="title" id="title" class="form-control"
                            value="@if(isset($banner->title)){{ $banner->title }}@endif">
@@ -92,30 +91,6 @@
                     let errorMsg;
                     let successMsg;
                     let requestMethod;
-                    if ($('#title').val() === '') {
-                        toastr.error('标题不能为空');
-                        return;
-                    }
-                    if ($('#link').val() === '') {
-                        toastr.error('链接不能为空');
-                        return;
-                    }
-                    if (this.src === '') {
-                        toastr.error('图片不能为空');
-                        return;
-                    }
-                    if ($('#daterange2').val() === '') {
-                        toastr.error('时间不能为空');
-                        return;
-                    }
-                    if ($('#sort').val() === '') {
-                        toastr.error('排序不能为空');
-                        return;
-                    }
-                    if ($('#type').val() === '') {
-                        toastr.error('类型不能为空');
-                        return;
-                    }
 
                     @if(isset($banner->id))
                         postUri = "{{ secure_route('banners.update',['id'=>$banner->id]) }}";
@@ -146,17 +121,32 @@
                     });
                 }, uploadImg: function (event) {
                     let that = this;
-                    let elSrc = $('#src');
-                    let src = elSrc[0].files[0];
-                    let formData = new FormData();
-                    formData.append('banners', src);
-                    formData.append('_token', '{{ csrf_token() }}');
-                    formData.append('dir_name', 'banners');
-
-                    axios.post("{{ secure_route('banners.upload') }}", formData, {headers: {'Content-Type': 'multipart/form-data'}}).then(function (res) {
+                    axios.post("{{ secure_route('common.sts_token')}}", {'_token': '{{ csrf_token() }}'}, {headers: {'Content-Type': 'multipart/form-data'}}).then(function (res) {
                         if (res.status === 200) {
                             if (res.data.status === 200) {
-                                that.src = res.data.content;
+                                result = res.data.content;
+                                let file = event.target.files[0];
+                                let storeAs = 'banners/' + '{{Auth::id()}}' + Date.parse(new Date()) + '.jpg';
+                                let size = file.size;
+                                let client = new OSS.Wrapper({
+                                    accessKeyId: result.AccessKeyId,
+                                    accessKeySecret: result.AccessKeySecret,
+                                    stsToken: result.SecurityToken,
+                                    endpoint: '{{env('OSS_ENDPOINT')}}',
+                                    bucket: '{{env('OSS_BUCKET')}}'
+                                });
+                                client.multipartUpload(storeAs, file).then(function (result) {
+                                    console.log(result);
+                                    if (size >= 100 * 1024) {
+                                        that.src = result.res.requestUrls[0].split("?")[0];
+                                    } else {
+                                        that.src = result.url;
+                                    }
+                                }).catch(function (err) {
+                                    that.src = '';
+                                    toastr.error('图片上传失败，稍后重试');
+                                    console.log(err);
+                                });
                             } else {
                                 toastr.error(res.data.msg);
                             }
