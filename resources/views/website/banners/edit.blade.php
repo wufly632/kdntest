@@ -121,32 +121,17 @@
                     });
                 }, uploadImg: function (event) {
                     let that = this;
-                    axios.post("{{ secure_route('common.sts_token')}}", {'_token': '{{ csrf_token() }}'}, {headers: {'Content-Type': 'multipart/form-data'}}).then(function (res) {
+                    let elSrc = $('#src');
+                    let src = elSrc[0].files[0];
+                    let formData = new FormData();
+                    formData.append('banners', src);
+                    formData.append('_token', '{{ csrf_token() }}');
+                    formData.append('dir_name', 'banners');
+
+                    axios.post("{{ secure_route('banners.upload') }}", formData, {headers: {'Content-Type': 'multipart/form-data'}}).then(function (res) {
                         if (res.status === 200) {
                             if (res.data.status === 200) {
-                                result = res.data.content;
-                                let file = event.target.files[0];
-                                let storeAs = 'banners/' + '{{Auth::id()}}' + Date.parse(new Date()) + '.jpg';
-                                let size = file.size;
-                                let client = new OSS.Wrapper({
-                                    accessKeyId: result.AccessKeyId,
-                                    accessKeySecret: result.AccessKeySecret,
-                                    stsToken: result.SecurityToken,
-                                    endpoint: '{{env('OSS_ENDPOINT')}}',
-                                    bucket: '{{env('OSS_BUCKET')}}'
-                                });
-                                client.multipartUpload(storeAs, file).then(function (result) {
-                                    console.log(result);
-                                    if (size >= 100 * 1024) {
-                                        that.src = result.res.requestUrls[0].split("?")[0];
-                                    } else {
-                                        that.src = result.url;
-                                    }
-                                }).catch(function (err) {
-                                    that.src = '';
-                                    toastr.error('图片上传失败，稍后重试');
-                                    console.log(err);
-                                });
+                                that.src = res.data.content;
                             } else {
                                 toastr.error(res.data.msg);
                             }
