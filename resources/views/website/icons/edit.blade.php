@@ -79,7 +79,26 @@
                     let errorMsg;
                     let successMsg;
                     let requestMethod;
-
+                    if ($('#title').val() === '') {
+                        toastr.error('标题不能为空');
+                        return;
+                    }
+                    if (this.src === '') {
+                        toastr.error('图片不能为空');
+                        return;
+                    }
+                    if ($('#category_id').val() === '') {
+                        toastr.error('类别不能为空');
+                        return;
+                    }
+                    if ($('#daterange').val() === '') {
+                        toastr.error('时间不能为空');
+                        return;
+                    }
+                    if ($('#sort').val() === '') {
+                        toastr.error('排序不能为空');
+                        return;
+                    }
                     @if(isset($icon->id))
                         postUri = "{{ secure_route('icons.update',['id'=>$icon->id]) }}";
                     errorMsg = '修改失败';

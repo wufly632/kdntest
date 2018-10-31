@@ -8,7 +8,8 @@
               id="banner-form">
             <div class="h3 text-center" style="padding: 10px;">@if(isset($banner->id))banner修改@else banner新建@endif</div>
             <div class="form-group">
-                <label for="title" class="col-sm-2 control-label text-right">标题<span class="text-danger">*</span></label>
+                <label for="title" class="col-sm-2 control-label text-right">标题<span
+                            class="text-danger">*</span></label>
                 <div class="col-sm-8">
                     <input type="text" name="title" id="title" class="form-control"
                            value="@if(isset($banner->title)){{ $banner->title }}@endif">
@@ -91,6 +92,30 @@
                     let errorMsg;
                     let successMsg;
                     let requestMethod;
+                    if ($('#title').val() === '') {
+                        toastr.error('标题不能为空');
+                        return;
+                    }
+                    if ($('#link').val() === '') {
+                        toastr.error('链接不能为空');
+                        return;
+                    }
+                    if (this.src === '') {
+                        toastr.error('图片不能为空');
+                        return;
+                    }
+                    if ($('#daterange2').val() === '') {
+                        toastr.error('时间不能为空');
+                        return;
+                    }
+                    if ($('#sort').val() === '') {
+                        toastr.error('排序不能为空');
+                        return;
+                    }
+                    if ($('#type').val() === '') {
+                        toastr.error('类型不能为空');
+                        return;
+                    }
 
                     @if(isset($banner->id))
                         postUri = "{{ secure_route('banners.update',['id'=>$banner->id]) }}";
