@@ -38,7 +38,7 @@ class HomePageController extends Controller
 
     public function update($id)
     {
-        $option = \request()->only(['link', 'title','product_category_id']);
+        $option = \request()->only(['link', 'title', 'product_category_id']);
         try {
             $this->homePageCardService->update($option, $id);
             return ApiResponse::success();
