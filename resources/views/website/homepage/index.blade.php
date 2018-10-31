@@ -438,6 +438,26 @@
                     let errorMsg = '';
                     let _thisVue = this;
                     postData = this.banners[index];
+                    if (this.banners[index].title === '') {
+                        toastr.error('标题不能为空');
+                        return;
+                    }
+                    if (this.banners[index].src === '') {
+                        toastr.error('图片不能为空');
+                        return;
+                    }
+                    if (this.banners[index].link === '') {
+                        toastr.error('链接不能为空');
+                        return;
+                    }
+                    if (this.banners[index].sort === '') {
+                        toastr.error('排序不能为空');
+                        return;
+                    }
+                    if (this.banners[index].time_duration === '') {
+                        toastr.error('时间不能为空');
+                        return;
+                    }
                     if (postData._method === 'post') {
                         successMsg = '添加成功';
                         errorMsg = '添加失败';
@@ -464,7 +484,13 @@
                     let _eventEl = event.currentTarget;
                     let index = _eventEl.getAttribute('data-index');
                     let id = _eventEl.getAttribute('data-id');
-                    console.log(1);
+
+                    if (!id) {
+                        panelBanner.banners.splice(index, 1);
+                        toastr.success('删除成功');
+                        return;
+                    }
+
                     axios.delete('{{ secure_route('banners.destroy',['id'=>1]) }}'.replace(1, id)).then(function (res) {
                         if (res.status === 200 && res.data.status === 200) {
                             panelBanner.banners.splice(index, 1)
@@ -712,6 +738,10 @@
                                     index: 5,
                                     left: panelDaily.checkedProduct,
                                 };
+                                if (panelDaily.checkedProduct.length > 5) {
+                                    toastr.error('最多选择5个商品');
+                                    return;
+                                }
                                 axios.post('{{ secure_route('homepage.updateleftimage') }}' + '/5', data).then(function (res) {
                                     layer.closeAll();
                                     location.reload();
