@@ -132,6 +132,7 @@
                         if (res.status === 200) {
                             if (res.data.status === 200) {
                                 that.src = res.data.content;
+                                toastr.success('图片上传成功');
                             } else {
                                 toastr.error(res.data.msg);
                             }
