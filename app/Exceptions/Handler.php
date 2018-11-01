@@ -36,7 +36,7 @@ class Handler extends ExceptionHandler
      */
     public function report(Exception $exception)
     {
-        if (env('APP_ENV', 'local') == 'production') {
+        if (env('DING_ENABLED', '') === true) {
             if ($exception->getMessage() != 'Unauthenticated.') {
                 ding()->at([""],true)
                     ->text($exception->getMessage());
