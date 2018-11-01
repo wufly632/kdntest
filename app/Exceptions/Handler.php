@@ -39,7 +39,7 @@ class Handler extends ExceptionHandler
         if (env('DING_ENABLED', '') === true) {
             if ($exception->getMessage() != 'Unauthenticated.') {
                 ding()->at([""],true)
-                    ->text($exception->getMessage());
+                    ->text('运营后台：'.$exception->getMessage());
             }
         }
         parent::report($exception);
