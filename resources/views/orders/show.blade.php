@@ -174,7 +174,9 @@
                                                     <tr>
                                                         <td style="width: 80px;">收货地址：</td>
                                                         <td style="word-break: break-word">
-                                                            {{ $addressObject->country.$addressObject->state.$addressObject->city.$addressObject->street_address }}
+                                                            @if(isset($addressObject))
+                                                                {{ $addressObject->country.$addressObject->state.$addressObject->city.$addressObject->street_address }}
+                                                            @endif
                                                         </td>
                                                     </tr>
                                                     <tr>

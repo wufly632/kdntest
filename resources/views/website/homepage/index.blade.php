@@ -905,13 +905,13 @@
                     let rightImg = _thisVue.cardDatas[index].rightImg;
                     rightImg.show = false;
                     let initData = 0;
-                    if (rightImg.catagoryOne !== '') {
+                    if (rightImg.catagoryOne !== '' && rightImg.catagoryOne !== undefined) {
                         initData = rightImg.catagoryOne;
                     }
-                    if (rightImg.catagoryTwo !== '') {
+                    if (rightImg.catagoryTwo !== '' && rightImg.catagoryTwo !== undefined) {
                         initData = rightImg.catagoryTwo;
                     }
-                    if (rightImg.categoryThree !== '') {
+                    if (rightImg.categoryThree !== '' && rightImg.categoryThree !== undefined) {
                         initData = rightImg.categoryThree;
                     }
                     axios.post('{{ secure_route('homepage.update') }}' + '/' + elId, {
