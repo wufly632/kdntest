@@ -67,6 +67,8 @@ class GenerateSupplierOrders extends Command
         $obj = Requirement::where([['is_push', '=', 0],['created_at', '<', $time]])
             ->selectRaw('sum(num) as number,sku_id')
             ->groupBy('sku_id');
+        $total_sku = $obj->get()->count();
+        $total_num = $obj->get()->sum('number');
         $this->output->progressStart($obj->count());
         $obj->chunk(100, function($data) use ($time){
                 foreach ($data as $item)
@@ -136,7 +138,7 @@ class GenerateSupplierOrders extends Command
                     }
                 }
             });
-        ding('推单'.$this->batchId.'finish!'.'共sku总数'.$obj->count().'个,需求数量'.$obj->get()->sum('number').'个');
+        ding('推单'.$this->batchId.'finish!'.'共sku总数'.$total_sku.'个,需求数量'.$total_num.'个');
         $this->output->progressFinish();
         $this->comment('Finished!');
     }
