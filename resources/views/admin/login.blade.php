@@ -18,7 +18,7 @@
 </head>
 <body class="back">
 <div class="logon-admin">
-    <div class="message">cucoe科技 - 用户登录</div>
+    <div class="message">waiwaimall - 用户登录</div>
     <form class="logon-form" method="post">
         <div class="logon-input">
             {!! csrf_field() !!}
