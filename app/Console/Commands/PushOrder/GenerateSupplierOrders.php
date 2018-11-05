@@ -60,7 +60,6 @@ class GenerateSupplierOrders extends Command
 
     public function handleProgress()
     {
-        ding('调用了推单脚本');
         $time = Carbon::now()->minute(0)->second(0);
         $this->batchId = $time->format('YmdH');
         $time = $time->toDateTimeString();
@@ -68,6 +67,8 @@ class GenerateSupplierOrders extends Command
         $obj = Requirement::where([['is_push', '=', 0],['created_at', '<', $time]])
             ->selectRaw('sum(num) as number,sku_id')
             ->groupBy('sku_id');
+        $total_sku = $obj->get()->count();
+        $total_num = $obj->get()->sum('number');
         $this->output->progressStart($obj->count());
         $obj->chunk(100, function($data) use ($time){
                 foreach ($data as $item)
@@ -137,7 +138,7 @@ class GenerateSupplierOrders extends Command
                     }
                 }
             });
-        ding('推单finish');
+        ding('推单'.$this->batchId.'finish!'.'共sku总数'.$total_sku.'个,需求数量'.$total_num.'个');
         $this->output->progressFinish();
         $this->comment('Finished!');
     }

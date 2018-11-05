@@ -24,6 +24,9 @@ class Order extends Model implements Transformable
      */
     protected $fillable = ['status','shipper_code', 'waybill_id','delivery_at'];
 
+    const WAIT_PAY = 1;
+    const PYID = 3;
+    const CANCEL = 6;
     public function customerOrderGood()
     {
         return $this->hasMany('App\Entities\Order\OrderGood', 'order_id', 'order_id');

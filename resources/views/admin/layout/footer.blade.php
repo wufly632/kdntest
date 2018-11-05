@@ -1,5 +1,5 @@
     <div class="_footer">
-        <p>© 2017 cucoe.com All rights reserved (浙ICP备17039201号)</p>
+        <p>© 2018 waiwaimall.com All rights reserved</p>
     </div>
 </body>
 </html>

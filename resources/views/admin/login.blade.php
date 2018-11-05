@@ -2,10 +2,7 @@
 <html lang="zh-cn">
 <head>
     <meta charset="utf-8">
-    <title>运营中心 - 句逗——新零售，用句逗</title>
-    <meta name="title" content="运营中心 - 句逗——新零售，用句逗">
-    <meta name="keywords" content="全渠道零售、全渠道解决方案、线上线下相融合、句逗新零售、多网点、一键小程序、小程序开发、微商城开发、杭州句逗科技有限公司、句逗科技">
-    <meta name="description" content="句逗，专注新零售（全渠道零售）解决方案,提供全渠道完美互通、深度融合的信息化管理工具。解决线上线下渠道拓展、打通，覆盖线上商城、线下多网点门店、线下加盟连锁、微信公众号商城、小程序、APP等">
+    <title>WaiWaiMall</title>
     <meta http-equiv="X-UA-Compatible" content="IE=edge,Chrome=1">
     <meta name="renderer" content="webkit">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -18,7 +15,7 @@
 </head>
 <body class="back">
 <div class="logon-admin">
-    <div class="message">cucoe科技 - 用户登录</div>
+    <div class="message">waiwaimall - 用户登录</div>
     <form class="logon-form" method="post">
         <div class="logon-input">
             {!! csrf_field() !!}

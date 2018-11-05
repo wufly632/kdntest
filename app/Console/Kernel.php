@@ -28,7 +28,11 @@ class Kernel extends ConsoleKernel
     {
         // $schedule->command('inspire')
         //          ->hourly();
-        $schedule->command('generate:push_orders --y')->everyFiveMinutes();
+        $schedule->command('generate:push_orders --y')->cron('0 0-24/2 * * * *');
+        // $schedule->command('generate:push_orders --y')->everyMinute();
+
+        //订单30分钟未支付自动取消
+        $schedule->command('generate:order_cancel --y')->everyMinute();
     }
 
     /**

@@ -37,9 +37,15 @@ class Handler extends ExceptionHandler
     public function report(Exception $exception)
     {
         if (env('DING_ENABLED', '') === true) {
-            if ($exception->getMessage() != 'Unauthenticated.') {
-                ding()->at([""],true)
-                    ->text($exception->getMessage());
+            if ($exception->getMessage() && $exception->getMessage() != 'Unauthenticated.') {
+                $title = '运营后台错误信息';
+                $markdown = "#### 错误信息  \n ".
+                    "文件：{$exception->getFile()}\n\n ".
+                    "行数：{$exception->getLine()}\n\n".
+                    "地址：".url()->full()."\n\n".
+                    "用户IP： ".getIP()."\n\n".
+                    "错误信息：".$exception->getMessage();
+                ding()->markdown($title,$markdown);
             }
         }
         parent::report($exception);

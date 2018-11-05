@@ -185,8 +185,8 @@
                                                 <a href="{{secure_route('good.audit', ['good' => $good->id])}}">编辑</a>
                                                 <br>
                                             @endif
-                                            @if(in_array($good->status, [\App\Entities\Good\Good::EDITED]) && $good->getProduct)
-                                                @if($good->getProduct->status == \App\Entities\Product\Product::OFFLINE)
+                                            @if($good->getProduct)
+                                                @if(in_array($good->status, [\App\Entities\Good\Good::EDITED]) && $good->getProduct->status == \App\Entities\Product\Product::OFFLINE)
                                                     <a href="javascript:;" onclick="onshelf({{$good->id}})">上架</a><br>
                                                 @endif
                                                 @if($good->getProduct->status == \App\Entities\Product\Product::ONLINE)

@@ -130,32 +130,29 @@
                                     </div>
                                     <span class="bg-success progress-circle fa fa-home progress-fa"
                                           data-status="1"></span>
-                                    <div class="text-gray-self text-center progress-text-bottom">2015-04-03
-                                        13:25:22
+                                    <div class="text-gray-self text-center progress-text-bottom">{{ $order->created_at }}
                                     </div>
                                 </div>
                                 <div class="progress-two progress-block">
                                     <div class="text-gray-self text-center progress-text-top">待发货
                                     </div>
                                     <span class="bg-success progress-circle" data-status="3"></span>
-                                    <div class="text-gray-self text-center progress-text-bottom" style="">2015-04-03
-                                        13:25:22
+                                    <div class="text-gray-self text-center progress-text-bottom"
+                                         style="">{{ $order->pay_at }}
                                     </div>
                                 </div>
                                 <div class="progress-three progress-block">
                                     <div class="text-gray-self text-center progress-text-top">待收货
                                     </div>
                                     <span class="bg-success progress-circle" data-status="4"></span>
-                                    <div class="text-gray-self text-center progress-text-bottom">2015-04-03
-                                        13:25:22
+                                    <div class="text-gray-self text-center progress-text-bottom">{{ $order->delivery_at }}
                                     </div>
                                 </div>
                                 <div class="progress-four progress-block">
                                     <div class="text-gray-self text-center progress-text-top">交易完成
                                     </div>
                                     <span class="bg-success progress-circle" data-status="5"></span>
-                                    <div class="text-gray-self text-center progress-text-bottom">2015-04-03
-                                        13:25:22
+                                    <div class="text-gray-self text-center progress-text-bottom">{{ $order->sign_at }}
                                     </div>
                                 </div>
                             </div>
