@@ -293,9 +293,9 @@
                                 <div class="form-group">
                                     <label for="currency" class="col-xs-1 control-label">活动币种：</label>
                                     <div class="col-xs-2">
-                                        <select name="currency" id="currency" class="form-control">
+                                        <select name="currency_code" id="currency" class="form-control">
                                             @foreach($currencys as $currency)
-                                                <option value="{{ $currency->id }}">{{ $currency->symbol }}{{ $currency->name }}</option>
+                                                <option value="{{ $currency->currency_code }}">{{ $currency->symbol.$currency->name }}</option>
                                             @endforeach
                                         </select>
                                     </div>
@@ -365,294 +365,238 @@
                                         </span>
                                     </div>
                                 </div>
-                                @if($promotion->activity_type!='')
-                                    <div class="panel panel-info col-xs-offset-1 col-xs-10">
-                                        <div class="panel-body">
-                                            <div class="detail-box row with-border">
-                                                <div class="@if($promotion->activity_type != 'reduce' && $promotion->activity_type) hidden @endif detail reduce-detail">
-                                                    <div class="reduce-detail-row addcontain">
-                                                        <div class="pull-left text-padding-top">活动期间，买满</div>
-                                                        <div class="col-xs-2">
-                                                            <div class="input-group">
-                                                                <input type="text" class="form-control"
-                                                                       name="reduce_name[]"
-                                                                       value="@if($promotion->activity_type == 'reduce') {{$promotion_rule ? $promotion_rule[0]->money : ''}} @endif">
-                                                                <span class="input-group-addon">元</span>
-                                                            </div>
-                                                        </div>
-                                                        <div class="pull-left text-padding-top"
-                                                             style="width: 60px;padding-left: 0;padding-right: 0">，立减
-                                                        </div>
-                                                        <div class="col-xs-2">
-                                                            <div class="input-group">
-                                                                <input type="text" class="form-control"
-                                                                       name="reduce_value[]"
-                                                                       value="@if($promotion->activity_type == 'reduce') {{$promotion_rule ? $promotion_rule[0]->reduce : ''}} @endif">
-                                                                <span class="input-group-addon">元</span>
-                                                            </div>
-                                                        </div>
-                                                        <button id="add-reduce-detail" type="button"
-                                                                class="btn btn-primary btn-flat icon-add @if($promotion->activity_type == 'reduce' && count($promotion_rule) > 1) dis-no @endif"
-                                                                style="border-radius: 90px;">+
-                                                        </button>
-                                                    </div>
-                                                    <div class="reduce-detail-row add-row @if($promotion->activity_type != 'reduce' || count($promotion_rule) <= 1) dis-no @endif">
-                                                        <div class="pull-left text-padding-top">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;满</div>
-                                                        <div class="col-xs-2">
-                                                            <div class="input-group">
-                                                                <input type="text" class="form-control"
-                                                                       name="reduce_name[]"
-                                                                       value="@if($promotion->activity_type == 'reduce' && isset($promotion_rule[1])) {{$promotion_rule[1]->money}} @endif">
-                                                                <span class="input-group-addon">元</span>
-                                                            </div>
-                                                        </div>
-                                                        <div class="pull-left text-padding-top"
-                                                             style="width: 60px;padding-left: 0;padding-right: 0">，立减
-                                                        </div>
-                                                        <div class="col-xs-2">
-                                                            <div class="input-group">
-                                                                <input type="text" class="form-control"
-                                                                       name="reduce_value[]"
-                                                                       value="@if($promotion->activity_type == 'reduce' && isset($promotion_rule[1])) {{$promotion_rule[1]->reduce}} @endif">
-                                                                <span class="input-group-addon">元</span>
-                                                            </div>
-                                                        </div>
-                                                        <button id="add-reduce-detail" type="button"
-                                                                class="btn btn-primary btn-flat icon-minus"
-                                                                style="border-radius: 90px;">-
-                                                        </button>
-                                                    </div>
-                                                </div>
-                                                <div class="@if($promotion->activity_type != 'return') hidden @endif detail return-detail">
-                                                    <div class="return-detail-row">
-                                                        <div class="pull-left text-padding-top">活动期间，买满</div>
-                                                        <div class="col-xs-2">
-                                                            <div class="input-group">
-                                                                <input type="text" class="form-control"
-                                                                       name="return_price"
-                                                                       value="@if($promotion->activity_type == 'return') {{$promotion->consume}} @endif">
-                                                                <span class="input-group-addon">元</span>
-                                                            </div>
-                                                            <input type="hidden" class="price fl" name="return-sum"
-                                                                   id="coupon-price-sum" value=""/>
-                                                        </div>
-                                                        <div class="col-xs-1 control-label"
-                                                             style="width: 40px;padding-left: 0;padding-right: 0">，返
-                                                        </div>
-                                                        <div class="col-xs-2">
-                                                            <select name="" id="" class="form-control">
-                                                                <option value="">券</option>
-                                                            </select>
-                                                        </div>
-                                                        <button type="button" class="btn btn-primary"
-                                                                style="border-radius: 90px;" data-toggle="modal"
-                                                                data-target="#myModal-four">+
-                                                        </button>
-                                                        <span class="span-tex" id="return-price_sum"></span>
-                                                    </div>
-                                                    <div class="clearfix dis-no" id="return-detail">
-                                                        <table class="acTable">
-                                                            <thead>
-                                                            <tr>
-                                                                <th class="ac-id">ID</th>
-                                                                <th class="ac-name">名称</th>
-                                                                <th class="ac-position">面额</th>
-                                                                <th class="ac-valid">使用有效期</th>
-                                                                <th class="ac-time">发放时间</th>
-                                                                <th class="ac-operate">操作</th>
-                                                            </tr>
-                                                            </thead>
-                                                            <tbody>
 
-                                                            </tbody>
-                                                        </table>
-                                                    </div>
-                                                </div>
-                                                <div class="@if($promotion->activity_type != 'discount') hidden @endif detail discount-detail">
-                                                    <div class="discount-detail-row addcontain">
-                                                        <div class="pull-left text-padding-top">
-                                                            活动期间，选购商品满
-                                                        </div>
-                                                        <div class="col-xs-2">
-                                                            <div class="input-group">
-                                                                <input type="text" class="form-control"
-                                                                       name="discount_name[]"
-                                                                       value="@if($promotion->activity_type == 'discount') {{$promotion_rule ? $promotion_rule[0]->num : ''}} @endif">
-                                                                <span class="input-group-addon">件</span>
-                                                            </div>
-                                                        </div>
-                                                        <div class="col-xs-1 control-label">
-                                                            ，立享
-                                                        </div>
-                                                        <div class="col-xs-2">
-                                                            <div class="input-group">
-                                                                <input type="text" class="form-control"
-                                                                       name="discount_value[]"
-                                                                       value="@if($promotion->activity_type == 'discount') {{$promotion_rule ? $promotion_rule[0]->discount : ''}} @endif">
-                                                                <span class="input-group-addon">折</span>
-                                                            </div>
-                                                        </div>
-                                                        <button id="add-discount-detail" type="button"
-                                                                class="btn btn-primary btn-flat icon-add @if($promotion->activity_type == 'discount' || (is_array($promotion_rule) && count($promotion_rule) > 1)) dis-no @endif"
-                                                                style="border-radius: 90px;">+
-                                                        </button>
-                                                    </div>
-                                                    <div class="discount-detail-row add-row @if($promotion->activity_type != 'discount' || count($promotion_rule) <= 1) dis-no @endif">
-                                                        <div class="pull-left text-padding-top">
-                                                            　　　　　　　　　满
-                                                        </div>
-                                                        <div class="col-xs-2">
-                                                            <div class="input-group">
-                                                                <input type="text" class="form-control"
-                                                                       name="discount_name[]"
-                                                                       value="@if($promotion->activity_type == 'discount' && isset($promotion_rule[1])) {{$promotion_rule[1]->num}} @endif">
-                                                                <span class="input-group-addon">件</span>
-                                                            </div>
-                                                        </div>
-                                                        <div class="col-xs-1 control-label">
-                                                            ，立享
-                                                        </div>
-                                                        <div class="col-xs-2">
-                                                            <div class="input-group">
-                                                                <input type="text" class="form-control"
-                                                                       name="discount_value[]"
-                                                                       value="@if($promotion->activity_type == 'discount' && isset($promotion_rule[1])) {{$promotion_rule[1]->discount}} @endif">
-                                                                <span class="input-group-addon">折</span>
-                                                            </div>
-                                                        </div>
-                                                        <button id="add-discount-detail" type="button"
-                                                                class="btn btn-primary btn-flat icon-minus"
-                                                                style="border-radius: 90px;">-
-                                                        </button>
-                                                    </div>
-                                                </div>
-
-                                                <div class="@if($promotion->activity_type != 'wholesale') hidden @endif detail wholesale-detail">
-                                                    <div class="pull-left text-padding-top">
-                                                        活动期间
-                                                    </div>
+                                <div class="panel panel-info col-xs-offset-1 col-xs-10" id="activity-detail">
+                                    <div class="panel-body">
+                                        <div class="detail-box row with-border">
+                                            <div class="@if($promotion->activity_type != 'reduce' && $promotion->activity_type) hidden @endif detail reduce-detail">
+                                                <div class="reduce-detail-row addcontain">
+                                                    <div class="pull-left text-padding-top">活动期间，买满</div>
                                                     <div class="col-xs-2">
                                                         <div class="input-group">
                                                             <input type="text" class="form-control"
-                                                                   name="wholesale_name[]"
-                                                                   value="@if($promotion->activity_type == 'wholesale') {{$promotion_rule ? $promotion_rule[0]->money : ''}} @endif">
+                                                                   name="reduce_name[]"
+                                                                   value="@if($promotion->activity_type == 'reduce') {{$promotion_rule ? $promotion_rule[0]->money : ''}} @endif">
                                                             <span class="input-group-addon">元</span>
                                                         </div>
                                                     </div>
-                                                    <div class="col-xs-1 control-label">
-                                                        任选
+                                                    <div class="pull-left text-padding-top"
+                                                         style="width: 60px;padding-left: 0;padding-right: 0">，立减
                                                     </div>
                                                     <div class="col-xs-2">
                                                         <div class="input-group">
                                                             <input type="text" class="form-control"
-                                                                   name="wholesale_value[]"
-                                                                   value="@if($promotion->activity_type == 'wholesale') {{$promotion_rule ? $promotion_rule[0]->wholesale : ''}} @endif">
-                                                            <span class="input-group-addon">件</span>
+                                                                   name="reduce_value[]"
+                                                                   value="@if($promotion->activity_type == 'reduce') {{$promotion_rule ? $promotion_rule[0]->reduce : ''}} @endif">
+                                                            <span class="input-group-addon">元</span>
                                                         </div>
                                                     </div>
-                                                    <div class="col-xs-1 control-label">活动商品</div>
+                                                    <button id="add-reduce-detail" type="button"
+                                                            class="btn btn-primary btn-flat icon-add @if($promotion->activity_type == 'reduce' && count($promotion_rule) > 1) dis-no @endif"
+                                                            style="border-radius: 90px;">+
+                                                    </button>
                                                 </div>
-                                                <div class="@if($promotion->activity_type != 'give') hidden @endif detail give-detail">
+                                                <div class="reduce-detail-row add-row @if($promotion->activity_type != 'reduce' || count($promotion_rule) <= 1) dis-no @endif">
+                                                    <div class="pull-left text-padding-top">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;满</div>
+                                                    <div class="col-xs-2">
+                                                        <div class="input-group">
+                                                            <input type="text" class="form-control"
+                                                                   name="reduce_name[]"
+                                                                   value="@if($promotion->activity_type == 'reduce' && isset($promotion_rule[1])) {{$promotion_rule[1]->money}} @endif">
+                                                            <span class="input-group-addon">元</span>
+                                                        </div>
+                                                    </div>
+                                                    <div class="pull-left text-padding-top"
+                                                         style="width: 60px;padding-left: 0;padding-right: 0">，立减
+                                                    </div>
+                                                    <div class="col-xs-2">
+                                                        <div class="input-group">
+                                                            <input type="text" class="form-control"
+                                                                   name="reduce_value[]"
+                                                                   value="@if($promotion->activity_type == 'reduce' && isset($promotion_rule[1])) {{$promotion_rule[1]->reduce}} @endif">
+                                                            <span class="input-group-addon">元</span>
+                                                        </div>
+                                                    </div>
+                                                    <button id="add-reduce-detail" type="button"
+                                                            class="btn btn-primary btn-flat icon-minus"
+                                                            style="border-radius: 90px;">-
+                                                    </button>
+                                                </div>
+                                            </div>
+                                            <div class="@if($promotion->activity_type != 'return') hidden @endif detail return-detail">
+                                                <div class="return-detail-row">
+                                                    <div class="pull-left text-padding-top">活动期间，买满</div>
+                                                    <div class="col-xs-2">
+                                                        <div class="input-group">
+                                                            <input type="text" class="form-control"
+                                                                   name="return_price"
+                                                                   value="@if($promotion->activity_type == 'return') {{$promotion->consume}} @endif">
+                                                            <span class="input-group-addon">元</span>
+                                                        </div>
+                                                        <input type="hidden" class="price fl" name="return-sum"
+                                                               id="coupon-price-sum" value=""/>
+                                                    </div>
+                                                    <div class="col-xs-1 control-label"
+                                                         style="width: 40px;padding-left: 0;padding-right: 0">，返
+                                                    </div>
+                                                    <div class="col-xs-2">
+                                                        <select name="" id="" class="form-control">
+                                                            <option value="">券</option>
+                                                        </select>
+                                                    </div>
+                                                    <button type="button" class="btn btn-primary"
+                                                            style="border-radius: 90px;" data-toggle="modal"
+                                                            data-target="#myModal-four">+
+                                                    </button>
+                                                    <span class="span-tex" id="return-price_sum"></span>
+                                                </div>
+                                                <div class="clearfix dis-no" id="return-detail">
+                                                    <table class="acTable">
+                                                        <thead>
+                                                        <tr>
+                                                            <th class="ac-id">ID</th>
+                                                            <th class="ac-name">名称</th>
+                                                            <th class="ac-position">面额</th>
+                                                            <th class="ac-valid">使用有效期</th>
+                                                            <th class="ac-time">发放时间</th>
+                                                            <th class="ac-operate">操作</th>
+                                                        </tr>
+                                                        </thead>
+                                                        <tbody>
+
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                            <div class="@if($promotion->activity_type != 'discount') hidden @endif detail discount-detail">
+                                                <div class="discount-detail-row addcontain">
                                                     <div class="pull-left text-padding-top">
                                                         活动期间，选购商品满
                                                     </div>
                                                     <div class="col-xs-2">
                                                         <div class="input-group">
-                                                            <input type="text" class="form-control" name="give_num"
-                                                                   value="@if($promotion->activity_type == 'give') {{$promotion->rule}} @endif">
-                                                            <span class="input-group-addon">
-                                                        件
-                                                    </span>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-xs-3 control-label">
-                                                        ，免其中价格最低的一件
-                                                    </div>
-                                                </div>
-                                                <div class="@if($promotion->activity_type != 'limit') hidden @endif detail limit-detail">
-                                                    <div class="pull-left text-padding-top">
-                                                        活动期间，购买活动商品统一
-                                                    </div>
-                                                    <div class="col-xs-2">
-                                                        <select name="limit_type" class="form-control active-select">
-                                                            <option value="1"
-                                                                    @if($promotion->activity_type == 'limit' && $promotion->rule_type == 1) selected @endif>
-                                                                立减
-                                                            </option>
-                                                            <option value="2"
-                                                                    @if($promotion->activity_type == 'limit' && $promotion->rule_type == 2) selected @endif>
-                                                                立享
-                                                            </option>
-                                                        </select>
-                                                    </div>
-                                                    <div class="col-xs-2">
-                                                        <div class="input-group">
-                                                            <input type="text" class="form-control" name="limit_num">
-                                                            <span class="input-group-addon limit-type-html">元</span>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-xs-1 control-label">
-                                                        每人限购
-                                                    </div>
-                                                    <div class="col-xs-1">
-                                                        <div class="input-group">
-                                                            <select name="limit_per_num" class="form-control">
-                                                                <option value="">不限</option>
-                                                                <option value="1">1</option>
-                                                                <option value="2">2</option>
-                                                                <option value="3">3</option>
-                                                                <option value="5">5</option>
-                                                            </select>
-                                                        </div>
-                                                    </div>
-                                                    <button type="button" class="btn btn-primary"
-                                                            onclick="setGoodInfo(this)">确定
-                                                    </button>
-                                                    <div class="text-info" style="padding: 6px;padding-left: 24px;">
-                                                        注：可在添加商品时针对每个商品分别设置优惠力度。
-                                                    </div>
-                                                </div>
-                                                <div class="@if($promotion->activity_type != 'quantity') hidden @endif detail quantity-detail">
-                                                    <div class="pull-left text-padding-top">
-                                                        活动期间，活动商品统一
-                                                    </div>
-                                                    <div class="col-xs-2 no-padding" style="width: 90px;margin:0 10px;">
-                                                        <select name="quantity_type" class="form-control active-select">
-                                                            <option value="1">价格</option>
-                                                            <option value="2">折扣</option>
-                                                        </select>
-                                                    </div>
-                                                    <div class="col-xs-2 no-padding" style="width: 90px;">
-                                                        <div class="input-group">
                                                             <input type="text" class="form-control"
-                                                                   name="quantity_price1">
-                                                            <span class="input-group-addon limit-type-html">元</span>
-                                                        </div>
-                                                        <div class="input-group dis-no">
-                                                            <input type="text" class="form-control"
-                                                                   name="quantity_price2">
-                                                            <span class="input-group-addon limit-type-html">元</span>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-xs-1 control-label text-left"
-                                                         style="width: 110px;margin-left: -15px;">， 秒杀库存
-                                                    </div>
-                                                    <div class="col-xs-1" style="width: 110px;margin-left: -20px">
-                                                        <div class="input-group">
-                                                            <input type="text" class="form-control" name="quantity_num">
+                                                                   name="discount_name[]"
+                                                                   value="@if($promotion->activity_type == 'discount') {{$promotion_rule ? $promotion_rule[0]->num : ''}} @endif">
                                                             <span class="input-group-addon">件</span>
                                                         </div>
                                                     </div>
+                                                    <div class="col-xs-1 control-label">
+                                                        ，立享
+                                                    </div>
+                                                    <div class="col-xs-2">
+                                                        <div class="input-group">
+                                                            <input type="text" class="form-control"
+                                                                   name="discount_value[]"
+                                                                   value="@if($promotion->activity_type == 'discount') {{$promotion_rule ? $promotion_rule[0]->discount : ''}} @endif">
+                                                            <span class="input-group-addon">折</span>
+                                                        </div>
+                                                    </div>
+                                                    <button id="add-discount-detail" type="button"
+                                                            class="btn btn-primary btn-flat icon-add @if($promotion->activity_type == 'discount' || (is_array($promotion_rule) && count($promotion_rule) > 1)) dis-no @endif"
+                                                            style="border-radius: 90px;">+
+                                                    </button>
+                                                </div>
+                                                <div class="discount-detail-row add-row @if($promotion->activity_type != 'discount' || count($promotion_rule) <= 1) dis-no @endif">
+                                                    <div class="pull-left text-padding-top">
+                                                        　　　　　　　　　满
+                                                    </div>
+                                                    <div class="col-xs-2">
+                                                        <div class="input-group">
+                                                            <input type="text" class="form-control"
+                                                                   name="discount_name[]"
+                                                                   value="@if($promotion->activity_type == 'discount' && isset($promotion_rule[1])) {{$promotion_rule[1]->num}} @endif">
+                                                            <span class="input-group-addon">件</span>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-xs-1 control-label">
+                                                        ，立享
+                                                    </div>
+                                                    <div class="col-xs-2">
+                                                        <div class="input-group">
+                                                            <input type="text" class="form-control"
+                                                                   name="discount_value[]"
+                                                                   value="@if($promotion->activity_type == 'discount' && isset($promotion_rule[1])) {{$promotion_rule[1]->discount}} @endif">
+                                                            <span class="input-group-addon">折</span>
+                                                        </div>
+                                                    </div>
+                                                    <button id="add-discount-detail" type="button"
+                                                            class="btn btn-primary btn-flat icon-minus"
+                                                            style="border-radius: 90px;">-
+                                                    </button>
+                                                </div>
+                                            </div>
 
-                                                    <div class="col-xs-2 text-danger" style="margin-left: -20px;">
-                                                        (不设置件数即为当前库存均用于秒杀)
+                                            <div class="@if($promotion->activity_type != 'wholesale') hidden @endif detail wholesale-detail">
+                                                <div class="pull-left text-padding-top">
+                                                    活动期间
+                                                </div>
+                                                <div class="col-xs-2">
+                                                    <div class="input-group">
+                                                        <input type="text" class="form-control"
+                                                               name="wholesale_name[]"
+                                                               value="@if($promotion->activity_type == 'wholesale') {{$promotion_rule ? $promotion_rule[0]->money : ''}} @endif">
+                                                        <span class="input-group-addon">元</span>
                                                     </div>
-                                                    <div class="col-xs-1 control-label"
-                                                         style="width: 110px;margin-left: -30px">每人限购件
+                                                </div>
+                                                <div class="col-xs-1 control-label">
+                                                    任选
+                                                </div>
+                                                <div class="col-xs-2">
+                                                    <div class="input-group">
+                                                        <input type="text" class="form-control"
+                                                               name="wholesale_value[]"
+                                                               value="@if($promotion->activity_type == 'wholesale') {{$promotion_rule ? $promotion_rule[0]->wholesale : ''}} @endif">
+                                                        <span class="input-group-addon">件</span>
                                                     </div>
-                                                    <div class="col-xs-2 no-padding">
-                                                        <select name="limit_per_num" class="form-control"
-                                                                style="width: 90px;">
+                                                </div>
+                                                <div class="col-xs-1 control-label">活动商品</div>
+                                            </div>
+                                            <div class="@if($promotion->activity_type != 'give') hidden @endif detail give-detail">
+                                                <div class="pull-left text-padding-top">
+                                                    活动期间，选购商品满
+                                                </div>
+                                                <div class="col-xs-2">
+                                                    <div class="input-group">
+                                                        <input type="text" class="form-control" name="give_num"
+                                                               value="@if($promotion->activity_type == 'give') {{$promotion->rule}} @endif">
+                                                        <span class="input-group-addon">
+                                                        件
+                                                    </span>
+                                                    </div>
+                                                </div>
+                                                <div class="col-xs-3 control-label">
+                                                    ，免其中价格最低的一件
+                                                </div>
+                                            </div>
+                                            <div class="@if($promotion->activity_type != 'limit') hidden @endif detail limit-detail">
+                                                <div class="pull-left text-padding-top">
+                                                    活动期间，购买活动商品统一
+                                                </div>
+                                                <div class="col-xs-2">
+                                                    <select name="limit_type" class="form-control active-select">
+                                                        <option value="1"
+                                                                @if($promotion->activity_type == 'limit' && $promotion->rule_type == 1) selected @endif>
+                                                            立减
+                                                        </option>
+                                                        <option value="2"
+                                                                @if($promotion->activity_type == 'limit' && $promotion->rule_type == 2) selected @endif>
+                                                            立享
+                                                        </option>
+                                                    </select>
+                                                </div>
+                                                <div class="col-xs-2">
+                                                    <div class="input-group">
+                                                        <input type="text" class="form-control" name="limit_num">
+                                                        <span class="input-group-addon limit-type-html">元</span>
+                                                    </div>
+                                                </div>
+                                                <div class="col-xs-1 control-label">
+                                                    每人限购
+                                                </div>
+                                                <div class="col-xs-1">
+                                                    <div class="input-group">
+                                                        <select name="limit_per_num" class="form-control">
                                                             <option value="">不限</option>
                                                             <option value="1">1</option>
                                                             <option value="2">2</option>
@@ -660,20 +604,75 @@
                                                             <option value="5">5</option>
                                                         </select>
                                                     </div>
-
-                                                    <div class="col-xs-12">
-                                                        <div class="text-left col-xs-5 text-info"
-                                                             style="padding: 10px 5px;">注：可在添加商品时针对每个商品分别设置优惠力度。
-                                                        </div>
-                                                        <button type="button" class="btn col-xs-offset-5 btn-primary"
-                                                                onclick="setGoodInfo(this)">确定
-                                                        </button>
+                                                </div>
+                                                <button type="button" class="btn btn-primary"
+                                                        onclick="setGoodInfo(this)">确定
+                                                </button>
+                                                <div class="text-info" style="padding: 6px;padding-left: 24px;">
+                                                    注：可在添加商品时针对每个商品分别设置优惠力度。
+                                                </div>
+                                            </div>
+                                            <div class="@if($promotion->activity_type != 'quantity') hidden @endif detail quantity-detail">
+                                                <div class="pull-left text-padding-top">
+                                                    活动期间，活动商品统一
+                                                </div>
+                                                <div class="col-xs-2 no-padding" style="width: 90px;margin:0 10px;">
+                                                    <select name="quantity_type" class="form-control active-select">
+                                                        <option value="1">价格</option>
+                                                        <option value="2">折扣</option>
+                                                    </select>
+                                                </div>
+                                                <div class="col-xs-2 no-padding" style="width: 90px;">
+                                                    <div class="input-group">
+                                                        <input type="text" class="form-control"
+                                                               name="quantity_price1">
+                                                        <span class="input-group-addon limit-type-html">元</span>
                                                     </div>
+                                                    <div class="input-group dis-no">
+                                                        <input type="text" class="form-control"
+                                                               name="quantity_price2">
+                                                        <span class="input-group-addon limit-type-html">元</span>
+                                                    </div>
+                                                </div>
+                                                <div class="col-xs-1 control-label text-left"
+                                                     style="width: 110px;margin-left: -15px;">， 秒杀库存
+                                                </div>
+                                                <div class="col-xs-1" style="width: 110px;margin-left: -20px">
+                                                    <div class="input-group">
+                                                        <input type="text" class="form-control" name="quantity_num">
+                                                        <span class="input-group-addon">件</span>
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-xs-2 text-danger" style="margin-left: -20px;">
+                                                    (不设置件数即为当前库存均用于秒杀)
+                                                </div>
+                                                <div class="col-xs-1 control-label"
+                                                     style="width: 110px;margin-left: -30px">每人限购件
+                                                </div>
+                                                <div class="col-xs-2 no-padding">
+                                                    <select name="limit_per_num" class="form-control"
+                                                            style="width: 90px;">
+                                                        <option value="">不限</option>
+                                                        <option value="1">1</option>
+                                                        <option value="2">2</option>
+                                                        <option value="3">3</option>
+                                                        <option value="5">5</option>
+                                                    </select>
+                                                </div>
+
+                                                <div class="col-xs-12">
+                                                    <div class="text-left col-xs-5 text-info"
+                                                         style="padding: 10px 5px;">注：可在添加商品时针对每个商品分别设置优惠力度。
+                                                    </div>
+                                                    <button type="button" class="btn col-xs-offset-5 btn-primary"
+                                                            onclick="setGoodInfo(this)">确定
+                                                    </button>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
-                                @endif
+                                </div>
                             </div>
                             <div class="box-body">
                                 <div class="col-xs-12">
@@ -905,6 +904,7 @@
                 }
             });
         });
+        $('#currency').val('{{ $promotion->currency_code }}');
         $('.good-sku-set').on('click', function () {
             var id = $(this).data('good');
             var target = $.trim($(this).data('target'));
@@ -913,7 +913,9 @@
         addDateRangePicker($('#promotion_time'));
         createDataTable($('#select_coupon_table'));
         $('.modal-content').css({'box-shadow': 'none'});
-
+        if ('{{ $promotion->activity_type }}' == '') {
+            $('#activity-detail').addClass('hidden');
+        }
         /*$('.set_promotion').click(function () {
             let thisParent = $(this).parents('.table-level-one');
             console.log(thisParent.next().hasClass('table-level-two'));
@@ -1099,7 +1101,6 @@
                         _index.text('保存中...');
                     },
                     success: function (data) {
-                        console.log(data);
                         if (data.status == 200) {
                             toastr.success(data.content);
                             window.location.href = "{{secure_route('promotion.index')}}";
@@ -1173,7 +1174,6 @@
 
             //立减/立享
             $(".limit-detail").on("change", '.active-select', function () {
-                console.log(22);
                 var value = $(this).val();
                 if (value == 1) {
                     $(".limit-type-html").text("元");
@@ -1198,6 +1198,9 @@
             });
 
             $("input[name=activity_type]").click(function (e) {
+                if ($('.promotion_method:checked ').val() !== '') {
+                    $('#activity-detail').removeClass('hidden');
+                }
                 if ($(this).val()) {
                     if (!confirm("确定修改内容？整个页面内容会被覆盖。")) {
                         e.preventDefault();
@@ -1210,9 +1213,7 @@
                 var activity_id = $('input[name=id]').val();
                 var _this = $(this);
                 var toggle = _this.attr('data-toggle');
-                console.log(1);
                 if (toggle == 'false') return;
-                console.log(2);
                 var good_id = _this.data('id');
                 _this.attr('data-toggle', false);
                 $.ajax({

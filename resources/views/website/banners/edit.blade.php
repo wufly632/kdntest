@@ -16,9 +16,20 @@
                 </div>
             </div>
             <div class="form-group">
+                <label for="title" class="col-sm-2 control-label text-right">货币<span
+                            class="text-danger">*</span></label>
+                <div class="col-sm-8">
+                    <select name="currency_code" v-model="currency_code" id="" class="form-control">
+                        @foreach($currencys as $currency)
+                            <option value="{{ $currency->currency_code }}">{{ $currency->symbol.$currency->name }}</option>
+                        @endforeach
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
                 <label for="src" class="col-sm-2 control-label text-right">图片<span class="text-danger">*</span></label>
                 <div class="col-sm-8">
-                    <input type="file" name="src" id="src" class="form-control" @change="uploadImg">
+                    <input type="file" name="src" id="src" class="form-control" @change="uploadImg" accept="image/*">
                 </div>
             </div>
             <div class="form-group">
@@ -75,7 +86,8 @@
         var bannerBox = new Vue({
             el: '#banner-box',
             data: {
-                src: '@if(isset($banner->src)){{ $banner->src }}@endif'
+                src: '@if(isset($banner->src)){{ $banner->src }}@endif',
+                currency_code: '{{ isset($banner->currency_code) ? $banner->currency_code:''}}'
             },
             created: function () {
                 @if(isset($banner->type))
@@ -116,7 +128,10 @@
                         toastr.error('类型不能为空');
                         return;
                     }
-
+                    if (this.currency_code === '') {
+                        toastr.error('货币不能为空');
+                        return;
+                    }
                     @if(isset($banner->id))
                         postUri = "{{ secure_route('banners.update',['id'=>$banner->id]) }}";
                     errorMsg = '修改失败';
@@ -152,7 +167,6 @@
                     formData.append('banners', src);
                     formData.append('_token', '{{ csrf_token() }}');
                     formData.append('dir_name', 'banners');
-
                     axios.post("{{ secure_route('banners.upload') }}", formData, {headers: {'Content-Type': 'multipart/form-data'}}).then(function (res) {
                         if (res.status === 200) {
                             if (res.data.status === 200) {

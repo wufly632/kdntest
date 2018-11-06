@@ -96,9 +96,9 @@
                                                 币种：
                                             </label>
                                             <div class="col-xs-7">
-                                                <select name="currency" id="currency" class="form-control">
+                                                <select name="currency_code" id="currency" class="form-control">
                                                     @foreach($currencys as $currency)
-                                                        <option value="{{ $currency->id }}">{{ $currency->symbol }}{{ $currency->name }}</option>
+                                                        <option value="{{ $currency->currency_code }}">{{ $currency->symbol.$currency->name }}</option>
                                                     @endforeach
                                                 </select>
                                             </div>

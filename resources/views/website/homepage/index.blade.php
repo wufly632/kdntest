@@ -49,7 +49,16 @@
 
                                             <label for="" style="margin-left:20px;">标题:</label>
                                             <input type="text" class="form-control my-form-control-sm"
-                                                   v-model="banner.title">
+                                                   v-model="banner.title" style="width: 100px;">
+
+                                            <label for="" style="margin-left:20px;"></label>
+                                            <select class="form-control my-form-control-sm"
+                                                    v-model="banner.currency_code">
+                                                <option :value="currency.currency_code" v-for="currency in currencys">
+                                                    @{{
+                                                    currency.symbol + currency.name }}
+                                                </option>
+                                            </select>
 
                                             <label for="" style="margin-left:20px;">链接:</label>
                                             <input type="text" class="form-control my-form-control-sm"
@@ -60,8 +69,9 @@
                                                    v-model="banner.describe">
 
                                             <label for="" style="margin-left:20px;">排序:</label>
-                                            <input type="text" class="form-control my-form-control-sm"
-                                                   v-model="banner.sort">
+                                            <input type="number" min="0" class="form-control my-form-control-sm"
+                                                   v-model="banner.sort" style="width: 60px;">
+
 
                                             <label for="" style="margin-left:20px;">起止时间:</label>
                                             <input type="text" class="time-range-picker form-control my-form-control-sm"
@@ -80,7 +90,7 @@
                                 </form>
                             </div>
                             <div @click="editShow">
-                                <img src="http://weiweimao-image.oss-ap-south-1.aliyuncs.com/product/000001000218/5bd6fce70a64d.png"
+                                <img v-lazy="bannerPlaceholder"
                                      alt="">
                             </div>
                         </div>
@@ -95,10 +105,12 @@
                         <div class="panel-body text-center">
                             <div class="col-sm-12" style="padding:2rem 0">
                                 <div class="col-sm-2" v-for="(good,goodindex) in goods">
-                                    <img :src="good.main_pic" alt="" style="width: 200px;height: 200px;">
-                                    <div>@{{ good.good_title }}</div>
+                                    <label :for="'good'+goodindex">
+                                        <img v-lazy="good.main_pic" alt="" style="width: 200px;height: 200px;">
+                                        <div style="min-height: 3em">@{{ good.good_title }}</div>
+                                    </label>
                                     <div>
-                                        <input type="checkbox" name="good_id" :value="good.id"
+                                        <input type="checkbox" name="good_id" :id="'good'+goodindex" :value="good.id"
                                                v-model="checkedProduct">
                                     </div>
                                 </div>
@@ -156,7 +168,7 @@
                                     </form>
                                 </div>
                                 <div class="image-wrapper col-sm-12" @click="appendChild" :data-index="index">
-                                    <img :src="cardData.leftImg.src" alt=""
+                                    <img v-lazy="cardData.leftImg.src" alt=""
                                          style="height: 100%;max-height: 600px;">
                                 </div>
                             </div>
@@ -192,7 +204,7 @@
                                         </div>
                                         <div @click="appendChild" :data-index="index"
                                              :data-index-two="innerIndex">
-                                            <img :src="centerData.src" title="" alt=""
+                                            <img v-lazy="centerData.src" title="" alt=""
                                                  style="height: 100%;max-height: 300px;">
                                         </div>
                                     </div>
@@ -226,7 +238,7 @@
                                         </div>
                                         <div @click="appendChild" :data-index="index"
                                              :data-index-two="innerIndex">
-                                            <img :src="centerData.src" title="" alt=""
+                                            <img v-lazy="centerData.src" title="" alt=""
                                                  style="height: 100%;max-height: 300px;">
                                         </div>
                                     </div>
@@ -296,7 +308,7 @@
                                 </div>
                                 <div class="image-wrapper col-sm-12" @click="appendChild" data-direction="right"
                                      :data-index="index">
-                                    <img :src="cardData.rightImg.src" alt=""
+                                    <img v-lazy="cardData.rightImg.src" alt=""
                                          style="height: 100%;max-height: 600px;">
                                 </div>
                             </div>
@@ -310,10 +322,13 @@
 @section('script')
     <script src="{{asset('/assets/js/bower_components/axios/dist/axios.min.js')}}"></script>
     <script src="{{asset('/assets/admin/js/vue.min.js')}}"></script>
+    <script src="https://unpkg.com/vue-lazyload/vue-lazyload.js"></script>
     <script>
+        Vue.use(VueLazyload);
         var panelBanner = new Vue({
             el: '#panel-banner',
             data: {
+                bannerPlaceholder: 'http://weiweimao-image.oss-ap-south-1.aliyuncs.com/product/000001000218/5bd6fce70a64d.png',
                 bannerEditShow: false,
                 banners: [
                         @foreach($banners as $banner)
@@ -328,10 +343,12 @@
                         time_duration: '{{ $banner->start_at."~".$banner->end_at }}',
                         btn: '修改',
                         dataTargetUri: '{{ secure_route('banners.update',['id'=>$banner->id]) }}',
-                        _method: 'put'
+                        _method: 'put',
+                        currency_code: '{{ $banner->currency_code }}'
                     },
                     @endforeach
-                ]
+                ],
+                currencys:{!! $currencys !!}
             },
             methods: {
                 addFiles: function (event) {
@@ -358,7 +375,8 @@
                                     time_duration: '',
                                     btn: '添加',
                                     dataTargetUri: '{{ secure_route('banners.store') }}',
-                                    _method: 'post'
+                                    _method: 'post',
+                                    currency_code: ''
                                 });
                             } else {
                                 toastr.error('上传失败');
@@ -389,15 +407,15 @@
                         "autoApply": true,
                         "timePicker24Hour": true,
                         "autoUpdateInput": false,
-                        "opens": 'center',
+                        "opens": 'left',
                         locale: locale,
                         ranges: {
-                            '今日': [moment(), moment()],
-                            '昨日': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
-                            '最近7日': [moment().subtract(6, 'days'), moment()],
-                            '最近30日': [moment().subtract(29, 'days'), moment()],
-                            '本月': [moment().startOf('month'), moment().endOf('month')],
-                            '上月': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
+                            '今日': [moment().format('YYYY-MM-DD 00:00:00'), moment().format('YYYY-MM-DD 23:59:59')],
+                            '昨日': [moment().subtract(1, 'days').format('YYYY-MM-DD 00:00:00'), moment().subtract(1, 'days').format('YYYY-MM-DD 23:59:59')],
+                            '最近7日': [moment().subtract(6, 'days').format('YYYY-MM-DD 00:00:00'), moment().format('YYYY-MM-DD 23:59:59')],
+                            '最近30日': [moment().subtract(29, 'days').format('YYYY-MM-DD 00:00:00'), moment().format('YYYY-MM-DD 23:59:59')],
+                            '本月': [moment().startOf('month').format('YYYY-MM-DD 00:00:00'), moment().endOf('month').format('YYYY-MM-DD 23:59:59')],
+                            '上月': [moment().subtract(1, 'month').startOf('month').format('YYYY-MM-DD 00:00:00'), moment().subtract(1, 'month').endOf('month').format('YYYY-MM-DD 23:59:59')]
                         }
                     }, function (start, end, label) {
                         _vueEl.banners[dataIndex].time_duration = start.format('YYYY-MM-DD HH:mm:ss') + '~' + end.format('YYYY-MM-DD HH:mm:ss');
@@ -829,7 +847,7 @@
                             toastr.options.onHidden = function () {
 
                             };
-                            toastr.success('modify 成功');
+                            toastr.success('修改成功');
                         } else {
                             toastr.error(res.data.msg);
                         }
@@ -848,7 +866,7 @@
                             toastr.options.onHidden = function () {
 
                             };
-                            toastr.success('modify 成功');
+                            toastr.success('修改成功');
                         } else {
                             toastr.error(res.data.msg);
                         }
@@ -869,7 +887,7 @@
                             toastr.options.onHidden = function () {
                                 _thisVue.cardDatas[index].leftImg.show = false;
                             };
-                            toastr.success('modify 成功');
+                            toastr.success('修改成功');
                         } else {
                             toastr.error(res.data.msg);
                         }
@@ -922,7 +940,7 @@
                             toastr.options.onHidden = function () {
 
                             };
-                            toastr.success('modify 成功');
+                            toastr.success('修改成功');
                         } else {
                             toastr.error(res.data.msg);
                         }
