@@ -53,6 +53,7 @@ class RepositoryServiceProvider extends ServiceProvider
         $this->app->bind(\App\Repositories\ShipOrder\GoodSkuLackRepository::class, \App\Repositories\ShipOrder\GoodSkuLackRepositoryEloquent::class);
         $this->app->bind(\App\Repositories\Website\IconRepository::class, \App\Repositories\Website\IconRepositoryEloquent::class);
         $this->app->bind(\App\Repositories\Website\HomePageCardRepository::class, \App\Repositories\Website\HomePageCardRepositoryEloquent::class);
+        $this->app->bind(\App\Repositories\Currency\CurrencyRepository::class, \App\Repositories\Currency\CurrencyRepositoryEloquent::class);
         //:end-bindings:
     }
 }

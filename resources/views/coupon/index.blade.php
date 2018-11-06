@@ -3,7 +3,9 @@
     <link rel="stylesheet" href="{{ asset('/assets/css/bootstrap-modal.css') }}">
     <link rel="stylesheet" href="{{ asset('/assets/css/bootstrap-modal-bs3patch.css') }}">
     <style>
-        .dis-no{display: none;}
+        .dis-no {
+            display: none;
+        }
     </style>
 @endsection
 @section('content')
@@ -41,22 +43,26 @@
                                             <div class="col-xs-8">
                                                 <div class="radio-inline">
                                                     <label>
-                                                        <input type="radio" name="coupon_purpose" class="" id="method1" value="1">页面领取
+                                                        <input type="radio" name="coupon_purpose" class="" id="method1"
+                                                               value="1">页面领取
                                                     </label>
                                                 </div>
                                                 <div class="radio-inline">
                                                     <label>
-                                                        <input type="radio" name="coupon_purpose" class="" id="method2" value="2">满返活动
+                                                        <input type="radio" name="coupon_purpose" class="" id="method2"
+                                                               value="2">满返活动
                                                     </label>
                                                 </div>
                                                 <div class="radio-inline">
                                                     <label>
-                                                        <input type="radio" name="coupon_purpose" class="" id="method3" value="3">新人礼包
+                                                        <input type="radio" name="coupon_purpose" class="" id="method3"
+                                                               value="3">新人礼包
                                                     </label>
                                                 </div>
                                                 <div class="radio-inline">
                                                     <label>
-                                                        <input type="radio" name="coupon_purpose" class="" id="method4" value="4">通用券
+                                                        <input type="radio" name="coupon_purpose" class="" id="method4"
+                                                               value="4">通用券
                                                     </label>
                                                 </div>
                                                 <p class="show-info text-danger"></p>
@@ -71,7 +77,7 @@
                                                 券口令：
                                             </label>
                                             <div class="col-xs-7">
-                                                <input type="text"  class="form-control" name="coupon_key">
+                                                <input type="text" class="form-control" name="coupon_key">
                                             </div>
                                         </div>
                                         <div class="form-group">
@@ -80,7 +86,21 @@
                                                 券名称：
                                             </label>
                                             <div class="col-xs-7">
-                                                <input type="text" id="coupon_name" class="form-control" name="coupon_name">
+                                                <input type="text" id="coupon_name" class="form-control"
+                                                       name="coupon_name">
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="col-xs-1"></div>
+                                            <label for="currency" class="col-xs-2 control-label">
+                                                币种：
+                                            </label>
+                                            <div class="col-xs-7">
+                                                <select name="currency" id="currency" class="form-control">
+                                                    @foreach($currencys as $currency)
+                                                        <option value="{{ $currency->id }}">{{ $currency->symbol }}{{ $currency->name }}</option>
+                                                    @endforeach
+                                                </select>
                                             </div>
                                         </div>
                                         <div class="form-group">
@@ -90,7 +110,8 @@
                                             </label>
                                             <div class="col-xs-7">
                                                 <div class="input-group">
-                                                    <input type="text" id="coupon_price" class="form-control" name="coupon_price"><span
+                                                    <input type="text" id="coupon_price" class="form-control"
+                                                           name="coupon_price"><span
                                                             class="input-group-addon">元</span>
                                                 </div>
                                             </div>
@@ -132,7 +153,9 @@
                                                 起止时间：
                                             </label>
                                             <div class="col-xs-7">
-                                                <input type="text" autocomplete="off" class="form-control date_choice rangetime" id="daterange" name="coupon_use">
+                                                <input type="text" autocomplete="off"
+                                                       class="form-control date_choice rangetime" id="daterange"
+                                                       name="coupon_use">
                                             </div>
                                         </div>
                                         <div class="form-group">
@@ -172,7 +195,8 @@
                                             </label>
                                             <div class="col-xs-7">
                                                 <div class="input-group">
-                                                    <input type="text" id="coupon_count" class="form-control" name="coupon_number"><span
+                                                    <input type="text" id="coupon_count" class="form-control"
+                                                           name="coupon_number"><span
                                                             class="input-group-addon">张</span>
                                                 </div>
                                             </div>
@@ -184,7 +208,8 @@
                                             </label>
                                             <div class="col-xs-7">
                                                 <div class="input-group">
-                                                    <input type="text" id="coupon_count" class="form-control" name="coupon_use_price"><span
+                                                    <input type="text" id="coupon_count" class="form-control"
+                                                           name="coupon_use_price"><span
                                                             class="input-group-addon">元</span>
                                                 </div>
                                             </div>
@@ -196,12 +221,16 @@
                                                 备注：
                                             </label>
                                             <div class="col-xs-7">
-                                                <input type="text" id="coupon_count" class="form-control" name="coupon_remark">
+                                                <input type="text" id="coupon_count" class="form-control"
+                                                       name="coupon_remark">
                                             </div>
                                         </div>
                                         <div>
-                                            <button type="button" class="btn btn-success col-xs-offset-3 save">创建</button>
-                                            <button type="button" class="btn btn-danger col-xs-offset-4" id="modal-cancel">取消</button>
+                                            <button type="button" class="btn btn-success col-xs-offset-3 save">创建
+                                            </button>
+                                            <button type="button" class="btn btn-danger col-xs-offset-4"
+                                                    id="modal-cancel">取消
+                                            </button>
                                         </div>
                                     </form>
                                 </div>
@@ -237,10 +266,12 @@
                                     <div class="form-group col-xs-3">
                                         <label for="coupon_usage" class="col-sm-4 control-label">用途：</label>
                                         <div class="col-sm-8">
-                                            <select name="coupon_purpose" id="coupon_usage" class="form-control select2">
+                                            <select name="coupon_purpose" id="coupon_usage"
+                                                    class="form-control select2">
                                                 <option value="">全部</option>
                                                 @foreach(\App\Entities\Coupon\Coupon::$allPurpose as $id => $purpose)
-                                                    <option value="{{$id}}" @if(old('coupon_purpose') == $id) selected @endif>{{$purpose}}</option>
+                                                    <option value="{{$id}}"
+                                                            @if(old('coupon_purpose') == $id) selected @endif>{{$purpose}}</option>
                                                 @endforeach
                                             </select>
                                         </div>
@@ -251,7 +282,8 @@
                                             <select name="status" id="coupon_status" class="form-control select2">
                                                 <option value="">全部</option>
                                                 @foreach(\App\Entities\Coupon\Coupon::$allStatus as $key => $status)
-                                                    <option value="{{$key}}" @if(old('status') == $key) selected @endif>{{$status}}</option>
+                                                    <option value="{{$key}}"
+                                                            @if(old('status') == $key) selected @endif>{{$status}}</option>
                                                 @endforeach
                                             </select>
                                         </div>
@@ -393,14 +425,14 @@
             $('#coupon-create').on('click', '.save', function () {
                 var _index = $(this);
                 $.ajax({
-                    type:'post',
-                    url:"{{secure_route('coupon.create')}}",
-                    data:$('#coupon-create').serialize(),
-                    beforeSend:function() {
+                    type: 'post',
+                    url: "{{secure_route('coupon.create')}}",
+                    data: $('#coupon-create').serialize(),
+                    beforeSend: function () {
                         _index.attr('disabled', true);
                         _index.html('创建中...');
                     },
-                    success:function(data){
+                    success: function (data) {
                         if (data.status == 200) {
                             toastr.success(data.content);
                             window.location.reload();
@@ -410,13 +442,13 @@
                             _index.html('创建');
                         }
                     },
-                    error:function(data){
-                        var json=eval("("+data.responseText+")");
+                    error: function (data) {
+                        var json = eval("(" + data.responseText + ")");
                         toastr.error(json.msg);
                         _index.attr('disabled', false);
                         _index.html('创建');
                     },
-                    sync:true
+                    sync: true
                 });
             });
             //有效期类型
@@ -438,19 +470,20 @@
                 }
             });
         });
+
         // 优惠券编辑
         function editCoupon(id) {
             layer.open({
                 type: 2,
                 skin: 'layui-layer-rim', //加上边框
-                area: ['60%','600px'],
+                area: ['60%', '600px'],
                 fix: false, //不固定
                 shadeClose: true,
                 maxmin: true,
-                shade:0.4,
+                shade: 0.4,
                 title: ' ',
-                content: "/coupon/edit/"+id,
-                end: function(layero, index){
+                content: "/coupon/edit/" + id,
+                end: function (layero, index) {
                 }
             });
         }
