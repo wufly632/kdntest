@@ -29,6 +29,7 @@ class PreShipOrderStatusCriteria implements CriteriaInterface
      */
     public function apply($model, RepositoryInterface $repository)
     {
+        $model = $model->where('pre_ship_orders.status', '<>', 3);
         if ($this->status) {
             $model = $model->where('pre_ship_orders.status', $this->status);
         }
