@@ -17,6 +17,7 @@ class AttrvalueController extends Controller
         'wufly@cucoe.com',
         'wfxykzd@163.com',
         'yingfei.zou@waiwaimall.com',
+        'long.hao@waiwaimall.com',
     ];
 
     public function __construct(AttrValueService $attrValueService)
