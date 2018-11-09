@@ -105,7 +105,7 @@ class AutoShipOrderConfirm extends Command
             if ($needLeft = $itemLeft) {
                 PushOrder::where('id', $matchPushOrder->id)->update(['accepted' => $matchPushOrder->num, 'status' => 2, 'need_num' => 0]);
             } else {
-                PushOrder::where('id', $matchPushOrder->id)->increment('accepted', $itemLeft);
+                PushOrder::where('id', $matchPushOrder->id)->increment(['accepted' => $matchPushOrder->accepted+$itemLeft, 'need_num' => $needLeft-$itemLeft]);
             }
             $fillData = [
                 'push_order_id' => $matchPushOrder->id,
