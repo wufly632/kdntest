@@ -408,11 +408,11 @@
                                 <div class="form-group">
                                     <div class="" style="margin-left: 10px">是否必填:</div>
                                     <label  class="property-radio">
-                                        <input type="radio" name="is_required" value="2"  v-model="is_required">
+                                        <input type="radio" name="is_required" value="1"  v-model="is_required">
                                         必填
                                     </label>
                                     <label class="property-radio">
-                                        <input type="radio" name="is_required" value="1"  v-model="is_required">
+                                        <input type="radio" name="is_required" value="2"  v-model="is_required">
                                         非必填
                                     </label>
                                 </div>
