@@ -17,7 +17,8 @@ class AttributeController extends Controller
 
     protected $users = [
         'wufly@cucoe.com',
-        'wfxykzd@163.com'
+        'wfxykzd@163.com',
+        'yingfei.zou@waiwaimall.com',
     ];
 
     public function __construct(AttributeService $attributeService)
