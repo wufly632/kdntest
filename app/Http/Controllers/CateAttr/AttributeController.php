@@ -102,7 +102,10 @@ class AttributeController extends Controller
         if(!$attribute_id){
             return ApiResponse::failure(g_API_ERROR,'参数缺失!');
         }
-        return ApiResponse::failure(g_API_ERROR, '属性不允许删除，请联系技术人员');
+        if(!in_array(Auth::user()->email, $this->users)){
+            return ApiResponse::failure(g_API_ERROR, '权限受限!');
+        }
+        return $this->attributeService->deleteAttribute($attribute_id);
     }
 
     /**

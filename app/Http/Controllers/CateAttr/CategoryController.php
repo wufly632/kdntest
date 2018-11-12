@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\CateAttr;
 
+use App\Entities\CateAttr\Category;
 use App\Http\Controllers\Controller;
 use App\Services\Api\ApiResponse;
 use App\Services\CateAttr\CategoryService;
@@ -192,5 +193,16 @@ class CategoryController extends Controller
             return ApiResponse::success($category);
         }
         return ApiResponse::failure(g_API_ERROR, '获取下一级类目失败');
+    }
+
+    public function delete(Category $category)
+    {
+        if (! $category) {
+            return ApiResponse::failure(g_API_ERROR, '该类目不存在');
+        }
+        if(!in_array(Auth::user()->email, $this->users)){
+            return ApiResponse::failure(g_API_ERROR, '权限受限!');
+        }
+        return $this->categoryService->deleteCategory($category);
     }
 }

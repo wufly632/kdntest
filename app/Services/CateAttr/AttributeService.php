@@ -6,11 +6,15 @@
  */
 namespace App\Services\CateAttr;
 
+use App\Entities\CateAttr\Attribute;
+use App\Entities\CateAttr\AttributeValue;
 use App\Entities\CateAttr\CategoryAttribute;
 use App\Presenters\CateAttr\CategoryPresenter;
 use App\Repositories\CateAttr\AttributeRepository;
 use App\Repositories\CateAttr\CategoryAttributeRepository;
+use App\Services\Api\ApiResponse;
 use App\Validators\CateAttr\CategoryAttributeValidator;
+use Illuminate\Support\Facades\DB;
 
 class AttributeService{
 
@@ -88,6 +92,31 @@ class AttributeService{
     public function getAttributeByPk(int $attribute_id)
     {
         return $this->getAttributeRepository()->makeModel()->find($attribute_id);
+    }
+
+    /**
+     * @function 删除属性
+     * @param $attribute_id
+     * @return mixed
+     */
+    public function deleteAttribute($attribute_id)
+    {
+        if (CategoryAttribute::where('attr_id', $attribute_id)->first()) {
+            return ApiResponse::failure(g_API_ERROR, '该属性已有商品，不允许删除');
+        }
+        try {
+            DB::beginTransaction();
+            //删除属性值
+            AttributeValue::where('attribute_id', $attribute_id)->delete();
+            Attribute::where('id', $attribute_id)->delete();
+            DB::commit();
+            return ApiResponse::success('操作成功');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            \Log::info('属性'.$attribute_id.'删除失败-'.$e->getMessage());
+            ding('属性'.$attribute_id.'删除失败-'.$e->getMessage());
+            return ApiResponse::failure(g_API_ERROR, '操作失败');
+        }
     }
 
 }
