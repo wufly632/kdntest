@@ -96,3 +96,20 @@ function showInfo(title, content, width = "60%", height = '800px') {
         }
     });
 }
+
+function showContent(title, content, area = ['60%', '500px']) {
+    layer.open({
+        type: 1,
+        skin: 'layui-layer-demo', //样式类名
+        closeBtn: 0, //不显示关闭按钮
+        area: area,
+        fix: true, //不固定
+        shadeClose: true,
+        shade: 0.4,
+        title: title,
+        content: content,
+        end: function (layero, index) {
+
+        }
+    });
+}

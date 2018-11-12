@@ -103,4 +103,22 @@ class AttrValueService{
         }
         return $object;
     }
+
+    /**
+     * 根据商品ids获取属性
+     * @param $ids
+     * @return string
+     */
+    public function getAttriButeByIds($ids)
+    {
+        if (!is_array($ids)) {
+            $ids = explode(',', $ids);
+        }
+        $attributeStr = '';
+        foreach ($ids as $key => $id) {
+            $attrValue = $this->attrvalue->model()::find($id);
+            $attributeStr .= $attrValue->getAttr->name . ':' . $attrValue->name . ',';
+        }
+        return rtrim($attributeStr, ',');
+    }
 }

@@ -54,6 +54,10 @@ class RepositoryServiceProvider extends ServiceProvider
         $this->app->bind(\App\Repositories\Website\IconRepository::class, \App\Repositories\Website\IconRepositoryEloquent::class);
         $this->app->bind(\App\Repositories\Website\HomePageCardRepository::class, \App\Repositories\Website\HomePageCardRepositoryEloquent::class);
         $this->app->bind(\App\Repositories\Currency\CurrencyRepository::class, \App\Repositories\Currency\CurrencyRepositoryEloquent::class);
+        $this->app->bind(\App\Repositories\Finance\ShipOrderReceiveDailyRepository::class, \App\Repositories\Finance\ShipOrderReceiveDailyRepositoryEloquent::class);
+        $this->app->bind(\App\Repositories\Finance\SupplierSettleAccountRepository::class, \App\Repositories\Finance\SupplierSettleAccountRepositoryEloquent::class);
+        $this->app->bind(\App\Repositories\Finance\SupplierSettleReceiveRepository::class, \App\Repositories\Finance\SupplierSettleReceiveRepositoryEloquent::class);
+        $this->app->bind(\App\Repositories\Finance\SupplierWithdrawRepository::class, \App\Repositories\Finance\SupplierWithdrawRepositoryEloquent::class);
         //:end-bindings:
     }
 }

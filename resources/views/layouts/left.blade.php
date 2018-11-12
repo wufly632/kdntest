@@ -99,6 +99,29 @@
             </li>
             <li class="treeview">
                 <a href="#">
+                    <i class="fa fa-cny"></i>
+                    <span>财务管理</span>
+                    <span class="pull-right-container">
+                      <i class="fa fa-angle-left pull-right"></i>
+                    </span>
+                </a>
+                <ul class="treeview-menu">
+                    <li>
+                        <a data-target-url="preShipOrder" href="{{ secure_route('settles.index') }}">
+                            <i class="fa fa-circle-o"></i>
+                            财务结算
+                        </a>
+                    </li>
+                    <li>
+                        <a data-target-url="preShipOrder" href="{{ secure_route('withdraws.index') }}">
+                            <i class="fa fa-circle-o"></i>
+                            财务提现
+                        </a>
+                    </li>
+                </ul>
+            </li>
+            <li class="treeview">
+                <a href="#">
                     <i class="fa fa-sitemap"></i>
                     <span>网站设置</span>
                     <span class="pull-right-container">
@@ -151,15 +174,15 @@
     <!-- /.sidebar -->
 </aside>
 <script>
-    $(function(){
-        $('.sidebar-menu li:not(.treeview) > a').on('click', function(){
+    $(function () {
+        $('.sidebar-menu li:not(.treeview) > a').on('click', function () {
             var $parent = $(this).parent().addClass('active');
             $parent.siblings('.treeview.active').find('> a').trigger('click');
             $parent.siblings().removeClass('active').find('li').removeClass('active');
         });
 
-        $(window).on('load', function(){
-            $('.sidebar-menu').find('a[href="'+window.location.href.split('?')[0]+'"]').parent().addClass('active')
+        $(window).on('load', function () {
+            $('.sidebar-menu').find('a[href="' + window.location.href.split('?')[0] + '"]').parent().addClass('active')
                 .closest('.treeview-menu').addClass('.menu-open')
                 .closest('.treeview').addClass('active');
         });
