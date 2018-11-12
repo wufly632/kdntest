@@ -8,6 +8,10 @@
 namespace App\Services\CateAttr;
 
 use App\Entities\CateAttr\Attribute;
+use App\Entities\CateAttr\Category;
+use App\Entities\CateAttr\CategoryAttribute;
+use App\Entities\Good\Good;
+use App\Entities\Product\Product;
 use App\Repositories\CateAttr\CategoryAttributeRepository;
 use App\Repositories\CateAttr\CategoryRepository;
 use App\Services\Api\ApiResponse;
@@ -307,6 +311,41 @@ class CategoryService
     public function getCategoryByLevel($level, $field = ['*'])
     {
         return $this->category->findWhere(['level' => $level], $field);
+    }
+
+    /**
+     * @function 删除类目
+     * @param $category
+     * @return mixed
+     */
+    public function deleteCategory($category)
+    {
+        // 判断该目录是否存在商品
+        if ($category->level == 1) {
+            $category_twos = $this->category->findWhere(['parent_id' => $category->id])->pluck('id')->toArray();
+            $category_ids = $this->category->findWhereIn('parent_id', $category_twos)->pluck('id')->toArray();
+            $category_ids = array_merge($category_twos,$category_ids);
+        } elseif ($category->level == 2) {
+            $category_ids = $this->category->findWhere(['parent_id' => $category->id])->pluck('id')->toArray();
+            $category_ids[] = $category->id;
+        } else {
+            $category_ids = [$category->id];
+        }
+        if (Good::whereIn('category_id', $category_ids)->first()) {
+            return ApiResponse::failure(g_API_ERROR, '该类目下存在商品，不允许删除');
+        }
+        try {
+            DB::beginTransaction();
+            CategoryAttribute::whereIn('category_id', $category_ids)->delete();
+            Category::whereIn('id', $category_ids)->delete();
+            DB::commit();
+            return ApiResponse::success('操作成功');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            \Log::info('类目'.$category->id.'删除失败-'.$e->getMessage());
+            ding('类目'.$category->id.'删除失败-'.$e->getMessage());
+            return ApiResponse::failure(g_API_ERROR, '操作失败');
+        }
     }
 
     /**
