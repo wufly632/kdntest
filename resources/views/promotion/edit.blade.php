@@ -607,7 +607,7 @@
                                                             <input type="hidden" name="sku_str{{$good->id}}[]" value="{{$kv->value_ids}}"/>
                                                             {{$kv->supply_price}}
                                                         </td>
-                                                        <td data-price="10">
+                                                        <td data-price="{{$kv->price}}">
                                                             {{$kv->price}}
                                                         </td>
                                                         @if($promotion->activity_type == 'quantity')
