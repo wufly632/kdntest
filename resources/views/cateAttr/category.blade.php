@@ -807,8 +807,8 @@
                 type: "warning",
                 showCancelButton: true,
                 confirmButtonColor: "#444444",
-                confirmButtonText: "{{trans('Category::category.delete')}}",
-                cancelButtonText: "{{trans('Category::category.cancel')}}",
+                confirmButtonText: "删除",
+                cancelButtonText: "取消",
                 closeOnConfirm: false,
                 closeOnCancel: true
             };

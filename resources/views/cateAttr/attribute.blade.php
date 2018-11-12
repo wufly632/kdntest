@@ -570,7 +570,8 @@ $defaultSelectAttribute = count($attribute_list)>0?$attribute_list[0]:0;
                     type:'POST',
                     success: function (response) {
                         if(response.status == 200){
-
+                            toastr.success(response.content);
+                            window.location.reload();
                         } else {
                             toastr.warning(response.msg);
                         }
