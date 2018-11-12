@@ -19,7 +19,9 @@ class CategoryController extends Controller
 
     protected $users = [
         'wufly@cucoe.com',
-        'wfxykzd@163.com'
+        'wfxykzd@163.com',
+        'yingfei.zou@waiwaimall.com',
+        'long.hao@waiwaimall.com',
     ];
 
     /**
