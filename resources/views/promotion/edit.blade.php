@@ -450,7 +450,7 @@
                                                 </div>
                                                 <div class="col-xs-2">
                                                     <div class="input-group">
-                                                        <input type="text" class="form-control" name="limit_num">
+                                                        <input type="text" class="form-control" name="limit_num" value="{{$promotion->rule}}">
                                                         <span class="input-group-addon limit-type-html">元</span>
                                                     </div>
                                                 </div>
