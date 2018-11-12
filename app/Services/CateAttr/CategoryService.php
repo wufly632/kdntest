@@ -347,4 +347,29 @@ class CategoryService
             return ApiResponse::failure(g_API_ERROR, '操作失败');
         }
     }
+
+    /**
+     * 删除类目属性
+     *
+     * @param Request $request
+     * @return json
+     */
+    public function deleteCategoryAttribute($request)
+    {
+        // 判断该类目下是否有商品
+        if (Good::where('category_id', $request->category_id)->first()) {
+            return ApiResponse::failure(g_API_ERROR, '该类目下已有商品，不允许删除');
+        }
+        try {
+            DB::beginTransaction();
+            $this->categoryAttribute->deleteWhere(['category_id' => $request->category_id, 'attr_id' => $request->attribute_id]);
+            DB::commit();
+            return ApiResponse::success('操作成功!');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            \Log::info('商品属性删除失败-'.$e->getMessage());
+            ding('商品属性删除失败-'.$e->getMessage());
+            return ApiResponse::failure(g_API_ERROR, '操作失败');
+        }
+    }
 }
