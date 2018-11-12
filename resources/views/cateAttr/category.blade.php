@@ -109,6 +109,9 @@
             border: none;
             border-radius: 2px;
         }
+        .sa-confirm-button-container{
+            display: inline;
+        }
     </style>
 @endsection
 
@@ -983,61 +986,44 @@
             attribute_type = $(this).data('attribute_type');
             category_id = select_category_id;
             will_delete_dom = $(this).parent();
-            $.ajax({
-                url:"/category/attribute/deleteRule",
-                data:{
-                    'category_id':category_id,
-                    'attribute_id':attribute_id,
-                    'attribute_type':attribute_type,
-                },
-                type:'POST',
-                success: function (response) {
-                    if(response.status == 200){
-                        swal({
-                            title: "",
-                            text: response.content,
-                            type: "warning",
-                            showCancelButton: true,
-                            confirmButtonColor: "#444444",
-                            confirmButtonText: "删除",
-                            cancelButtonText: "取消",
-                            closeOnConfirm: false,
-                            closeOnCancel: true
-                        },function(){
-                            $.ajax({
-                                url:"/category/attribute/delete",
-                                data:{
-                                    'category_id':category_id,
-                                    'attribute_id':attribute_id,
-                                },
-                                type:'POST',
-                                success:function(response){
-                                    if(response.status == 200){
-                                        will_delete_dom.remove();
-                                        attribute_detail_container_vue.attribute_items =[];
-                                        swal("删除成功", "success");
-                                    } else {
-                                        swal("警告", response.msg, "error");
-                                    }
-                                },
-                                complete: function () {
+            configure = {
+                title: "Warning",
+                text: "确认要删除此类目属性吗？",
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#444444",
+                confirmButtonText: "删除",
+                cancelButtonText: "取消",
+                closeOnConfirm: false,
+                closeOnCancel: true
+            };
+            swal(configure,function (isConfirm) {
+                $.ajax({
+                    url:"/category/attribute/deleteRule",
+                    data:{
+                        '_token': "{{csrf_token()}}",
+                        'category_id':category_id,
+                        'attribute_id':attribute_id,
+                        'attribute_type':attribute_type,
+                    },
+                    type:'POST',
+                    success: function (response) {
+                        if(response.status == 200){
+                            will_delete_dom.remove();
+                            attribute_detail_container_vue.attribute_items =[];
+                            swal("删除成功", "success");
+                        } else {
+                            swal("警告", response.msg, "error");
+                        }
+                    },
+                    complete: function () {
 
-                                },
-                                error: function (xmlHttpRequest, textStatus, errorThrown) {
-                                    toastr.warning('错误码: '+xmlHttpRequest.status);
-                                }
-                            })
-                        });
-                    } else {
-                        swal("警告", response.msg, "error");
+                    },error: function (xmlHttpRequest, textStatus, errorThrown) {
+                        swal("错误", '错误码: '+xmlHttpRequest.status, "error");
                     }
-                },
-                complete: function () {
-
-                },error: function (xmlHttpRequest, textStatus, errorThrown) {
-                    swal("错误", '错误码: '+xmlHttpRequest.status, "error");
-                }
+                });
             });
+
         }
 
         //配置属性
