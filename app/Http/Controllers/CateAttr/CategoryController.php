@@ -223,4 +223,20 @@ class CategoryController extends Controller
         }
         return $this->categoryService->deleteCategoryAttribute($request);
     }
+
+
+    /**
+     * @function 类目搜索
+     * @param Request $request
+     * @return array|mixed
+     */
+    public function searchCategory(Request $request)
+    {
+        $name = $request->input('name', '');
+        if (! $name) {
+            return ApiResponse::success([]);
+        }
+        $categories = $this->categoryService->searchCategory($name);
+        return ApiResponse::success($categories);
+    }
 }

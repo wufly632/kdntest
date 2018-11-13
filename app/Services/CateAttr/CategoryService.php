@@ -372,4 +372,26 @@ class CategoryService
             return ApiResponse::failure(g_API_ERROR, '操作失败');
         }
     }
+
+    /**
+     * @function 类目搜索
+     * @param $name
+     * @return mixed
+     */
+    public function searchCategory($name)
+    {
+        $name = strtolower($name);
+        $categories = $this->category->findWhere([['name', 'like', '%'.$name.'%']]);
+        $categoriesLikeName = [];
+        foreach ($categories as $category) {
+            $categoriesLikeName[$category->id] = $category->name;
+            if ($paCategory = $category->parentCategory) {
+                $categoriesLikeName[$paCategory->id] = $paCategory->name . ' > ' . $category->name;
+                if ($paPaCategory = $paCategory->parentCategory) {
+                    $categoriesLikeName[$paPaCategory->id] = $paPaCategory->name . ' > '.$paCategory->name . ' > ' . $category->name;
+                }
+            }
+        }
+        return $categoriesLikeName;
+    }
 }
