@@ -33,6 +33,7 @@ Route::group(['middleware' => ['auth', 'web']], function () {
         Route::post('/attribute', ['as' => 'category.attribute', 'uses' => 'CategoryController@getCategoryAttributes']);
         Route::post('/subcategories', ['as' => 'category.subcategories', 'uses' => 'CategoryController@getSubCategories']);
         Route::get('/{category}/delete', ['as' => 'category.delete', 'uses' => 'CategoryController@delete']);
+        Route::get('/searchCategory', ['as' => 'category.search', 'uses' => 'CategoryController@searchCategory']);
         //更新或添加
         Route::post('/update', ['as' => 'category.update', 'uses' => 'CategoryController@update']);
         Route::get('/current_category_info/{category_id}', ['as' => 'category.current_info', 'uses' => 'CategoryController@currentCategoryInfo']);

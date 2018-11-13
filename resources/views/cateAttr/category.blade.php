@@ -1,6 +1,6 @@
 @extends('layouts.default')
 @section('title')
-    {{trans('common.system_name')}}
+    类目管理
 @endsection
 @section('css')
     <style type="text/css">
@@ -608,7 +608,7 @@
         function autocomple(){
             $("#autocomplete").empty();
             $.ajax({
-                url:"searchCategory",
+                url:"/category/searchCategory",
                 type:"get",
                 data:"name="+$("#search-text").val(),
                 dataType:"json",
@@ -616,9 +616,11 @@
                     if (response.status == 200) {
                         $("#autocomplete").empty();
                         $("#autocomplete").hide();
-                        var data = response.content.categories;
+                        var data = response.content;
+                        console.log(data);
                         var str = "";
                         $.each(data,function(n,obj){
+                            console.log(n,obj);
                             $("#autocomplete").show();
                             str = "<li><a href='#' data-id='"+n+"'>"+obj+"</a><li>";
                             $("#autocomplete").append(str);
