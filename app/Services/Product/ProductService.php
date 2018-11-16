@@ -2,7 +2,7 @@
 // +----------------------------------------------------------------------
 // | ProductService.php
 // +----------------------------------------------------------------------
-// | Description: 
+// | Description:
 // +----------------------------------------------------------------------
 // | Time: 2018/9/29 下午2:41
 // +----------------------------------------------------------------------
@@ -123,5 +123,10 @@ class ProductService
     public function getByIds(Array $ids)
     {
         return $this->product->findWhereIn('id', $ids);
+    }
+
+    public function checkProductCountByCateIds($categoryIds)
+    {
+        return $this->product->model()::where('status', 1)->whereIn('category_id', $categoryIds)->count();
     }
 }

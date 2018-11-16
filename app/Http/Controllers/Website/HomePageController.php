@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Website;
 use App\Entities\Product\Product;
 use App\Entities\Website\HomePageCard;
 use App\Services\Api\ApiResponse;
+use App\Services\CateAttr\CategoryService;
 use App\Services\Currency\CurrencyService;
 use App\Services\Product\ProductService;
 use App\Services\Website\BannerService;
@@ -18,13 +19,16 @@ class HomePageController extends Controller
     protected $bannerService;
     protected $homePageCardService;
     protected $productService;
+    protected $currencyService;
+    protected $categoryService;
 
-    public function __construct(BannerService $bannerService, HomePageCardService $homePageCardService, ProductService $productService, CurrencyService $currencyService)
+    public function __construct(BannerService $bannerService, HomePageCardService $homePageCardService, ProductService $productService, CurrencyService $currencyService, CategoryService $categoryService)
     {
         $this->bannerService = $bannerService;
         $this->homePageCardService = $homePageCardService;
         $this->productService = $productService;
         $this->currencyService = $currencyService;
+        $this->categoryService = $categoryService;
     }
 
     public function index()
@@ -42,6 +46,11 @@ class HomePageController extends Controller
     {
         $option = \request()->only(['link', 'title', 'product_category_id']);
         try {
+            if (\request()->filled('product_category_id')) {
+                if ($this->categoryService->getCategoryProductSum($option['product_category_id']) < 5) {
+                    return ApiResponse::failure(g_API_ERROR, '此分类商品数量不足');
+                }
+            }
             $this->homePageCardService->update($option, $id);
             return ApiResponse::success();
         } catch (\Exception $e) {

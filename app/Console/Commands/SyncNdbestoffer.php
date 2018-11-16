@@ -69,10 +69,7 @@ class SyncNdbestoffer extends Command
         \Cache::put('sync_ndbest_offer', time(), 43200);
         $res = $this->makePostRequest($uri, $params)['result'];
         foreach ($res as $item) {
-            dd($item);
-            $cateDepthOne = Category::firstOrCreate(['name' => $item['fullCategoryName'][0]['categoryName'], 'level' => 1]);
-            $cateDepthTwo = Category::firstOrCreate(['name' => $item['fullCategoryName'][1]['categoryName'], 'parent_id' => $cateDepthOne->id, 'level' => 2]);
-            $cateDepthThree = Category::firstOrCreate(['name' => $item['fullCategoryName'][2]['categoryName'], 'parent_id' => $cateDepthTwo->id, 'level' => 3]);
+
         }
     }
 
