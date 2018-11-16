@@ -133,6 +133,10 @@ Route::group(['middleware' => ['auth', 'web']], function () {
         ]);
         //PC首页
         Route::get('/homepage', 'HomePageController@index')->name('homepage.index');
+        Route::get('/pccategorys', 'HomePageController@index')->name('homepage.categorys.index');
+        //手机首页
+        Route::get('/mobilehomepage', 'MobileHomePageController@index')->name('mobile.homepage.index');
+        Route::get('/mobilecategorys', 'MobileCategoryController@index')->name('mobile.categorys.index');
     });
 
     //发货管理
