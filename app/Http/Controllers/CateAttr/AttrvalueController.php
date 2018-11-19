@@ -20,6 +20,15 @@ class AttrvalueController extends Controller
         'long.hao@waiwaimall.com',
     ];
 
+    protected $add_users = [
+        'wufly@cucoe.com',
+        'wfxykzd@163.com',
+        'yingfei.zou@waiwaimall.com',
+        'long.hao@waiwaimall.com',
+        'chengxi.luo@waiwaimall.com',
+        'qiang.han@waiwaimall.com'
+    ];
+
     public function __construct(AttrValueService $attrValueService)
     {
         $this->attrValueService = $attrValueService;
@@ -32,7 +41,7 @@ class AttrvalueController extends Controller
      */
     public function updateOrInsert(Request $request)
     {
-        if(!in_array(Auth::user()->email, $this->users)){
+        if(!in_array(Auth::user()->email, $this->add_users)){
             return ApiResponse::failure(g_API_ERROR, '权限受限!');
         }
         $model = $this->attrValueService->getAttributeValueRepository()->makeModel();

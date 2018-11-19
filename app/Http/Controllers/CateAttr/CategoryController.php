@@ -25,6 +25,15 @@ class CategoryController extends Controller
         'long.hao@waiwaimall.com',
     ];
 
+    protected $add_users = [
+        'wufly@cucoe.com',
+        'wfxykzd@163.com',
+        'yingfei.zou@waiwaimall.com',
+        'long.hao@waiwaimall.com',
+        'chengxi.luo@waiwaimall.com',
+        'qiang.han@waiwaimall.com'
+    ];
+
     /**
      * CategoryController constructor.
      * @param CategoryService $categoryService
@@ -107,6 +116,9 @@ class CategoryController extends Controller
      */
     public function update(Request $request)
     {
+        if(!in_array(Auth::user()->email, $this->add_users)){
+            return ApiResponse::failure(g_API_ERROR, '权限受限!');
+        }
         $result = $this->categoryService->updateOrInsert($request);
         if ($result['status'] == 200) {
             return ApiResponse::success([], '保存成功');
@@ -156,7 +168,7 @@ class CategoryController extends Controller
      */
     public function updateCategoryAttribute(Request $request)
     {
-        if(!in_array(Auth::user()->email, $this->users)){
+        if(!in_array(Auth::user()->email, $this->add_users)){
             return ApiResponse::failure(g_API_ERROR, '权限受限!');
         }
         return $this->categoryService->updateCategoryAttribute($request);
