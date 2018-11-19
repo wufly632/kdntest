@@ -30,7 +30,7 @@ class CategoryController extends Controller
         'wfxykzd@163.com',
         'yingfei.zou@waiwaimall.com',
         'long.hao@waiwaimall.com',
-        'chengxi.luo@waiwaimall',
+        'chengxi.luo@waiwaimall.com',
         'qiang.han@waiwaimall.com'
     ];
 
