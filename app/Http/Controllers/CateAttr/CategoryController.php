@@ -195,6 +195,11 @@ class CategoryController extends Controller
         return ApiResponse::failure(g_API_ERROR, '获取下一级类目失败');
     }
 
+    /**
+     * @function 删除类目
+     * @param Category $category
+     * @return mixed
+     */
     public function delete(Category $category)
     {
         if (! $category) {
@@ -204,5 +209,34 @@ class CategoryController extends Controller
             return ApiResponse::failure(g_API_ERROR, '权限受限!');
         }
         return $this->categoryService->deleteCategory($category);
+    }
+
+    /**
+     * @function 删除类目属性
+     * @param Request $request
+     * @return \App\Services\CateAttr\json|mixed
+     */
+    public function deleteCategoryAttribute(Request $request)
+    {
+        if(!in_array(Auth::user()->email, $this->users)){
+            return ApiResponse::failure(g_API_ERROR, '权限受限!');
+        }
+        return $this->categoryService->deleteCategoryAttribute($request);
+    }
+
+
+    /**
+     * @function 类目搜索
+     * @param Request $request
+     * @return array|mixed
+     */
+    public function searchCategory(Request $request)
+    {
+        $name = $request->input('name', '');
+        if (! $name) {
+            return ApiResponse::success([]);
+        }
+        $categories = $this->categoryService->searchCategory($name);
+        return ApiResponse::success($categories);
     }
 }

@@ -47,4 +47,14 @@ class Product extends Model implements Transformable
     {
         return $this->hasOne(Good::class, 'id', 'id');
     }
+
+    public function getImages()
+    {
+        return $this->hasMany(ProductSkuImages::class, 'good_id', 'id');
+    }
+
+    public function getAttrValue()
+    {
+        return $this->hasMany(ProductAttrValue::class, 'good_id', 'id');
+    }
 }
