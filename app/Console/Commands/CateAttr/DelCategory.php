@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands\CateAttr;
 
+use App\Entities\CateAttr\Category;
 use App\Entities\CateAttr\GoodAttrValue;
 use App\Entities\Good\Good;
 use App\Entities\Good\GoodSku;
@@ -57,7 +58,7 @@ class DelCategory extends Command
 
     public function handleProgress()
     {
-        $category_ids = [358,363];
+        $category_ids = [491];
         // 查找所有的商品
         $goods = Good::whereIn('category_id', $category_ids)->get();
         foreach ($goods as $good) {
@@ -83,6 +84,8 @@ class DelCategory extends Command
 
             $product->delete();
         }
+        // 删除类目
+        Category::whereIn('id', $category_ids)->delete();
         $this->info('end');
     }
 }
