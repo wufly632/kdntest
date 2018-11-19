@@ -56,38 +56,6 @@
             </li>
             <li class="treeview">
                 <a href="#">
-                    <i class="fa fa-pie-chart"></i>
-                    <span>营销管理</span>
-                    <span class="pull-right-container">
-                      <i class="fa fa-angle-left pull-right"></i>
-                    </span>
-                </a>
-                <ul class="treeview-menu">
-                    <li><a data-target-url="promotion" href="{{secure_route('promotion.index')}}"><i
-                                    class="fa fa-circle-o"></i>促销活动</a></li>
-                    <li><a data-target-url="coupon" href="{{secure_route('coupon.index')}}"><i
-                                    class="fa fa-circle-o"></i>优惠券</a></li>
-                </ul>
-            </li>
-            <li class="treeview">
-                <a href="#">
-                    <i class="fa fa-users"></i>
-                    <span>用户管理</span>
-                    <span class="pull-right-container">
-                      <i class="fa fa-angle-left pull-right"></i>
-                    </span>
-                </a>
-                <ul class="treeview-menu">
-                    <li><a data-target-url="users" href="{{secure_route('users.index')}}"><i
-                                    class="fa fa-circle-o"></i>会员管理</a></li>
-                    <li><a data-target-url="supplierusers" href="{{secure_route('supplierusers.index')}}"><i
-                                    class="fa fa-circle-o"></i>商家管理</a></li>
-                    <li><a data-target-url="adminusers" href="{{secure_route('adminusers.index')}}"><i
-                                    class="fa fa-circle-o"></i>用户管理</a></li>
-                </ul>
-            </li>
-            <li class="treeview">
-                <a href="#">
                     <i class="fa fa-th-list"></i>
                     <span>订单管理</span>
                     <span class="pull-right-container">
