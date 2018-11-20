@@ -33,11 +33,13 @@ Route::group(['middleware' => ['auth', 'web']], function () {
         Route::post('/attribute', ['as' => 'category.attribute', 'uses' => 'CategoryController@getCategoryAttributes']);
         Route::post('/subcategories', ['as' => 'category.subcategories', 'uses' => 'CategoryController@getSubCategories']);
         Route::get('/{category}/delete', ['as' => 'category.delete', 'uses' => 'CategoryController@delete']);
+        Route::get('/searchCategory', ['as' => 'category.search', 'uses' => 'CategoryController@searchCategory']);
         //更新或添加
         Route::post('/update', ['as' => 'category.update', 'uses' => 'CategoryController@update']);
         Route::get('/current_category_info/{category_id}', ['as' => 'category.current_info', 'uses' => 'CategoryController@currentCategoryInfo']);
         Route::get('/{category_id}/attribute/{attribute_id}/detail', ['as' => 'category.category.attribute', 'uses' => 'CategoryController@getCategoryAttributeDetail']);
         Route::post('/attribute/update', ['as' => 'category.attribute.update', 'uses' => 'CategoryController@updateCategoryAttribute']);
+        Route::post('/attribute/deleteRule', ['as' => 'category.attribute.delete', 'uses' => 'CategoryController@deleteCategoryAttribute']);
         Route::get('/existCategoryPicAttribute', ['as' => 'category.exist.picAttribute', 'uses' => 'CategoryController@existCategoryPicAttribute']);
         Route::post('/next_level', ['as' => 'category.nextLevel', 'uses' => 'CategoryController@getNextLevel']);
     });

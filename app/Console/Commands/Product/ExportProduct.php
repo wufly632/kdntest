@@ -4,6 +4,7 @@ namespace App\Console\Commands\Product;
 
 use App\Entities\CateAttr\Category;
 use App\Entities\Product\Product;
+use App\Presenters\CateAttr\CategoryPresenter;
 use Illuminate\Console\Command;
 use Maatwebsite\Excel\Classes\LaravelExcelWorksheet;
 use Maatwebsite\Excel\Excel;
@@ -124,7 +125,48 @@ class ExportProduct extends Command
                     }
                 }
             });
-        })->store('xlsx')/*->export('xlsx')*/;
+        })->store('xlsx');
+        /*\Excel::create('online_products'.date('md').'.xlsx', function (LaravelExcelWriter $writer) {
+            $writer->sheet('Sheet1', function(LaravelExcelWorksheet $sheet) {
+                $heading = array(
+                    "ID",
+                    "名称",
+                    "一级类目",
+                    "二级类目",
+                    "三级类目",
+                    "售价"
+                );
+                $sheet->row(1, $heading);// set header
+                $index = 2;
+                $width = [10,30,30,30,30,10];
+                foreach (range('A', 'F') as $key => $char) {
+                    $sheet->setWidth($char, $width[$key]);
+                }
+                $sheet->setColumnFormat([
+                    'D' => '@',
+                    'B' => '@',
+                    'E' => '@',
+                    'C' => '@'
+                ]);
+                // 查找所有的上线商品
+                $products = Product::where('status', 1)->get();
+                foreach ($products as $product) {
+                    $product_path = $product->category_path;
+                    $categorys = explode(' > ', app(CategoryPresenter::class)->getCatePathName($product_path));
+                    $sheet->row($index,
+                        [
+                            $product->id,
+                            $product->good_title ?: $product->good_en_title,
+                            $categorys[0],
+                            $categorys[1],
+                            $categorys[2],
+                            $product->price,
+                        ]
+                    );
+                    $index++;
+                }
+            });
+        })->store('xlsx');*/
         $this->info('end');
     }
 }

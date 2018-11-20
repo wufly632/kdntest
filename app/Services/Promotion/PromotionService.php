@@ -89,6 +89,11 @@ class PromotionService
         $this->product = $product;
     }
 
+    public function getPromotionModel()
+    {
+        return $this->promotion->makeModel();
+    }
+
     /**
      * @function 获取促销活动列表
      */
@@ -442,7 +447,7 @@ class PromotionService
      * @param $activity_id
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
-    public function getAblePromotionActivityGoods($activity_id, $request)
+    public function getAblePromotionActivityGoods($promotion, $request)
     {
         $request->flash();
         $category = [
@@ -450,8 +455,11 @@ class PromotionService
             'two' => $request->category_two,
             'three' => $request->category_three,
         ];
+        // 获取该时间内所有的促销活动商品
+        $activity_ids = $this->getPromotionModel()->where([['start_at', '<=', $promotion->start_at], ['end_at', '>=', $promotion->start_at]])
+            ->orWhere([['start_at', '>=', $promotion->end_at], ['end_at', '<=', $promotion->end_at]])->pluck('id')->toArray();
         //获取所有已参加活动的商品
-        $activity_good_ids = $this->promotionGood->findWhere(['activity_id' => $activity_id])->pluck('goods_id')->toArray();
+        $activity_good_ids = $this->promotionGood->findWhereIn('activity_id', $activity_ids)->pluck('goods_id')->toArray();
         //获取所有商品列表
         $this->product->pushCriteria(new ProductTitleCriteria($request->good_title));
         $this->product->pushCriteria(new ProductIdCriteria($request->good_id));

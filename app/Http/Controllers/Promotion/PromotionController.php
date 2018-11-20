@@ -75,7 +75,7 @@ class PromotionController extends Controller
             redirect(secure_route('promotion.index'));
         }
         //获取可添加的促销活动商品
-        $promotion_goods = $this->promotionService->getAblePromotionActivityGoods($promotion->id, $request);
+        $promotion_goods = $this->promotionService->getAblePromotionActivityGoods($promotion, $request);
         //获取优惠券
         $coupon_list = app(CouponService::class)->getPromotionCoupons();
         //获取所有促销活动sku
@@ -149,7 +149,11 @@ class PromotionController extends Controller
     public function getGoods(Request $request)
     {
         //获取可添加的促销活动商品
-        $promotion_goods = $this->promotionService->getAblePromotionActivityGoods($request->activity_id, $request);
+        $promotion = $this->promotionService->getPromotionModel()->find($request->activity_id);
+        if (! $promotion) {
+            abort(404);
+        }
+        $promotion_goods = $this->promotionService->getAblePromotionActivityGoods($promotion, $request);
         // $result = $this->promotionService->getAblePromotionActivityGoods($request->activity_id, $request);
         /*if ($request->is_ajax == 1) {
             return ApiResponse::success($result);
