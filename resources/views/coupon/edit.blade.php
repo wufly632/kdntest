@@ -3,7 +3,9 @@
     <link rel="stylesheet" href="{{ asset('/assets/css/bootstrap-modal.css') }}">
     <link rel="stylesheet" href="{{ asset('/assets/css/bootstrap-modal-bs3patch.css') }}">
     <style>
-        .dis-no{display: none;}
+        .dis-no {
+            display: none;
+        }
     </style>
 @endsection
 @section('content')
@@ -21,22 +23,26 @@
                     <div class="col-xs-8">
                         <div class="radio-inline">
                             <label>
-                                <input type="radio" name="coupon_purpose" class="" id="method1" value="1" @if($coupon->coupon_purpose == 1) checked @endif>页面领取
+                                <input type="radio" name="coupon_purpose" class="" id="method1" value="1"
+                                       @if($coupon->coupon_purpose == 1) checked @endif>页面领取
                             </label>
                         </div>
                         <div class="radio-inline">
                             <label>
-                                <input type="radio" name="coupon_purpose" class="" id="method2" value="2" @if($coupon->coupon_purpose == 2) checked @endif>满返活动
+                                <input type="radio" name="coupon_purpose" class="" id="method2" value="2"
+                                       @if($coupon->coupon_purpose == 2) checked @endif>满返活动
                             </label>
                         </div>
                         <div class="radio-inline">
                             <label>
-                                <input type="radio" name="coupon_purpose" class="" id="method3" value="3" @if($coupon->coupon_purpose == 3) checked @endif>新人礼包
+                                <input type="radio" name="coupon_purpose" class="" id="method3" value="3"
+                                       @if($coupon->coupon_purpose == 3) checked @endif>新人礼包
                             </label>
                         </div>
                         <div class="radio-inline">
                             <label>
-                                <input type="radio" name="coupon_purpose" class="" id="method4" value="4" @if($coupon->coupon_purpose == 4) checked @endif>通用
+                                <input type="radio" name="coupon_purpose" class="" id="method4" value="4"
+                                       @if($coupon->coupon_purpose == 4) checked @endif>通用
                             </label>
                         </div>
                         <p class="show-info text-danger"></p>
@@ -60,7 +66,21 @@
                         券名称：
                     </label>
                     <div class="col-xs-7">
-                        <input type="text" id="coupon_name" class="form-control" name="coupon_name" value="{{$coupon->coupon_name}}">
+                        <input type="text" id="coupon_name" class="form-control" name="coupon_name"
+                               value="{{$coupon->coupon_name}}">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-xs-1"></div>
+                    <label for="currency" class="col-xs-2 control-label">
+                        币种：
+                    </label>
+                    <div class="col-xs-7">
+                        <select name="currency_code" id="currency" class="form-control">
+                            @foreach($currencys as $currency)
+                                <option value="{{ $currency->currency_code }}">{{ $currency->symbol.$currency->name }}</option>
+                            @endforeach
+                        </select>
                     </div>
                 </div>
                 <div class="form-group">
@@ -70,7 +90,8 @@
                     </label>
                     <div class="col-xs-7">
                         <div class="input-group">
-                            <input type="text" id="coupon_price" class="form-control" name="coupon_price" value="{{$coupon->coupon_price}}"><span
+                            <input type="text" id="coupon_price" class="form-control" name="coupon_price"
+                                   value="{{$coupon->coupon_price}}"><span
                                     class="input-group-addon">元</span>
                         </div>
                     </div>
@@ -83,12 +104,14 @@
                     <div class="col-xs-7">
                         <div class="radio-inline">
                             <label>
-                                <input type="radio" name="use_type" value="1" @if($coupon->use_type == 1) checked @endif>固定时长
+                                <input type="radio" name="use_type" value="1"
+                                       @if($coupon->use_type == 1) checked @endif>固定时长
                             </label>
                         </div>
                         <div class="radio-inline">
                             <label>
-                                <input type="radio" name="use_type" value="2" @if($coupon->use_type == 2) checked @endif>固定起止时间
+                                <input type="radio" name="use_type" value="2"
+                                       @if($coupon->use_type == 2) checked @endif>固定起止时间
                             </label>
                         </div>
                     </div>
@@ -112,7 +135,8 @@
                         起止时间：
                     </label>
                     <div class="col-xs-7">
-                        <input type="text" autocomplete="off" class="form-control date_choice rangetime" name="coupon_use"
+                        <input type="text" autocomplete="off" class="form-control date_choice rangetime"
+                               name="coupon_use"
                                value="{{$coupon->use_type ==2 ? $coupon->coupon_use_startdate.'~'.$coupon->coupon_use_enddate : ''}}">
                     </div>
                 </div>
@@ -156,7 +180,8 @@
                     </label>
                     <div class="col-xs-7">
                         <div class="input-group">
-                            <input type="text" id="coupon_count" class="form-control" name="coupon_number" value="{{$coupon->coupon_number}}">
+                            <input type="text" id="coupon_count" class="form-control" name="coupon_number"
+                                   value="{{$coupon->coupon_number}}">
                             <span class="input-group-addon">张</span>
                         </div>
                     </div>
@@ -168,7 +193,8 @@
                     </label>
                     <div class="col-xs-7">
                         <div class="input-group">
-                            <input type="text" id="coupon_count" class="form-control" name="coupon_use_price" value="{{$coupon->coupon_use_price}}">
+                            <input type="text" id="coupon_count" class="form-control" name="coupon_use_price"
+                                   value="{{$coupon->coupon_use_price}}">
                             <span class="input-group-addon">元</span>
                         </div>
                     </div>
@@ -180,7 +206,8 @@
                         备注：
                     </label>
                     <div class="col-xs-7">
-                        <input type="text" id="coupon_count" class="form-control" name="coupon_remark" value="{{$coupon->coupon_remark}}">
+                        <input type="text" id="coupon_count" class="form-control" name="coupon_remark"
+                               value="{{$coupon->coupon_remark}}">
                     </div>
                 </div>
                 <div>
@@ -216,6 +243,7 @@
             language: 'zh-cn',
 
         });
+        $('[name=currency_code]').val('{{ $coupon->currency_code }}');
         let locale = {
             "format": 'YYYY-MM-DD hh:mm:ss',
             "separator": "~",
@@ -299,14 +327,14 @@
             $('#coupon-edit').on('click', '.save', function () {
                 var _index = $(this);
                 $.ajax({
-                    type:'post',
-                    url:"{{secure_route('coupon.update')}}",
-                    data:$('#coupon-edit').serialize(),
-                    beforeSend:function() {
+                    type: 'post',
+                    url: "{{secure_route('coupon.update')}}",
+                    data: $('#coupon-edit').serialize(),
+                    beforeSend: function () {
                         _index.attr('disabled', true);
                         _index.html('保存中...');
                     },
-                    success:function(data){
+                    success: function (data) {
                         if (data.status == 200) {
                             toastr.success(data.content);
                             parent.location.reload();
@@ -316,13 +344,13 @@
                             _index.html('保存');
                         }
                     },
-                    error:function(data){
-                        var json=eval("("+data.responseText+")");
+                    error: function (data) {
+                        var json = eval("(" + data.responseText + ")");
                         toastr.error(json.msg);
                         _index.attr('disabled', false);
                         _index.html('保存');
                     },
-                    sync:true
+                    sync: true
                 });
             });
             $('#coupon-edit').on('click', '.cancel', function () {

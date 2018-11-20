@@ -95,4 +95,14 @@ class SupplierUserService
             return false;
         }
     }
+
+    public function getAll()
+    {
+        return $this->supplierUserRepository->all(['id', 'name']);
+    }
+
+    public function backMoney($supplier_id, $count)
+    {
+        $this->supplierUserRepository->model()::where('id', $supplier_id)->increment('amount_money', $count);
+    }
 }

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Website;
 use App\Entities\Product\Product;
 use App\Entities\Website\HomePageCard;
 use App\Services\Api\ApiResponse;
+use App\Services\Currency\CurrencyService;
 use App\Services\Product\ProductService;
 use App\Services\Website\BannerService;
 use App\Services\Website\HomePageCardService;
@@ -18,11 +19,12 @@ class HomePageController extends Controller
     protected $homePageCardService;
     protected $productService;
 
-    public function __construct(BannerService $bannerService, HomePageCardService $homePageCardService, ProductService $productService)
+    public function __construct(BannerService $bannerService, HomePageCardService $homePageCardService, ProductService $productService, CurrencyService $currencyService)
     {
         $this->bannerService = $bannerService;
         $this->homePageCardService = $homePageCardService;
         $this->productService = $productService;
+        $this->currencyService = $currencyService;
     }
 
     public function index()
@@ -31,9 +33,9 @@ class HomePageController extends Controller
         $banners = $this->bannerService->getAllBanner(['type' => 1]);
         $dailySelect = HomePageCard::find(5);
         $good_ids = json_decode($dailySelect->left_image, true);
-
+        $currencys = $this->currencyService->getAll();
         $goods = $this->productService->getByIds($good_ids);
-        return view('website.homepage.index', ['cards' => HomePageCard::limit(4)->get(), 'banners' => $banners, 'goods' => $goods, 'good_ids' => $good_ids]);
+        return view('website.homepage.index', ['cards' => HomePageCard::limit(4)->get(), 'banners' => $banners, 'goods' => $goods, 'good_ids' => $good_ids, 'currencys' => $currencys]);
     }
 
     public function update($id)

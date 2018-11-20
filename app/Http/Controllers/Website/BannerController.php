@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Website;
 
 use App\Services\Api\ApiResponse;
 use App\Services\Api\CommonService;
+use App\Services\Currency\CurrencyService;
 use App\Services\Website\BannerService;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -13,10 +14,12 @@ class BannerController extends Controller
 {
 
     protected $bannerService;
+    protected $currencyService;
 
-    public function __construct(BannerService $bannerService)
+    public function __construct(BannerService $bannerService, CurrencyService $currencyService)
     {
         $this->bannerService = $bannerService;
+        $this->currencyService = $currencyService;
     }
 
     /**
@@ -53,7 +56,8 @@ class BannerController extends Controller
     public function create()
     {
         //
-        return view('website.banners.edit');
+        $currencys = $this->currencyService->getAll();
+        return view('website.banners.edit', ['currencys' => $currencys]);
     }
 
     /**
@@ -73,7 +77,8 @@ class BannerController extends Controller
                     'link' => 'required',
                     'type' => 'required',
                     'sort' => 'required',
-                    'time_duration' => 'required'
+                    'time_duration' => 'required',
+                    'currency_code' => 'required',
                 ]
             );
             $banner = $this->bannerService->createBannerInfo($validator);
@@ -105,7 +110,8 @@ class BannerController extends Controller
     {
         //
         $banner = $this->bannerService->getBannerInfo($id);
-        return view('website.banners.edit', ['banner' => $banner]);
+        $currencys = $this->currencyService->getAll();
+        return view('website.banners.edit', ['banner' => $banner, 'currencys' => $currencys]);
     }
 
     /**
@@ -126,7 +132,8 @@ class BannerController extends Controller
                     'link' => 'required',
                     'type' => 'required',
                     'sort' => 'required',
-                    'time_duration' => 'required'
+                    'time_duration' => 'required',
+                    'currency_code' => 'required'
                 ]
             );
             $this->bannerService->updateBannerInfo($validator, $id);
@@ -161,13 +168,13 @@ class BannerController extends Controller
         $img = $request->file($dirName);
         if ($request->hasFile($dirName) && $img->isValid()) {
             $ext = $img->getClientOriginalExtension();
-            if (!in_array(strtolower($ext), ['jpg', 'png', 'bmp', 'wbmp'])) {
+            if (!in_array(strtolower($ext), ['jpg', 'png', 'bmp', 'wbmp', 'jpeg'])) {
                 return ApiResponse::failure(g_API_ERROR, '图片格式不正确，请检查!');
             }
             $directory = $dirName;
             $ali = false;
             $bucket = null;
-            if(env('APP_ENV', 'local') == 'production'){
+            if (env('APP_ENV', 'local') == 'production') {
                 $ali = true;
             }
             $urlInfo = app(CommonService::class)->uploadFile($file = $dirName, $directory, $ali, false, false);
