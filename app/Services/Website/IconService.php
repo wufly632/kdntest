@@ -54,4 +54,9 @@ class IconService
     {
         $this->iconRepository->delete($id);
     }
+
+    public function getAll()
+    {
+        return $this->iconRepository->all();
+    }
 }

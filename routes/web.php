@@ -135,6 +135,10 @@ Route::group(['middleware' => ['auth', 'web']], function () {
         ]);
         //PC首页
         Route::get('/homepage', 'HomePageController@index')->name('homepage.index');
+        Route::get('/pccategorys', 'HomePageController@index')->name('homepage.categorys.index');
+        //手机首页
+        Route::get('/mobilehomepage', 'MobileHomePageController@index')->name('mobile.homepage.index');
+        Route::get('/mobilecategorys', 'MobileCategoryController@index')->name('mobile.categorys.index');
     });
 
     //发货管理
@@ -150,7 +154,23 @@ Route::group(['middleware' => ['auth', 'web']], function () {
         Route::post('/signPost', ['as' => 'shipOrder.signPost', 'uses' => 'ShipOrderController@signPost']);
     });
 
-    Route::group(['namespace' => 'Common', 'prefix' => 'common'], function(){
+    Route::group(['namespace' => 'Common', 'prefix' => 'common'], function () {
         Route::post('/getToken', ['as' => 'common.sts_token', 'uses' => 'AliyunController@getAliStsToken']);
+    });
+
+    Route::group(['namespace' => 'Finance'], function () {
+        //结算
+        Route::get('settleaccounts', 'SettleAccountController@index')->name('settles.index');
+
+        Route::get('onedailysettle/{settleId}', 'SettleAccountController@getOneDailySettleDetail')->name('settles.getonedaily');
+
+        Route::get('alldailysettles', 'SettleAccountController@getAllDailySettleDetail')->name('settles.getalldailys');
+        //提现
+        Route::get('withdraws', 'WithdrawController@index')->name('withdraws.index');
+
+        Route::post('passapplywithdraw/', 'WithdrawController@passApply')->name('withdraws.passapply');
+        Route::post('rejectapplywithdraw/', 'WithdrawController@rejectApply')->name('withdraws.rejectapply');
+        Route::post('confirmgirowithdraw/', 'WithdrawController@confirmGiro')->name('withdraws.confirmgiro');
+        Route::post('girofailedwithdraw/', 'WithdrawController@giroFailed')->name('withdraws.girofailed');
     });
 });

@@ -26,7 +26,7 @@ class PromotionAddGoodRequest extends Request
         return [
             'activity_id'      => 'required',
             'good_id'          => 'required',
-            'type'             => 'required'
+//            'type'             => 'required'
         ];
     }
 

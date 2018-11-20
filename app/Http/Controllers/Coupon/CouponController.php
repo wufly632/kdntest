@@ -16,15 +16,18 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Coupon\CouponRequest;
 use App\Services\Api\ApiResponse;
 use App\Services\Coupon\CouponService;
+use App\Services\Currency\CurrencyService;
 use Illuminate\Http\Request;
 
 class CouponController extends Controller
 {
     protected $couponService;
+    protected $currencyService;
 
-    public function __construct(CouponService $couponService)
+    public function __construct(CouponService $couponService, CurrencyService $currencyService)
     {
         $this->couponService = $couponService;
+        $this->currencyService = $currencyService;
     }
 
     /**
@@ -35,8 +38,9 @@ class CouponController extends Controller
     public function index(Request $request)
     {
         $request->flash();
+        $currencys = $this->getCurrencyList();
         $coupons = $this->couponService->getList();
-        return view('coupon.index', compact('coupons'));
+        return view('coupon.index', compact('coupons','currencys'));
     }
 
     /**
@@ -56,7 +60,7 @@ class CouponController extends Controller
      */
     public function update(CouponRequest $request)
     {
-        if (! $request->id) {
+        if (!$request->id) {
             return ApiResponse::failure(g_API_ERROR, '请选择要修改的优惠券');
         }
         $result = $this->couponService->update($request);
@@ -67,10 +71,20 @@ class CouponController extends Controller
     }
 
     /**
+     * 获取币种列表
+     * @return mixed
+     */
+    public function getCurrencyList()
+    {
+        return $this->currencyService->getAll();
+    }
+
+    /**
      * 编辑优惠券
      */
     public function edit(Coupon $coupon)
     {
-        return view('coupon.edit', compact('coupon'));
+        $currencys = $this->getCurrencyList();
+        return view('coupon.edit', compact('coupon', 'currencys'));
     }
 }

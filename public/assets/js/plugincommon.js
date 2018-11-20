@@ -22,12 +22,12 @@ function addDateRangePicker(ele) {
         "opens": 'center',
         locale: locale,
         ranges: {
-            '今日': [moment(), moment()],
-            '昨日': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
-            '最近7日': [moment().subtract(6, 'days'), moment()],
-            '最近30日': [moment().subtract(29, 'days'), moment()],
-            '本月': [moment().startOf('month'), moment().endOf('month')],
-            '上月': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
+            '今日': [moment().format('YYYY-MM-DD 00:00:00'), moment().format('YYYY-MM-DD 23:59:59')],
+            '昨日': [moment().subtract(1, 'days').format('YYYY-MM-DD 00:00:00'), moment().subtract(1, 'days').format('YYYY-MM-DD 23:59:59')],
+            '最近7日': [moment().subtract(6, 'days').format('YYYY-MM-DD 00:00:00'), moment().format('YYYY-MM-DD 23:59:59')],
+            '最近30日': [moment().subtract(29, 'days').format('YYYY-MM-DD 00:00:00'), moment().format('YYYY-MM-DD 23:59:59')],
+            '本月': [moment().startOf('month').format('YYYY-MM-DD 00:00:00'), moment().endOf('month').format('YYYY-MM-DD 23:59:59')],
+            '上月': [moment().subtract(1, 'month').startOf('month').format('YYYY-MM-DD 00:00:00'), moment().subtract(1, 'month').endOf('month').format('YYYY-MM-DD 23:59:59')]
         }
     }, function (start, end, label) {
         console.log('New date range selected: ' + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD') + ' (predefined range: ' + label + ')');
@@ -81,14 +81,30 @@ function createDatePicker(ele) {
     });
 }
 
-function showInfo(title, content,width="60%") {
+function showInfo(title, content, width = "60%", height = '800px') {
     layer.open({
         type: 2,
-        skin: 'layui-layer-rim', //加上边框
-        area: [width, '500px'],
+        area: [width, height],
         fix: true, //不固定
         shadeClose: true,
         maxmin: true,
+        shade: 0.4,
+        title: title,
+        content: content,
+        end: function (layero, index) {
+
+        }
+    });
+}
+
+function showContent(title, content, area = ['60%', '500px']) {
+    layer.open({
+        type: 1,
+        skin: 'layui-layer-demo', //样式类名
+        closeBtn: 0, //不显示关闭按钮
+        area: area,
+        fix: true, //不固定
+        shadeClose: true,
         shade: 0.4,
         title: title,
         content: content,

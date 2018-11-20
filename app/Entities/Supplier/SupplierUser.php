@@ -22,6 +22,10 @@ class SupplierUser extends Model implements Transformable
      *
      * @var array
      */
-    protected $fillable = ['name', 'mobile', 'email', 'password', 'status','created_at','updated_at'];
+    protected $fillable = ['name', 'mobile', 'email', 'password', 'status', 'created_at', 'updated_at'];
 
+    public function supplierAccount()
+    {
+        return $this->hasOne(SupplierAccount::class, 'supplier_id', 'id');
+    }
 }

@@ -7,6 +7,11 @@ use Illuminate\Pagination\LengthAwarePaginator;
 
 class BannerService
 {
+    const TYPE = [
+        1 => 'PC',
+        2 => '移动设备'
+    ];
+    
     protected $bannerRepository;
 
     public function __construct(BannerRepository $bannerRepository)

@@ -349,6 +349,24 @@ class CategoryService
     }
 
     /**
+     * 根据商品分类path获取分类名称
+     * @param $ids
+     * @return string
+     */
+    public function getCateNameByIds($ids)
+    {
+        $ids = explode(',', $ids);
+        array_shift($ids);
+        $cates       = $this->category->findWhereIn('id', $ids);
+        $cateNameStr = '';
+        foreach ($cates as $cate) {
+            $cateNameStr .= $cate->name;
+            $cateNameStr .= ' ';
+        }
+        return $cateNameStr;
+    }
+
+     /*
      * 删除类目属性
      *
      * @param Request $request
