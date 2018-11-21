@@ -33,6 +33,9 @@ class Kernel extends ConsoleKernel
 
         //订单30分钟未支付自动取消
         $schedule->command('generate:order_cancel --y')->everyMinute();
+
+        //每天凌晨2点自动备份数据库
+        $schedule->command('backup:run --only-db')->dailyAt('2:00');
     }
 
     /**

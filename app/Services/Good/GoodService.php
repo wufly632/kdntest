@@ -93,8 +93,10 @@ class GoodService{
                 $category_self_ids[] = implode(',', Category::where([['level', '=', 3], ['category_ids', 'like', '0,'.$category_id.',%']])->pluck('id')->toArray());
             }
             $category_self_ids = explode(',', implode(',', $category_self_ids));
-            if ($category_arr_ids) {
+            if ($category_arr_ids !== null) {
                 $category_arr_ids = array_intersect($category_arr_ids, $category_self_ids);
+            } else {
+                $category_arr_ids = $category_self_ids;
             }
         }
         $this->good->pushCriteria(new GoodTitleCriteria($request->good_title));
