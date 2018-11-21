@@ -53,7 +53,7 @@ return [
              * The disk names on which the backups will be stored.
              */
             'disks' => [
-                'local',
+                'mysqldump',
             ],
         ],
     ],
@@ -70,33 +70,33 @@ return [
             /*
              * The amount of days that all backups must be kept.
              */
-            'keepAllBackupsForDays' => 7,
+            'keepAllBackupsForDays' => 5,
 
             /*
              * The amount of days that all daily backups must be kept.
              */
-            'keepDailyBackupsForDays' => 16,
+            'keepDailyBackupsForDays' => 3,
 
             /*
              * The amount of weeks of which one weekly backup must be kept.
              */
-            'keepWeeklyBackupsForWeeks' => 8,
+            'keepWeeklyBackupsForWeeks' => 2,
 
             /*
              * The amount of months of which one monthly backup must be kept.
              */
-            'keepMonthlyBackupsForMonths' => 4,
+            'keepMonthlyBackupsForMonths' => 1,
 
             /*
              * The amount of years of which one yearly backup must be kept.
              */
-            'keepYearlyBackupsForYears' => 2,
+            'keepYearlyBackupsForYears' => 1,
 
             /*
              * After cleaning up the backups remove the oldest backup until
              * this amount of megabytes has been reached.
              */
-            'deleteOldestBackupsWhenUsingMoreMegabytesThan' => 5000
+            'deleteOldestBackupsWhenUsingMoreMegabytesThan' => 500
         ]
     ],
 
@@ -109,7 +109,7 @@ return [
     'monitorBackups' => [
         [
             'name' => env('APP_URL'),
-            'disks' => ['local'],
+            'disks' => ['mysqldump'],
             'newestBackupsShouldNotBeOlderThanDays' => 1,
             'storageUsedMayNotBeHigherThanMegabytes' => 5000,
         ],
@@ -133,7 +133,7 @@ return [
 
         /*
          * Here you can specify the ways you want to be notified when certain
-         * events take place. Possible values are "log", "mail", "slack", 
+         * events take place. Possible values are "log", "mail", "slack",
          * "pushover", and "telegram".
          *
          * Slack requires the installation of the maknz/slack package.
@@ -176,7 +176,7 @@ return [
                 'error'   => env('PUSHOVER_SOUND_ERROR', 'siren'),
             ],
         ],
-        
+
         /*
          * Here you can specify how messages should be sent to Telegram Bot API.
          */

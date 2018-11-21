@@ -35,7 +35,8 @@ class Kernel extends ConsoleKernel
         $schedule->command('generate:order_cancel --y')->everyMinute();
 
         //每天凌晨2点自动备份数据库
-        $schedule->command('backup:run --only-db')->dailyAt('2:00');
+        $schedule->command('backup:clean')->dailyAt('2:00');
+        $schedule->command('backup:run --only-db')->dailyAt('3:00');
     }
 
     /**
