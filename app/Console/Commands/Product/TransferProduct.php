@@ -52,7 +52,7 @@ class TransferProduct extends Command
 
     public function handleProgress()
     {
-        $ascriptions = DB::table('category_ascription as a')
+        /*$ascriptions = DB::table('category_ascription as a')
             ->leftJoin('admin_users as b', 'b.id', '=', 'a.admin_user_id')
             ->selectRaw('a.*,b.supplier_id')
             ->get();
@@ -63,7 +63,9 @@ class TransferProduct extends Command
             Good::where('category_path', 'like', '0,'.$category_id.',%')->where('supplier_id', 1)->update(['supplier_id' => $supplier_id]);
             Product::where('category_path', 'like', '0,'.$category_id.',%')->where('supplier_id', 1)->update(['supplier_id' => $supplier_id]);
             $this->info($category_id.' end');
-        }
+        }*/
+        Good::where('category_path', 'like', '0,1,%')->where('supplier_id', 90)->update(['supplier_id' => 1]);
+        Product::where('category_path', 'like', '0,1,%')->where('supplier_id', 90)->update(['supplier_id' => 1]);
         $this->info('finish');
     }
 }
