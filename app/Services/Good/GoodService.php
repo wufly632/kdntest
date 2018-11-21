@@ -10,10 +10,12 @@ use App\Criteria\Good\GoodCategoryIdCriteria;
 use App\Criteria\Good\GoodCodeCriteria;
 use App\Criteria\Good\GoodCreatedAtCriteria;
 use App\Criteria\Good\GoodIdCriteria;
+use App\Criteria\Good\GoodSelfCategoryIdsCriteria;
 use App\Criteria\Good\GoodStatusCriteria;
 use App\Criteria\Good\GoodSupplierIdCriteria;
 use App\Criteria\Good\GoodTitleCriteria;
 use App\Entities\CateAttr\Category;
+use App\Entities\CateAttr\CategoryAscription;
 use App\Entities\CateAttr\CategoryAttribute;
 use App\Entities\CateAttr\GoodAttrValue;
 use App\Entities\Good\Good;
@@ -73,13 +75,27 @@ class GoodService{
         $orderBy = $request->orderBy ?? 'audit_goods.id';
         $sort = $request->sort ?? 'desc';
         $length = $request->length ?? 20;
-        $category_ids = '';
+        $category_arr_ids = null;
         if ($request->category_three) {
-            $category_ids = [$request->category_three];
+            $category_arr_ids = [$request->category_three];
         } elseif ($request->category_two) {
-            $category_ids = Category::where(['parent_id' => $request->category_two])->pluck('id')->toArray();
+            $category_arr_ids = Category::where(['parent_id' => $request->category_two])->pluck('id')->toArray();
         } elseif ($request->category_one) {
-            $category_ids = Category::where([['level', '=', 3], ['category_ids', 'like', '0,'.$request->category_one.',%']])->pluck('id')->toArray();
+            $category_arr_ids = Category::where([['level', '=', 3], ['category_ids', 'like', '0,'.$request->category_one.',%']])->pluck('id')->toArray();
+        }
+        // 权限
+        $self_category_ids = CategoryAscription::where('admin_user_id', \Auth::id())->pluck('category_id')->toArray();
+        if ($self_category_ids !== [0]) {
+            $category_self_ids = [];
+            foreach ($self_category_ids as $category_id)
+            {
+                // 查找所有的三级类目
+                $category_self_ids[] = implode(',', Category::where([['level', '=', 3], ['category_ids', 'like', '0,'.$category_id.',%']])->pluck('id')->toArray());
+            }
+            $category_self_ids = explode(',', implode(',', $category_self_ids));
+            if ($category_arr_ids) {
+                $category_arr_ids = array_intersect($category_arr_ids, $category_self_ids);
+            }
         }
         $this->good->pushCriteria(new GoodTitleCriteria($request->good_title));
         $this->good->pushCriteria(new GoodIdCriteria($request->id));
@@ -87,7 +103,7 @@ class GoodService{
         $this->good->pushCriteria(new GoodStatusCriteria($request->status));
         $this->good->pushCriteria(new GoodSupplierIdCriteria($request->supplier_id));
         $this->good->pushCriteria(new GoodCreatedAtCriteria($request->daterange));
-        $this->good->pushCriteria(new GoodCategoryIdCriteria($category_ids));
+        $this->good->pushCriteria(new GoodCategoryIdCriteria($category_arr_ids));
         return $this->good->orderBy($orderBy, $sort)->paginate($length);
     }
 
