@@ -3,6 +3,7 @@
 namespace App\Console\Commands\CateAttr;
 
 use App\Entities\CateAttr\Category;
+use App\Entities\CateAttr\CategoryAttribute;
 use App\Entities\CateAttr\GoodAttrValue;
 use App\Entities\Good\Good;
 use App\Entities\Good\GoodSku;
@@ -86,6 +87,8 @@ class DelCategory extends Command
         }
         // 删除类目
         Category::whereIn('id', $category_ids)->delete();
+        // 删除类目属性
+        CategoryAttribute::whereIn('category_id', $category_ids)->delete();
         $this->info('end');
     }
 }

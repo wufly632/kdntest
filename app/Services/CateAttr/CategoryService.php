@@ -279,6 +279,12 @@ class CategoryService
      */
     public function updateCategoryAttribute($request)
     {
+        if ($request->type == 3) { // 销售属性
+            // 判断该类目下是否有商品
+            if (Good::where('category_id', $request->category_id)->first()) {
+                return ApiResponse::failure(g_API_ERROR, '该类目下已有商品，不允许修改销售属性');
+            }
+        }
         $attribute = app(AttributeService::class)->getAttributeByPk($request->attribute_id);
         $data = [
             'category_id' => $request->category_id,

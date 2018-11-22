@@ -193,6 +193,9 @@
                             </h2>
                             <ul class="con-message" v-show="select_categroy_name">
                                 <li>
+                                    <span class="mess-name">类目ID:</span><span class="mess-key">@{{ select_categroy_id }}</span>
+                                </li>
+                                <li>
                                     <span class="mess-name">类目名称:</span><span class="mess-key">@{{ select_categroy_name }}</span>
                                 </li>
                                 <li>
@@ -202,7 +205,7 @@
                                     <span class="mess-name">排序值:</span><span class="mess-key">@{{ select_categroy_sort }}</span>
                                 </li>
                                 <li>
-                                    <span class="mess-name">叶子类目:</span><span class="mess-key">@{{ select_categroy_is_final }}</span>
+                                    <span class="mess-name">叶子类目:</span><span class="mess-key">@{{ select_categroy_is_final ? '是' : '否' }}</span>
                                 </li>
 
                             </ul>
@@ -477,6 +480,7 @@
         var category_detail_vue = new Vue({
             el: '#category_detail_container',
             data: {
+                select_categroy_id: '',
                 select_categroy_name: '',
                 select_categroy_en_name: '',
                 select_categroy_sort: '',
@@ -858,6 +862,7 @@
                 success: function (response) {
                     if (response.status == 200) {
                         category = JSON.parse(response.content);
+                        category_detail_vue.select_categroy_id = category.id;
                         category_detail_vue.select_categroy_name = category.name;
                         category_detail_vue.select_categroy_en_name = category.en_name;
                         category_detail_vue.select_categroy_sort = category.sort;
@@ -1000,30 +1005,33 @@
                 closeOnCancel: true
             };
             swal(configure,function (isConfirm) {
-                $.ajax({
-                    url:"/category/attribute/deleteRule",
-                    data:{
-                        '_token': "{{csrf_token()}}",
-                        'category_id':category_id,
-                        'attribute_id':attribute_id,
-                        'attribute_type':attribute_type,
-                    },
-                    type:'POST',
-                    success: function (response) {
-                        if(response.status == 200){
-                            will_delete_dom.remove();
-                            attribute_detail_container_vue.attribute_items =[];
-                            swal("删除成功", "success");
-                        } else {
-                            swal("警告", response.msg, "error");
-                        }
-                    },
-                    complete: function () {
+                if (isConfirm) {
+                    $.ajax({
+                        url:"/category/attribute/deleteRule",
+                        data:{
+                            '_token': "{{csrf_token()}}",
+                            'category_id':category_id,
+                            'attribute_id':attribute_id,
+                            'attribute_type':attribute_type,
+                        },
+                        type:'POST',
+                        success: function (response) {
+                            if(response.status == 200){
+                                will_delete_dom.remove();
+                                attribute_detail_container_vue.attribute_items =[];
+                                swal("删除成功", "success");
+                            } else {
+                                swal("警告", response.msg, "error");
+                            }
+                        },
+                        complete: function () {
 
-                    },error: function (xmlHttpRequest, textStatus, errorThrown) {
-                        swal("错误", '错误码: '+xmlHttpRequest.status, "error");
-                    }
-                });
+                        },error: function (xmlHttpRequest, textStatus, errorThrown) {
+                            swal("错误", '错误码: '+xmlHttpRequest.status, "error");
+                        }
+                    });
+                }
+
             });
 
         }

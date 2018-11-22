@@ -1,6 +1,6 @@
 @extends('layouts.default')
 @section('title')
-    {{trans('common.system_name')}}
+    属性管理
 @endsection
 @section('css')
     <link rel="stylesheet" href="{{asset('assets/admin-lte/plugins/iCheck/all.css')}}">
@@ -81,6 +81,9 @@
             background: #3c8dbc;
             color: #fff;
         }
+        .sa-button-container .sa-confirm-button-container{
+            display: inline-block;
+        }
     </style>
 @endsection
 <?php
@@ -133,6 +136,10 @@ $defaultSelectAttribute = count($attribute_list)>0?$attribute_list[0]:0;
                             </h2>
                             <components>
                                 <ul class="con-message">
+                                    <li>
+                                        <span class="mess-name" >属性ID:</span>
+                                        <span class="mess-key" v-text = "attribute_info.id"></span>
+                                    </li>
                                     <li>
                                         <span class="mess-name" >属性名(中文):</span>
                                         <span class="mess-key" v-text = "attribute_info.name"></span>
@@ -630,21 +637,37 @@ $defaultSelectAttribute = count($attribute_list)>0?$attribute_list[0]:0;
         });
 
         function deleteAttributeValue(attribute_value_id, attribute_value_name) {
-            $.ajax({
-                url:"{{secure_route('attrvalue.delete')}}",
-                data:{id: attribute_value_id, name:attribute_value_name,_token:"{{csrf_token()}}"},
-                type:'POST',
-                success: function (response) {
-                    if(response.status == 200){
+            configure = {
+                title: "Warning",
+                text: "删除属性值"+attribute_value_name+"会导致所有含有该属性值的商品同步清空，且无法恢复，确认删除此属性值吗？",
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#444444",
+                confirmButtonText: "删除",
+                cancelButtonText: "取消",
+                closeOnConfirm: false,
+                closeOnCancel: true
+            };
+            swal(configure,function (isConfirm) {
+                if (isConfirm) {
+                    $.ajax({
+                        url:"{{secure_route('attrvalue.delete')}}",
+                        data:{id: attribute_value_id, name:attribute_value_name,_token:"{{csrf_token()}}"},
+                        type:'POST',
+                        success: function (response) {
+                            if(response.status == 200){
+                                toastr.success(response.content);
+                                window.location.reload();
+                            } else {
+                                toastr.warning(response.msg);
+                            }
+                        },
+                        complete: function () {
 
-                    } else {
-                        toastr.warning(response.msg);
-                    }
-                },
-                complete: function () {
-
-                },error: function (xmlHttpRequest, textStatus, errorThrown) {
-                    swal("错误", '错误码: '+xmlHttpRequest.status, "error");
+                        },error: function (xmlHttpRequest, textStatus, errorThrown) {
+                            swal("错误", '错误码: '+xmlHttpRequest.status, "error");
+                        }
+                    });
                 }
             });
         }
