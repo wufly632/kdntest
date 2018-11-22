@@ -16,15 +16,13 @@ class AttributeController extends Controller
     protected $attributeService;
 
     protected $users = [
-        'wufly@cucoe.com',
-        'wfxykzd@163.com',
+        'fei.wu@waiwaimall.com',
         'yingfei.zou@waiwaimall.com',
         'long.hao@waiwaimall.com',
     ];
 
     protected $add_users = [
-        'wufly@cucoe.com',
-        'wfxykzd@163.com',
+        'fei.wu@waiwaimall.com',
         'yingfei.zou@waiwaimall.com',
         'long.hao@waiwaimall.com',
         'chengxi.luo@waiwaimall.com',
