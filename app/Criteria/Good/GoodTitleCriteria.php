@@ -30,7 +30,7 @@ class GoodTitleCriteria implements CriteriaInterface
     public function apply($model, RepositoryInterface $repository)
     {
         if ($this->good_title) {
-            $model = $model->where('audit_goods.good_title', 'like', $this->good_title);
+            $model = $model->where('audit_goods.good_title', 'like', '%'.$this->good_title.'%');
         }
         return $model;
     }
