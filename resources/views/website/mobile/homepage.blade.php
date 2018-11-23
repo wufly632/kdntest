@@ -38,7 +38,7 @@
         <!-- Main content -->
         <section class="content">
             <div class="row">
-                <div class="col-xs-12">
+                <div class="col-sm-12">
                     <div class="panel">
                         <div class="panel-body text-center" style="position: relative" id="panel-banner">
                             <div class="" v-if="bannerEditShow" @click="editHide"
@@ -101,7 +101,7 @@
                             </div>
                             <div @click="editShow">
                                 <img :src="bannerPlaceholder"
-                                     alt="">
+                                     alt="" style="width: 100%;max-width: 1440px;">
                             </div>
                         </div>
                     </div>
@@ -169,12 +169,185 @@
                                     </div>
                                     <div @click="appendChild" :data-index="index">
                                         <img :src="icon.src" title="" alt=""
-                                             style="height: 300px;">
+                                             style="width: 100%;max-width: 300px;">
                                     </div>
                                     <h2 style="margin: 20px;">@{{ icon.title }}</h2>
                                 </div>
                             </template>
                         </div>
+                    </div>
+                    <div id="fash-sale">
+                        <template v-for="(item,index) in anything">
+                            <div class="panel" id="">
+                                <template v-if="item.type===3">
+                                    <div class="panel-body" style="position: relative">
+                                        <template v-for="(detail,innerIndex) in item.content">
+                                            <div class="col-sm-4" v-if="innerIndex===0">
+                                                <div>
+                                                    <template v-if="detail.show">
+                                                        <div @click="shadowHidden(index,innerIndex)"
+                                                             style="position: absolute;top: 0;left:0;right: 0;bottom:0;opacity: 0.6;height: 100%;background-color: #000000;z-index: 9998">
+                                                        </div>
+                                                        <div style="position: absolute;left: 40px;top:10%;right: 0;bottom: 10%;margin:0 30px 0 -10px;background-color:#FFFFff;z-index: 9999;max-height: 370px;overflow: auto">
+                                                            <form action="" class="form-horizontal"
+                                                                  style="padding: 20px;">
+                                                                <div class="form-group">
+                                                                    <label class="col-sm-2 control-label"
+                                                                           for="">图片:</label>
+                                                                    <div class="col-sm-8">
+                                                                        <input type="file" class="form-control"
+                                                                               @change="updateFiles($event,index,innerIndex)">
+                                                                    </div>
+                                                                </div>
+                                                                <div class="form-group">
+                                                                    <label class="control-label col-sm-2"
+                                                                           for="">标题:</label>
+                                                                    <div class="col-sm-8">
+                                                                        <input type="text" class="form-control"
+                                                                               v-model="detail.title">
+                                                                    </div>
+                                                                </div>
+                                                                <div class="form-group">
+                                                                    <label class="control-label col-sm-2"
+                                                                           for="">链接:</label>
+                                                                    <div class="col-sm-8">
+                                                                        <input type="text" class="form-control"
+                                                                               v-model="detail.link">
+                                                                    </div>
+                                                                </div>
+                                                                <div class="text-center">
+                                                                    <input type="button" class="btn btn-success"
+                                                                           value="保存"
+                                                                           @click="confirmBtn($event,index,item.id,innerIndex)">
+                                                                    <input type="button" class="btn btn-danger"
+                                                                           value="取消"
+                                                                           @click="shadowHidden(index,innerIndex)">
+                                                                </div>
+                                                            </form>
+                                                        </div>
+                                                    </template>
+                                                    <div>
+                                                        <img :src="detail.src"
+                                                             alt=""
+                                                             style="width: 100%;height: 600px;min-width: 300px;min-height: 300px;"
+                                                             @click="showBannerEdit(index,innerIndex)">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-8" v-else>
+                                                <div style="position: relative">
+                                                    <template v-if="detail.show">
+                                                        <div @click="shadowHidden(index,innerIndex)"
+                                                             style="position: absolute;top: 0;left:0;right: 0;bottom:0;opacity: 0.6;height: 100%;background-color: #000000;z-index: 9998">
+                                                        </div>
+                                                        <div style="position: absolute;left: 40px;top:10%;right: 0;bottom: 10%;margin:0 30px 0 -10px;background-color:#FFFFff;z-index: 9999;max-height: 370px;overflow: auto">
+                                                            <form action="" class="form-horizontal">
+                                                                <div class="form-group" style="margin:15px 0;">
+                                                                    <label class="col-sm-2 control-label"
+                                                                           for="">图片:</label>
+                                                                    <div class="col-sm-8">
+                                                                        <input type="file" class="form-control"
+                                                                               @change="updateFiles($event,index,innerIndex)">
+                                                                    </div>
+                                                                </div>
+                                                                <div class="form-group" style="margin:15px 0;">
+                                                                    <label class="col-sm-2 control-label"
+                                                                           for="">标题:</label>
+                                                                    <div class="col-sm-8">
+                                                                        <input type="text" class="form-control"
+                                                                               v-model="detail.title">
+                                                                    </div>
+                                                                </div>
+                                                                <div class="form-group" style="margin:15px 0;">
+                                                                    <label class="col-sm-2 control-label"
+                                                                           for="">链接:</label>
+                                                                    <div class="col-sm-8">
+                                                                        <input type="text" class="form-control"
+                                                                               v-model="detail.link">
+                                                                    </div>
+                                                                </div>
+                                                                <div class="text-center">
+                                                                    <input type="button" class="btn btn-success"
+                                                                           value="保存"
+                                                                           @click="confirmBtn($event,index,item.id,innerIndex)">
+                                                                    <input type="button" class="btn btn-danger"
+                                                                           value="取消"
+                                                                           @click="shadowHidden(index,innerIndex)">
+                                                                </div>
+                                                            </form>
+                                                        </div>
+                                                    </template>
+                                                    <div>
+                                                        <img :src="detail.src"
+                                                             alt=""
+                                                             style="width: 100%;height: 300px;min-height: 300px;min-width: 300px;"
+                                                             @click="showBannerEdit(index,innerIndex)">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </template>
+                                    </div>
+                                </template>
+                                <template v-else-if="item.type===1">
+                                    <div class="panel-body" style="position: relative">
+                                        <div class="">
+                                            <div>
+                                                <template v-for="(detail,innerIndex) in item.content">
+                                                    <template v-if="detail.show">
+                                                        <div @click="shadowHidden(index)"
+                                                             style="position: absolute;top: 0;left:0;right: 0;bottom:0;opacity: 0.6;height: 100%;background-color: #000000;z-index: 9998">
+                                                        </div>
+                                                        <div style="position: absolute;left: 40px;top:10%;right: 0;bottom: 10%;margin:0 30px 0 -10px;background-color:#FFFFff;z-index: 9999;max-height: 370px;overflow: auto">
+                                                            <form action="" class="form-horizontal"
+                                                                  style="margin-top: 50px;">
+                                                                <div class="form-group" style="margin:15px 0;">
+                                                                    <label class="col-sm-2 control-label"
+                                                                           for="">图片:</label>
+                                                                    <div class="col-sm-8">
+                                                                        <input type="file" class="form-control"
+                                                                               @change="updateFiles($event,index,innerIndex)">
+                                                                    </div>
+                                                                </div>
+                                                                <div class="form-group" style="margin:15px 0;">
+                                                                    <label class="control-label col-sm-2"
+                                                                           for="">标题:</label>
+                                                                    <div class="col-sm-8">
+                                                                        <input type="text" class="form-control"
+                                                                               v-model="detail.title">
+                                                                    </div>
+                                                                </div>
+                                                                <div class="form-group" style="margin:15px 0;">
+                                                                    <label class="control-label col-sm-2"
+                                                                           for="">链接:</label>
+                                                                    <div class="col-sm-8">
+                                                                        <input type="text" class="form-control"
+                                                                               v-model="detail.link">
+                                                                    </div>
+                                                                </div>
+                                                                <div class="text-center">
+                                                                    <input type="button" class="btn btn-success"
+                                                                           value="保存"
+                                                                           @click="confirmBtn($event,index,item.id,innerIndex)">
+                                                                    <input type="button" class="btn btn-danger"
+                                                                           value="取消"
+                                                                           @click="shadowHidden(index,innerIndex)">
+                                                                </div>
+                                                            </form>
+                                                        </div>
+                                                    </template>
+                                                    <div>
+                                                        <img :src="detail.src"
+                                                             alt=""
+                                                             style="width: 100%;height: 600px;min-height: 300px;min-width: 800px;"
+                                                             @click="showBannerEdit(index)">
+                                                    </div>
+                                                </template>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </template>
+                            </div>
+                        </template>
                     </div>
                 </div>
             </div>
@@ -184,6 +357,15 @@
 @section('script')
     <script src="{{asset('/assets/js/bower_components/axios/dist/axios.min.js')}}"></script>
     <script src="{{asset('/assets/admin/js/vue.min.js')}}"></script>
+    <script type="text/x-template" id="form-block">
+        <div>
+            <label for="" style="margin-left:20px;">@{{ anything }}标题:</label>
+            <input type="text" class="form-control my-form-control-sm"
+                   style="width: 100px;" v-model="anything.title">
+            <label for="" style="margin-left:20px;">链接:</label>
+            <input type="text" class="form-control my-form-control-sm">
+        </div>
+    </script>
     <script>
         var panelBanner = new Vue({
             el: '#panel-banner',
@@ -491,9 +673,65 @@
                 }
             }
         });
-        $('.select2').on('change', function () {
+        $('#panel-icon .select2').on('change', function () {
             let index = $(this).attr('data-index');
             panelIcon.icons[index].category_id = $(this).val();
+        });
+        var fashSale = new Vue({
+            el: '#fash-sale',
+            data: {
+                bannerEditShow: false,
+                bannerPlaceholder: 'https://www.google.com/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png',
+                anything: {!! $mobileCards !!}
+            },
+            created: function () {
+                this.anything.forEach(function (item, index) {
+                    item.content.forEach(function (rightItem, rightIndex) {
+                        rightItem.show = false;
+                    })
+                });
+            },
+            methods: {
+                showBannerEdit: function (index, innerIndex) {
+                    this.anything[index].content[innerIndex].show = true;
+
+                },
+                shadowHidden: function (index, innerIndex) {
+                    this.anything[index].content[innerIndex].show = false;
+
+                },
+                updateFiles: function (event, index, innerIndex) {
+                    let _eventEl = event.currentTarget;
+                    let banner = _eventEl.files[0];
+                    let formData = new FormData();
+                    let _that = this;
+                    formData.append('banners', banner);
+                    formData.append('dir_name', 'banners');
+                    axios.post("{{ secure_route('banners.upload') }}", formData, {headers: {'Content-Type': 'multipart/form-data'}}).then(function (res) {
+                        if (res.status === 200) {
+                            if (res.data.status === 200) {
+                                _that.anything[index].content[innerIndex].src = res.data.content;
+                            } else {
+                                toastr.error(res.data.msg);
+                            }
+                        }
+                    })
+                },
+                confirmBtn: function (event, index, id, innerIndex) {
+                    console.log(event, index, id, innerIndex);
+                    data = {id: this.anything[index].id, content: this.anything[index].content};
+                    data._method = 'put';
+                    let _thisVue = this;
+                    axios.post("{{ secure_route('mobile.homecard.update',['id'=>1]) }}".replace(1, id), data).then(function (res) {
+                        if (res.data.status === 200) {
+                            _thisVue.anything[index].content[innerIndex].show = false;
+                            toastr.success('保存成功');
+                        } else {
+                            toastr.error(res.data.msg);
+                        }
+                    });
+                }
+            }
         })
     </script>
 @endsection

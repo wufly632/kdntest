@@ -60,6 +60,9 @@ class RepositoryServiceProvider extends ServiceProvider
         $this->app->bind(\App\Repositories\Finance\SupplierWithdrawRepository::class, \App\Repositories\Finance\SupplierWithdrawRepositoryEloquent::class);
         $this->app->bind(\App\Repositories\Country\CountryAreaRepository::class, \App\Repositories\Country\CountryAreaRepositoryEloquent::class);
         $this->app->bind(\App\Repositories\Website\MobileHomePageRepository::class, \App\Repositories\Website\MobileHomePageRepositoryEloquent::class);
+        $this->app->bind(\App\Repositories\Website\MobileHomeCardRepository::class, \App\Repositories\Website\MobileHomeCardRepositoryEloquent::class);
+        $this->app->bind(\App\Repositories\Website\MobileCategoryRepository::class, \App\Repositories\Website\MobileCategoryRepositoryEloquent::class);
+        $this->app->bind(\App\Repositories\Website\PcCategoryRepository::class, \App\Repositories\Website\PcCategoryRepositoryEloquent::class);
         //:end-bindings:
     }
 }

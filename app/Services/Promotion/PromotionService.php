@@ -36,7 +36,7 @@ use Carbon\Carbon;
 use Dotenv\Exception\ValidationException;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
-use Request,Log;
+use Request, Log;
 
 class PromotionService
 {
@@ -169,9 +169,9 @@ class PromotionService
      */
     private function transform($request)
     {
-        $promotion['promotion'] = $request->only(['id','title','activity_type','currency_code','is_all','pre_time','poster_pic','h5_poster_pic']);
+        $promotion['promotion'] = $request->only(['id', 'title', 'activity_type', 'currency_code', 'is_all', 'pre_time', 'poster_pic', 'h5_poster_pic']);
         $promotion['promotion']['stock'] = 0;
-        list($start_time,$end_time) = get_time_range($request->promotion_time);
+        list($start_time, $end_time) = get_time_range($request->promotion_time);
         $promotion['promotion']['start_at'] = $start_time;
         $promotion['promotion']['end_at'] = $end_time;
         if ($request->pre_time) {
@@ -183,7 +183,7 @@ class PromotionService
         }
 
         $activity_goods = $this->promotionGood->findWhere(['activity_id' => $request->id]);
-        if (! $activity_goods) {
+        if (!$activity_goods) {
             throw new CustomException('请添加要参加活动的商品');
         }
         // 获取活动类型
@@ -196,19 +196,19 @@ class PromotionService
         if ($request->activity_type == 'quantity') {
             // 货值（商品最高sku供货价*秒杀数量）
             $goodsValue = $activity_goods->map(function ($activity_good) {
-               return $activity_good->num*$activity_good->getProduct->productSku->max('supply_price');
+                return $activity_good->num * $activity_good->getProduct->productSku->max('supply_price');
             })->sum();
         } else {
             // 货值（商品sku供货价*商品数量）
-            $goodsValue = collect($sku_info)->map(function($sku) {
-                return $sku->supply_price*$sku->good_stock;
+            $goodsValue = collect($sku_info)->map(function ($sku) {
+                return $sku->supply_price * $sku->good_stock;
             })->sum();
         }
         // 验证促销商品价格是否大于商品原价格
         foreach ($promotion_goods['promotion_goods_sku'] as $val) {
             foreach ($sku_info as $v) {
                 if ($val['goods_id'] == $v->good_id && $val['sku_id'] == $v->value_ids) {
-                    if($val['price'] > $v['supply_price']) {
+                    if ($val['price'] > $v['supply_price']) {
                         throw new CustomException('促销价不能大于售价');
                         break;
                     }
@@ -235,14 +235,14 @@ class PromotionService
             'rule_type' => '',
             'consume' => ''
         ];
-        switch($request->activity_type) {
+        switch ($request->activity_type) {
             case 'reduce': //满减
-                foreach($request->reduce_name as $key => $val){
-                    if(empty(floatval($val)) || empty(floatval($request->reduce_value[$key]))) continue;
+                foreach ($request->reduce_name as $key => $val) {
+                    if (empty(floatval($val)) || empty(floatval($request->reduce_value[$key]))) continue;
                     $tmp['money'] = $money = floatval($val);
                     $tmp['reduce'] = $reduce = floatval($request->reduce_value[$key]);
                     $rule[] = $tmp;
-                    $rule_str[] = '消费满'.$val.'，减'.$request->reduce_value[$key];
+                    $rule_str[] = '消费满' . $val . '，减' . $request->reduce_value[$key];
                 }
                 $data['rule'] = json_encode($rule);
                 $data['rule_text'] = implode('；', $rule_str);
@@ -255,28 +255,28 @@ class PromotionService
                 $price_sum = Coupon::whereIn('id', $request->return_ids)->sum('coupon_price');
 
                 $data['rule'] = json_encode(['ids' => implode(',', $request->return_ids), 'value' => $price_sum]);
-                $data['rule_text'] = '消费满'.$consume.'元，返价值'.$price_sum.'元现金券';
+                $data['rule_text'] = '消费满' . $consume . '元，返价值' . $price_sum . '元现金券';
                 $data['status'] = 1;
                 break;
             case 'discount': //多件多折
-                foreach($request->discount_name as $key => $val){
-                    if(empty(intval($val)) || empty(floatval($request->discount_value[$key]))) continue;
+                foreach ($request->discount_name as $key => $val) {
+                    if (empty(intval($val)) || empty(floatval($request->discount_value[$key]))) continue;
                     $tmp['num'] = $num = intval($val);
                     $tmp['discount'] = $discount = floatval($request->discount_value[$key]);
                     $rule[] = $tmp;
-                    $rule_str[] = '选购商品满'.$num.'件，享受'.$discount.'折优惠';
+                    $rule_str[] = '选购商品满' . $num . '件，享受' . $discount . '折优惠';
                 }
                 $data['rule'] = json_encode($rule);
                 $data['rule_text'] = implode('；', $rule_str);
                 $data['status'] = 1;
                 break;
             case 'wholesale': // X元n件
-                foreach($request->wholesale_name as $key => $val){
-                    if(empty(intval($val)) || empty(floatval($request->wholesale_value[$key]))) continue;
+                foreach ($request->wholesale_name as $key => $val) {
+                    if (empty(intval($val)) || empty(floatval($request->wholesale_value[$key]))) continue;
                     $tmp['money'] = $money = intval($val);
                     $tmp['wholesale'] = $wholesale = floatval($request->wholesale_value[$key]);
                     $rule[] = $tmp;
-                    $rule_str[] = $money.'元任选'.$wholesale.'件活动商品';
+                    $rule_str[] = $money . '元任选' . $wholesale . '件活动商品';
                 }
 
                 $data['rule'] = json_encode($rule);
@@ -295,7 +295,7 @@ class PromotionService
                 break;
             case 'quantity': //限量秒杀
                 $data['rule_type'] = $request->quantity_type;
-                $data['rule'] = $request->quantity_price.$request->quantity_type;
+                $data['rule'] = $request->quantity_price . $request->quantity_type;
                 $data['num'] = $request->quantity_num;
                 $data['rule_text'] = '限量秒杀';
                 break;
@@ -322,59 +322,59 @@ class PromotionService
         // 商品sku信息
         $promotion_goods_sku = [];
         $good_ids = [];
-        switch($request->activity_type){
+        switch ($request->activity_type) {
             case 'limit':
             case 'quantity':
-                foreach($activity_goods as $val) {
+                foreach ($activity_goods as $val) {
                     $good_id = $val->goods_id;
                     $good_ids[] = $good_id;
                     $good_tmp['id'] = $val->id;
-                    $good_tmp['per_num'] = $request->input(['per_num'.$good_id]);
-                    if ($request->input('num'.$good_id) !== null && ! $request->input('num'.$good_id)) {
-                        throw new CustomException('请完善优惠活动的商品信息，商品id：'.$good_id);
+                    $good_tmp['per_num'] = $request->input(['per_num' . $good_id]);
+                    if ($request->input('num' . $good_id) !== null && !$request->input('num' . $good_id)) {
+                        throw new CustomException('请完善优惠活动的商品信息，商品id：' . $good_id);
                     }
                     /*if (! $request->input('num'.$good_id)) {
                         throw new CustomException('请完善优惠活动的商品信息，商品id：'.$good_id);
                     }*/
-                    $good_tmp['num'] = $request->input('num'.$good_id);
-                    $stock += $request->input('num'.$good_id);
+                    $good_tmp['num'] = $request->input('num' . $good_id);
+                    $stock += $request->input('num' . $good_id);
 
                     $sku_tmp['activity_id'] = $request->id;
                     $sku_tmp['goods_id'] = $good_id;
-                    if (empty($request->input('sku_id'.$good_id))) {
-                        throw new CustomException('请重新添加商品，商品id：'.$good_id);
+                    if (empty($request->input('sku_id' . $good_id))) {
+                        throw new CustomException('请重新添加商品，商品id：' . $good_id);
                     }
-                    foreach ($request->input('sku_id'.$good_id) as $key => $v) {
+                    foreach ($request->input('sku_id' . $good_id) as $key => $v) {
                         // $sku_tmp['sku_id'] = $request->input('sku_str'.$good_id)[$key];
                         $sku_tmp['sku_id'] = $v;
-                        if (empty(floatval($request->input('price'.$v)))) {
-                            throw new CustomException('请完善优惠活动的商品信息，商品id：'.$good_id);
+                        if (empty(floatval($request->input('price' . $v)))) {
+                            throw new CustomException('请完善优惠活动的商品信息，商品id：' . $good_id);
                         }
-                        $sku_tmp['price'] = $request->input('price'.$v);
+                        $sku_tmp['price'] = $request->input('price' . $v);
                         $sku_tmp['created_at'] = Carbon::now()->toDateTimeString();
                         $promotion_goods_sku[] = $sku_tmp;
                     }
                     $good_tmp['status'] = 1;
                     $promotion_goods[] = $good_tmp;
                 }
-                $pre_num = $request->input($request->activity_type.'_pre_num');
+                $pre_num = $request->input($request->activity_type . '_pre_num');
                 break;
             default:
-                foreach($activity_goods as $val){
+                foreach ($activity_goods as $val) {
                     $good_id = $val->goods_id;
                     $good_tmp['id'] = $val->id;
-                    if($request->input('per_num'.$good_id) !== null) {
-                        $good_tmp['per_num'] = $request->input('per_num'.$good_id);
-                        $good_tmp['num'] = $request->input('num'.$good_id) ?? 0;
-                        foreach($request->input('sku_id'.$good_id) as $key => $v){
+                    if ($request->input('per_num' . $good_id) !== null) {
+                        $good_tmp['per_num'] = $request->input('per_num' . $good_id);
+                        $good_tmp['num'] = $request->input('num' . $good_id) ?? 0;
+                        foreach ($request->input('sku_id' . $good_id) as $key => $v) {
                             $sku_tmp['activity_id'] = $request->id;
                             $sku_tmp['goods_id'] = $good_id;
                             // $sku_tmp['sku_id'] = $request->input('sku_str'.$good_id)[$key];
                             $sku_tmp['sku_id'] = $v;
-                            if($request->input('price'.$v) !== null && empty(floatval($request->input('price'.$v)))) {
-                                throw new CustomException('请完善优惠活动的商品信息，商品id：'.$good_id);
+                            if ($request->input('price' . $v) !== null && empty(floatval($request->input('price' . $v)))) {
+                                throw new CustomException('请完善优惠活动的商品信息，商品id：' . $good_id);
                             }
-                            $sku_tmp['price'] = $request->input('price'.$v);
+                            $sku_tmp['price'] = $request->input('price' . $v);
                             $sku_tmp['created_at'] = Carbon::now()->toDateTimeString();
                             $promotion_goods_sku[] = $sku_tmp;
                         }
@@ -388,7 +388,7 @@ class PromotionService
                 }
                 break;
         }
-        return compact('promotion_goods', 'promotion_goods_sku', 'good_ids','stock');
+        return compact('promotion_goods', 'promotion_goods_sku', 'good_ids', 'stock');
     }
 
     /**
@@ -417,7 +417,7 @@ class PromotionService
             $goods_sku_str = response($view)->getContent();
             return ApiResponse::success($goods_sku_str);
         } catch (\Exception $e) {
-            ding('促销活动'.$request->activity_id.'添加商品失败'.$e->getMessage());
+            ding('促销活动' . $request->activity_id . '添加商品失败' . $e->getMessage());
             DB::rollBack();
             return ApiResponse::failure(g_API_ERROR, '添加活动商品失败，请稍后重试或者联系管理员');
         }
@@ -468,13 +468,14 @@ class PromotionService
         $this->product->pushCriteria(new ProductStatusCriteria(Product::ONLINE));
         $this->product->pushCriteria(new ProductCategoryCriteria($category));
         $goods = $this->product->orderBy('id', 'desc')->paginate(10);
-        $addGoods = view('promotion.addGoods', compact('goods','activity_id'));
+        $addGoods = view('promotion.addGoods', compact('goods', 'activity_id'));
         $goodStr = response($addGoods)->getContent();
         return $goodStr;
     }
 
-    public function getGoodsWithSku($goods, $type){
-        if(empty($goods)) return '';
+    public function getGoodsWithSku($goods, $type)
+    {
+        if (empty($goods)) return '';
         $good_ids = $goods->pluck('id');
         $data['goods'] = $goods;
         $data['type'] = $type;
@@ -509,17 +510,17 @@ class PromotionService
     {
         $good_id = $request->good_id;
         $activity_id = $request->activity_id;
-        if (! $good_id || ! $activity_id) {
+        if (!$good_id || !$activity_id) {
             return ApiResponse::failure(g_API_ERROR, '请选择要设置是商品');
         }
         $activityGoods = $this->promotionGood->findWhere(['goods_id' => $good_id, 'activity_id' => $activity_id]);
-        if (! $activityGoods) {
+        if (!$activityGoods) {
             return ApiResponse::failure(g_API_ERROR, '请重新选择要设置的商品');
         }
         $good = $this->product->find($good_id);
         $goodSkus = $good->getGood->getSkus;
         $skuHtml = view('promotion.singlesku', compact('goodSkus'));
-        $html=response($skuHtml)->getContent();
+        $html = response($skuHtml)->getContent();
         return ApiResponse::success($html);
     }
 
@@ -537,8 +538,19 @@ class PromotionService
             return ApiResponse::success('删除成功');
         } catch (\Exception $e) {
             DB::rollBack();
-            Log::info('促销活动删除失败'.$e->getMessage());
+            Log::info('促销活动删除失败' . $e->getMessage());
             return ApiResponse::failure(g_API_ERROR, '删除失败');
         }
+    }
+
+    /**
+     * 获取单个活动
+     * @param $id
+     * @param $columns
+     * @return mixed
+     */
+    public function find($id, $columns)
+    {
+        return $this->promotion->model()::find($id);
     }
 }

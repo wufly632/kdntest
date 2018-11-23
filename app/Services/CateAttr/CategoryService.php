@@ -369,6 +369,11 @@ class CategoryService
         return $cateNameStr;
     }
 
+    /**
+     * 获取某一类目下的商品数量
+     * @param $categoryId
+     * @return mixed
+     */
      /*
      * 删除类目属性
      *
@@ -422,6 +427,11 @@ class CategoryService
 
     }
 
+    /**
+     * 获取所有第三级ID
+     * @param $categoryId
+     * @return array
+     */
     public function getAllLevelThree($categoryId)
     {
         $cate = $this->category->find($categoryId);
@@ -432,6 +442,11 @@ class CategoryService
         }
     }
 
+    /**
+     * 获取下级所有ID
+     * @param array $categoryIds
+     * @return array
+     */
     public function getNextLevelAllCateId(Array $categoryIds)
     {
         $cate = $this->category->findWhereIn('parent_id', $categoryIds);
@@ -440,5 +455,10 @@ class CategoryService
         } else {
             return $this->getNextLevelAllCateId(array_pluck($cate->toArray(), 'id'));
         }
+    }
+
+    public function getCateByName($name)
+    {
+        return $this->category->model()::where('name', $name)->where('level', 3)->first();
     }
 }

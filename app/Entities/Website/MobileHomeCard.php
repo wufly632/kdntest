@@ -7,20 +7,26 @@ use Prettus\Repository\Contracts\Transformable;
 use Prettus\Repository\Traits\TransformableTrait;
 
 /**
- * Class MobileCategory.
+ * Class MobileHomeCard.
  *
  * @package namespace App\Entities\Website;
  */
-class MobileCategory extends Model implements Transformable
+class MobileHomeCard extends Model implements Transformable
 {
     use TransformableTrait;
 
-
-    protected $table = 'website_mobile_categorys';
+    protected $table = 'website_mobile_homepage_cards';
     /**
      * The attributes that are mass assignable.
      *
      * @var array
      */
-    protected $fillable = ['category_id', 'name', 'image', 'icon', 'sort', 'parent_id'];
+    protected $fillable = ['title', 'content', 'type'];
+
+    protected $visible = ['id', 'title', 'content', 'type'];
+
+    protected $casts = [
+        'content' => 'array'
+    ];
+
 }

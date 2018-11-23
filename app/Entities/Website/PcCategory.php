@@ -7,20 +7,20 @@ use Prettus\Repository\Contracts\Transformable;
 use Prettus\Repository\Traits\TransformableTrait;
 
 /**
- * Class MobileCategory.
+ * Class PcCategory.
  *
  * @package namespace App\Entities\Website;
  */
-class MobileCategory extends Model implements Transformable
+class PcCategory extends Model implements Transformable
 {
     use TransformableTrait;
 
-
-    protected $table = 'website_mobile_categorys';
+    protected $table = 'website_pc_categorys';
     /**
      * The attributes that are mass assignable.
      *
      * @var array
      */
-    protected $fillable = ['category_id', 'name', 'image', 'icon', 'sort', 'parent_id'];
+    protected $fillable = ['category_id', 'name', 'sort', 'parent_id'];
+
 }

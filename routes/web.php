@@ -89,6 +89,7 @@ Route::group(['middleware' => ['auth', 'web']], function () {
         Route::post('/getSingleSkuHtml', ['as' => 'promotion.getSingleSkuHtml', 'uses' => 'PromotionController@getSingleSkuHtml']);
         Route::post('/delete', ['as' => 'promotion.delete', 'uses' => 'PromotionController@delete']);
         Route::post('/imgUpload', ['as' => 'promotion.imgUpload', 'uses' => 'PromotionController@imgUpload']);
+        Route::put('/homeshow/{id}', ['as' => 'promotion.homeshow.update', 'uses' => 'PromotionController@updateHomeShow']);
     });
 
     //优惠券模块
@@ -139,6 +140,7 @@ Route::group(['middleware' => ['auth', 'web']], function () {
         //手机首页
         Route::get('/mobilehomepage', 'MobileHomePageController@index')->name('mobile.homepage.index');
         Route::get('/mobilecategorys', 'MobileCategoryController@index')->name('mobile.categorys.index');
+        Route::put('/mobilehomecard/{id}', 'MobileCardController@update')->name('mobile.homecard.update');
     });
 
     //发货管理

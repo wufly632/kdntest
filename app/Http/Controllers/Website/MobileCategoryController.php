@@ -2,24 +2,20 @@
 
 namespace App\Http\Controllers\Website;
 
-use App\Services\Currency\CurrencyService;
-use App\Services\Website\BannerService;
+use App\Services\Website\MobileCategoryService;
 
 class MobileCategoryController
 {
-    protected $currencyService;
-    protected $bannerService;
+    protected $mobileCategoryService;
 
-    public function __construct(BannerService $bannerService, CurrencyService $currencyService)
+    public function __construct(MobileCategoryService $mobileCategoryService)
     {
-        $this->currencyService = $currencyService;
-        $this->bannerService = $bannerService;
+        $this->mobileCategoryService = $mobileCategoryService;
     }
 
     public function index()
     {
-        $banners = $this->bannerService->getAllBanner(['type' => 2]);
-        $currencys = $this->currencyService->getAll();
-        return view('website.mobile.category', compact('banners', 'currencys'));
+        $categorys = $this->mobileCategoryService->get();
+        return view('website.mobile.category', compact('categorys'));
     }
 }

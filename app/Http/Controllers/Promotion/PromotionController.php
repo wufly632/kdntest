@@ -150,7 +150,7 @@ class PromotionController extends Controller
     {
         //获取可添加的促销活动商品
         $promotion = $this->promotionService->getPromotionModel()->find($request->activity_id);
-        if (! $promotion) {
+        if (!$promotion) {
             abort(404);
         }
         $promotion_goods = $this->promotionService->getAblePromotionActivityGoods($promotion, $request);
@@ -218,6 +218,22 @@ class PromotionController extends Controller
             }
         } else {
             return ApiResponse::failure(g_API_ERROR, '图片上传失败!');
+        }
+    }
+
+    public function updateHomeShow($id)
+    {
+        try {
+            $promotion = $this->promotionService->find($id, ['home_show']);
+            if ($promotion->home_show == 1) {
+                $promotion->home_show = 0;
+            } else {
+                $promotion->home_show = 1;
+            }
+            $promotion->save();
+            return ApiResponse::success();
+        } catch (\Exception $e) {
+            return ApiResponse::failure(g_API_ERROR, '修改失败');
         }
     }
 
