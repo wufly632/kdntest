@@ -270,7 +270,7 @@ class CategoryService
         $data['is_diy'] = $values ? $values[0]['is_diy'] : 2;
         $data['check_type'] = $values ? $values[0]['check_type'] : 2;
         $data['is_required'] = $values ? $values[0]['is_required'] : 2;
-        $data['is_detail'] = $values ? $values[0]['is_detail'] : 2;
+        $data['is_detail'] = $values ? $values[0]['is_detail'] : 1;
         $data['is_custom_text'] = $attribute->type;
         return $data;
     }
