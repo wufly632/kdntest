@@ -402,10 +402,14 @@ $defaultSelectAttribute = count($attribute_list)>0?$attribute_list[0]:0;
                         toastr.warning("属性别名不能为空");
                     }else {
                         var inputs = $("#attribute_edit_form").serialize();
+                        var _loading = '';
                         $.ajax({
                             url:"{{secure_route('attribute.update_or_insert')}}",
                             data:inputs,
                             type:'POST',
+                            beforeSend:function() {
+                                _loading = layer.load();
+                            },
                             success: function (response) {
                                 if (response.status == 200) {
                                     $("#add_edit_attribute_close_button").click();
@@ -428,6 +432,7 @@ $defaultSelectAttribute = count($attribute_list)>0?$attribute_list[0]:0;
                                 }
                             },
                             complete: function () {
+                                layer.close(_loading);
                             },error: function (xmlHttpRequest, textStatus, errorThrown) {
                                 swal("错误", '错误码: '+xmlHttpRequest.status, "error");
                             }
@@ -456,11 +461,15 @@ $defaultSelectAttribute = count($attribute_list)>0?$attribute_list[0]:0;
                     }else if (!add_edit_attribute_value_data.en_name){
                         toastr.warning("属性值英文名称不能为空");
                     }else {
+                        var _loading = '';
                         var inputs = $("#attribute_value_edit_form").serialize();
                         $.ajax({
                             url:"{{secure_route('attrvalue.update_or_insert')}}",
                             data:inputs,
                             type:'POST',
+                            beforeSend:function() {
+                                _loading = layer.load();
+                            },
                             success: function (response) {
                                 if (response.status == 200) {
                                     toastr.success(response.msg);
@@ -473,6 +482,7 @@ $defaultSelectAttribute = count($attribute_list)>0?$attribute_list[0]:0;
                                 }
                             },
                             complete: function () {
+                                layer.close(_loading);
                             },error: function (xmlHttpRequest, textStatus, errorThrown) {
                                 swal("警告", '错误码: '+xmlHttpRequest.status, "error");
                             }
@@ -483,9 +493,13 @@ $defaultSelectAttribute = count($attribute_list)>0?$attribute_list[0]:0;
         });
 
         function refreshAttributeDetailInfo(attribute_id) {
+            var _loading = '';
             $.ajax({
                 url:"/attribute/detail/"+attribute_id,
                 type:'GET',
+                beforeSend:function() {
+                    _loading = layer.load();
+                },
                 success: function (response) {
                     if (response.status == 200) {
                         attribute = response.content;
@@ -509,6 +523,7 @@ $defaultSelectAttribute = count($attribute_list)>0?$attribute_list[0]:0;
                     }
                 },
                 complete: function () {
+                    layer.close(_loading);
                 },error: function (xmlHttpRequest, textStatus, errorThrown) {
                     toastr.error('错误码: '+xmlHttpRequest.status);
                 }
@@ -571,10 +586,14 @@ $defaultSelectAttribute = count($attribute_list)>0?$attribute_list[0]:0;
         //删除属性
         function deleteProperty(){
             $(".delete-property").on("click",function(){
+                var _loading = '';
                 $.ajax({
                     url:"{{secure_route('attribute.delete')}}",
                     data:{id: attribute.id, name:attribute.name,_token: "{{csrf_token()}}"},
                     type:'POST',
+                    beforeSend:function() {
+                        _loading = layer.load();
+                    },
                     success: function (response) {
                         if(response.status == 200){
                             toastr.success(response.content);
@@ -584,7 +603,7 @@ $defaultSelectAttribute = count($attribute_list)>0?$attribute_list[0]:0;
                         }
                     },
                     complete: function () {
-
+                        layer.close(_loading);
                     },error: function (xmlHttpRequest, textStatus, errorThrown) {
                         swal("错误", '错误码: '+xmlHttpRequest.status, "error");
                     }
@@ -650,10 +669,14 @@ $defaultSelectAttribute = count($attribute_list)>0?$attribute_list[0]:0;
             };
             swal(configure,function (isConfirm) {
                 if (isConfirm) {
+                    var _loading = '';
                     $.ajax({
                         url:"{{secure_route('attrvalue.delete')}}",
                         data:{id: attribute_value_id, name:attribute_value_name,_token:"{{csrf_token()}}"},
                         type:'POST',
+                        beforeSend:function() {
+                            _loading = layer.load();
+                        },
                         success: function (response) {
                             if(response.status == 200){
                                 toastr.success(response.content);
@@ -663,7 +686,7 @@ $defaultSelectAttribute = count($attribute_list)>0?$attribute_list[0]:0;
                             }
                         },
                         complete: function () {
-
+                            layer.close(_loading);
                         },error: function (xmlHttpRequest, textStatus, errorThrown) {
                             swal("错误", '错误码: '+xmlHttpRequest.status, "error");
                         }
@@ -688,11 +711,15 @@ $defaultSelectAttribute = count($attribute_list)>0?$attribute_list[0]:0;
         });
         function autocomple(){
             $("#autocomplete").empty();
+            var _loading = '';
             $.ajax({
                 url:"{{secure_route('attribute.search')}}",
                 type:"get",
                 data:"name="+$("#search-text").val(),
                 dataType:"json",
+                beforeSend:function() {
+                    _loading = layer.load();
+                },
                 success:function(response){
                     if (response.status == 200) {
                         $("#autocomplete").empty();
@@ -715,6 +742,9 @@ $defaultSelectAttribute = count($attribute_list)>0?$attribute_list[0]:0;
                         });
                     }
 
+                },
+                complete: function () {
+                    layer.close(_loading);
                 },
                 error:function(textStatus){
 

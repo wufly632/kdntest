@@ -168,7 +168,8 @@
                                         <td class="table-center">{{$good->orders}}</td>
                                         <td class="table-center">{{$good->good_stock}}</td>
                                         <td class="table-center">
-                                            {{$good->created_at}}
+                                            {{$good->created_at}}<br>
+                                            <a href="javascript:;" onclick="showMoreTime({{$good->id}})">more</a>
                                         </td>
                                         <td class="table-center">
                                             {{\App\Entities\Good\Good::$allStatus[$good->status]}}<br>
@@ -238,6 +239,23 @@
 
 
     }
+
+    function showMoreTime(id) {
+        var _index = $(this);
+        layer.open({
+            type: 2,
+            skin: 'layui-layer-rim', //加上边框
+            area: ['40%','400px'],
+            fix: false, //不固定
+            shadeClose: true,
+            maxmin: true,
+            shade:0.4,
+            title: '时间明细',
+            content: "/good/moretime/"+id,
+            end: function(layero, index){
+            }
+        });
+    }
     function offshelf(id) {
         var _index = $(this);
         $.ajax({
@@ -294,9 +312,9 @@
             });
         };
         getSubCategories(0,'category_one', select_category_one);
-        if (select_category_two) {
+        if (select_category_one) {
             getSubCategories(select_category_one,'category_two', select_category_two);
-            if (select_category_three) {
+            if (select_category_two) {
                 getSubCategories(select_category_two,'category_three', select_category_three);
             }
         }

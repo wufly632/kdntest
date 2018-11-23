@@ -247,7 +247,11 @@ class CategoryService
         //获取类目属性
         $attribute = app(AttributeService::class)->getAttributeByPk($attribute_id);
         //获取类目属性对应的所有属性值
-        $attribute_values = app(AttrValueService::class)->getAttributeValuesByAttributeId($attribute_id, 'sort', 'desc', true);
+        if ($attribute->type == 2) {
+            $attribute_values = [];
+        } else {
+            $attribute_values = app(AttrValueService::class)->getAttributeValuesByAttributeId($attribute_id, 'sort', 'desc', true);
+        }
 
         //获取属性对应的属性值名称
         $category_attributes = $this->categoryAttribute->findWhere(['category_id' => $category_id, 'attr_id' => $attribute_id, 'status' => 1])->first();
@@ -266,7 +270,7 @@ class CategoryService
         $data['is_diy'] = $values ? $values[0]['is_diy'] : 2;
         $data['check_type'] = $values ? $values[0]['check_type'] : 2;
         $data['is_required'] = $values ? $values[0]['is_required'] : 2;
-        $data['is_detail'] = $values ? $values[0]['is_detail'] : 2;
+        $data['is_detail'] = $values ? $values[0]['is_detail'] : 1;
         $data['is_custom_text'] = $attribute->type;
         return $data;
     }
@@ -279,12 +283,12 @@ class CategoryService
      */
     public function updateCategoryAttribute($request)
     {
-        if ($request->type == 3) { // 销售属性
+        /*if ($request->type == 3) { // 销售属性
             // 判断该类目下是否有商品
             if (Good::where('category_id', $request->category_id)->first()) {
                 return ApiResponse::failure(g_API_ERROR, '该类目下已有商品，不允许修改销售属性');
             }
-        }
+        }*/
         $attribute = app(AttributeService::class)->getAttributeByPk($request->attribute_id);
         $data = [
             'category_id' => $request->category_id,

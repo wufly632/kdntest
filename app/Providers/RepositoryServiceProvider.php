@@ -61,6 +61,7 @@ class RepositoryServiceProvider extends ServiceProvider
         $this->app->bind(\App\Repositories\Country\CountryAreaRepository::class, \App\Repositories\Country\CountryAreaRepositoryEloquent::class);
         $this->app->bind(\App\Repositories\Website\MobileHomePageRepository::class, \App\Repositories\Website\MobileHomePageRepositoryEloquent::class);
         $this->app->bind(\App\Repositories\CateAttr\CategoryAscriptionRepository::class, \App\Repositories\CateAttr\CategoryAscriptionRepositoryEloquent::class);
+        $this->app->bind(\App\Repositories\Product\ProductOnOfflineRepository::class, \App\Repositories\Product\ProductOnOfflineRepositoryEloquent::class);
         //:end-bindings:
     }
 }

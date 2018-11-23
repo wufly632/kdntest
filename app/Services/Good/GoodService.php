@@ -166,6 +166,7 @@ class GoodService{
                 return false;
             }
             $good->status = Good::WAIT_EDIT;
+            $good->audit_at = Carbon::now()->toDateTimeString();
             $good->save();
             // 同步商品数据
             if (! $this->syncGoodData($good)) {
@@ -293,6 +294,7 @@ class GoodService{
             return false;
         }
         $good->status = Good::REJECT;
+        $good->audit_at = Carbon::now()->toDateTimeString();
         if ($good->save()){
             return true;
         }
@@ -306,6 +308,8 @@ class GoodService{
     {
         $good = $this->good->find($request->id);
         $good->status = Good::RETURN;
+        $good->return_reason = $request->return_reason;
+        $good->return_at = Carbon::now()->toDateTimeString();
         if ($good->save()){
             return ApiResponse::success('退回成功');
         }
@@ -344,7 +348,7 @@ class GoodService{
             $origin_price = collect($request->good_sku['price'])->min('origin_price');
             $this->good->update(['good_en_title' => $request->good_en_title, 'price' => $price], $request->id);
             $this->product->update(['good_en_title' => $request->good_en_title, 'price' => $price, 'origin_price' => $origin_price], $request->id);
-            $this->good->update(['status' => Good::EDITED], $request->id);
+            $this->good->update(['status' => Good::EDITED, 'edited_at' => Carbon::now()->toDateTimeString()], $request->id);
             DB::commit();
             return ApiResponse::success('编辑成功');
         } catch (\Exception $e) {

@@ -66,6 +66,7 @@ Route::group(['middleware' => ['auth', 'web']], function () {
         Route::post('/auditReturn', ['as' => 'good.auditReturn', 'uses' => 'GoodsController@auditReturn']);
         Route::post('/auditReject', ['as' => 'good.auditReject', 'uses' => 'GoodsController@auditReject']);
         Route::post('/sort', ['as' => 'good.sort', 'uses' => 'GoodsController@sort']);
+        Route::get('/moretime/{good}', ['as' => 'good.more.time', 'uses' => 'GoodsController@showMoretime']);
     });
 
     Route::group(['prefix' => 'product', 'namespace' => 'Product'], function () {
