@@ -21,7 +21,7 @@ class SupplierUser extends Model implements Transformable
      *
      * @var array
      */
-    protected $fillable = ['name', 'mobile', 'email', 'password', 'status'];
+    protected $fillable = ['name', 'mobile', 'email', 'password', 'status', 'company_name'];
 
-    protected $visible = ['id', 'name', 'mobile', 'email', 'password', 'amount_money', 'status', 'create_at'];
+    protected $visible = ['id', 'name', 'mobile', 'email', 'password', 'amount_money', 'status', 'create_at', 'company_name'];
 }
