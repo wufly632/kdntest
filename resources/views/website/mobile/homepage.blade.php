@@ -294,7 +294,7 @@
                                             <div>
                                                 <template v-for="(detail,innerIndex) in item.content">
                                                     <template v-if="detail.show">
-                                                        <div @click="shadowHidden(index)"
+                                                        <div @click="shadowHidden(index,innerIndex)"
                                                              style="position: absolute;top: 0;left:0;right: 0;bottom:0;opacity: 0.6;height: 100%;background-color: #000000;z-index: 9998">
                                                         </div>
                                                         <div style="position: absolute;left: 40px;top:10%;right: 0;bottom: 10%;margin:0 30px 0 -10px;background-color:#FFFFff;z-index: 9999;max-height: 370px;overflow: auto">
@@ -339,7 +339,7 @@
                                                         <img :src="detail.src"
                                                              alt=""
                                                              style="width: 100%;height: 600px;min-height: 300px;min-width: 800px;"
-                                                             @click="showBannerEdit(index)">
+                                                             @click="showBannerEdit(index,innerIndex)">
                                                     </div>
                                                 </template>
                                             </div>
@@ -690,6 +690,7 @@
                         rightItem.show = false;
                     })
                 });
+                console.log(this.anything);
             },
             methods: {
                 showBannerEdit: function (index, innerIndex) {
