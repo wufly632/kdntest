@@ -1,26 +1,24 @@
 <?php
 
-
 namespace App\Services\Website;
 
+use App\Repositories\Website\PcCategoryRepository;
 
-use App\Repositories\Website\MobileCategoryRepository;
-
-class MobileCategoryService
+class PcCategoryService
 {
-    protected $mobileCategoryRepository;
+    protected $pcCategoryRepository;
 
-    public function __construct(MobileCategoryRepository $mobileCategoryRepository)
+    public function __construct(PcCategoryRepository $pcCategoryRepository)
     {
-        $this->mobileCategoryRepository = $mobileCategoryRepository;
+        $this->pcCategoryRepository = $pcCategoryRepository;
     }
 
     public function get()
     {
-        $field = ['id', 'category_id', 'name', 'image', 'icon', 'sort', 'parent_id'];
-        $levelone = $this->mobileCategoryRepository->orderBy('sort', 'desc')->findWhere(['parent_id' => 0], $field);
+        $field = ['id', 'category_id', 'name', 'sort', 'parent_id'];
+        $levelone = $this->pcCategoryRepository->orderBy('sort', 'desc')->findWhere(['parent_id' => 0], $field);
         $ids = array_pluck($levelone, 'id');
-        $levelTwo = $this->mobileCategoryRepository->orderBy('sort', 'desc')->findWhereIn('parent_id', $ids, $field);
+        $levelTwo = $this->pcCategoryRepository->orderBy('sort', 'desc')->findWhereIn('parent_id', $ids, $field);
         $data = [];
         foreach ($levelone as $key => $item) {
             $data[$key] = $item;
@@ -39,8 +37,8 @@ class MobileCategoryService
 
     public function delete($id)
     {
-        $this->mobileCategoryRepository->delete($id);
-        $this->mobileCategoryRepository->model()::where('parent_id', $id)->delete();
+        $this->pcCategoryRepository->delete($id);
+        $this->pcCategoryRepository->model()::where('parent_id', $id)->delete();
     }
 
     public function updateOrCreate($item)
@@ -48,42 +46,38 @@ class MobileCategoryService
         $data = $item;
         if ($item['id']) {
             $parentCategory = $item;
-            $this->mobileCategoryRepository->model()::where('id', $item['id'])->update([
+            $this->pcCategoryRepository->model()::where('id', $item['id'])->update([
                 'name' => $item['name'],
                 'category_id' => $item['category_id'],
-                'icon' => $item['icon'],
                 'sort' => $item['sort']
             ]);
         } else {
-            $parentCategory = $this->mobileCategoryRepository->model()::create([
+            $parentCategory = $this->pcCategoryRepository->model()::create([
                 'name' => $item['name'],
                 'category_id' => $item['category_id'],
-                'icon' => $item['icon'],
                 'sort' => $item['sort']
             ])->toArray();
         }
         if ($item['removed']) {
             $removedChilds = $this->idFilter($item['removed']);
-            $this->mobileCategoryRepository->model()::whereIn('id', $removedChilds)->delete();
+            $this->pcCategoryRepository->model()::whereIn('id', $removedChilds)->delete();
         }
         if ($item['child']) {
             foreach ($item['child'] as $key => $child) {
                 if ($child['id']) {
-                    $this->mobileCategoryRepository->model()::where('id', $child['id'])->update(
+                    $this->pcCategoryRepository->model()::where('id', $child['id'])->update(
                         [
                             'name' => $child['name'],
                             'parent_id' => $parentCategory['id'],
                             'category_id' => $child['category_id'],
-                            'image' => $child['image'],
                             'sort' => $child['sort']
                         ]);
                 } else {
-                    $childModel = $this->mobileCategoryRepository->model()::create(
+                    $childModel = $this->pcCategoryRepository->model()::create(
                         [
                             'name' => $child['name'],
                             'parent_id' => $parentCategory['id'],
                             'category_id' => $child['category_id'],
-                            'image' => $child['image'],
                             'sort' => $child['sort']
                         ]
                     );
@@ -109,6 +103,4 @@ class MobileCategoryService
         }
         return $filteredId;
     }
-
-
 }

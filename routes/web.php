@@ -136,10 +136,21 @@ Route::group(['middleware' => ['auth', 'web']], function () {
         ]);
         //PC首页
         Route::get('/homepage', 'HomePageController@index')->name('homepage.index');
-        Route::get('/pccategorys', 'HomePageController@index')->name('homepage.categorys.index');
+        //获取
+        Route::get('/pccategorys', 'PcCategoryController@index')->name('pc.categorys.index');
+        //删除
+        Route::delete('/pccategorys/{id}', 'PcCategoryController@delete')->name('pc.categorys.delete');
+        //添加
+        Route::post('/pccategorys', 'PcCategoryController@store')->name('pc.categorys.store');
         //手机首页
         Route::get('/mobilehomepage', 'MobileHomePageController@index')->name('mobile.homepage.index');
+
         Route::get('/mobilecategorys', 'MobileCategoryController@index')->name('mobile.categorys.index');
+
+        Route::delete('/mobilecategorys/{id}', 'MobileCategoryController@delete')->name('mobile.categorys.delete');
+
+        Route::post('/mobilecategorys', 'MobileCategoryController@store')->name('mobile.categorys.store');
+
         Route::put('/mobilehomecard/{id}', 'MobileCardController@update')->name('mobile.homecard.update');
     });
 

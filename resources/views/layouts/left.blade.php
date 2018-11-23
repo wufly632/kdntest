@@ -135,7 +135,7 @@
                                     class="fa fa-circle-o"></i>icon设置</a></li>
                     <li><a data-target-url="homepage" href="{{secure_route('homepage.index')}}"><i
                                     class="fa fa-circle-o"></i>PC首页</a></li>
-                    <li><a data-target-url="pccategorys" href="{{secure_route('homepage.categorys.index')}}"><i
+                    <li><a data-target-url="pccategorys" href="{{secure_route('pc.categorys.index')}}"><i
                                     class="fa fa-circle-o"></i>PC分类</a></li>
                     <li><a data-target-url="mobilehomepage" href="{{secure_route('mobile.homepage.index')}}"><i
                                     class="fa fa-circle-o"></i>H5首页</a></li>
