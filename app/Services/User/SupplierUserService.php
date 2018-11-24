@@ -80,7 +80,7 @@ class SupplierUserService
     {
         try {
             $this->supplierUserRepository->update($request, $id);
-            return ApiResponse::success('创建成功');
+            return ApiResponse::success('修改成功');
         } catch (\Exception $e) {
 
             return ApiResponse::failure(g_API_ERROR, $e->getMessage());
