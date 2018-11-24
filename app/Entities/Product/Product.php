@@ -20,6 +20,11 @@ class Product extends Model implements Transformable
     protected $table = "goods";
     protected $primaryKey = 'id';
 
+    public function getMainPicAttribute($item)
+    {
+        return cdnUrl($item);
+    }
+
     /**
      * The attributes that are mass assignable.
      *
