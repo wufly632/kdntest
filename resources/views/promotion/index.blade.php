@@ -100,7 +100,6 @@
                                         <td>库存深度</td>
                                         <td>状态</td>
                                         <td>操作</td>
-                                        <td class="text-center">首页展示</td>
                                     </tr>
                                     </thead>
                                     <tbody>
@@ -125,17 +124,6 @@
                                             <td>
                                                 <a href="{{secure_route('promotion.edit', ['promotion' => $promotion->id])}}">修改</a><br>
                                                 <a href="javascript:;" onclick="delPromotion({{$promotion->id}})">删除</a>
-                                            </td>
-                                            <td class="text-center">
-                                                @if($promotion->home_show==0)
-                                                    <input type="button" class="btn btn-sm btn-primary"
-                                                           onclick="indexShow('{{ $promotion->id }}',this)"
-                                                           value="打开展示">
-                                                @else
-                                                    <input type="button" class="btn btn-sm btn-warning"
-                                                           onclick="indexShow('{{ $promotion->id }}',this)"
-                                                           value="关闭展示">
-                                                @endif
                                             </td>
                                         </tr>
                                     @endforeach
