@@ -50,8 +50,8 @@ class SupplierUserController extends Controller
      */
     public function store(SupplierUserCreateRequest $request)
     {
-        $userRequest = $request->only(['name', 'mobile', 'email', 'password', 'status']);
-        $userRequest['password'] = \Hash::make($request->input('password'));
+        $userRequest = $request->only(['name', 'mobile', 'email', 'status', 'company_name']);
+        $userRequest['password'] = \Hash::make('Ww123456');//默认密码Ww123456
         $result = $this->supplierUserService->createUser($userRequest);
         if ($result['status'] != 200) {
             return ApiResponse::failure(g_API_ERROR, $result['msg']);
@@ -93,7 +93,7 @@ class SupplierUserController extends Controller
      */
     public function update(SupplierUserUpdateRequest $request, $id)
     {
-        $userRequest = $request->only(['name', 'mobile', 'email', 'password', 'password_confirmation', 'status']);
+        $userRequest = $request->only(['name', 'mobile', 'email', 'password', 'password_confirmation', 'status', 'company_name']);
         if ($request->filled('password')) {
             $userRequest['password'] = \Hash::make($request->input('password'));
         }

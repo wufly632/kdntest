@@ -59,7 +59,7 @@
                             @endif
                             @if(in_array($good->status, \App\Entities\Good\Good::$auditReturn))
                             <div class="col-xs-1">
-                                <button type="button" class="btn btn-block btn-info btn-lg auditReturn btn-edit">退回修改</button>
+                                <button type="button" class="btn btn-block btn-info btn-lg btn-edit"  data-toggle="modal" data-target="#modal-return">退回修改</button>
                             </div>
                             @endif
                             @if(in_array($good->status, \App\Entities\Good\Good::$auditReject))
@@ -305,7 +305,33 @@
                             </div>
                         </div>
                         <!-- /.box -->
-
+                        <div class="modal fade in" id="modal-return" style="display: none;">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">×</span></button>
+                                        <h4 class="modal-title">退回原因</h4>
+                                    </div>
+                                    <div class="modal-body">
+                                        <div class="col-xs-12">
+                                            <div class="form-group col-xs-12">
+                                                <label for="inputEmail3" class="col-sm-1 control-label"></label>
+                                                <div class="col-sm-10">
+                                                    <textarea name="return_reason" class="return_reason" cols="30" rows="10" style="width: 100%"></textarea>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-default pull-left col-sm-offset-4" data-dismiss="modal">取消</button>
+                                        <button type="button" class="btn btn-primary auditReturn pull-left" style="margin-left: 50px;">保存</button>
+                                    </div>
+                                </div>
+                                <!-- /.modal-content -->
+                            </div>
+                            <!-- /.modal-dialog -->
+                        </div>
                     </div>
                     @endif
                     <!-- /.col -->
@@ -512,9 +538,10 @@
      */
     $('.auditReturn').click(function () {
         var _index = $(this);
+        var return_reason = $('.return_reason').val();
         $.ajax({
             type: 'post',
-            data: {id: "{{$good->id}}", _token: "{{csrf_token()}}"},
+            data: {id: "{{$good->id}}", return_reason: return_reason, _token: "{{csrf_token()}}"},
             url: "{{secure_route('good.auditReturn')}}",
             dataType:'json',
             beforeSend: function () {

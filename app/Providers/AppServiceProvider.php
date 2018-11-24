@@ -2,6 +2,8 @@
 
 namespace App\Providers;
 
+use App\Entities\Product\Product;
+use App\Observers\ProductObserver;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -15,6 +17,8 @@ class AppServiceProvider extends ServiceProvider
     {
         //导入文件
         $this->import();
+        // // 模型监听
+        // Product::observe(ProductObserver::class);
     }
 
     /**

@@ -29,11 +29,6 @@
                 商家列表
                 <small>商家</small>
             </h1>
-            <ol class="breadcrumb">
-                <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
-                <li><a href="#">Layout</a></li>
-                <li class="active">Fixed</li>
-            </ol>
         </section>
 
         <!-- Main content -->
@@ -86,6 +81,7 @@
                                 <tr>
                                     <th>商家ID <span class="fa fa-gray fa-sort-numeric-desc pull-right"></span></th>
                                     <th>商家名称<span class="fa fa-gray fa-unsorted pull-right"></span></th>
+                                    <th>公司名称<span class="fa fa-gray fa-unsorted pull-right"></span></th>
                                     <th>手机号<span class="fa fa-gray fa-unsorted pull-right"></span></th>
                                     <th>邮箱<span class="fa fa-gray fa-unsorted pull-right"></span></th>
                                     <th>账户余额<span class="fa fa-gray fa-unsorted pull-right"></span></th>
@@ -99,6 +95,7 @@
                                     <tr>
                                         <td>{{ $user->id }}</td>
                                         <td>{{ $user->name }}</td>
+                                        <td>{{ $user->company_name }}</td>
                                         <td>{{ $user->mobile }}</td>
                                         <td>{{ $user->email }}</td>
                                         <td>{{ $user->amount_money }}</td>

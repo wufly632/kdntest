@@ -193,6 +193,9 @@
                             </h2>
                             <ul class="con-message" v-show="select_categroy_name">
                                 <li>
+                                    <span class="mess-name">类目ID:</span><span class="mess-key">@{{ select_categroy_id }}</span>
+                                </li>
+                                <li>
                                     <span class="mess-name">类目名称:</span><span class="mess-key">@{{ select_categroy_name }}</span>
                                 </li>
                                 <li>
@@ -202,7 +205,7 @@
                                     <span class="mess-name">排序值:</span><span class="mess-key">@{{ select_categroy_sort }}</span>
                                 </li>
                                 <li>
-                                    <span class="mess-name">叶子类目:</span><span class="mess-key">@{{ select_categroy_is_final }}</span>
+                                    <span class="mess-name">叶子类目:</span><span class="mess-key">@{{ select_categroy_is_final ? '是' : '否' }}</span>
                                 </li>
 
                             </ul>
@@ -419,7 +422,7 @@
                                         非必填
                                     </label>
                                 </div>
-                                <div class="form-group">
+                                <div class="form-group" v-show="is_custom_text == 1">
                                     <div class="" style="margin-left: 10px">单选/多选:</div>
                                     <label  class="property-radio">
                                         <input type="radio" name="check_type" value="2" v-model="check_type">
@@ -477,6 +480,7 @@
         var category_detail_vue = new Vue({
             el: '#category_detail_container',
             data: {
+                select_categroy_id: '',
                 select_categroy_name: '',
                 select_categroy_en_name: '',
                 select_categroy_sort: '',
@@ -534,7 +538,6 @@
             },
             methods:{
                 changeSelectValue:function (el) {
-                    layer.load(1);
                     if(el == undefined){
                         this.attribue_picked_name = attribute_detail_container_vue.select_attribute_name;
                     }else{
@@ -545,9 +548,13 @@
                     attribue_value_container_vue.attribute_values = [];
                     attribue_value_container_vue.backup_attribute_values = [];
                     attribue_value_container_vue.attribue_value_container_picked = [];
+                    var _loading = '';
                     $.ajax({
                         url:"/category/"+select_category_id+"/attribute/"+this.attribue_picked_id+'/detail',
                         type:'GET',
+                        beforeSend:function() {
+                            _loading = layer.load();
+                        },
                         success: function (response) {
                             if (response.status == 200) {
                                 console.log(600,response.content);
@@ -563,7 +570,7 @@
                                 configure_attribute_detail_container_vue.is_detail = response.content.is_detail;
                             }
                         },complete: function () {
-                            layer.closeAll('loading');
+                            layer.close(_loading);
                         },error: function (xmlHttpRequest, textStatus, errorThrown) {
                             toastr.warning('错误码: '+xmlHttpRequest.status);
                         }
@@ -607,11 +614,15 @@
         });
         function autocomple(){
             $("#autocomplete").empty();
+            var _loading = '';
             $.ajax({
                 url:"/category/searchCategory",
                 type:"get",
                 data:"name="+$("#search-text").val(),
                 dataType:"json",
+                beforeSend:function() {
+                    _loading = layer.load();
+                },
                 success:function(response){
                     if (response.status == 200) {
                         $("#autocomplete").empty();
@@ -654,6 +665,9 @@
                     }
 
                 },
+                complete: function () {
+                    layer.close(_loading);
+                },
                 error:function(textStatus){
 
                 }
@@ -668,10 +682,14 @@
                 $("#secondCategoryLevel").prepend("<option value='-1'>{{trans('Category::category.select_second_category')}}</option>"); //为Select插入一个Option(第一个位置)
                 return;
             }
+            var _loading = '';
             $.ajax({
                 url:"{{secure_route('category.subcategories')}}",
                 data:{'category_id':category_id,_token: "{{csrf_token()}}"},
                 type:'POST',
+                beforeSend:function() {
+                    _loading = layer.load();
+                },
                 success: function (response) {
                     if (response.status == 200) {
                         $("#secondCategoryLevel").empty();
@@ -683,6 +701,7 @@
                     }
                 },
                 complete: function () {
+                    layer.close(_loading);
                 },error: function (xmlHttpRequest, textStatus, errorThrown) {
                     toastr.warning('错误码: '+xmlHttpRequest.status);
                 }
@@ -713,9 +732,13 @@
 
             //请求分类信息
             //显示编辑
+            var _loading = '';
             $.ajax({
                 url:"/category/current_category_info/"+category_id,
                 type:'GET',
+                beforeSend:function() {
+                    _loading = layer.load();
+                },
                 success: function (response) {
                     if (response.status == 200) {
                         $("#firstCategoryLevel").val(response.content.current_first_level_category.id);   //设置Select的Text值为jQuery的项选中
@@ -737,6 +760,7 @@
                     }
                 },
                 complete: function () {
+                    layer.close(_loading);
                 },error: function (xmlHttpRequest, textStatus, errorThrown) {
                     toastr.warning('错误码: '+xmlHttpRequest.status);
                 }
@@ -769,6 +793,7 @@
             if(category_id == undefined){
                 category_id = '';
             }
+            var _loading = '';
             $.ajax({
                 url:"{{secure_route('category.update')}}",
                 data:{
@@ -782,6 +807,9 @@
                     "_token":"{{csrf_token()}}",
                 },
                 type:'POST',
+                beforeSend:function() {
+                    _loading = layer.load();
+                },
                 success: function (response) {
                     if (response.status == 200) {
                         toastr.success(response.msg);
@@ -792,6 +820,7 @@
                     }
                 },
                 complete: function () {
+                    layer.close(_loading);
                 },error: function (xmlHttpRequest, textStatus, errorThrown) {
                     toastr.warning('错误码: '+xmlHttpRequest.status);
                 }
@@ -819,9 +848,13 @@
             };
             swal(configure,function (isConfirm) {
                 if (isConfirm) {
+                    var _loading = '';
                     $.ajax({
                         url:"/category/"+category_id+'/delete',
                         type:'GET',
+                        beforeSend:function() {
+                            _loading = layer.load();
+                        },
                         success: function (response) {
                             if (response.status == 200) {
                                 swal("删除成功!", "", "success");
@@ -831,6 +864,7 @@
                             }
                         },
                         complete: function () {
+                            layer.close(_loading);
                         },error: function (xmlHttpRequest, textStatus, errorThrown) {
                             toastr.warning('错误码: '+xmlHttpRequest.status);
                         }
@@ -852,12 +886,18 @@
 
         //刷新类目详细信息
         function refreshCategoryDetailInfo(category_id) {
+            var _loading = '';
             $.ajax({
                 url:"/category/detail/"+category_id,
                 type:'GET',
+                beforeSend: function () {
+                    _loading = layer.load();
+                },
                 success: function (response) {
+                    layer.close(_loading);
                     if (response.status == 200) {
                         category = JSON.parse(response.content);
+                        category_detail_vue.select_categroy_id = category.id;
                         category_detail_vue.select_categroy_name = category.name;
                         category_detail_vue.select_categroy_en_name = category.en_name;
                         category_detail_vue.select_categroy_sort = category.sort;
@@ -866,6 +906,7 @@
                 },
                 complete: function () {
                 },error: function (xmlHttpRequest, textStatus, errorThrown) {
+                    layer.close(_loading);
                     toastr.warning('错误码: '+xmlHttpRequest.status);
                 }
             });
@@ -873,6 +914,7 @@
 
         //刷新分类属性
         function refreshCategoryAttributes(category_id) {
+            var _loading = '';
             $.ajax({
                 url:"{{secure_route('category.attribute')}}",
                 data:{
@@ -880,7 +922,11 @@
                     '_token': "{{csrf_token()}}"
                 },
                 type:'POST',
+                beforeSend:function() {
+                    _loading = layer.load();
+                },
                 success: function (response) {
+                    layer.close(_loading);
                     //目前类型就
                     $('.category_attribute_ul').children('li .attribute_class').remove();
                     attribute_detail_container_vue.attribute_items = [];
@@ -901,6 +947,7 @@
                 },
                 complete: function () {
                 },error: function (xmlHttpRequest, textStatus, errorThrown) {
+                    layer.close(_loading);
                     toastr.warning('错误码: '+xmlHttpRequest.status);
                 }
             });
@@ -936,10 +983,13 @@
             attribute_detail_container_vue.select_attribute_type = $(this).data('attribute_type');
             console.log(attribute_detail_container_vue.select_attribute_type);
             attribute_detail_container_vue.select_attribute_name = $(this).data('attribute_name');
-            layer.load(1);
+            var _loading = '';
             $.ajax({
                 url:"/category/"+category_id+"/attribute/"+attribute_detail_container_vue.select_attribute_id+'/detail',
                 type:'GET',
+                beforeSend:function() {
+                    _loading = layer.load();
+                },
                 success: function (response) {
                     if (response.status == 200) {
                         attribute_detail_container_vue.attribute_items = response.content.attribute_items;
@@ -948,7 +998,7 @@
                     }
                 },
                 complete: function () {
-                    layer.closeAll('loading');
+                    layer.close(_loading);
                 },error: function (xmlHttpRequest, textStatus, errorThrown) {
                     toastr.warning('错误码: '+xmlHttpRequest.status);
                 }
@@ -1000,30 +1050,37 @@
                 closeOnCancel: true
             };
             swal(configure,function (isConfirm) {
-                $.ajax({
-                    url:"/category/attribute/deleteRule",
-                    data:{
-                        '_token': "{{csrf_token()}}",
-                        'category_id':category_id,
-                        'attribute_id':attribute_id,
-                        'attribute_type':attribute_type,
-                    },
-                    type:'POST',
-                    success: function (response) {
-                        if(response.status == 200){
-                            will_delete_dom.remove();
-                            attribute_detail_container_vue.attribute_items =[];
-                            swal("删除成功", "success");
-                        } else {
-                            swal("警告", response.msg, "error");
+                if (isConfirm) {
+                    var _loading = '';
+                    $.ajax({
+                        url:"/category/attribute/deleteRule",
+                        data:{
+                            '_token': "{{csrf_token()}}",
+                            'category_id':category_id,
+                            'attribute_id':attribute_id,
+                            'attribute_type':attribute_type,
+                        },
+                        type:'POST',
+                        beforeSend:function() {
+                            _loading = layer.load();
+                        },
+                        success: function (response) {
+                            if(response.status == 200){
+                                will_delete_dom.remove();
+                                attribute_detail_container_vue.attribute_items =[];
+                                swal("删除成功", "success");
+                            } else {
+                                swal("警告", response.msg, "error");
+                            }
+                        },
+                        complete: function () {
+                            layer.close(_loading);
+                        },error: function (xmlHttpRequest, textStatus, errorThrown) {
+                            swal("错误", '错误码: '+xmlHttpRequest.status, "error");
                         }
-                    },
-                    complete: function () {
+                    });
+                }
 
-                    },error: function (xmlHttpRequest, textStatus, errorThrown) {
-                        swal("错误", '错误码: '+xmlHttpRequest.status, "error");
-                    }
-                });
             });
 
         }
@@ -1043,11 +1100,14 @@
 
             attribue_name_container_vue.type = type; //保存添加的属性类别
             configure_attribute_detail_container_vue.attr_type = type;//区分属性类型
-            layer.load(1);
             //获取所有的属性名(已配置除外)
+            var _loading = '';
             $.ajax({
                 url:"{{secure_route('attribute.all')}}",
                 type:'get',
+                beforeSend:function() {
+                    _loading = layer.load();
+                },
                 success: function (response) {
                     if (response.status == 200) {
                         attribue_name_container_vue.backup_attributes = response.content;
@@ -1062,7 +1122,7 @@
                     }
                 },
                 complete: function () {
-                    layer.closeAll('loading');
+                    layer.close(_loading);
                 },error: function (xmlHttpRequest, textStatus, errorThrown) {
                     toastr.warning('错误码: '+xmlHttpRequest.status);
                 }
@@ -1089,8 +1149,7 @@
             is_image = $("input[name='is_image']:checked").val();
             is_diy = $("input[name='is_diy']:checked").val();
             is_detail = $("input[name='is_detail']:checked").val();
-            layer.load(1);
-            console.log(attribue_name_container_vue.attribue_picked_name);
+            var _loading = '';
             $.ajax({
                 url:"{{secure_route('category.attribute.update')}}",
                 type:'POST',
@@ -1106,6 +1165,9 @@
                     'check_type':check_type,
                     '_token': "{{csrf_token()}}"
                 },
+                beforeSend:function() {
+                    _loading = layer.load();
+                },
                 success: function (response) {
                     if (response.status == 200) {
                         $('#configure_attribue_container').modal('hide');
@@ -1117,11 +1179,9 @@
 
                             if($(this).html() == attribue_name_container_vue.attribue_picked_name){
                                 is_exist = true;
-                                console.log('clickddd');
                                 $(this).click();
                             }
                         });
-                        console.log(is_exist);
                         if(!is_exist){
                             item = addOneAttribute('category_attribute_'+type,attribue_name_container_vue.attribue_picked_id,attribue_name_container_vue.attribue_picked_name,type);
                             $(item).children('span').eq(0).click();
@@ -1132,7 +1192,7 @@
                     }
                 },
                 complete: function () {
-                    layer.closeAll('loading');
+                    layer.close(_loading);
                 },error: function (xmlHttpRequest, textStatus, errorThrown) {
                     toastr.warning('错误码: '+xmlHttpRequest.status);
                 }
@@ -1172,10 +1232,14 @@
         });
 
         $("input[name='is_image'][value='1']").on("click", function(){
+            var _loading = '';
             $.ajax({
                 url:"/category/existCategoryPicAttribute",
                 data:{category_id: select_category_id,attribute_id:attribue_name_container_vue.attribue_picked_id},
                 type:'GET',
+                beforeSend:function() {
+                    _loading = layer.load();
+                },
                 success: function (response) {
                     if(response.status != 200){
                         swal({
@@ -1200,7 +1264,7 @@
                     }
                 },
                 complete: function () {
-
+                    layer.close(_loading);
                 },error: function (xmlHttpRequest, textStatus, errorThrown) {
                     swal("错误", '错误码: '+xmlHttpRequest.status, "error");
                 }

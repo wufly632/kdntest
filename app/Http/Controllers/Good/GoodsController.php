@@ -145,4 +145,9 @@ class GoodsController extends Controller
         return $this->goodService->sortGood($request);
     }
 
+    public function showMoretime(Good $good)
+    {
+        return view('goods.moretime', compact('good'));
+    }
+
 }

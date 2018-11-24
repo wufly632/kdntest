@@ -3,6 +3,7 @@
 namespace App\Entities\Product;
 
 use App\Entities\Good\Good;
+use App\Observers\ProductObserver;
 use Illuminate\Database\Eloquent\Model;
 use Prettus\Repository\Contracts\Transformable;
 use Prettus\Repository\Traits\TransformableTrait;
@@ -30,6 +31,13 @@ class Product extends Model implements Transformable
                            'origin_price','deleted_at', 'updated_at'];
 
 
+    protected static function boot()
+    {
+        parent::boot();
+        // 模型监听
+        self::observe(ProductObserver::class);
+    }
+
     const ONLINE  = 1;   //上架
     const OFFLINE = 2;   //下架
 
@@ -37,6 +45,7 @@ class Product extends Model implements Transformable
         self::ONLINE => '上架',
         self::OFFLINE => '下架',
     ];
+
 
     public function productSku()
     {
