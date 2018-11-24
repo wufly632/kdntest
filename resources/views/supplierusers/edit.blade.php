@@ -124,7 +124,7 @@
                         };
                         toastr.success(toastrMsg);
                     } else {
-                        toastr.error(res.data.msg);
+                        toastr.error(res.msg);
                         _index.attr('disabled', false);
                         _index.html('保存');
                     }
