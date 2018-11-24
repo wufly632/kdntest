@@ -23,6 +23,15 @@
                 </div>
                 <div class="form-group">
                     <div class="col-xs-1"></div>
+                    <label class="col-xs-2 control-label">
+                        公司名称:
+                    </label>
+                    <div class="col-xs-7">
+                        @if(isset($user->company_name)){{ $user->company_name }}@endif
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-xs-1"></div>
                     <label for="coupon_name" class="col-xs-2 control-label">
                         手机号：
                     </label>
@@ -39,7 +48,7 @@
                         @if(isset($user->email)){{ $user->email }}@endif
                     </div>
                 </div>
-                <div class="form-group">
+                {{--<div class="form-group">
                     <div class="col-xs-1"></div>
                     <label for="password" class="col-xs-2 control-label">
                         新密码：
@@ -56,11 +65,11 @@
                     <div class="col-xs-7">
                         <input type="password" id="password_confirm" class="form-control" name="repassword" value="">
                     </div>
-                </div>
-                <div>
+                </div>--}}
+                {{--<div>
                     <button type="button" class="btn btn-success col-xs-offset-3 save">保存</button>
                     <button type="button" class="btn btn-danger col-xs-offset-4 cancel">取消</button>
-                </div>
+                </div>--}}
             </form>
         </div>
     </div>

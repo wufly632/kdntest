@@ -16,10 +16,17 @@ class AttributeController extends Controller
     protected $attributeService;
 
     protected $users = [
-        'wufly@cucoe.com',
-        'wfxykzd@163.com',
+        'fei.wu@waiwaimall.com',
         'yingfei.zou@waiwaimall.com',
         'long.hao@waiwaimall.com',
+    ];
+
+    protected $add_users = [
+        'fei.wu@waiwaimall.com',
+        'yingfei.zou@waiwaimall.com',
+        'long.hao@waiwaimall.com',
+        'chengxi.luo@waiwaimall.com',
+        'qiang.han@waiwaimall.com'
     ];
 
     public function __construct(AttributeService $attributeService)
@@ -63,7 +70,7 @@ class AttributeController extends Controller
      */
     public function updateOrInsert(Request $request)
     {
-        if(!in_array(Auth::user()->email, $this->users)){
+        if(!in_array(Auth::user()->email, $this->add_users)){
             return ApiResponse::failure(g_API_ERROR, '权限受限!');
         }
         if(!$attribute = $this->attributeService->getAttributeRepository()->updateOrCreate(['id'=> $request->id], $request->all())){

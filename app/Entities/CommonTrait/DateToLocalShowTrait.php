@@ -154,4 +154,44 @@ trait DateToLocalShowTrait
     {
         return Carbon::parse($date)->addHours(8);
     }
+
+    /**
+     * @function 提交审核时间时间转化
+     * @param $date
+     * @return Carbon
+     */
+    public function getSubmitAtAttribute($date)
+    {
+        return Carbon::parse($date)->addHours(8);
+    }
+
+    /**
+     * @function 编辑完成时间时间转化
+     * @param $date
+     * @return Carbon
+     */
+    public function getEditedAtAttribute($date)
+    {
+        return Carbon::parse($date)->addHours(8);
+    }
+
+    /**
+     * @function 审核完成时间时间转化
+     * @param $date
+     * @return Carbon
+     */
+    public function getAuditAtAttribute($date)
+    {
+        return Carbon::parse($date)->addHours(8);
+    }
+
+    /**
+     * @function 退回修改完成时间时间转化
+     * @param $date
+     * @return Carbon
+     */
+    public function getReturnAtAttribute($date)
+    {
+        return Carbon::parse($date)->addHours(8);
+    }
 }

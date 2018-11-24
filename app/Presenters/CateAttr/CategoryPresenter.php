@@ -26,7 +26,13 @@ class CategoryPresenter extends FractalPresenter
     public function getCatePathName($path)
     {
         $cate_ids = explode(',', $path);
-        $categories = Category::whereIn('id', $cate_ids)->orderBy('id', 'asc')->pluck('name')->toArray();
-        return implode(' > ', $categories);
+        $categories = Category::whereIn('id', $cate_ids)->orderBy('id', 'asc')->pluck('name','id')->toArray();
+        $category_str = '';
+        foreach ($cate_ids as $cate_id) {
+            if (isset($categories[$cate_id])) {
+                $category_str .= $categories[$cate_id].' > ';
+            }
+        }
+        return rtrim($category_str, ' > ');
     }
 }

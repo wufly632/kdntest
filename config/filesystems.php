@@ -63,6 +63,11 @@ return [
             'bucket' => env('AWS_BUCKET'),
         ],
 
+        'mysqldump' => [
+            'driver' => 'local',
+            'root' => '/var/www/html/mysqldump',
+        ],
+
     ],
 
 ];

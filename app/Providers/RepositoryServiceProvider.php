@@ -63,6 +63,8 @@ class RepositoryServiceProvider extends ServiceProvider
         $this->app->bind(\App\Repositories\Website\MobileHomeCardRepository::class, \App\Repositories\Website\MobileHomeCardRepositoryEloquent::class);
         $this->app->bind(\App\Repositories\Website\MobileCategoryRepository::class, \App\Repositories\Website\MobileCategoryRepositoryEloquent::class);
         $this->app->bind(\App\Repositories\Website\PcCategoryRepository::class, \App\Repositories\Website\PcCategoryRepositoryEloquent::class);
+        $this->app->bind(\App\Repositories\CateAttr\CategoryAscriptionRepository::class, \App\Repositories\CateAttr\CategoryAscriptionRepositoryEloquent::class);
+        $this->app->bind(\App\Repositories\Product\ProductOnOfflineRepository::class, \App\Repositories\Product\ProductOnOfflineRepositoryEloquent::class);
         //:end-bindings:
     }
 }
