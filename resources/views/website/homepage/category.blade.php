@@ -18,6 +18,7 @@
         .btn-mine {
             width: 8em;
             padding: 2px 0;
+            margin: 20px 0;
         }
 
         .pt-1 {
@@ -34,6 +35,16 @@
             font-size: 24px;
             margin-left: 10px;
             cursor: pointer
+        }
+
+        .del-btn {
+            color: #000;
+            background-color: #EEEEEE;
+            border: 1px solid #aaa;
+        }
+
+        .mine-border-left {
+            border-left: 5px solid #3c8dbc;
         }
     </style>
 @endsection
@@ -56,79 +67,90 @@
         <section class="content">
             <div class="row">
                 <div class="col-xs-12" id="accordion">
-                    <button class="btn btn-mine btn-primary" @click="add" style="margin-bottom: 10px;">添加栏目</button>
-                    <div class="box-group">
-                        <template v-for="(item,index) in items">
-                            <!-- we are adding the .panel class so bootstrap.js collapse plugin detects it -->
-                            <div class="box">
-                                <div class="box-header with-border">
-                                    <div class="col-sm-2">
-                                        <label for="" class="pt-1 col-sm-4">名称:</label>
-                                        <div class="col-sm-8">
-                                            <input type="text" class="form-control my-form-contrl" v-model="item.name">
+                    <div class="box box-primary">
+                        <div class="box-body">
+                            <button class="btn btn-mine btn-primary" @click="add">添加栏目
+                            </button>
+                            <div class="box-group">
+                                <template v-for="(item,index) in items">
+                                    <!-- we are adding the .panel class so bootstrap.js collapse plugin detects it -->
+                                    <div class="box" style="border-top: 1px solid #EEEEEE;margin-bottom: 0">
+                                        <div class="box-header with-border mine-border-left">
+                                            <div class="col-sm-2">
+                                                <label for="" class="pt-1 col-sm-4">名称:</label>
+                                                <div class="col-sm-8">
+                                                    <input type="text" class="form-control my-form-contrl"
+                                                           v-model="item.name">
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-2">
+                                                <label for="" class="pt-1 col-sm-4">分类ID:</label>
+                                                <input type="text" class="form-control my-form-contrl"
+                                                       v-model="item.category_id">
+                                            </div>
+                                            <div class="col-sm-2">
+                                                <label for="" class="pt-1 col-sm-4">排序:</label>
+                                                <input type="text" class="form-control my-form-contrl"
+                                                       v-model="item.sort">
+                                            </div>
+                                            <a class="btn btn-sm btn-primary pull-right" @click="showChild(index)">
+                                                <span class="fa fa-angle-double-up" v-if="item.show"></span>
+                                                <span class="fa fa-angle-double-down" v-else></span>
+                                            </a>
                                         </div>
-                                    </div>
-                                    <div class="col-sm-2">
-                                        <label for="" class="pt-1 col-sm-4">分类ID:</label>
-                                        <input type="text" class="form-control my-form-contrl"
-                                               v-model="item.category_id">
-                                    </div>
-                                    <div class="col-sm-2">
-                                        <label for="" class="pt-1 col-sm-4">排序:</label>
-                                        <input type="text" class="form-control my-form-contrl" v-model="item.sort">
-                                    </div>
-                                    <a class="btn btn-sm btn-primary pull-right" @click="showChild(index)">
-                                        <span class="fa fa-angle-double-up" v-if="item.show"></span>
-                                        <span class="fa fa-angle-double-down" v-else></span>
-                                    </a>
-                                </div>
-                                <template v-if="item.show">
-                                    <div class="box-body">
-                                        <ul class="list-group list-group-unbordered">
-                                            <template v-for="(child,childIndex) in item.child">
-                                                <li class="list-group-item clearfix">
-                                                    <div class="col-sm-2 col-sm-offset-1">
-                                                        <label class="col-sm-4 pt-1" for="">名称</label>
-                                                        <div class="col-sm-8">
-                                                            <input type="text"
-                                                                   class="form-control my-form-contrl"
-                                                                   v-model="child.name">
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-sm-2">
-                                                        <label class="col-sm-4 pt-1" for="">分类ID</label>
-                                                        <div class="col-sm-8">
-                                                            <input type="text" class="form-control my-form-contrl"
-                                                                   v-model="child.category_id">
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-sm-2">
-                                                        <label class="col-sm-4 pt-1" for="">排序</label>
-                                                        <div class="col-sm-8">
-                                                            <input type="text" class="form-control my-form-contrl"
-                                                                   v-model="child.sort">
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-sm-2">
+                                        <template v-if="item.show">
+                                            <div class="box-body">
+                                                <ul class="list-group list-group-unbordered">
+                                                    <template v-for="(child,childIndex) in item.child">
+                                                        <li class="list-group-item clearfix">
+                                                            <div class="col-sm-2 col-sm-offset-1">
+                                                                <label class="col-sm-4 pt-1" for="">名称</label>
+                                                                <div class="col-sm-8">
+                                                                    <input type="text"
+                                                                           class="form-control my-form-contrl"
+                                                                           v-model="child.name">
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-sm-2">
+                                                                <label class="col-sm-4 pt-1" for="">分类ID</label>
+                                                                <div class="col-sm-8">
+                                                                    <input type="text"
+                                                                           class="form-control my-form-contrl"
+                                                                           v-model="child.category_id">
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-sm-2">
+                                                                <label class="col-sm-4 pt-1" for="">排序</label>
+                                                                <div class="col-sm-8">
+                                                                    <input type="text"
+                                                                           class="form-control my-form-contrl"
+                                                                           v-model="child.sort">
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-sm-2">
                                                         <span class="fa fa-minus-circle reduce-btn pt-1"
                                                               @click="removeChild(index, childIndex, child.id)"></span>
 
-                                                    </div>
-                                                </li>
-                                            </template>
-                                        </ul>
-                                        <div class="col-sm-offset-1">
-                                            <button class="btn btn-mine btn-primary" @click="save(index)">保存</button>
-                                            <button class="btn btn-mine btn-primary" @click="deleteItem(item.id,index)">
-                                                删除本条
-                                            </button>
-                                            <button class="btn btn-mine btn-primary" @click="addChild(index)">新建
-                                            </button>
-                                        </div>
+                                                            </div>
+                                                        </li>
+                                                    </template>
+                                                </ul>
+                                                <div class="col-sm-offset-1">
+                                                    <button class="btn btn-mine btn-primary" @click="save(index)">保存
+                                                    </button>
+                                                    <button class="btn btn-mine del-btn"
+                                                            @click="deleteItem(item.id,index)">
+                                                        删除本条
+                                                    </button>
+                                                    <button class="btn btn-mine btn-primary" @click="addChild(index)">新建
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </template>
                                     </div>
                                 </template>
                             </div>
-                        </template>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -186,6 +208,7 @@
                         if (res.data.status === 200) {
                             _thisVue.items[index] = res.data.content;
                             toastr.success('保存成功');
+                            location.reload();
                         } else {
                             toastr.error('保存失败');
                         }
