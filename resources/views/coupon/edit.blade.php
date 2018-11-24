@@ -72,6 +72,18 @@
                 </div>
                 <div class="form-group">
                     <div class="col-xs-1"></div>
+                    <label for="rebate_type" class="col-xs-2 control-label">
+                        优惠券类型：
+                    </label>
+                    <div class="col-xs-7">
+                        <select name="rebate_type" id="rebate_type" class="form-control">
+                            <option value="1">面额券</option>
+                            <option value="2">折扣券</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-xs-1"></div>
                     <label for="currency" class="col-xs-2 control-label">
                         币种：
                     </label>
@@ -375,5 +387,6 @@
                 }
             });
         });
+        $('#rebate_type').val('{{ $coupon->rebate_type }}');
     </script>
 @stop
