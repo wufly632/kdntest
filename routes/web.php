@@ -132,8 +132,8 @@ Route::group(['middleware' => ['auth', 'web']], function () {
         Route::post('/update/{id?}', 'HomePageController@update')->name('homepage.update');
         Route::post('banners/upload', 'BannerController@uploadImages')->name('banners.upload');
         Route::resources([
+            'iconsmanage' => 'IconController',
             'banners' => 'BannerController',
-            'icons' => 'IconController'
         ]);
         //PC首页
         Route::get('/homepage', 'HomePageController@index')->name('homepage.index');

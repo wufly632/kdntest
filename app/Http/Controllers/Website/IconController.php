@@ -78,9 +78,10 @@ class IconController extends Controller
                     'time_duration' => 'required'
                 ]
             );
-            $this->iconService->createIcon($validator);
-            return ApiResponse::success();
+            $id = $this->iconService->createIcon($validator);
+            return ApiResponse::success($id);
         } catch (\Exception $e) {
+            dd($e);
             return ApiResponse::failure(g_API_ERROR, $e->getMessage());
         }
 
