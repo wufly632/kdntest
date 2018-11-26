@@ -92,44 +92,6 @@
                                         </div>
                                         <div class="form-group">
                                             <div class="col-xs-1"></div>
-                                            <label for="rebate_type" class="col-xs-2 control-label">
-                                                优惠券类型：
-                                            </label>
-                                            <div class="col-xs-7">
-                                                <select name="rebate_type" id="rebate_type" class="form-control">
-                                                    <option value="1">面额券</option>
-                                                    <option value="2">折扣券</option>
-                                                </select>
-                                            </div>
-                                        </div>
-                                        <div class="form-group">
-                                            <div class="col-xs-1"></div>
-                                            <label for="currency" class="col-xs-2 control-label">
-                                                币种：
-                                            </label>
-                                            <div class="col-xs-7">
-                                                <select name="currency_code" id="currency" class="form-control">
-                                                    @foreach($currencys as $currency)
-                                                        <option value="{{ $currency->currency_code }}">{{ $currency->symbol.$currency->name }}</option>
-                                                    @endforeach
-                                                </select>
-                                            </div>
-                                        </div>
-                                        <div class="form-group">
-                                            <div class="col-xs-1"></div>
-                                            <label for="coupon_price" class="col-xs-2 control-label">
-                                                券面额：
-                                            </label>
-                                            <div class="col-xs-7">
-                                                <div class="input-group">
-                                                    <input type="text" id="coupon_price" class="form-control"
-                                                           name="coupon_price"><span
-                                                            class="input-group-addon">元</span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="form-group">
-                                            <div class="col-xs-1"></div>
                                             <label for="coupon_count" class="col-xs-2 control-label">
                                                 有效期：
                                             </label>
@@ -178,6 +140,44 @@
                                             <div class="col-xs-7">
                                                 <input type="text" id="daterange2" autocomplete="off"
                                                        class="form-control date_choice" name="coupon_grant">
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="col-xs-1"></div>
+                                            <label for="rebate_type" class="col-xs-2 control-label">
+                                                优惠券类型：
+                                            </label>
+                                            <div class="col-xs-7">
+                                                <select name="rebate_type" id="rebate_type" class="form-control">
+                                                    <option value="1">面额券</option>
+                                                    <option value="2">折扣券</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="col-xs-1"></div>
+                                            <label for="currency" class="col-xs-2 control-label">
+                                                币种：
+                                            </label>
+                                            <div class="col-xs-7">
+                                                <select name="currency_code" id="currency" class="form-control">
+                                                    @foreach($currencys as $currency)
+                                                        <option value="{{ $currency->currency_code }}">{{ $currency->symbol.$currency->name }}</option>
+                                                    @endforeach
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="col-xs-1"></div>
+                                            <label for="coupon_price" class="col-xs-2 control-label">
+                                                券面额：
+                                            </label>
+                                            <div class="col-xs-7">
+                                                <div class="input-group">
+                                                    <input type="text" id="coupon_price" class="form-control"
+                                                           name="coupon_price"><span
+                                                            class="input-group-addon">元</span>
+                                                </div>
                                             </div>
                                         </div>
                                         <div class="form-group">
