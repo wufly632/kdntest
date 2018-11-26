@@ -207,6 +207,9 @@
                                 <li>
                                     <span class="mess-name">叶子类目:</span><span class="mess-key">@{{ select_categroy_is_final ? '是' : '否' }}</span>
                                 </li>
+                                <li>
+                                    <span class="mess-name">描述:</span><span class="mess-key">@{{ select_categroy_describe }}</span>
+                                </li>
 
                             </ul>
                         </div>
@@ -340,6 +343,15 @@
                                     <div class="col-xs-7">
                                         <input name="is_final" value="0" type="radio" checked>否
                                         <input name="is_final" value="1" type="radio">是
+                                    </div>
+                                </div>
+                                <div class="form-group" style="height: 30px;">
+                                    <div class="col-xs-1"></div>
+                                    <label for="name" class="col-xs-2 control-label">
+                                        描述：
+                                    </label>
+                                    <div class="col-xs-7">
+                                        <input name="describe" type="text" class="form-control">
                                     </div>
                                 </div>
                                 <div class="modal-footer">
@@ -485,6 +497,8 @@
                 select_categroy_en_name: '',
                 select_categroy_sort: '',
                 select_categroy_is_final: 0,
+                select_categroy_describe:'',
+
             }
         })
 
@@ -727,7 +741,7 @@
             $("#updateCategoryContainer").find("input[name=en_name]").val(category_detail_vue.select_categroy_en_name);
             $("#updateCategoryContainer").find("input[name=sort]").val(category_detail_vue.select_categroy_sort);
             $("#updateCategoryContainer").find("input[name=is_final][value="+category_detail_vue.select_categroy_is_final+"]").attr("checked",true);
-
+            $("#updateCategoryContainer").find("input[name=describe]").val(category_detail_vue.select_categroy_describe);
             $("#saveUpdateCategoryInfoButton").data('category_id',category_id);
 
             //请求分类信息
@@ -775,6 +789,7 @@
             name = $("#updateCategoryContainer").find("input[name=name]").val();
             en_name = $("#updateCategoryContainer").find("input[name=en_name]").val();
             sort = $("#updateCategoryContainer").find("input[name=sort]").val();
+            describe = $("#updateCategoryContainer").find("input[name=describe]").val();
             is_final = $("#updateCategoryContainer").find("input[name=is_final]:checked").val();
             category_id = $("#saveUpdateCategoryInfoButton").data('category_id');
 
@@ -804,6 +819,7 @@
                     "en_name":en_name,
                     "sort":sort,
                     "is_final": is_final,
+                    "describe": describe,
                     "_token":"{{csrf_token()}}",
                 },
                 type:'POST',
@@ -902,6 +918,7 @@
                         category_detail_vue.select_categroy_en_name = category.en_name;
                         category_detail_vue.select_categroy_sort = category.sort;
                         category_detail_vue.select_categroy_is_final = category.is_final;
+                        category_detail_vue.select_categroy_describe = category.describe;
                     }
                 },
                 complete: function () {

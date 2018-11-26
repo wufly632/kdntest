@@ -128,6 +128,7 @@ class CategoryService
             $data['en_name'] = $request->en_name;
             $data['sort'] = $request->sort;
             $data['is_final'] = $request->is_final;
+            $data['describe'] = $request->describe;
             $data['parent_id'] = $this->getParentId($category_id, $request->first_level_category, $request->second_level_category);
             if ($data['parent_id'] == 0) {
                 $data['level'] = 1;
