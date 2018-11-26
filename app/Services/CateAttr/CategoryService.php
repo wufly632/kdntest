@@ -171,7 +171,7 @@ class CategoryService
         if ($first_level_category < 0) {
             return $parent_id;
         }
-        if ($first_level_category === $category_id) {
+        if ($first_level_category == $category_id) {
             return $parent_id;
         }
 
