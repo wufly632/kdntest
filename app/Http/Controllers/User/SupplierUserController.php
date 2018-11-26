@@ -93,15 +93,18 @@ class SupplierUserController extends Controller
      */
     public function update(SupplierUserUpdateRequest $request, $id)
     {
-        $userRequest = $request->only(['name', 'mobile', 'email', 'password', 'password_confirmation', 'status', 'company_name']);
+        $userRequest = $request->only(['name', 'mobile', 'email', 'status', 'company_name']);
         if ($request->filled('password')) {
+            if ($request->input('password') != $request->input('password_confirmation')) {
+                return ApiResponse::failure(g_API_ERROR, '两次密码输入不一致');
+            }
             $userRequest['password'] = \Hash::make($request->input('password'));
         }
         $result = $this->supplierUserService->updateUser($userRequest, $id);
         if ($result['status'] != 200) {
             return ApiResponse::failure(g_API_ERROR, $result['msg']);
         }
-        return ApiResponse::success('创建成功');
+        return ApiResponse::success('修改成功');
 
     }
 

@@ -24,7 +24,11 @@ class SupplierUserUpdateRequest extends FormRequest
     public function rules()
     {
         return [
-
+            // 'name' => 'required',
+            // 'mobile' => 'required',
+            // 'email' => 'required|email|unique:supplier_users,email',
+            // 'password' => 'required|confirmed',
+            // 'password_confirmation' => 'required|min:6|same:password'
         ];
     }
 
@@ -36,6 +40,7 @@ class SupplierUserUpdateRequest extends FormRequest
             'email' => ':attribute 必须为邮箱',
             'in' => ':attribute 不正确',
             'required_if' => '缺少 :attribute',
+            'password_confirmation' => '两次密码不一致'
         ];
     }
 }
