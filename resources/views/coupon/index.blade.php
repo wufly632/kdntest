@@ -503,5 +503,15 @@
                 }
             });
         }
+
+        let rebateType = $('#rebate_type');
+        let rebateTypeShow = $('#rebate_type_show')
+        rebateType.change(function () {
+            if (rebateType.val() == 1) {
+                rebateTypeShow.html('元');
+            } else {
+                rebateTypeShow.html('%减免');
+            }
+        })
     </script>
 @stop
