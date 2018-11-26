@@ -104,7 +104,7 @@
                         <div class="input-group">
                             <input type="text" id="coupon_price" class="form-control" name="coupon_price"
                                    value="{{$coupon->coupon_price}}"><span
-                                    class="input-group-addon">元</span>
+                                    class="input-group-addon" id="rebate_type_show">元</span>
                         </div>
                     </div>
                 </div>
@@ -387,6 +387,22 @@
                 }
             });
         });
-        $('#rebate_type').val('{{ $coupon->rebate_type }}');
+
+        let rebateType = $('#rebate_type');
+        let rebateTypeShow = $('#rebate_type_show')
+        rebateType.val('{{ $coupon->rebate_type }}');
+        if (rebateType.val() == 1) {
+            rebateTypeShow.html('元');
+        } else {
+            rebateTypeShow.html('%减免');
+        }
+
+        rebateType.change(function () {
+            if (rebateType.val() == 1) {
+                rebateTypeShow.html('元');
+            } else {
+                rebateTypeShow.html('%减免');
+            }
+        })
     </script>
 @stop
