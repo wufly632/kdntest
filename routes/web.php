@@ -90,6 +90,7 @@ Route::group(['middleware' => ['auth', 'web']], function () {
         Route::post('/getSingleSkuHtml', ['as' => 'promotion.getSingleSkuHtml', 'uses' => 'PromotionController@getSingleSkuHtml']);
         Route::post('/delete', ['as' => 'promotion.delete', 'uses' => 'PromotionController@delete']);
         Route::post('/imgUpload', ['as' => 'promotion.imgUpload', 'uses' => 'PromotionController@imgUpload']);
+        Route::put('/homeshow/{id}', ['as' => 'promotion.homeshow.update', 'uses' => 'PromotionController@updateHomeShow']);
     });
 
     //优惠券模块
@@ -131,15 +132,27 @@ Route::group(['middleware' => ['auth', 'web']], function () {
         Route::post('/update/{id?}', 'HomePageController@update')->name('homepage.update');
         Route::post('banners/upload', 'BannerController@uploadImages')->name('banners.upload');
         Route::resources([
+            'iconsmanage' => 'IconController',
             'banners' => 'BannerController',
-            'icons' => 'IconController'
         ]);
         //PC首页
         Route::get('/homepage', 'HomePageController@index')->name('homepage.index');
-        Route::get('/pccategorys', 'HomePageController@index')->name('homepage.categorys.index');
+        //获取
+        Route::get('/pccategorys', 'PcCategoryController@index')->name('pc.categorys.index');
+        //删除
+        Route::delete('/pccategorys/{id}', 'PcCategoryController@delete')->name('pc.categorys.delete');
+        //添加
+        Route::post('/pccategorys', 'PcCategoryController@store')->name('pc.categorys.store');
         //手机首页
         Route::get('/mobilehomepage', 'MobileHomePageController@index')->name('mobile.homepage.index');
+
         Route::get('/mobilecategorys', 'MobileCategoryController@index')->name('mobile.categorys.index');
+
+        Route::delete('/mobilecategorys/{id}', 'MobileCategoryController@delete')->name('mobile.categorys.delete');
+
+        Route::post('/mobilecategorys', 'MobileCategoryController@store')->name('mobile.categorys.store');
+
+        Route::put('/mobilehomecard/{id}', 'MobileCardController@update')->name('mobile.homecard.update');
     });
 
     //发货管理

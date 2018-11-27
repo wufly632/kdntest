@@ -3,22 +3,23 @@
 namespace App\Http\Controllers\Website;
 
 use App\Services\Api\ApiResponse;
-use App\Services\Website\MobileCategoryService;
+use App\Services\Website\PcCategoryService;
+use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
 
-class MobileCategoryController
+class PcCategoryController extends Controller
 {
-    protected $mobileCategoryService;
+    protected $pcCategoryService;
 
-    public function __construct(MobileCategoryService $mobileCategoryService)
+    public function __construct(PcCategoryService $pcCategoryService)
     {
-        $this->mobileCategoryService = $mobileCategoryService;
+        $this->pcCategoryService = $pcCategoryService;
     }
 
     public function index()
     {
-        $categorys = $this->mobileCategoryService->get();
-        return view('website.mobile.category', compact('categorys'));
+        $categorys = $this->pcCategoryService->get();
+        return view('website.homepage.category', compact('categorys'));
     }
 
     public function store()
@@ -26,7 +27,7 @@ class MobileCategoryController
         $item = request()->input('item');
         try {
             DB::beginTransaction();
-            $newItem = $this->mobileCategoryService->updateOrCreate($item);
+            $newItem = $this->pcCategoryService->updateOrCreate($item);
             DB::commit();
             return ApiResponse::success($newItem);
         } catch (\Exception $e) {
@@ -39,7 +40,7 @@ class MobileCategoryController
     {
         try {
             DB::beginTransaction();
-            $this->mobileCategoryService->delete($id);
+            $this->pcCategoryService->delete($id);
             DB::commit();
         } catch (\Exception $e) {
             dd($e);

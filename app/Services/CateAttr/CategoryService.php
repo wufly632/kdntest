@@ -15,6 +15,7 @@ use App\Entities\Product\Product;
 use App\Repositories\CateAttr\CategoryAttributeRepository;
 use App\Repositories\CateAttr\CategoryRepository;
 use App\Services\Api\ApiResponse;
+use App\Services\Product\ProductService;
 use Carbon\Carbon;
 use DB;
 
@@ -30,16 +31,18 @@ class CategoryService
      * @var CategoryAttributeRepository
      */
     protected $categoryAttribute;
+    protected $productService;
 
     /**
      * GoodsController constructor.
      *
      * @param CategoryRepository $category
      */
-    public function __construct(CategoryRepository $category, CategoryAttributeRepository $categoryAttribute)
+    public function __construct(CategoryRepository $category, CategoryAttributeRepository $categoryAttribute, ProductService $productService)
     {
         $this->category = $category;
         $this->categoryAttribute = $categoryAttribute;
+        $this->productService = $productService;
     }
 
     public function getCategoryRepository()
@@ -128,6 +131,7 @@ class CategoryService
             $data['en_name'] = $request->en_name;
             $data['sort'] = $request->sort;
             $data['is_final'] = $request->is_final;
+            $data['describe'] = $request->describe;
             $data['parent_id'] = $this->getParentId($category_id, $request->first_level_category, $request->second_level_category);
             if ($data['parent_id'] == 0) {
                 $data['level'] = 1;
@@ -334,7 +338,7 @@ class CategoryService
         if ($category->level == 1) {
             $category_twos = $this->category->findWhere(['parent_id' => $category->id])->pluck('id')->toArray();
             $category_ids = $this->category->findWhereIn('parent_id', $category_twos)->pluck('id')->toArray();
-            $category_ids = array_merge($category_twos,$category_ids);
+            $category_ids = array_merge($category_twos, $category_ids);
         } elseif ($category->level == 2) {
             $category_ids = $this->category->findWhere(['parent_id' => $category->id])->pluck('id')->toArray();
             $category_ids[] = $category->id;
@@ -352,8 +356,8 @@ class CategoryService
             return ApiResponse::success('操作成功');
         } catch (\Exception $e) {
             DB::rollBack();
-            \Log::info('类目'.$category->id.'删除失败-'.$e->getMessage());
-            ding('类目'.$category->id.'删除失败-'.$e->getMessage());
+            \Log::info('类目' . $category->id . '删除失败-' . $e->getMessage());
+            ding('类目' . $category->id . '删除失败-' . $e->getMessage());
             return ApiResponse::failure(g_API_ERROR, '操作失败');
         }
     }
@@ -376,6 +380,11 @@ class CategoryService
         return $cateNameStr;
     }
 
+    /**
+     * 获取某一类目下的商品数量
+     * @param $categoryId
+     * @return mixed
+     */
      /*
      * 删除类目属性
      *
@@ -421,5 +430,46 @@ class CategoryService
             }
         }
         return $categoriesLikeName;
+    }
+
+    public function getCategoryProductSum($categoryId)
+    {
+        return $this->productService->checkProductCountByCateIds($this->getAllLevelThree($categoryId));
+
+    }
+
+    /**
+     * 获取所有第三级ID
+     * @param $categoryId
+     * @return array
+     */
+    public function getAllLevelThree($categoryId)
+    {
+        $cate = $this->category->find($categoryId);
+        if ($cate->is_final == 1) {
+            return [$cate->id];
+        } else {
+            return $this->getNextLevelAllCateId([$cate->id]);
+        }
+    }
+
+    /**
+     * 获取下级所有ID
+     * @param array $categoryIds
+     * @return array
+     */
+    public function getNextLevelAllCateId(Array $categoryIds)
+    {
+        $cate = $this->category->findWhereIn('parent_id', $categoryIds);
+        if ($cate[0]->level == 3) {
+            return array_pluck($cate->toArray(), 'id');
+        } else {
+            return $this->getNextLevelAllCateId(array_pluck($cate->toArray(), 'id'));
+        }
+    }
+
+    public function getCateByName($name)
+    {
+        return $this->category->model()::where('name', $name)->where('level', 3)->first();
     }
 }

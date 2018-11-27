@@ -33,7 +33,7 @@ class GoodSku extends Model implements Transformable
      *
      * @var array
      */
-    protected $fillable = [];
+    protected $guarded = ['id'];
 
     // 需同步的字段
     public static $syncField = ['id', 'good_id', 'value_ids', 'supply_price', 'price', 'good_stock', 'supplier_code',
