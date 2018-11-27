@@ -71,8 +71,8 @@
                     <input type="hidden" name="sku_str{{$val->id}}[]" value="{{$kv->value_ids}}"/>
                     {{$kv->supply_price}}
                 </td>
-                <td data-price="10">
-                    10
+                <td data-price="{{$kv->price}}">
+                    {{$kv->price}}
                 </td>
                 @if($type == 'quantity')
                     <td>

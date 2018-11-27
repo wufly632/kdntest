@@ -17,16 +17,8 @@ class IconService
     public function getIcons($option)
     {
 
-        if (!$option) {
-            $icons = $this->iconRepository->paginate();
-        } else {
-            $item = $this->iconRepository->findWhere($option);
-            $count = count($item);
-            $icons = new LengthAwarePaginator($item, $count, $page = 20);
-            $icons->withPath('icons');
-            $icons->appends($option);
-        }
-        return $icons;
+        $item = $this->iconRepository->findWhere($option);
+        return $item;
     }
 
     public function createIcon($data)
@@ -34,7 +26,7 @@ class IconService
         $time = explode('~', $data['time_duration']);
         $data['start_at'] = $time[0];
         $data['end_at'] = $time[1];
-        $this->iconRepository->create($data);
+        return $this->iconRepository->create($data)->id;
     }
 
     public function updateIconInfo($data, $id)

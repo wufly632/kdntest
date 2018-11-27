@@ -20,11 +20,20 @@ class GoodSku extends Model implements Transformable
     protected $table = "audit_good_skus";
 
     /**
+     * @function cdn加速
+     * @param $item
+     * @return \Illuminate\Contracts\Routing\UrlGenerator|mixed|string
+     */
+    public function getIconAttribute($item) {
+        return cdnUrl($item);
+    }
+
+    /**
      * The attributes that are mass assignable.
      *
      * @var array
      */
-    protected $fillable = [];
+    protected $guarded = ['id'];
 
     // 需同步的字段
     public static $syncField = ['id', 'good_id', 'value_ids', 'supply_price', 'price', 'good_stock', 'supplier_code',

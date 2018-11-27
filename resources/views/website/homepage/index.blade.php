@@ -90,7 +90,7 @@
                                 </form>
                             </div>
                             <div @click="editShow">
-                                <img v-lazy="bannerPlaceholder"
+                                <img :src="bannerPlaceholder"
                                      alt="">
                             </div>
                         </div>
@@ -106,7 +106,7 @@
                             <div class="col-sm-12" style="padding:2rem 0">
                                 <div class="col-sm-2" v-for="(good,goodindex) in goods">
                                     <label :for="'good'+goodindex">
-                                        <img v-lazy="good.main_pic" alt="" style="width: 200px;height: 200px;">
+                                        <img :src="good.main_pic" alt="" style="width: 200px;height: 200px;">
                                         <div style="min-height: 3em">@{{ good.good_title }}</div>
                                     </label>
                                     <div>
@@ -125,7 +125,7 @@
                 <div class="col-xs-12" v-for="(cardData,index) in cardDatas">
                     <div class="panel">
                         <div class="panel-heading clearfix">
-                            <h2 class="col-sm-3 h4 pull-left">@{{ cardData.title }}
+                            <h2 class="col-sm-4 h4 pull-left">@{{ cardData.title }}
                                 <input class="form-control my-form-control"
                                        type="text"
                                        v-model="cardData.title">
@@ -168,7 +168,7 @@
                                     </form>
                                 </div>
                                 <div class="image-wrapper col-sm-12" @click="appendChild" :data-index="index">
-                                    <img v-lazy="cardData.leftImg.src" alt=""
+                                    <img :src="cardData.leftImg.src" alt=""
                                          style="height: 100%;max-height: 600px;">
                                 </div>
                             </div>
@@ -204,8 +204,8 @@
                                         </div>
                                         <div @click="appendChild" :data-index="index"
                                              :data-index-two="innerIndex">
-                                            <img v-lazy="centerData.src" title="" alt=""
-                                                 style="height: 100%;max-height: 300px;">
+                                            <img :src="centerData.src" title="" alt=""
+                                                 style="height: 100%;max-height: 300px;min-height: 300px;min-width: 300px;">
                                         </div>
                                     </div>
                                     <div v-else class="image-wrapper col-sm-12">
@@ -238,7 +238,7 @@
                                         </div>
                                         <div @click="appendChild" :data-index="index"
                                              :data-index-two="innerIndex">
-                                            <img v-lazy="centerData.src" title="" alt=""
+                                            <img :src="centerData.src" title="" alt=""
                                                  style="height: 100%;max-height: 300px;">
                                         </div>
                                     </div>
@@ -308,7 +308,7 @@
                                 </div>
                                 <div class="image-wrapper col-sm-12" @click="appendChild" data-direction="right"
                                      :data-index="index">
-                                    <img v-lazy="cardData.rightImg.src" alt=""
+                                    <img :src="cardData.rightImg.src" alt=""
                                          style="height: 100%;max-height: 600px;">
                                 </div>
                             </div>
@@ -328,7 +328,7 @@
         var panelBanner = new Vue({
             el: '#panel-banner',
             data: {
-                bannerPlaceholder: 'http://weiweimao-image.oss-ap-south-1.aliyuncs.com/product/000001000218/5bd6fce70a64d.png',
+                bannerPlaceholder: "{{ url('images/bannerplaceholder.png') }}",
                 bannerEditShow: false,
                 banners: [
                         @foreach($banners as $banner)
@@ -794,7 +794,7 @@
                                 @endforeach
                             ],
                         rightImg: {
-                            src: "http://weiweimao-image.oss-ap-south-1.aliyuncs.com/product/000001000218/5bd6fde57af6a.png",
+                            src: "{{ url('/images/rightplaceholder.png') }}",
                             link: "https://www.tmall.com",
                             show: false,
                             catagory: '{{ $card->product_category_id }}',
@@ -814,8 +814,7 @@
                     let _elDirection = event.currentTarget.getAttribute('data-direction');
                     if (_elIndexTwo) {
                         this.cardDatas[_elIndex].centerImg[_elIndexTwo].show = true;
-                    }
-                    else if (_elDirection) {
+                    } else if (_elDirection) {
                         this.cardDatas[_elIndex].rightImg.show = true;
                     } else {
                         this.cardDatas[_elIndex].leftImg.show = true;

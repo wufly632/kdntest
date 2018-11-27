@@ -128,4 +128,9 @@ class ProductService
     {
         return $this->product->findWhereIn('id', $ids);
     }
+
+    public function checkProductCountByCateIds($categoryIds)
+    {
+        return $this->product->model()::where('status', 1)->whereIn('category_id', $categoryIds)->count();
+    }
 }

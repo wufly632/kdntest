@@ -7,25 +7,26 @@ use Prettus\Repository\Contracts\Transformable;
 use Prettus\Repository\Traits\TransformableTrait;
 
 /**
- * Class Icon.
+ * Class MobileHomeCard.
  *
  * @package namespace App\Entities\Website;
  */
-class Icon extends Model implements Transformable
+class MobileHomeCard extends Model implements Transformable
 {
     use TransformableTrait;
 
-    protected $table = 'website_icons';
-
-    public function getSrcAttribute($item)
-    {
-        return cdnUrl($item);
-    }
+    protected $table = 'website_mobile_homepage_cards';
     /**
      * The attributes that are mass assignable.
      *
      * @var array
      */
-    protected $fillable = ['title', 'src', 'category_id', 'start_at', 'end_at', 'sort'];
+    protected $fillable = ['title', 'content', 'type'];
+
+    protected $visible = ['id', 'title', 'content', 'type'];
+
+    protected $casts = [
+        'content' => 'array'
+    ];
 
 }
