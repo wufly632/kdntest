@@ -1019,6 +1019,30 @@
                 }
             })
         });
+        //添加促销商品
+        $('#myModal-one').on('click', '.pagination a', function (event) {
+            var event = event || window.event;
+            event.preventDefault(); // 兼容标准浏览器
+            window.event.returnValue = false; // 兼容IE6~8
+            var _index = $(this);
+            var url = _index.attr('href');
+            _index.attr('href', 'javascript:;');
+            var id = [];
+            $.ajax({
+                type: 'get',
+                url: url,
+                beforeSend: function () {
+                    _index.attr('disabled', true);
+                },
+                success: function (data) {
+                    $('#myModal-one').find('.seckill-modal').html(data);
+                    _index.attr('disabled', false);
+                },
+                error: function (data) {
+
+                }
+            })
+        });
         $(function () {
             $(".detail-box").on("click", '.icon-add', function () {
                 $(this).addClass("dis-no");
