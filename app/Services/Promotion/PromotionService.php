@@ -151,6 +151,8 @@ class PromotionService
                 $this->promotionGood->update($promotion_good, $promotion_good['id']);
             }
             if ($promotion['promotion_goods_sku']) {
+                // 删除原有的promotion_goods_sku
+                PromotionGoodSku::where(['activity_id' => $request->id])->delete();
                 PromotionGoodSku::insert($promotion['promotion_goods_sku']);
             }
             DB::commit();
@@ -517,9 +519,14 @@ class PromotionService
         if (!$activityGoods) {
             return ApiResponse::failure(g_API_ERROR, '请重新选择要设置的商品');
         }
+        // 商品sku促销价
+        $activityGoodSkus = $this->promotionGoodSku->findWhere(['goods_id' => $good_id, 'activity_id' => $activity_id])->toArray();
+        if ($activityGoodSkus) {
+            $activityGoodSkus = array_pluck($activityGoodSkus, null, 'sku_id');
+        }
         $good = $this->product->find($good_id);
         $goodSkus = $good->getGood->getSkus;
-        $skuHtml = view('promotion.singlesku', compact('goodSkus'));
+        $skuHtml = view('promotion.singlesku', compact('goodSkus', 'activityGoodSkus'));
         $html = response($skuHtml)->getContent();
         return ApiResponse::success($html);
     }
