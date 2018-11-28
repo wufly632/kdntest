@@ -683,8 +683,8 @@
                 anything: {!! $mobileCards !!}
             },
             created: function () {
-                if (this.anything.length === 0) {
-                    this.anything = [
+                if (this.anything.length !== 3) {
+                    let defult_anything = [
                         {
                             id: '',
                             type: 3,
@@ -739,7 +739,15 @@
 
                         }
 
-                    ]
+                    ];
+                    if (this.anything.length === 1) {
+                        this.anything.push(defult_anything[1]);
+                        this.anything.push(defult_anything[2]);
+                    } else if (this.anything.length === 2) {
+                        this.anything.push(defult_anything[2]);
+                    } else {
+
+                    }
                 }
                 this.anything.forEach(function (item, index) {
                     item.content.forEach(function (rightItem, rightIndex) {
