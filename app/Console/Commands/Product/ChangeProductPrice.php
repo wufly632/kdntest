@@ -54,7 +54,27 @@ class ChangeProductPrice extends Command
 
     public function handleProgress()
     {
-        $category_ids = [1,172,798,508];
+        $category_path = '0,1019,1063,%';
+        //查找该类目下所有的商品
+        $goods = Product::where('category_path', 'like', $category_path)
+            ->get();
+        foreach ($goods as $good) {
+            //查找所有的sku
+            $skus = ProductSku::where('good_id', $good->id)->get();
+            foreach ($skus as $sku) {
+                $sku->origin_price = $sku->price*1.6;
+                $sku->save();
+            }
+            $good->origin_price = $good->price*1.6;
+            $good->save();
+            $this->info($good->id.'finish');
+        }
+        $this->info('finish!');
+
+
+
+
+        /*$category_ids = [1,172,798,508];
         $this->info('start...');
         foreach ($category_ids as $category_id)
         {
@@ -91,6 +111,6 @@ class ChangeProductPrice extends Command
                 $this->info($good->id.'finished');
             }
         }
-        $this->info('end...');
+        $this->info('end...');*/
     }
 }
