@@ -814,8 +814,8 @@
                                         <tr>
                                             <td>商品图片</td>
                                             <td>商品信息</td>
-                                            <td>采购价</td>
                                             <td>供应价</td>
+                                            <td>售价</td>
                                             <td>最近30天销量</td>
                                             <td>库存数量</td>
                                             <td>操作</td>
@@ -844,16 +844,18 @@
                                                             <div class="col-xs-7 text-left">{{$product->good_code}}</div>
                                                         </div>
                                                     </td>
-                                                    <td>{{$product->stock_price}}起</td>
-                                                    <td>¥{{$product->supply_price}}起</td>
+                                                    <td>￥{{$product->supply_price}}起</td>
+                                                    <td>${{$product->price}}起</td>
                                                     <td>{{$product->orders}}</td>
                                                     <td>{{$product->good_stock}}</td>
                                                     <td>
                                                         <div><a href="javascript:void(0);"
                                                                 class="promotion-goods-delete"
                                                                 data-id="{{$product->id}}">删除</a></div>
+                                                        @if($promotion->activity_type)
                                                         <div class="set_promotion"><span class="promotion-goods-single"
                                                                                          data-id="{{$product->id}}">设置优惠</span>
+                                                            @endif
                                                         </div>
                                                     </td>
                                                 </tr>
