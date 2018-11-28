@@ -779,7 +779,7 @@
 
                     {
                         id: '{{ $card->id }}',
-                        title: '{{ $card->title }}',
+                        title: '{!! $card->title !!}',
                         link: '{{ $card->link }}',
                         leftImg: JSON.parse('{!! $card->left_image !!}'),
                         centerImg:
