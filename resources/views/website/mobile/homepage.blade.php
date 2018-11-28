@@ -745,8 +745,12 @@
                         this.anything.push(defult_anything[2]);
                     } else if (this.anything.length === 2) {
                         this.anything.push(defult_anything[2]);
-                    } else {
-
+                    } else if (this.anything.length === 0) {
+                        this.anything.push(defult_anything[1]);
+                        this.anything.push(defult_anything[2]);
+                        this.anything.push(defult_anything[3]);
+                    }else{
+                        
                     }
                 }
                 this.anything.forEach(function (item, index) {
