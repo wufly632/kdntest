@@ -53,9 +53,8 @@ class TransferCategory extends Command
     public function handleProgress()
     {
         $cates = [
-          848 => 990,//parent_id
-          849 => 990,
-          865 => 990
+          866 => 990,//parent_id
+          809 => 1867,
         ];
         foreach ($cates as $id => $parent_id)
         {
