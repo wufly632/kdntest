@@ -153,6 +153,8 @@ Route::group(['middleware' => ['auth', 'web']], function () {
         Route::post('/mobilecategorys', 'MobileCategoryController@store')->name('mobile.categorys.store');
 
         Route::put('/mobilehomecard/{id}', 'MobileCardController@update')->name('mobile.homecard.update');
+
+        Route::post('/mobilehomecard', 'MobileCardController@store')->name('mobile.homecard.store');
     });
 
     //发货管理
