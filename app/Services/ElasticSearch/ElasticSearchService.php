@@ -33,11 +33,6 @@ class ElasticSearchService
         return $this->elasticSearchRepository->getClient();
     }
 
-    public function createMapping($index, $force = false)
-    {
-        return $this->elasticSearchRepository->createMapping($index, $force);
-    }
-
     public function putMapping($index)
     {
         return $this->elasticSearchRepository->putMapping($index);
