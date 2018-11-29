@@ -87,6 +87,7 @@ class GenerateSupplierSettle extends Command
                         DB::table('supplier_settle_receive')->insert($settle_receive_data);
                         DB::commit();
                     } catch (\Exception $e) {
+                        DB::rollBack();
                         \Log::info($item->supplier_id.'生成结算单出错-'.$e->getMessage());
                         ding($item->supplier_id.'生成结算单出错-'.$e->getMessage());
                         continue;

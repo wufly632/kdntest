@@ -2,8 +2,10 @@
 
 namespace App\Presenters\Good;
 
+use App\Entities\CateAttr\AttributeValue;
 use App\Transformers\Good\GoodTransformer;
 use Prettus\Repository\Presenter\FractalPresenter;
+use DB;
 
 /**
  * Class GoodPresenter.
@@ -107,6 +109,25 @@ class GoodPresenter extends FractalPresenter
             }
         }
         return compact('sku_attribute_name', 'sku_th_names', 'sku_attribute_value_name', 'attr_num');
+    }
+
+    /**
+     * @function sku属性及属性值显示
+     * @param $sku_value_ids
+     * @return string
+     */
+    public function displaySkuAttr($sku_value_ids)
+    {
+        $attr_value_str = '';
+        $attr_value_ids = explode(',', $sku_value_ids);
+        $attr_values = DB::table('admin_attribute_value as av')->leftJoin('admin_attribute as a', 'a.id', '=', 'av.attribute_id')
+            ->whereIn('av.id', $attr_value_ids)
+            ->selectRaw('av.id,av.attribute_id,av.name,a.name as attr_name')
+            ->get();
+        foreach ($attr_values as $attr_value) {
+            $attr_value_str .= $attr_value->attr_name.':'.$attr_value->name.',';
+        }
+        return rtrim($attr_value_str, ',');
     }
 
 }
