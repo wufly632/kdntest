@@ -45,7 +45,7 @@
                                         </div>
                                     </div>
                                     <div class="col-sm-1">
-                                        <input type="submit" class="btn-sm btn-info">
+                                        <input type="submit" class="btn-sm btn-info" value="查找">
                                     </div>
                                     <div class="col-sm-1">
                                         <input type="button" class="btn-sm btn-primary" value="创建" id="create-banner"

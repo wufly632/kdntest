@@ -42,6 +42,10 @@ class Kernel extends ConsoleKernel
 
         //发货单自动确认
         $schedule->command('auto:ship_order_confirm --y')->dailyAt('0:10');
+
+        //每天晚上11点自动备份数据库
+        $schedule->command('backup:clean')->dailyAt('15:10');
+        $schedule->command('backup:run --only-db')->dailyAt('15:30');
     }
 
     /**

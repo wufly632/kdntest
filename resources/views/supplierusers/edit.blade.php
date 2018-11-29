@@ -33,6 +33,17 @@
             </div>
             <div class="form-group">
                 <div class="col-xs-1"></div>
+                <label class="col-xs-2 control-label" for="name">
+                    公司名称:
+                </label>
+                <div class="col-xs-7">
+                    <input type="text" id="name" autofocus name="company_name"
+                           class="form-control"
+                           value="@if(isset($user->company_name)){{ $user->company_name }}@endif">
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-xs-1"></div>
                 <label for="coupon_name" class="col-xs-2 control-label" for="mobile">
                     手机号：
                 </label>
@@ -53,24 +64,26 @@
                            value="@if(isset($user->email)){{ $user->email }}@endif">
                 </div>
             </div>
-            <div class="form-group">
-                <div class="col-xs-1"></div>
-                <label for="password" class="col-xs-2 control-label">
-                    新密码：
-                </label>
-                <div class="col-xs-7">
-                    <input type="password" id="password" class="form-control" name="password">
+            @if(isset($user->id))
+                <div class="form-group">
+                    <div class="col-xs-1"></div>
+                    <label for="password" class="col-xs-2 control-label">
+                        新密码：
+                    </label>
+                    <div class="col-xs-7">
+                        <input type="password" id="password" class="form-control" name="password">
+                    </div>
                 </div>
-            </div>
-            <div class="form-group">
-                <div class="col-xs-1"></div>
-                <label for="password_confirmation" class="col-xs-2 control-label">
-                    确认密码：
-                </label>
-                <div class="col-xs-7">
-                    <input type="password" id="password_confirmation" class="form-control" name="password_confirmation">
+                <div class="form-group">
+                    <div class="col-xs-1"></div>
+                    <label for="password_confirmation" class="col-xs-2 control-label">
+                        确认密码：
+                    </label>
+                    <div class="col-xs-7">
+                        <input type="password" id="password_confirmation" class="form-control" name="password_confirmation">
+                    </div>
                 </div>
-            </div>
+            @endif
             <div>
                 <button type="button" class="btn btn-danger col-xs-offset-3 cancel">取消</button>
                 <button type="button" class="btn btn-success col-xs-offset-4 save">保存</button>
@@ -111,7 +124,7 @@
                         };
                         toastr.success(toastrMsg);
                     } else {
-                        toastr.error(res.data.msg);
+                        toastr.error(res.msg);
                         _index.attr('disabled', false);
                         _index.html('保存');
                     }

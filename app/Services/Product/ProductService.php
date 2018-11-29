@@ -2,7 +2,7 @@
 // +----------------------------------------------------------------------
 // | ProductService.php
 // +----------------------------------------------------------------------
-// | Description: 
+// | Description:
 // +----------------------------------------------------------------------
 // | Time: 2018/9/29 下午2:41
 // +----------------------------------------------------------------------
@@ -19,6 +19,7 @@ use App\Criteria\Product\ProductTitleCriteria;
 use App\Entities\Product\Product;
 use App\Repositories\Product\ProductRepository;
 use App\Services\Api\ApiResponse;
+use Carbon\Carbon;
 use Request, DB, Log;
 
 class ProductService
@@ -61,6 +62,9 @@ class ProductService
             $product->status = Product::ONLINE;
             $product->rebate_level_one = $request->rebate_level_one;
             $product->rebate_level_two = $request->rebate_level_two;
+            if ($product->shelf_at <= 0) {
+                $product->shelf_at = Carbon::now()->toDateTimeString();
+            }
             $product->save();
             DB::commit();
             return ApiResponse::success('上架成功');
@@ -123,5 +127,10 @@ class ProductService
     public function getByIds(Array $ids)
     {
         return $this->product->findWhereIn('id', $ids);
+    }
+
+    public function checkProductCountByCateIds($categoryIds)
+    {
+        return $this->product->model()::where('status', 1)->whereIn('category_id', $categoryIds)->count();
     }
 }

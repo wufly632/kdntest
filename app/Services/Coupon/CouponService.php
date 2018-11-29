@@ -2,7 +2,7 @@
 // +----------------------------------------------------------------------
 // | CouponService.php
 // +----------------------------------------------------------------------
-// | Description: 
+// | Description:
 // +----------------------------------------------------------------------
 // | Time: 2018/9/20 上午11:40
 // +----------------------------------------------------------------------
@@ -24,7 +24,7 @@ use App\Validators\Coupon\CouponValidator;
 use Carbon\Carbon;
 use function Composer\Autoload\includeFile;
 use Illuminate\Support\Facades\Auth;
-use DB,Request;
+use DB, Request;
 use Illuminate\Support\Facades\Input;
 use Prettus\Validator\Contracts\ValidatorInterface;
 
@@ -74,12 +74,12 @@ class CouponService
     {
         try {
             DB::beginTransaction();
-            $coupon = $request->only(['coupon_name','coupon_price', 'coupon_use_price', 'coupon_number',
-                                      'use_type', 'use_days', 'coupon_use_startdate', 'coupon_use_enddate',
-                                      'coupon_grant_startdate', 'coupon_grant_enddate', 'coupon_purpose',
-                                      'coupon_remark','coupon_key']);
+            $coupon = $request->only(['coupon_name', 'coupon_price', 'currency_code', 'coupon_use_price', 'coupon_number',
+                'use_type', 'use_days', 'coupon_use_startdate', 'coupon_use_enddate',
+                'coupon_grant_startdate', 'coupon_grant_enddate', 'coupon_purpose',
+                'coupon_remark', 'coupon_key']);
             if ($request->coupon_purpose == 4) {
-                if (! $request->coupon_key) {
+                if (!$request->coupon_key) {
                     return ApiResponse::failure(g_API_ERROR, '请填写券口令');
                 }
                 if ($this->coupon->findWhere(['coupon_key' => $request->coupon_key])->count() > 0) {
@@ -120,15 +120,15 @@ class CouponService
     {
         try {
             DB::beginTransaction();
-            $coupon = $request->only(['id','coupon_name','coupon_price', 'coupon_key','coupon_use_price', 'coupon_number',
-                                      'use_type', 'use_days', 'coupon_use_startdate', 'coupon_use_enddate',
-                                      'coupon_grant_startdate', 'coupon_grant_enddate', 'coupon_purpose',
-                                      'coupon_remark']);
+            $coupon = $request->only(['id', 'coupon_name', 'coupon_price', 'currency_code', 'coupon_key', 'coupon_use_price', 'coupon_number',
+                'use_type', 'use_days', 'coupon_use_startdate', 'coupon_use_enddate',
+                'coupon_grant_startdate', 'coupon_grant_enddate', 'coupon_purpose',
+                'coupon_remark']);
             if ($request->coupon_purpose == 4) {
-                if (! $request->coupon_key) {
+                if (!$request->coupon_key) {
                     return ApiResponse::failure(g_API_ERROR, '请填写券口令');
                 }
-                if ($this->coupon->findWhere([['coupon_key','=', $request->coupon_key], ['id', '<>', $request->id]])->count() > 0) {
+                if ($this->coupon->findWhere([['coupon_key', '=', $request->coupon_key], ['id', '<>', $request->id]])->count() > 0) {
                     return ApiResponse::failure(g_API_ERROR, '券口令重复');
                 }
             }
@@ -149,7 +149,7 @@ class CouponService
 
             $coupon['user_id'] = Auth::id();
             $coupon['updated_at'] = Carbon::now()->toDateTimeString();
-            $this->coupon->update($coupon,$request->id);
+            $this->coupon->update($coupon, $request->id);
             DB::commit();
             return ApiResponse::success('修改成功');
         } catch (\Exception $e) {

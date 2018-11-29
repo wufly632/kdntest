@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\CateAttr;
 
+use App\Entities\CateAttr\Category;
 use App\Http\Controllers\Controller;
 use App\Services\Api\ApiResponse;
 use App\Services\CateAttr\CategoryService;
@@ -18,8 +19,18 @@ class CategoryController extends Controller
     protected $categoryService;
 
     protected $users = [
-        'wufly@cucoe.com',
-        'wfxykzd@163.com'
+        'fei.wu@waiwaimall.com',
+        'yingfei.zou@waiwaimall.com',
+        'long.hao@waiwaimall.com',
+    ];
+
+    protected $add_users = [
+        'fei.wu@waiwaimall.com',
+        'yingfei.zou@waiwaimall.com',
+        'long.hao@waiwaimall.com',
+        'chengxi.luo@waiwaimall.com',
+        'qiang.han@waiwaimall.com',
+        "jia.cheng@waiwaimall.com",
     ];
 
     /**
@@ -104,6 +115,9 @@ class CategoryController extends Controller
      */
     public function update(Request $request)
     {
+        if(!in_array(Auth::user()->email, $this->add_users)){
+            return ApiResponse::failure(g_API_ERROR, '权限受限!');
+        }
         $result = $this->categoryService->updateOrInsert($request);
         if ($result['status'] == 200) {
             return ApiResponse::success([], '保存成功');
@@ -153,7 +167,7 @@ class CategoryController extends Controller
      */
     public function updateCategoryAttribute(Request $request)
     {
-        if(!in_array(Auth::user()->email, $this->users)){
+        if(!in_array(Auth::user()->email, $this->add_users)){
             return ApiResponse::failure(g_API_ERROR, '权限受限!');
         }
         return $this->categoryService->updateCategoryAttribute($request);
@@ -190,5 +204,50 @@ class CategoryController extends Controller
             return ApiResponse::success($category);
         }
         return ApiResponse::failure(g_API_ERROR, '获取下一级类目失败');
+    }
+
+    /**
+     * @function 删除类目
+     * @param Category $category
+     * @return mixed
+     */
+    public function delete(Category $category)
+    {
+        if (! $category) {
+            return ApiResponse::failure(g_API_ERROR, '该类目不存在');
+        }
+        if(!in_array(Auth::user()->email, $this->users)){
+            return ApiResponse::failure(g_API_ERROR, '权限受限!');
+        }
+        return $this->categoryService->deleteCategory($category);
+    }
+
+    /**
+     * @function 删除类目属性
+     * @param Request $request
+     * @return \App\Services\CateAttr\json|mixed
+     */
+    public function deleteCategoryAttribute(Request $request)
+    {
+        if(!in_array(Auth::user()->email, $this->users)){
+            return ApiResponse::failure(g_API_ERROR, '权限受限!');
+        }
+        return $this->categoryService->deleteCategoryAttribute($request);
+    }
+
+
+    /**
+     * @function 类目搜索
+     * @param Request $request
+     * @return array|mixed
+     */
+    public function searchCategory(Request $request)
+    {
+        $name = $request->input('name', '');
+        if (! $name) {
+            return ApiResponse::success([]);
+        }
+        $categories = $this->categoryService->searchCategory($name);
+        return ApiResponse::success($categories);
     }
 }

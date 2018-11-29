@@ -80,7 +80,7 @@ class SupplierUserService
     {
         try {
             $this->supplierUserRepository->update($request, $id);
-            return ApiResponse::success('创建成功');
+            return ApiResponse::success('修改成功');
         } catch (\Exception $e) {
 
             return ApiResponse::failure(g_API_ERROR, $e->getMessage());
@@ -94,5 +94,15 @@ class SupplierUserService
         } else {
             return false;
         }
+    }
+
+    public function getAll()
+    {
+        return $this->supplierUserRepository->all(['id', 'name']);
+    }
+
+    public function backMoney($supplier_id, $count)
+    {
+        $this->supplierUserRepository->model()::where('id', $supplier_id)->increment('amount_money', $count);
     }
 }

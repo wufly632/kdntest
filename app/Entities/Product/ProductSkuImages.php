@@ -16,6 +16,12 @@ class ProductSkuImages extends Model implements Transformable
     use TransformableTrait;
 
     protected $table = 'good_sku_images';
+
+    public function getSrcAttribute($item)
+    {
+        return cdnUrl($item);
+    }
+
     /**
      * The attributes that are mass assignable.
      *

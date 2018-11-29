@@ -29,7 +29,7 @@ class GoodCategoryIdCriteria implements CriteriaInterface
      */
     public function apply($model, RepositoryInterface $repository)
     {
-        if ($this->category_ids) {
+        if ($this->category_ids !== null) {
             $model = $model->whereIn('audit_goods.category_id', $this->category_ids);
         }
         return $model;

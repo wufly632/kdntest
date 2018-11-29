@@ -33,7 +33,8 @@
                         {{$goodSku->price ?? '0.00'}}
                     </td>
                     <td>
-                        <input class="table-into-input promotion-price" name="price{{$goodSku->id}}" value="">
+                        <input class="table-into-input promotion-price" name="price{{$goodSku->id}}"
+                               value="{{$activityGoodSkus[$goodSku->id]['price'] ?? ''}}">
                     </td>
                     @if($key == 0)
                     <td class="store_num" rowspan="{{$goodSku->count()}}">

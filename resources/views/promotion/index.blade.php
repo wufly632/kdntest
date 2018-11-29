@@ -38,7 +38,8 @@
                                         <div class="form-group">
                                             <label for="active_time" class="col-xs-4 control-label">活动时间</label>
                                             <div class="col-xs-4">
-                                                <input type="text" class="form-control create_time" id="daterange2" name="daterange2">
+                                                <input type="text" class="form-control create_time" id="daterange2"
+                                                       name="daterange2">
                                             </div>
                                         </div>
                                         <input type="button" class="btn btn-danger col-xs-offset-4" id="modal-cancel"
@@ -57,14 +58,16 @@
                                     <div class="form-group col-xs-3">
                                         <label for="" class="col-xs-4 control-label">创建时间：</label>
                                         <div class="col-xs-8">
-                                            <input type="text" id="daterange" name="daterange" class="form-control create_time"
+                                            <input type="text" id="daterange" name="daterange"
+                                                   class="form-control create_time"
                                                    autocomplete="off" value="{{old('daterange')}}">
                                         </div>
                                     </div>
                                     <div class="form-group col-xs-3">
                                         <label for="coupon_name" class="col-xs-4 control-label">活动名称：</label>
                                         <div class="col-xs-8">
-                                            <input type="text" name="title" class="form-control" value="{{old('title')}}">
+                                            <input type="text" name="title" class="form-control"
+                                                   value="{{old('title')}}">
                                         </div>
                                     </div>
                                     <div class="form-group col-xs-3">
@@ -73,7 +76,8 @@
                                             <select name="status" id="status" class="form-control">
                                                 <option value="">全部</option>
                                                 @foreach(\App\Entities\Promotion\Promotion::$allStatus as $key => $status)
-                                                    <option value="{{$key}}" @if(old('status') == $key) selected @endif>{{$status}}</option>
+                                                    <option value="{{$key}}"
+                                                            @if(old('status') == $key) selected @endif>{{$status}}</option>
                                                 @endforeach
                                             </select>
                                         </div>
@@ -89,6 +93,7 @@
                                     <tr>
                                         <td>序号</td>
                                         <td>活动时间</td>
+                                        <td>币种</td>
                                         <td>活动名称</td>
                                         <td>促销详情</td>
                                         <td>货值</td>
@@ -99,27 +104,28 @@
                                     </thead>
                                     <tbody>
                                     @foreach($promotions as $promotion)
-                                    <tr>
-                                        <td>{{$promotion->id}}</td>
-                                        <td>{{$promotion->start_at.'~'.$promotion->end_at}}</td>
-                                        <td>{{$promotion->title}}</td>
-                                        <td>{{$promotion->rule_text}}</td>
-                                        <td>{{$promotion->goods_value}}</td>
-                                        <td>{{$promotion->stock}}</td>
-                                        <td>
-                                            @if(\Carbon\Carbon::now()->toDateTimeString() < $promotion->start_at)
-                                                未开始
-                                            @elseif(\Carbon\Carbon::now()->toDateTimeString() > $promotion->end_at)
-                                                已结束
-                                            @else
-                                                进行中
-                                            @endif
-                                        </td>
-                                        <td>
-                                            <a href="{{secure_route('promotion.edit', ['promotion' => $promotion->id])}}">修改</a><br>
-                                            <a href="javascript:;" onclick="delPromotion({{$promotion->id}})">删除</a>
-                                        </td>
-                                    </tr>
+                                        <tr>
+                                            <td>{{$promotion->id}}</td>
+                                            <td>{{$promotion->start_at.'~'.$promotion->end_at}}</td>
+                                            <td>{{ $promotion->currency_code }}</td>
+                                            <td>{{$promotion->title}}</td>
+                                            <td>@if($promotion->activity_type!=''){{$promotion->rule_text}}@else{{$promotion->title}}@endif</td>
+                                            <td>{{$promotion->goods_value}}</td>
+                                            <td>{{$promotion->stock}}</td>
+                                            <td>
+                                                @if(\Carbon\Carbon::now()->toDateTimeString() < $promotion->start_at)
+                                                    未开始
+                                                @elseif(\Carbon\Carbon::now()->toDateTimeString() > $promotion->end_at)
+                                                    已结束
+                                                @else
+                                                    进行中
+                                                @endif
+                                            </td>
+                                            <td>
+                                                <a href="{{secure_route('promotion.edit', ['promotion' => $promotion->id])}}">修改</a><br>
+                                                <a href="javascript:;" onclick="delPromotion({{$promotion->id}})">删除</a>
+                                            </td>
+                                        </tr>
                                     @endforeach
                                     </tbody>
                                 </table>
@@ -147,25 +153,25 @@
             $('#promotion-add').on('click', '.save', function () {
                 var _index = $(this);
                 $.ajax({
-                    type:'post',
-                    url:"{{secure_route('promotion.addPost')}}",
-                    data:$('#promotion-add').serialize(),
-                    beforeSend:function() {
+                    type: 'post',
+                    url: "{{secure_route('promotion.addPost')}}",
+                    data: $('#promotion-add').serialize(),
+                    beforeSend: function () {
                         _index.attr('disabled', true);
                         _index.html('创建中...');
                     },
-                    success:function(data){
+                    success: function (data) {
                         if (data.status == 200) {
                             toastr.success(data.msg);
-                            window.location.href = '/promotion/edit/'+data.content;
+                            window.location.href = '/promotion/edit/' + data.content;
                         } else {
                             toastr.error(data.msg);
                             _index.attr('disabled', false);
                             _index.html('创建');
                         }
                     },
-                    error:function(data){
-                        var json=eval("("+data.responseText+")");
+                    error: function (data) {
+                        var json = eval("(" + data.responseText + ")");
                         toastr.error(json.msg);
                         _index.attr('disabled', false);
                         _index.html('创建');
@@ -173,15 +179,16 @@
                 });
             })
         });
+
         function delPromotion(id) {
-            layer.confirm('确定是否删除此活动?',{
+            layer.confirm('确定是否删除此活动?', {
                 btn: ['删除', '取消'] //按钮
             }, function () {
                 $.ajax({
-                    type:'post',
-                    url:"{{secure_route('promotion.delete')}}",
-                    data:{id:id,_token:"{{csrf_token()}}"},
-                    success:function(data){
+                    type: 'post',
+                    url: "{{secure_route('promotion.delete')}}",
+                    data: {id: id, _token: "{{csrf_token()}}"},
+                    success: function (data) {
                         if (data.status == 200) {
                             toastr.success(data.content);
                             layer.close();
@@ -190,14 +197,51 @@
                             toastr.error(data.msg);
                         }
                     },
-                    error:function(data){
-                        var json=eval("("+data.responseText+")");
+                    error: function (data) {
+                        var json = eval("(" + data.responseText + ")");
                         toastr.error(json.msg);
                     }
                 });
-            },function () {
+            }, function () {
                 layer.close();
             });
+        }
+
+        function indexShow(id, el) {
+            var layIndex = layer.confirm('确定在首页显示此活动?', {
+                    btn: ['确定', '取消']
+                }, //按钮
+                function () {
+                    $.ajax({
+                        type: 'post',
+                        url: "{{ secure_route('promotion.homeshow.update',['id'=>1]) }}".replace(1, id),
+                        data: {id: id, _token: "{{csrf_token()}}", _method: 'put'},
+                        success: function (data) {
+                            console.log(data.status);
+                            if (data.status === 200) {
+                                if ($(el).val() === '打开展示') {
+                                    $(el).removeClass('btn-primary').addClass('btn-warning');
+                                    $(el).val('关闭展示');
+                                } else {
+                                    $(el).removeClass('btn-warning').addClass('btn-primary');
+                                    $(el).val('打开展示');
+                                }
+                                layer.close(layIndex);
+                                toastr.success('修改成功');
+                            } else {
+                                toastr.error('修改失败');
+                            }
+
+                        },
+                        error: function (data) {
+                            var json = eval("(" + data.responseText + ")");
+                            toastr.error(json.msg);
+                        }
+                    });
+                }
+                , function () {
+                    layer.close();
+                });
         }
     </script>
 @endsection

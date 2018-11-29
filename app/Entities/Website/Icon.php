@@ -16,6 +16,11 @@ class Icon extends Model implements Transformable
     use TransformableTrait;
 
     protected $table = 'website_icons';
+
+    public function getSrcAttribute($item)
+    {
+        return cdnUrl($item);
+    }
     /**
      * The attributes that are mass assignable.
      *

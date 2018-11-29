@@ -32,11 +32,14 @@ Route::group(['middleware' => ['auth', 'web']], function () {
         Route::get('/detail/{category}', ['as' => 'category.detail', 'uses' => 'CategoryController@detail']);
         Route::post('/attribute', ['as' => 'category.attribute', 'uses' => 'CategoryController@getCategoryAttributes']);
         Route::post('/subcategories', ['as' => 'category.subcategories', 'uses' => 'CategoryController@getSubCategories']);
+        Route::get('/{category}/delete', ['as' => 'category.delete', 'uses' => 'CategoryController@delete']);
+        Route::get('/searchCategory', ['as' => 'category.search', 'uses' => 'CategoryController@searchCategory']);
         //更新或添加
         Route::post('/update', ['as' => 'category.update', 'uses' => 'CategoryController@update']);
         Route::get('/current_category_info/{category_id}', ['as' => 'category.current_info', 'uses' => 'CategoryController@currentCategoryInfo']);
         Route::get('/{category_id}/attribute/{attribute_id}/detail', ['as' => 'category.category.attribute', 'uses' => 'CategoryController@getCategoryAttributeDetail']);
         Route::post('/attribute/update', ['as' => 'category.attribute.update', 'uses' => 'CategoryController@updateCategoryAttribute']);
+        Route::post('/attribute/deleteRule', ['as' => 'category.attribute.delete', 'uses' => 'CategoryController@deleteCategoryAttribute']);
         Route::get('/existCategoryPicAttribute', ['as' => 'category.exist.picAttribute', 'uses' => 'CategoryController@existCategoryPicAttribute']);
         Route::post('/next_level', ['as' => 'category.nextLevel', 'uses' => 'CategoryController@getNextLevel']);
     });
@@ -63,6 +66,7 @@ Route::group(['middleware' => ['auth', 'web']], function () {
         Route::post('/auditReturn', ['as' => 'good.auditReturn', 'uses' => 'GoodsController@auditReturn']);
         Route::post('/auditReject', ['as' => 'good.auditReject', 'uses' => 'GoodsController@auditReject']);
         Route::post('/sort', ['as' => 'good.sort', 'uses' => 'GoodsController@sort']);
+        Route::get('/moretime/{good}', ['as' => 'good.more.time', 'uses' => 'GoodsController@showMoretime']);
     });
 
     Route::group(['prefix' => 'product', 'namespace' => 'Product'], function () {
@@ -86,6 +90,7 @@ Route::group(['middleware' => ['auth', 'web']], function () {
         Route::post('/getSingleSkuHtml', ['as' => 'promotion.getSingleSkuHtml', 'uses' => 'PromotionController@getSingleSkuHtml']);
         Route::post('/delete', ['as' => 'promotion.delete', 'uses' => 'PromotionController@delete']);
         Route::post('/imgUpload', ['as' => 'promotion.imgUpload', 'uses' => 'PromotionController@imgUpload']);
+        Route::put('/homeshow/{id}', ['as' => 'promotion.homeshow.update', 'uses' => 'PromotionController@updateHomeShow']);
     });
 
     //优惠券模块
@@ -127,11 +132,27 @@ Route::group(['middleware' => ['auth', 'web']], function () {
         Route::post('/update/{id?}', 'HomePageController@update')->name('homepage.update');
         Route::post('banners/upload', 'BannerController@uploadImages')->name('banners.upload');
         Route::resources([
+            'iconsmanage' => 'IconController',
             'banners' => 'BannerController',
-            'icons' => 'IconController'
         ]);
         //PC首页
         Route::get('/homepage', 'HomePageController@index')->name('homepage.index');
+        //获取
+        Route::get('/pccategorys', 'PcCategoryController@index')->name('pc.categorys.index');
+        //删除
+        Route::delete('/pccategorys/{id}', 'PcCategoryController@delete')->name('pc.categorys.delete');
+        //添加
+        Route::post('/pccategorys', 'PcCategoryController@store')->name('pc.categorys.store');
+        //手机首页
+        Route::get('/mobilehomepage', 'MobileHomePageController@index')->name('mobile.homepage.index');
+
+        Route::get('/mobilecategorys', 'MobileCategoryController@index')->name('mobile.categorys.index');
+
+        Route::delete('/mobilecategorys/{id}', 'MobileCategoryController@delete')->name('mobile.categorys.delete');
+
+        Route::post('/mobilecategorys', 'MobileCategoryController@store')->name('mobile.categorys.store');
+
+        Route::put('/mobilehomecard/{id}', 'MobileCardController@update')->name('mobile.homecard.update');
     });
 
     //发货管理
@@ -147,7 +168,23 @@ Route::group(['middleware' => ['auth', 'web']], function () {
         Route::post('/signPost', ['as' => 'shipOrder.signPost', 'uses' => 'ShipOrderController@signPost']);
     });
 
-    Route::group(['namespace' => 'Common', 'prefix' => 'common'], function(){
+    Route::group(['namespace' => 'Common', 'prefix' => 'common'], function () {
         Route::post('/getToken', ['as' => 'common.sts_token', 'uses' => 'AliyunController@getAliStsToken']);
+    });
+
+    Route::group(['namespace' => 'Finance'], function () {
+        //结算
+        Route::get('settleaccounts', 'SettleAccountController@index')->name('settles.index');
+
+        Route::get('onedailysettle/{settleId}', 'SettleAccountController@getOneDailySettleDetail')->name('settles.getonedaily');
+
+        Route::get('alldailysettles', 'SettleAccountController@getAllDailySettleDetail')->name('settles.getalldailys');
+        //提现
+        Route::get('withdraws', 'WithdrawController@index')->name('withdraws.index');
+
+        Route::post('passapplywithdraw/', 'WithdrawController@passApply')->name('withdraws.passapply');
+        Route::post('rejectapplywithdraw/', 'WithdrawController@rejectApply')->name('withdraws.rejectapply');
+        Route::post('confirmgirowithdraw/', 'WithdrawController@confirmGiro')->name('withdraws.confirmgiro');
+        Route::post('girofailedwithdraw/', 'WithdrawController@giroFailed')->name('withdraws.girofailed');
     });
 });

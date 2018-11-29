@@ -71,8 +71,8 @@
                     <input type="hidden" name="sku_str{{$val->id}}[]" value="{{$kv->value_ids}}"/>
                     {{$kv->supply_price}}
                 </td>
-                <td data-price="10">
-                    10
+                <td data-price="{{$kv->price}}">
+                    {{$kv->price}}
                 </td>
                 @if($type == 'quantity')
                     <td>
@@ -120,13 +120,15 @@
                     <div class="col-xs-7 text-left">{{$good->good_code}}</div>
                 </div>
             </td>
-            <td>{{$good->price}}起</td>
             <td>¥{{$good->supply_price}}起</td>
+            <td>${{$good->price}}起</td>
             <td>{{$good->orders}}</td>
             <td>{{$good->good_stock}}</td>
             <td>
                 <div><a href="javascript:void(0);" class="promotion-goods-delete" data-id="{{$good->id}}">删除</a></div>
-                <div class="promotion-goods-single" data-id="{{$good->id}}" data-toggle="true"><a href="javascript:void(0);">设置优惠</a></div>
+                @if($type)
+                    <div class="promotion-goods-single" data-id="{{$good->id}}" data-toggle="true"><a href="javascript:void(0);">设置优惠</a></div>
+                @endif
             </td>
         </tr>
     @endforeach

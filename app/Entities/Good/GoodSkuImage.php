@@ -17,6 +17,11 @@ class GoodSkuImage extends Model implements Transformable
 
     protected $table = "audit_good_sku_images";
 
+    public function getSrcAttribute($item)
+    {
+        return cdnUrl($item);
+    }
+
     /**
      * The attributes that are mass assignable.
      *

@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands\CateAttr;
 
+use App\Entities\CateAttr\AttributeValue;
 use App\Entities\CateAttr\Category;
 use App\Entities\CateAttr\CategoryAttribute;
 use Illuminate\Console\Command;
@@ -52,16 +53,34 @@ class AddCategoryAttr extends Command
     public function handleProgress()
     {
         $attr_id = 6;//颜色
-        $attr_value_ids = [
-            '23022',
-            '24265',
-            '24266'
-        ];
+        $attr_value_ids = AttributeValue::where('attribute_id', 6)->where('id', '<', 25033)->pluck('id')->toArray();
         $category = [
-            1 => [172],
+            1 => [1182, 1237, 1258, 1300, 1419, 1511],
             2 => [],
             3 => []
         ];
+        // 排除的类目
+        $excepte_cates = [
+            1 => [],
+            2 => [],
+            3 => []
+        ];
+        $except_ids = [];
+        // 查找所有排除的类目
+        foreach ($excepte_cates as $level => $excepte_cate) {
+            if ($level == 1) {
+                //获取所有的二级类目
+                $except_category_two = Category::whereIn('parent_id', $excepte_cate)->pluck('id')->toArray();
+                // 获取所有的三级类目
+                $except_category_three = Category::whereIn('parent_id', $except_category_two)->pluck('id')->toArray();
+            } elseif ($level == 2) {
+                // 获取所有的三级类目
+                $except_category_three = Category::whereIn('parent_id', $excepte_cate)->pluck('id')->toArray();
+            } elseif ($level == 3) {
+                $except_category_three = $excepte_cate;
+            }
+            $except_ids = array_merge($except_ids, $except_category_three);
+        }
         foreach ($category as $level => $category_ids)
         {
             if ($level == 1) {

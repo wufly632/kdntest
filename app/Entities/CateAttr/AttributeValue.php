@@ -22,6 +22,14 @@ class AttributeValue extends Model implements Transformable
      *
      * @var array
      */
-    protected $fillable = ['attribute_id','name','en_name','value','sort','created_at','updated_at'];
+    protected $fillable = ['attribute_id', 'name', 'en_name', 'value', 'sort', 'created_at', 'updated_at'];
 
+    /**
+     * @function 获取属性
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     */
+    public function getAttr()
+    {
+        return $this->hasOne(Attribute::class, 'id', 'attribute_id');
+    }
 }

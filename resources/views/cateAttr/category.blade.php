@@ -1,6 +1,6 @@
 @extends('layouts.default')
 @section('title')
-    {{trans('common.system_name')}}
+    类目管理
 @endsection
 @section('css')
     <style type="text/css">
@@ -109,6 +109,9 @@
             border: none;
             border-radius: 2px;
         }
+        .sa-confirm-button-container{
+            display: inline;
+        }
     </style>
 @endsection
 
@@ -190,6 +193,9 @@
                             </h2>
                             <ul class="con-message" v-show="select_categroy_name">
                                 <li>
+                                    <span class="mess-name">类目ID:</span><span class="mess-key">@{{ select_categroy_id }}</span>
+                                </li>
+                                <li>
                                     <span class="mess-name">类目名称:</span><span class="mess-key">@{{ select_categroy_name }}</span>
                                 </li>
                                 <li>
@@ -199,7 +205,10 @@
                                     <span class="mess-name">排序值:</span><span class="mess-key">@{{ select_categroy_sort }}</span>
                                 </li>
                                 <li>
-                                    <span class="mess-name">叶子类目:</span><span class="mess-key">@{{ select_categroy_is_final }}</span>
+                                    <span class="mess-name">叶子类目:</span><span class="mess-key">@{{ select_categroy_is_final ? '是' : '否' }}</span>
+                                </li>
+                                <li>
+                                    <span class="mess-name">描述:</span><span class="mess-key">@{{ select_categroy_describe }}</span>
                                 </li>
 
                             </ul>
@@ -336,6 +345,15 @@
                                         <input name="is_final" value="1" type="radio">是
                                     </div>
                                 </div>
+                                <div class="form-group" style="height: 30px;">
+                                    <div class="col-xs-1"></div>
+                                    <label for="name" class="col-xs-2 control-label">
+                                        描述：
+                                    </label>
+                                    <div class="col-xs-7">
+                                        <input name="describe" type="text" class="form-control">
+                                    </div>
+                                </div>
                                 <div class="modal-footer">
                                     <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
                                     <button type="button" class="btn btn-primary" id="saveUpdateCategoryInfoButton">保存</button>
@@ -408,15 +426,15 @@
                                 <div class="form-group">
                                     <div class="" style="margin-left: 10px">是否必填:</div>
                                     <label  class="property-radio">
-                                        <input type="radio" name="is_required" value="2"  v-model="is_required">
+                                        <input type="radio" name="is_required" value="1"  v-model="is_required">
                                         必填
                                     </label>
                                     <label class="property-radio">
-                                        <input type="radio" name="is_required" value="1"  v-model="is_required">
+                                        <input type="radio" name="is_required" value="2"  v-model="is_required">
                                         非必填
                                     </label>
                                 </div>
-                                <div class="form-group">
+                                <div class="form-group" v-show="is_custom_text == 1">
                                     <div class="" style="margin-left: 10px">单选/多选:</div>
                                     <label  class="property-radio">
                                         <input type="radio" name="check_type" value="2" v-model="check_type">
@@ -474,10 +492,13 @@
         var category_detail_vue = new Vue({
             el: '#category_detail_container',
             data: {
+                select_categroy_id: '',
                 select_categroy_name: '',
                 select_categroy_en_name: '',
                 select_categroy_sort: '',
                 select_categroy_is_final: 0,
+                select_categroy_describe:'',
+
             }
         })
 
@@ -531,7 +552,6 @@
             },
             methods:{
                 changeSelectValue:function (el) {
-                    layer.load(1);
                     if(el == undefined){
                         this.attribue_picked_name = attribute_detail_container_vue.select_attribute_name;
                     }else{
@@ -542,9 +562,13 @@
                     attribue_value_container_vue.attribute_values = [];
                     attribue_value_container_vue.backup_attribute_values = [];
                     attribue_value_container_vue.attribue_value_container_picked = [];
+                    var _loading = '';
                     $.ajax({
                         url:"/category/"+select_category_id+"/attribute/"+this.attribue_picked_id+'/detail',
                         type:'GET',
+                        beforeSend:function() {
+                            _loading = layer.load();
+                        },
                         success: function (response) {
                             if (response.status == 200) {
                                 console.log(600,response.content);
@@ -560,7 +584,7 @@
                                 configure_attribute_detail_container_vue.is_detail = response.content.is_detail;
                             }
                         },complete: function () {
-                            layer.closeAll('loading');
+                            layer.close(_loading);
                         },error: function (xmlHttpRequest, textStatus, errorThrown) {
                             toastr.warning('错误码: '+xmlHttpRequest.status);
                         }
@@ -604,18 +628,24 @@
         });
         function autocomple(){
             $("#autocomplete").empty();
+            var _loading = '';
             $.ajax({
-                url:"searchCategory",
+                url:"/category/searchCategory",
                 type:"get",
                 data:"name="+$("#search-text").val(),
                 dataType:"json",
+                beforeSend:function() {
+                    _loading = layer.load();
+                },
                 success:function(response){
                     if (response.status == 200) {
                         $("#autocomplete").empty();
                         $("#autocomplete").hide();
-                        var data = response.content.categories;
+                        var data = response.content;
+                        console.log(data);
                         var str = "";
                         $.each(data,function(n,obj){
+                            console.log(n,obj);
                             $("#autocomplete").show();
                             str = "<li><a href='#' data-id='"+n+"'>"+obj+"</a><li>";
                             $("#autocomplete").append(str);
@@ -649,6 +679,9 @@
                     }
 
                 },
+                complete: function () {
+                    layer.close(_loading);
+                },
                 error:function(textStatus){
 
                 }
@@ -663,10 +696,14 @@
                 $("#secondCategoryLevel").prepend("<option value='-1'>{{trans('Category::category.select_second_category')}}</option>"); //为Select插入一个Option(第一个位置)
                 return;
             }
+            var _loading = '';
             $.ajax({
                 url:"{{secure_route('category.subcategories')}}",
                 data:{'category_id':category_id,_token: "{{csrf_token()}}"},
                 type:'POST',
+                beforeSend:function() {
+                    _loading = layer.load();
+                },
                 success: function (response) {
                     if (response.status == 200) {
                         $("#secondCategoryLevel").empty();
@@ -678,6 +715,7 @@
                     }
                 },
                 complete: function () {
+                    layer.close(_loading);
                 },error: function (xmlHttpRequest, textStatus, errorThrown) {
                     toastr.warning('错误码: '+xmlHttpRequest.status);
                 }
@@ -703,14 +741,18 @@
             $("#updateCategoryContainer").find("input[name=en_name]").val(category_detail_vue.select_categroy_en_name);
             $("#updateCategoryContainer").find("input[name=sort]").val(category_detail_vue.select_categroy_sort);
             $("#updateCategoryContainer").find("input[name=is_final][value="+category_detail_vue.select_categroy_is_final+"]").attr("checked",true);
-
+            $("#updateCategoryContainer").find("input[name=describe]").val(category_detail_vue.select_categroy_describe);
             $("#saveUpdateCategoryInfoButton").data('category_id',category_id);
 
             //请求分类信息
             //显示编辑
+            var _loading = '';
             $.ajax({
                 url:"/category/current_category_info/"+category_id,
                 type:'GET',
+                beforeSend:function() {
+                    _loading = layer.load();
+                },
                 success: function (response) {
                     if (response.status == 200) {
                         $("#firstCategoryLevel").val(response.content.current_first_level_category.id);   //设置Select的Text值为jQuery的项选中
@@ -732,6 +774,7 @@
                     }
                 },
                 complete: function () {
+                    layer.close(_loading);
                 },error: function (xmlHttpRequest, textStatus, errorThrown) {
                     toastr.warning('错误码: '+xmlHttpRequest.status);
                 }
@@ -746,6 +789,7 @@
             name = $("#updateCategoryContainer").find("input[name=name]").val();
             en_name = $("#updateCategoryContainer").find("input[name=en_name]").val();
             sort = $("#updateCategoryContainer").find("input[name=sort]").val();
+            describe = $("#updateCategoryContainer").find("input[name=describe]").val();
             is_final = $("#updateCategoryContainer").find("input[name=is_final]:checked").val();
             category_id = $("#saveUpdateCategoryInfoButton").data('category_id');
 
@@ -764,6 +808,7 @@
             if(category_id == undefined){
                 category_id = '';
             }
+            var _loading = '';
             $.ajax({
                 url:"{{secure_route('category.update')}}",
                 data:{
@@ -774,9 +819,13 @@
                     "en_name":en_name,
                     "sort":sort,
                     "is_final": is_final,
+                    "describe": describe,
                     "_token":"{{csrf_token()}}",
                 },
                 type:'POST',
+                beforeSend:function() {
+                    _loading = layer.load();
+                },
                 success: function (response) {
                     if (response.status == 200) {
                         toastr.success(response.msg);
@@ -787,6 +836,7 @@
                     }
                 },
                 complete: function () {
+                    layer.close(_loading);
                 },error: function (xmlHttpRequest, textStatus, errorThrown) {
                     toastr.warning('错误码: '+xmlHttpRequest.status);
                 }
@@ -807,16 +857,20 @@
                 type: "warning",
                 showCancelButton: true,
                 confirmButtonColor: "#444444",
-                confirmButtonText: "{{trans('Category::category.delete')}}",
-                cancelButtonText: "{{trans('Category::category.cancel')}}",
+                confirmButtonText: "删除",
+                cancelButtonText: "取消",
                 closeOnConfirm: false,
                 closeOnCancel: true
             };
             swal(configure,function (isConfirm) {
                 if (isConfirm) {
+                    var _loading = '';
                     $.ajax({
                         url:"/category/"+category_id+'/delete',
                         type:'GET',
+                        beforeSend:function() {
+                            _loading = layer.load();
+                        },
                         success: function (response) {
                             if (response.status == 200) {
                                 swal("删除成功!", "", "success");
@@ -826,6 +880,7 @@
                             }
                         },
                         complete: function () {
+                            layer.close(_loading);
                         },error: function (xmlHttpRequest, textStatus, errorThrown) {
                             toastr.warning('错误码: '+xmlHttpRequest.status);
                         }
@@ -847,20 +902,28 @@
 
         //刷新类目详细信息
         function refreshCategoryDetailInfo(category_id) {
+            var _loading = '';
             $.ajax({
                 url:"/category/detail/"+category_id,
                 type:'GET',
+                beforeSend: function () {
+                    _loading = layer.load();
+                },
                 success: function (response) {
+                    layer.close(_loading);
                     if (response.status == 200) {
                         category = JSON.parse(response.content);
+                        category_detail_vue.select_categroy_id = category.id;
                         category_detail_vue.select_categroy_name = category.name;
                         category_detail_vue.select_categroy_en_name = category.en_name;
                         category_detail_vue.select_categroy_sort = category.sort;
                         category_detail_vue.select_categroy_is_final = category.is_final;
+                        category_detail_vue.select_categroy_describe = category.describe;
                     }
                 },
                 complete: function () {
                 },error: function (xmlHttpRequest, textStatus, errorThrown) {
+                    layer.close(_loading);
                     toastr.warning('错误码: '+xmlHttpRequest.status);
                 }
             });
@@ -868,6 +931,7 @@
 
         //刷新分类属性
         function refreshCategoryAttributes(category_id) {
+            var _loading = '';
             $.ajax({
                 url:"{{secure_route('category.attribute')}}",
                 data:{
@@ -875,7 +939,11 @@
                     '_token': "{{csrf_token()}}"
                 },
                 type:'POST',
+                beforeSend:function() {
+                    _loading = layer.load();
+                },
                 success: function (response) {
+                    layer.close(_loading);
                     //目前类型就
                     $('.category_attribute_ul').children('li .attribute_class').remove();
                     attribute_detail_container_vue.attribute_items = [];
@@ -896,6 +964,7 @@
                 },
                 complete: function () {
                 },error: function (xmlHttpRequest, textStatus, errorThrown) {
+                    layer.close(_loading);
                     toastr.warning('错误码: '+xmlHttpRequest.status);
                 }
             });
@@ -931,10 +1000,13 @@
             attribute_detail_container_vue.select_attribute_type = $(this).data('attribute_type');
             console.log(attribute_detail_container_vue.select_attribute_type);
             attribute_detail_container_vue.select_attribute_name = $(this).data('attribute_name');
-            layer.load(1);
+            var _loading = '';
             $.ajax({
                 url:"/category/"+category_id+"/attribute/"+attribute_detail_container_vue.select_attribute_id+'/detail',
                 type:'GET',
+                beforeSend:function() {
+                    _loading = layer.load();
+                },
                 success: function (response) {
                     if (response.status == 200) {
                         attribute_detail_container_vue.attribute_items = response.content.attribute_items;
@@ -943,7 +1015,7 @@
                     }
                 },
                 complete: function () {
-                    layer.closeAll('loading');
+                    layer.close(_loading);
                 },error: function (xmlHttpRequest, textStatus, errorThrown) {
                     toastr.warning('错误码: '+xmlHttpRequest.status);
                 }
@@ -983,61 +1055,51 @@
             attribute_type = $(this).data('attribute_type');
             category_id = select_category_id;
             will_delete_dom = $(this).parent();
-            $.ajax({
-                url:"/category/attribute/deleteRule",
-                data:{
-                    'category_id':category_id,
-                    'attribute_id':attribute_id,
-                    'attribute_type':attribute_type,
-                },
-                type:'POST',
-                success: function (response) {
-                    if(response.status == 200){
-                        swal({
-                            title: "",
-                            text: response.content,
-                            type: "warning",
-                            showCancelButton: true,
-                            confirmButtonColor: "#444444",
-                            confirmButtonText: "删除",
-                            cancelButtonText: "取消",
-                            closeOnConfirm: false,
-                            closeOnCancel: true
-                        },function(){
-                            $.ajax({
-                                url:"/category/attribute/delete",
-                                data:{
-                                    'category_id':category_id,
-                                    'attribute_id':attribute_id,
-                                },
-                                type:'POST',
-                                success:function(response){
-                                    if(response.status == 200){
-                                        will_delete_dom.remove();
-                                        attribute_detail_container_vue.attribute_items =[];
-                                        swal("删除成功", "success");
-                                    } else {
-                                        swal("警告", response.msg, "error");
-                                    }
-                                },
-                                complete: function () {
-
-                                },
-                                error: function (xmlHttpRequest, textStatus, errorThrown) {
-                                    toastr.warning('错误码: '+xmlHttpRequest.status);
-                                }
-                            })
-                        });
-                    } else {
-                        swal("警告", response.msg, "error");
-                    }
-                },
-                complete: function () {
-
-                },error: function (xmlHttpRequest, textStatus, errorThrown) {
-                    swal("错误", '错误码: '+xmlHttpRequest.status, "error");
+            configure = {
+                title: "Warning",
+                text: "确认要删除此类目属性吗？",
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#444444",
+                confirmButtonText: "删除",
+                cancelButtonText: "取消",
+                closeOnConfirm: false,
+                closeOnCancel: true
+            };
+            swal(configure,function (isConfirm) {
+                if (isConfirm) {
+                    var _loading = '';
+                    $.ajax({
+                        url:"/category/attribute/deleteRule",
+                        data:{
+                            '_token': "{{csrf_token()}}",
+                            'category_id':category_id,
+                            'attribute_id':attribute_id,
+                            'attribute_type':attribute_type,
+                        },
+                        type:'POST',
+                        beforeSend:function() {
+                            _loading = layer.load();
+                        },
+                        success: function (response) {
+                            if(response.status == 200){
+                                will_delete_dom.remove();
+                                attribute_detail_container_vue.attribute_items =[];
+                                swal("删除成功", "success");
+                            } else {
+                                swal("警告", response.msg, "error");
+                            }
+                        },
+                        complete: function () {
+                            layer.close(_loading);
+                        },error: function (xmlHttpRequest, textStatus, errorThrown) {
+                            swal("错误", '错误码: '+xmlHttpRequest.status, "error");
+                        }
+                    });
                 }
+
             });
+
         }
 
         //配置属性
@@ -1055,11 +1117,14 @@
 
             attribue_name_container_vue.type = type; //保存添加的属性类别
             configure_attribute_detail_container_vue.attr_type = type;//区分属性类型
-            layer.load(1);
             //获取所有的属性名(已配置除外)
+            var _loading = '';
             $.ajax({
                 url:"{{secure_route('attribute.all')}}",
                 type:'get',
+                beforeSend:function() {
+                    _loading = layer.load();
+                },
                 success: function (response) {
                     if (response.status == 200) {
                         attribue_name_container_vue.backup_attributes = response.content;
@@ -1074,7 +1139,7 @@
                     }
                 },
                 complete: function () {
-                    layer.closeAll('loading');
+                    layer.close(_loading);
                 },error: function (xmlHttpRequest, textStatus, errorThrown) {
                     toastr.warning('错误码: '+xmlHttpRequest.status);
                 }
@@ -1101,8 +1166,7 @@
             is_image = $("input[name='is_image']:checked").val();
             is_diy = $("input[name='is_diy']:checked").val();
             is_detail = $("input[name='is_detail']:checked").val();
-            layer.load(1);
-            console.log(attribue_name_container_vue.attribue_picked_name);
+            var _loading = '';
             $.ajax({
                 url:"{{secure_route('category.attribute.update')}}",
                 type:'POST',
@@ -1118,6 +1182,9 @@
                     'check_type':check_type,
                     '_token': "{{csrf_token()}}"
                 },
+                beforeSend:function() {
+                    _loading = layer.load();
+                },
                 success: function (response) {
                     if (response.status == 200) {
                         $('#configure_attribue_container').modal('hide');
@@ -1129,11 +1196,9 @@
 
                             if($(this).html() == attribue_name_container_vue.attribue_picked_name){
                                 is_exist = true;
-                                console.log('clickddd');
                                 $(this).click();
                             }
                         });
-                        console.log(is_exist);
                         if(!is_exist){
                             item = addOneAttribute('category_attribute_'+type,attribue_name_container_vue.attribue_picked_id,attribue_name_container_vue.attribue_picked_name,type);
                             $(item).children('span').eq(0).click();
@@ -1144,7 +1209,7 @@
                     }
                 },
                 complete: function () {
-                    layer.closeAll('loading');
+                    layer.close(_loading);
                 },error: function (xmlHttpRequest, textStatus, errorThrown) {
                     toastr.warning('错误码: '+xmlHttpRequest.status);
                 }
@@ -1184,10 +1249,14 @@
         });
 
         $("input[name='is_image'][value='1']").on("click", function(){
+            var _loading = '';
             $.ajax({
                 url:"/category/existCategoryPicAttribute",
                 data:{category_id: select_category_id,attribute_id:attribue_name_container_vue.attribue_picked_id},
                 type:'GET',
+                beforeSend:function() {
+                    _loading = layer.load();
+                },
                 success: function (response) {
                     if(response.status != 200){
                         swal({
@@ -1212,7 +1281,7 @@
                     }
                 },
                 complete: function () {
-
+                    layer.close(_loading);
                 },error: function (xmlHttpRequest, textStatus, errorThrown) {
                     swal("错误", '错误码: '+xmlHttpRequest.status, "error");
                 }

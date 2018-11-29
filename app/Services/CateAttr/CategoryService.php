@@ -8,9 +8,14 @@
 namespace App\Services\CateAttr;
 
 use App\Entities\CateAttr\Attribute;
+use App\Entities\CateAttr\Category;
+use App\Entities\CateAttr\CategoryAttribute;
+use App\Entities\Good\Good;
+use App\Entities\Product\Product;
 use App\Repositories\CateAttr\CategoryAttributeRepository;
 use App\Repositories\CateAttr\CategoryRepository;
 use App\Services\Api\ApiResponse;
+use App\Services\Product\ProductService;
 use Carbon\Carbon;
 use DB;
 
@@ -26,16 +31,18 @@ class CategoryService
      * @var CategoryAttributeRepository
      */
     protected $categoryAttribute;
+    protected $productService;
 
     /**
      * GoodsController constructor.
      *
      * @param CategoryRepository $category
      */
-    public function __construct(CategoryRepository $category, CategoryAttributeRepository $categoryAttribute)
+    public function __construct(CategoryRepository $category, CategoryAttributeRepository $categoryAttribute, ProductService $productService)
     {
         $this->category = $category;
         $this->categoryAttribute = $categoryAttribute;
+        $this->productService = $productService;
     }
 
     public function getCategoryRepository()
@@ -124,6 +131,7 @@ class CategoryService
             $data['en_name'] = $request->en_name;
             $data['sort'] = $request->sort;
             $data['is_final'] = $request->is_final;
+            $data['describe'] = $request->describe;
             $data['parent_id'] = $this->getParentId($category_id, $request->first_level_category, $request->second_level_category);
             if ($data['parent_id'] == 0) {
                 $data['level'] = 1;
@@ -167,7 +175,7 @@ class CategoryService
         if ($first_level_category < 0) {
             return $parent_id;
         }
-        if ($first_level_category === $category_id) {
+        if ($first_level_category == $category_id) {
             return $parent_id;
         }
 
@@ -243,7 +251,11 @@ class CategoryService
         //获取类目属性
         $attribute = app(AttributeService::class)->getAttributeByPk($attribute_id);
         //获取类目属性对应的所有属性值
-        $attribute_values = app(AttrValueService::class)->getAttributeValuesByAttributeId($attribute_id, 'sort', 'desc', true);
+        if ($attribute->type == 2) {
+            $attribute_values = [];
+        } else {
+            $attribute_values = app(AttrValueService::class)->getAttributeValuesByAttributeId($attribute_id, 'sort', 'desc', true);
+        }
 
         //获取属性对应的属性值名称
         $category_attributes = $this->categoryAttribute->findWhere(['category_id' => $category_id, 'attr_id' => $attribute_id, 'status' => 1])->first();
@@ -262,7 +274,7 @@ class CategoryService
         $data['is_diy'] = $values ? $values[0]['is_diy'] : 2;
         $data['check_type'] = $values ? $values[0]['check_type'] : 2;
         $data['is_required'] = $values ? $values[0]['is_required'] : 2;
-        $data['is_detail'] = $values ? $values[0]['is_detail'] : 2;
+        $data['is_detail'] = $values ? $values[0]['is_detail'] : 1;
         $data['is_custom_text'] = $attribute->type;
         return $data;
     }
@@ -275,6 +287,12 @@ class CategoryService
      */
     public function updateCategoryAttribute($request)
     {
+        /*if ($request->type == 3) { // 销售属性
+            // 判断该类目下是否有商品
+            if (Good::where('category_id', $request->category_id)->first()) {
+                return ApiResponse::failure(g_API_ERROR, '该类目下已有商品，不允许修改销售属性');
+            }
+        }*/
         $attribute = app(AttributeService::class)->getAttributeByPk($request->attribute_id);
         $data = [
             'category_id' => $request->category_id,
@@ -307,5 +325,151 @@ class CategoryService
     public function getCategoryByLevel($level, $field = ['*'])
     {
         return $this->category->findWhere(['level' => $level], $field);
+    }
+
+    /**
+     * @function 删除类目
+     * @param $category
+     * @return mixed
+     */
+    public function deleteCategory($category)
+    {
+        // 判断该目录是否存在商品
+        if ($category->level == 1) {
+            $category_twos = $this->category->findWhere(['parent_id' => $category->id])->pluck('id')->toArray();
+            $category_ids = $this->category->findWhereIn('parent_id', $category_twos)->pluck('id')->toArray();
+            $category_ids = array_merge($category_twos, $category_ids);
+        } elseif ($category->level == 2) {
+            $category_ids = $this->category->findWhere(['parent_id' => $category->id])->pluck('id')->toArray();
+            $category_ids[] = $category->id;
+        } else {
+            $category_ids = [$category->id];
+        }
+        if (Good::whereIn('category_id', $category_ids)->first()) {
+            return ApiResponse::failure(g_API_ERROR, '该类目下存在商品，不允许删除');
+        }
+        try {
+            DB::beginTransaction();
+            CategoryAttribute::whereIn('category_id', $category_ids)->delete();
+            Category::whereIn('id', $category_ids)->delete();
+            DB::commit();
+            return ApiResponse::success('操作成功');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            \Log::info('类目' . $category->id . '删除失败-' . $e->getMessage());
+            ding('类目' . $category->id . '删除失败-' . $e->getMessage());
+            return ApiResponse::failure(g_API_ERROR, '操作失败');
+        }
+    }
+
+    /**
+     * 根据商品分类path获取分类名称
+     * @param $ids
+     * @return string
+     */
+    public function getCateNameByIds($ids)
+    {
+        $ids = explode(',', $ids);
+        array_shift($ids);
+        $cates       = $this->category->findWhereIn('id', $ids);
+        $cateNameStr = '';
+        foreach ($cates as $cate) {
+            $cateNameStr .= $cate->name;
+            $cateNameStr .= ' ';
+        }
+        return $cateNameStr;
+    }
+
+    /**
+     * 获取某一类目下的商品数量
+     * @param $categoryId
+     * @return mixed
+     */
+     /*
+     * 删除类目属性
+     *
+     * @param Request $request
+     * @return json
+     */
+    public function deleteCategoryAttribute($request)
+    {
+        // 判断该类目下是否有商品
+        if (Good::where('category_id', $request->category_id)->first()) {
+            return ApiResponse::failure(g_API_ERROR, '该类目下已有商品，不允许删除');
+        }
+        try {
+            DB::beginTransaction();
+            $this->categoryAttribute->deleteWhere(['category_id' => $request->category_id, 'attr_id' => $request->attribute_id]);
+            DB::commit();
+            return ApiResponse::success('操作成功!');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            \Log::info('商品属性删除失败-'.$e->getMessage());
+            ding('商品属性删除失败-'.$e->getMessage());
+            return ApiResponse::failure(g_API_ERROR, '操作失败');
+        }
+    }
+
+    /**
+     * @function 类目搜索
+     * @param $name
+     * @return mixed
+     */
+    public function searchCategory($name)
+    {
+        $name = strtolower($name);
+        $categories = $this->category->findWhere([['name', 'like', '%'.$name.'%']]);
+        $categoriesLikeName = [];
+        foreach ($categories as $category) {
+            $categoriesLikeName[$category->id] = $category->name;
+            if ($paCategory = $category->parentCategory) {
+                $categoriesLikeName[$paCategory->id] = $paCategory->name . ' > ' . $category->name;
+                if ($paPaCategory = $paCategory->parentCategory) {
+                    $categoriesLikeName[$paPaCategory->id] = $paPaCategory->name . ' > '.$paCategory->name . ' > ' . $category->name;
+                }
+            }
+        }
+        return $categoriesLikeName;
+    }
+
+    public function getCategoryProductSum($categoryId)
+    {
+        return $this->productService->checkProductCountByCateIds($this->getAllLevelThree($categoryId));
+
+    }
+
+    /**
+     * 获取所有第三级ID
+     * @param $categoryId
+     * @return array
+     */
+    public function getAllLevelThree($categoryId)
+    {
+        $cate = $this->category->find($categoryId);
+        if ($cate->is_final == 1) {
+            return [$cate->id];
+        } else {
+            return $this->getNextLevelAllCateId([$cate->id]);
+        }
+    }
+
+    /**
+     * 获取下级所有ID
+     * @param array $categoryIds
+     * @return array
+     */
+    public function getNextLevelAllCateId(Array $categoryIds)
+    {
+        $cate = $this->category->findWhereIn('parent_id', $categoryIds);
+        if ($cate[0]->level == 3) {
+            return array_pluck($cate->toArray(), 'id');
+        } else {
+            return $this->getNextLevelAllCateId(array_pluck($cate->toArray(), 'id'));
+        }
+    }
+
+    public function getCateByName($name)
+    {
+        return $this->category->model()::where('name', $name)->where('level', 3)->first();
     }
 }

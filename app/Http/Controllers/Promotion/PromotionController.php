@@ -4,6 +4,7 @@
  * User: wufly
  * Date: 2018/9/20 上午11:21
  */
+
 namespace App\Http\Controllers\Promotion;
 
 use App\Entities\Promotion\Promotion;
@@ -12,6 +13,7 @@ use App\Http\Requests\Promotion\PromotionAddGoodRequest;
 use App\Services\Api\ApiResponse;
 use App\Services\Api\CommonService;
 use App\Services\Coupon\CouponService;
+use App\Services\Currency\CurrencyService;
 use App\Services\Product\ProductService;
 use App\Services\Promotion\PromotionService;
 use Carbon\Carbon;
@@ -20,13 +22,14 @@ use Illuminate\Http\Request;
 class PromotionController extends Controller
 {
     protected $promotionService;
-
     protected $productService;
+    protected $currencyService;
 
-    public function __construct(PromotionService $promotionService, ProductService $productService)
+    public function __construct(PromotionService $promotionService, ProductService $productService, CurrencyService $currencyService)
     {
         $this->promotionService = $promotionService;
         $this->productService = $productService;
+        $this->currencyService = $currencyService;
     }
 
     /**
@@ -48,10 +51,10 @@ class PromotionController extends Controller
      */
     public function addPost(Request $request)
     {
-        if (! $request->title) {
+        if (!$request->title) {
             return ApiResponse::failure(g_API_ERROR, '请填写活动名称');
         }
-        if (! $request->daterange2) {
+        if (!$request->daterange2) {
             return ApiResponse::failure(g_API_ERROR, '请完善活动时间');
         }
         $result = $this->promotionService->preCreate($request);
@@ -68,16 +71,18 @@ class PromotionController extends Controller
      */
     public function edit(Promotion $promotion, Request $request)
     {
-        if (! $promotion) {
+        if (!$promotion) {
             redirect(secure_route('promotion.index'));
         }
         //获取可添加的促销活动商品
-        $promotion_goods = $this->promotionService->getAblePromotionActivityGoods($promotion->id, $request);
+        $promotion_goods = $this->promotionService->getAblePromotionActivityGoods($promotion, $request);
         //获取优惠券
         $coupon_list = app(CouponService::class)->getPromotionCoupons();
         //获取所有促销活动sku
         $promotion_skus = $promotion->getPromotionSkus->pluck('price', 'sku_id')->toArray();
-        return view('promotion.edit', compact('promotion','promotion_goods', 'coupon_list', 'promotion_skus'));
+        //货币列表
+        $currencys = $this->currencyService->getAll();
+        return view('promotion.edit', compact('promotion', 'promotion_goods', 'coupon_list', 'promotion_skus', 'currencys'));
     }
 
     /**
@@ -99,7 +104,7 @@ class PromotionController extends Controller
     {
         //获取所有可添加的商品(已上线)
         $promotion_products = $this->productService->getList();
-        return view('promotion.addGoods', compact('promotion','promotion_products'));
+        return view('promotion.addGoods', compact('promotion', 'promotion_products'));
     }
 
     /**
@@ -109,12 +114,12 @@ class PromotionController extends Controller
      */
     public function addGoodPost(PromotionAddGoodRequest $request)
     {
-        if (! $request->good_id) {
+        if (!$request->good_id) {
             return ApiResponse::failure(g_API_ERROR, '请选择要添加的商品');
         }
-        if (! $request->type) {
-            return ApiResponse::failure(g_API_ERROR, '请先选择活动的类型');
-        }
+//        if (!$request->type) {
+//            return ApiResponse::failure(g_API_ERROR, '请先选择活动的类型');
+//        }
         $result = $this->promotionService->addGoods($request);
         return $result;
     }
@@ -126,7 +131,7 @@ class PromotionController extends Controller
      */
     public function delGoodPost(Request $request)
     {
-        if (! $request->good_id || ! $request->activity_id) {
+        if (!$request->good_id || !$request->activity_id) {
             return ApiResponse::failure(g_API_ERROR, '缺少参数');
         }
         $result = $this->promotionService->delGoods($request);
@@ -144,7 +149,11 @@ class PromotionController extends Controller
     public function getGoods(Request $request)
     {
         //获取可添加的促销活动商品
-        $promotion_goods = $this->promotionService->getAblePromotionActivityGoods($request->activity_id, $request);
+        $promotion = $this->promotionService->getPromotionModel()->find($request->activity_id);
+        if (!$promotion) {
+            abort(404);
+        }
+        $promotion_goods = $this->promotionService->getAblePromotionActivityGoods($promotion, $request);
         // $result = $this->promotionService->getAblePromotionActivityGoods($request->activity_id, $request);
         /*if ($request->is_ajax == 1) {
             return ApiResponse::success($result);
@@ -168,7 +177,7 @@ class PromotionController extends Controller
      */
     public function delete(Request $request)
     {
-        if (! $id = $request->id) {
+        if (!$id = $request->id) {
             return ApiResponse::failure(g_API_ERROR, '请选择要删除的活动');
         }
         return $this->promotionService->deletePromotion($id);
@@ -185,10 +194,10 @@ class PromotionController extends Controller
         if ($request->hasFile($img_name)) {
             $file = $request->file($img_name);
             $ext = $file->getClientOriginalExtension();
-            if( ! in_array(strtolower($ext), ['jpg', 'png', 'bmp', 'wbmp'])){
+            if (!in_array(strtolower($ext), ['jpg', 'png', 'bmp', 'wbmp'])) {
                 return ApiResponse::failure(g_API_ERROR, '图片格式不正确，请检查!');
             }
-            if(!$request->input('not_limit')){
+            if (!$request->input('not_limit')) {
                 list($width, $height) = getimagesize($file->getRealPath());
                 /*if($width > 800 || $height > 800){ //限制图片的宽高
                     return ApiResponse::failure(g_API_ERROR, '图片宽高不能大于800!');
@@ -197,7 +206,7 @@ class PromotionController extends Controller
         }
         $directory = 'promotion';
         $ali = false;
-        if(env('APP_ENV', 'local') == 'production'){
+        if (env('APP_ENV', 'local') == 'production') {
             $ali = true;
         }
         $urlInfo = app(CommonService::class)->uploadFile($file = $img_name, $directory, $ali, false, false);
@@ -207,8 +216,24 @@ class PromotionController extends Controller
             } else {
                 return ApiResponse::success($urlInfo, '图片上传成功');
             }
-        }else{
+        } else {
             return ApiResponse::failure(g_API_ERROR, '图片上传失败!');
+        }
+    }
+
+    public function updateHomeShow($id)
+    {
+        try {
+            $promotion = $this->promotionService->find($id, ['home_show']);
+            if ($promotion->home_show == 1) {
+                $promotion->home_show = 0;
+            } else {
+                $promotion->home_show = 1;
+            }
+            $promotion->save();
+            return ApiResponse::success();
+        } catch (\Exception $e) {
+            return ApiResponse::failure(g_API_ERROR, '修改失败');
         }
     }
 
