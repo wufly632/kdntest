@@ -163,7 +163,7 @@
                                                 <select name="currency_code" id="currency" class="form-control">
                                                     <option value="">请选择</option>
                                                     @foreach($currencys as $currency)
-                                                        <option value="{{ $currency->currency_code }}">{{ $currency->symbol.$currency->name }}</option>
+                                                        <option value="{{ $currency->currency_code }}" data-unit="{{$currency->name}}">{{ $currency->symbol.$currency->name }}</option>
                                                     @endforeach
                                                 </select>
                                             </div>
@@ -223,7 +223,7 @@
                                                 <div class="input-group">
                                                     <input type="text" id="coupon_count" class="form-control"
                                                            name="coupon_use_price"><span
-                                                            class="input-group-addon">元</span>
+                                                            class="input-group-addon currency_name">元</span>
                                                 </div>
                                             </div>
                                         </div>
@@ -520,9 +520,17 @@
         let rebateTypeShow = $('#rebate_type_show')
         rebateType.change(function () {
             if (rebateType.val() == 1) {
-                rebateTypeShow.html('元');
+                var unit = $('#currency').find('option:checked').data('unit');
+                rebateTypeShow.html(unit);
             } else {
                 rebateTypeShow.html('%');
+            }
+        })
+        $('#currency').change(function () {
+            var unit = $(this).find('option:checked').data('unit');
+            $('.currency_name').html(unit);
+            if ($('#rebate_type').val() == 1) {
+                $('#rebate_type_show').html(unit);
             }
         })
     </script>
