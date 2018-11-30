@@ -665,7 +665,7 @@
                         _vueEl.icons[dataIndex].time_duration = start.format('YYYY-MM-DD HH:mm:ss') + '~' + end.format('YYYY-MM-DD HH:mm:ss');
                     });
                 },
-                registSelect2:function (event) {
+                registSelect2: function (event) {
                     $(event.currentTarget).select2();
                     $('#panel-icon .myselect2').on('change', function () {
                         let index = $(this).attr('data-index');
@@ -683,6 +683,76 @@
                 anything: {!! $mobileCards !!}
             },
             created: function () {
+                if (this.anything.length !== 3) {
+                    let defult_anything = [
+                        {
+                            id: '',
+                            type: 3,
+                            content:
+                                [
+                                    {
+                                        "src": "{{ url('images/activity1.png') }}",
+                                        "link": "http:\/\/www.waiwaimall.com",
+                                        "show": false,
+                                        "title": "waiwaimall"
+                                    },
+                                    {
+                                        "src": "{{ url('images/activity2.png') }}",
+                                        "link": "http:\/\/www.waiwaimall.com",
+                                        "show": false,
+                                        "title": "waiwaimall"
+                                    },
+                                    {
+                                        "src": "{{ url('images/activity3.png') }}",
+                                        "link": "http:\/\/www.waiwaimall.com",
+                                        "show": false,
+                                        "title": "waiwaimall"
+                                    }
+                                ]
+                        },
+                        {
+                            id: '',
+                            type: 1,
+                            content:
+                                [
+                                    {
+                                        "src": "{{ url('images/activity4.png') }}",
+                                        "link": "http:\/\/www.waiwaimall.com",
+                                        "show": false,
+                                        "title": "waiwaimall"
+                                    }
+                                ]
+                        }
+                        ,
+                        {
+                            id: '',
+                            type: 1,
+                            content:
+                                [
+                                    {
+                                        "src": "{{ url('images/activity4.png') }}",
+                                        "link": "http:\/\/www.waiwaimall.com",
+                                        "show": false,
+                                        "title": "waiwaimall"
+                                    }
+                                ]
+
+                        }
+
+                    ];
+                    if (this.anything.length === 1) {
+                        this.anything.push(defult_anything[1]);
+                        this.anything.push(defult_anything[2]);
+                    } else if (this.anything.length === 2) {
+                        this.anything.push(defult_anything[2]);
+                    } else if (this.anything.length === 0) {
+                        this.anything.push(defult_anything[1]);
+                        this.anything.push(defult_anything[2]);
+                        this.anything.push(defult_anything[3]);
+                    }else{
+
+                    }
+                }
                 this.anything.forEach(function (item, index) {
                     item.content.forEach(function (rightItem, rightIndex) {
                         rightItem.show = false;
@@ -716,10 +786,17 @@
                     })
                 },
                 confirmBtn: function (event, index, id, innerIndex) {
-                    data = {id: this.anything[index].id, content: this.anything[index].content};
-                    data._method = 'put';
+                    data = {type: this.anything[index].type, content: this.anything[index].content};
+
                     let _thisVue = this;
-                    axios.post("{{ secure_route('mobile.homecard.update',['id'=>1]) }}".replace(1, id), data).then(function (res) {
+                    let uri = '';
+                    if (this.anything[index].id !== '') {
+                        uri = "{{ secure_route('mobile.homecard.update',['id'=>1]) }}".replace(1, id);
+                        data._method = 'put';
+                    } else {
+                        uri = "{{ secure_route('mobile.homecard.store') }}";
+                    }
+                    axios.post(uri, data).then(function (res) {
                         if (res.data.status === 200) {
                             _thisVue.anything[index].content[innerIndex].show = false;
                             toastr.success('保存成功');

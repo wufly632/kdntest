@@ -21,15 +21,20 @@ class MobileCardController
         $this->mobileHomeCardService = $mobileHomeCardService;
     }
 
-    public function store()
-    {
-
-    }
-
     public function update($id)
     {
         try {
-            $this->mobileHomeCardService->update($id, request()->only('content'));
+            $this->mobileHomeCardService->update($id, request()->all());
+            return ApiResponse::success();
+        } catch (\Exception $e) {
+            return ApiResponse::failure(g_API_ERROR, '修改失败');
+        }
+    }
+
+    public function store()
+    {
+        try {
+            $this->mobileHomeCardService->create(request()->all());
             return ApiResponse::success();
         } catch (\Exception $e) {
             return ApiResponse::failure(g_API_ERROR, '修改失败');

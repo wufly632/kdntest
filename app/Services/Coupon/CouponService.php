@@ -77,7 +77,7 @@ class CouponService
             $coupon = $request->only(['coupon_name', 'coupon_price', 'currency_code', 'coupon_use_price', 'coupon_number',
                 'use_type', 'use_days', 'coupon_use_startdate', 'coupon_use_enddate',
                 'coupon_grant_startdate', 'coupon_grant_enddate', 'coupon_purpose',
-                'coupon_remark', 'coupon_key']);
+                'coupon_remark', 'coupon_key', 'rebate_type']);
             if ($request->coupon_purpose == 4) {
                 if (!$request->coupon_key) {
                     return ApiResponse::failure(g_API_ERROR, '请填写券口令');
@@ -123,7 +123,7 @@ class CouponService
             $coupon = $request->only(['id', 'coupon_name', 'coupon_price', 'currency_code', 'coupon_key', 'coupon_use_price', 'coupon_number',
                 'use_type', 'use_days', 'coupon_use_startdate', 'coupon_use_enddate',
                 'coupon_grant_startdate', 'coupon_grant_enddate', 'coupon_purpose',
-                'coupon_remark']);
+                'coupon_remark', 'rebate_type']);
             if ($request->coupon_purpose == 4) {
                 if (!$request->coupon_key) {
                     return ApiResponse::failure(g_API_ERROR, '请填写券口令');

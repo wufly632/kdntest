@@ -28,5 +28,6 @@ class MobileHomeCardService
 
     public function create($option)
     {
+        $this->mobileHomeCardRepository->create($option);
     }
 }

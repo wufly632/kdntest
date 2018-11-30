@@ -22,12 +22,11 @@
                 <label for="shipper-code" class="col-sm-3 control-label">选择快递公司:</label>
                 <div class="col-sm-8">
                     <select name="shipper_code" id="shipper-code" class="form-control" required>
-                        <option value="1">百世</option>
-                        <option value="2">圆通</option>
-                        <option value="3">中通</option>
-                        <option value="4">汇通</option>
-                        <option value="5">顺丰</option>
-                        <option value="6">韵达</option>
+                        <option value="sf-express">顺丰</option>
+                        <option value="bestex">百世</option>
+                        <option value="zto">中通</option>
+                        <option value="yto">圆通</option>
+                        <option value="yunda">韵达</option>
                     </select>
                 </div>
             </div>
