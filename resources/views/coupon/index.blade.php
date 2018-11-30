@@ -214,7 +214,7 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="form-group">
+                                        <div class="form-group use_price_limit">
                                             <div class="col-xs-1"></div>
                                             <label for="coupon_count" class="col-xs-2 control-label">
                                                 使用条件：
@@ -440,9 +440,12 @@
                 $('#rebate_type').find('option[value=1]').addClass('dis-no');
                 $('#rebate_type_show').html('%');
                 $('.currency_code').addClass('dis-no');
+                $('.use_price_limit').find('input[name=coupon_use_price]').val(0);
+                $('.use_price_limit').addClass('dis-no');
             }  else {
                 $('#rebate_type').find('option[value=1]').removeClass('dis-no');
                 $('.currency_code').removeClass('dis-no');
+                $('.use_price_limit').removeClass('dis-no');
             }
         });
         $('.modal-content').css({'box-shadow': 'none'});
