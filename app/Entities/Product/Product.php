@@ -2,6 +2,7 @@
 
 namespace App\Entities\Product;
 
+use App\Entities\CateAttr\Category;
 use App\Entities\Good\Good;
 use App\Observers\ProductObserver;
 use Illuminate\Database\Eloquent\Model;
@@ -65,5 +66,42 @@ class Product extends Model implements Transformable
     public function getAttrValue()
     {
         return $this->hasMany(ProductAttrValue::class, 'good_id', 'id');
+    }
+
+    public function category()
+    {
+        return $this->belongsTo(Category::class);
+    }
+
+    // 转换ES数组
+    public function toESArray()
+    {
+        // 只取出需要的字段
+        $arr = array_only($this->toArray(), [
+            'id',
+            'good_en_title',
+            'category_id',
+            'status',
+            'price',
+            'orders',
+            'good_en_summary',
+            'main_pic',
+            'good_stock',
+            'rebate_level_one',
+            'rebate_level_two'
+        ]);
+        // 类目的 path 字段
+        $arr['category_path'] = $this->category ? $this->category->getPathArr() : [];
+        // strip_tags 函数可以将 html 标签去除
+        $arr['good_en_summary'] = strip_tags($this->good_en_summary);
+        // 只取出需要的 SKU 字段
+        $arr['skus'] = $this->productSku->map(function (ProductSku $sku) {
+            return array_only($sku->toArray(), ['price', 'value_ids', 'good_stock']);
+        });
+        // 只取出需要的商品属性字段
+        $arr['properties'] = $this->properties->map(function (ProductProperty $property) {
+            return array_only($property->toArray(), ['name', 'value']);
+        });
+        return $arr;
     }
 }
