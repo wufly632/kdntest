@@ -76,7 +76,6 @@ class OrderTrackingMoreController extends Controller
             return ApiResponse::success(['trackinfo' => $order->orderTrackingmore->trackinfo]);
         };
         $orderTrackInfo = $this->trackingMoreService->getSingleTrackingResult($shipperCode, $waybillId);
-        ding(json_encode($orderTrackInfo));
         if ($orderTrackInfo['meta']['code'] == 200) {
             $getApiInfo = [
                 'order_id' => $order->order_id,

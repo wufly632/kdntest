@@ -54,7 +54,7 @@ class GenerateProductReceive extends Command
 
     private function handleProgress()
     {
-        $date = Carbon::now()->addDay()->toDateString();
+        $date = Carbon::now()->toDateString();
         // 查找今日所有到货sku
         DB::table('ship_orders as so')
             ->leftJoin('ship_order_items as soi', 'soi.ship_order_id', '=', 'so.id')
