@@ -73,6 +73,7 @@ class ExportAllProduct extends Command
                     "一级返利",
                     "二级返利",
                     "创建时间",
+                    "更新时间",
                     "上架时间"
                 );
                 $sheet->row(1, $heading);// set header
@@ -105,6 +106,7 @@ class ExportAllProduct extends Command
                     $data[] = $product->rebate_level_one ?? '';
                     $data[] = $product->rebate_level_two ?? '';
                     $data[] = $good->created_at;
+                    $data[] = $product->updated_at ?? '';
                     $data[] = $product->shelf_at ?? '';
                     $sheet->row($index,$data);
                     $index++;
