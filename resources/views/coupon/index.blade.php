@@ -43,25 +43,25 @@
                                             <div class="col-xs-8">
                                                 <div class="radio-inline">
                                                     <label>
-                                                        <input type="radio" name="coupon_purpose" class="" id="method1"
+                                                        <input type="radio" name="coupon_purpose" class="coupon-method" id="method1"
                                                                value="1">页面领取
                                                     </label>
                                                 </div>
                                                 <div class="radio-inline">
                                                     <label>
-                                                        <input type="radio" name="coupon_purpose" class="" id="method2"
+                                                        <input type="radio" name="coupon_purpose" class="coupon-method" id="method2"
                                                                value="2">满返活动
                                                     </label>
                                                 </div>
                                                 <div class="radio-inline">
                                                     <label>
-                                                        <input type="radio" name="coupon_purpose" class="" id="method3"
+                                                        <input type="radio" name="coupon_purpose" class="coupon-method" id="method3"
                                                                value="3">新人礼包
                                                     </label>
                                                 </div>
                                                 <div class="radio-inline">
                                                     <label>
-                                                        <input type="radio" name="coupon_purpose" class="" id="method4"
+                                                        <input type="radio" name="coupon_purpose" class="coupon-method" id="method4"
                                                                value="4">通用券
                                                     </label>
                                                 </div>
@@ -154,13 +154,14 @@
                                                 </select>
                                             </div>
                                         </div>
-                                        <div class="form-group">
+                                        <div class="form-group currency_code">
                                             <div class="col-xs-1"></div>
                                             <label for="currency" class="col-xs-2 control-label">
                                                 币种：
                                             </label>
                                             <div class="col-xs-7">
                                                 <select name="currency_code" id="currency" class="form-control">
+                                                    <option value="">请选择</option>
                                                     @foreach($currencys as $currency)
                                                         <option value="{{ $currency->currency_code }}">{{ $currency->symbol.$currency->name }}</option>
                                                     @endforeach
@@ -418,23 +419,31 @@
         $('#modal-cancel').click(function () {
             $("#responsive").modal('hide');
         });
-        $('#method1').click(function () {
-            $('.show-info').text('用户可在店铺主页领取，显示最新提交的3张；或在已设置的活动页面领取');
-            $('#coupon_key').addClass('dis-no');
-        });
-
-        $('#method2').click(function () {
-            $('.show-info').text('满返活动券需要在满返活动中进行配置，用户方可在活动中获得返券');
-            $('#coupon_key').addClass('dis-no');
-        });
-
-        $('#method3').click(function () {
-            $('.show-info').text('');
-            $('#coupon_key').addClass('dis-no');
-        });
-        $('#method4').click(function () {
-            $('.show-info').text('');
-            $('#coupon_key').removeClass('dis-no');
+        $('.coupon-method').change(function () {
+            var va = $(this).val();
+            if (va == 1) { //页面领取
+                $('.show-info').text('用户可在店铺主页领取，显示最新提交的3张；或在已设置的活动页面领取');
+                $('#coupon_key').addClass('dis-no');
+            } else if (va == 2) { //满返活动
+                $('.show-info').text('满返活动券需要在满返活动中进行配置，用户方可在活动中获得返券');
+                $('#coupon_key').addClass('dis-no');
+            } else if (va == 3) { //新人礼包
+                $('.show-info').text('');
+                $('#coupon_key').addClass('dis-no');
+            } else if (va == 4) { // 通用券
+                $('.show-info').text('');
+                $('#coupon_key').removeClass('dis-no');
+            }
+            if (va == 3) {
+                //取消币种和面额券
+                $('#rebate_type').val(2);
+                $('#rebate_type').find('option[value=1]').addClass('dis-no');
+                $('#rebate_type_show').html('%');
+                $('.currency_code').addClass('dis-no');
+            }  else {
+                $('#rebate_type').find('option[value=1]').removeClass('dis-no');
+                $('.currency_code').removeClass('dis-no');
+            }
         });
         $('.modal-content').css({'box-shadow': 'none'});
         $(function () {
@@ -510,7 +519,7 @@
             if (rebateType.val() == 1) {
                 rebateTypeShow.html('元');
             } else {
-                rebateTypeShow.html('%减免');
+                rebateTypeShow.html('%');
             }
         })
     </script>
