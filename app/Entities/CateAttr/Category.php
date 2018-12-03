@@ -54,6 +54,6 @@ class Category extends Model implements Transformable
      */
     public function getPathArr()
     {
-        return app(CategoryPresenter::class)->getCatePathArr($this->category_ids.','.$this->id);
+        return app(CategoryPresenter::class)->getCatePathArr($this->category_ids.','.$this->id, 'en_name');
     }
 }

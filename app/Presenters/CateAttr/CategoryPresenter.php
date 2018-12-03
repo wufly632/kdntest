@@ -46,10 +46,10 @@ class CategoryPresenter extends FractalPresenter
      * @param $path
      * @return array
      */
-    public function getCatePathArr($path)
+    public function getCatePathArr($path, $field='name')
     {
         $cate_ids = explode(',', $path);
-        $categories = Category::whereIn('id', $cate_ids)->orderBy('id', 'asc')->pluck('name','id')->toArray();
+        $categories = Category::whereIn('id', $cate_ids)->orderBy('id', 'asc')->pluck($field,'id')->toArray();
         $category_arr = [];
         foreach ($cate_ids as $cate_id) {
             if (isset($categories[$cate_id])) {

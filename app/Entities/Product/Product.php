@@ -105,20 +105,22 @@ class Product extends Model implements Transformable
             'rebate_level_two'
         ]);
         // 类目的 path 字段
-        $arr['category_path'] = $this->category ? $this->category->getPathArr() : [];
+        $arr['category_path'] = $this->category ? implode(' ', $this->category->getPathArr()) : '';
         // strip_tags 函数可以将 html 标签去除
         $arr['good_en_summary'] = strip_tags($this->good_en_summary);
         // 只取出需要的 SKU 字段
         $arr['skus'] = $this->productSku->map(function (ProductSku $sku) {
-            return array_only($sku->toArray(), ['price', 'value_ids', 'good_stock']);
-        });
+            $item = array_only($sku->toArray(), ['price', 'good_stock']);
+            $item['desciption'] = $sku->getSkuDescription();
+            return $item;
+        })->toArray();
         // 只取出需要的商品属性字段
-        $arr['properties'] = $this->prop->map(function (ProductAttrValue $property) {
+        $arr['prop'] = $this->prop->map(function (ProductAttrValue $property) {
             $item = [];
             $item['name'] = $property->getAttibute->en_name;
             $item['value'] = $property->value_name ?: ($property->getAttrValue->en_name ?? '');
             return $item;
-        });
+        })->toArray();
         return $arr;
     }
 }
