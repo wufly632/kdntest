@@ -80,9 +80,10 @@ class PromotionController extends Controller
         $coupon_list = app(CouponService::class)->getPromotionCoupons();
         //获取所有促销活动sku
         $promotion_skus = $promotion->getPromotionSkus->pluck('price', 'sku_id')->toArray();
+        $promotion_sku_goods = $promotion->getPromotionSkus->pluck(null, 'goods_id')->toArray();
         //货币列表
         $currencys = $this->currencyService->getAll();
-        return view('promotion.edit', compact('promotion', 'promotion_goods', 'coupon_list', 'promotion_skus', 'currencys'));
+        return view('promotion.edit', compact('promotion', 'promotion_goods', 'coupon_list', 'promotion_skus', 'currencys', 'promotion_sku_goods'));
     }
 
     /**

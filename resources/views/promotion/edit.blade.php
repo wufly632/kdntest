@@ -853,7 +853,7 @@
                                                                 class="promotion-goods-delete"
                                                                 data-id="{{$product->id}}">删除</a></div>
                                                         @if($promotion->activity_type)
-                                                        <div class="set_promotion"><span class="promotion-goods-single"
+                                                        <div class="set_promotion"><span class="promotion-goods-single @if(isset($promotion_sku_goods[$product->id])) promo_sku_set @endif"
                                                                                          data-id="{{$product->id}}">设置优惠</span>
                                                             @endif
                                                         </div>
@@ -1082,7 +1082,6 @@
             $('#myModal-one').on('click', 'ul li a', function () {
                 var url = $(this).attr('href');
                 var page = $(this).html();
-                console.log(url);
                 $(this).attr('href', 'javascript:;');
                 /*if(url.indexOf('http://') == -1 || url.indexOf('https://') == -1){
                     console.log(77);
@@ -1098,7 +1097,6 @@
                         _index.attr('disabled', true);
                     },
                     success: function (data) {
-                        console.log(data);
                         $('#myModal-one').find('.seckill-modal').html(data);
                     },
                     error: function (data) {
@@ -1121,7 +1119,6 @@
                         _index.text('保存中...');
                     },
                     success: function (data) {
-                        console.log(data);
                         if (data.status == 200) {
                             toastr.success(data.content);
                             window.location.href = "{{secure_route('promotion.index')}}";
@@ -1195,7 +1192,6 @@
 
             //立减/立享
             $(".limit-detail").on("change", '.active-select', function () {
-                console.log(22);
                 var value = $(this).val();
                 if (value == 1) {
                     $(".limit-type-html").text("元");
@@ -1232,9 +1228,7 @@
                 var activity_id = $('input[name=id]').val();
                 var _this = $(this);
                 var toggle = _this.attr('data-toggle');
-                console.log(1);
                 if (toggle == 'false') return;
-                console.log(2);
                 var good_id = _this.data('id');
                 _this.attr('data-toggle', false);
                 $.ajax({
@@ -1255,6 +1249,9 @@
             $('.promotion-activity-type1,.promotion-activity-type2').on('click', '.promotion-goods-single-clear', function () {
                 $(this).parents('td.add_Table').parent().prev().find('.promotion-goods-single').attr('data-toggle', true);
                 $(this).parents('td.add_Table').parent().remove();
+            });
+            $('.promo_sku_set').each(function() {
+                $(this).click();
             });
         });
 
@@ -1295,7 +1292,6 @@
             var _this = $(obj);
             var type = $('input[name=activity_type]:checked').val();
             var perNum = _this.parents('.detail').find('select[name=limit_per_num] option:checked').val();
-            console.log(perNum);
             $('.promotion-per-num').each(function () {
                 $(this).val(perNum);
             });
@@ -1379,10 +1375,8 @@
                 var price = '';
                 var return_coupons = this.coupons;
                 _this.find('input[name=coupon-ids]').each(function (i, item) {
-                    console.log(1);
                     var that = $(item);
                     if (that.prop('checked')) {
-                        console.log(2);
                         if ($.inArray(that.val(), return_coupons) != -1) {
                             return true;
                         } else {
@@ -1403,14 +1397,12 @@
                 $('#myModal-four').modal('hide');
                 $('#return-detail').removeClass('dis-no').find('tbody').append(str);
                 var tr = $('#return-detail .acTable').find("tr").length
-                console.log(tr)
                 var height = (tr + 1) * 43 + 50
                 $('.seckill .se-sale').css('height', height + 'px');
                 $('#return-price_sum').html('(总价值￥' + price + '元)');
             },
             del: function (obj) {
                 var tr = $(obj).parents("table").find('tr').length;
-                console.log(tr)
                 var height = tr * 43 + 50
                 var id = $(obj).data('id');
                 var price = $(obj).data('price');
@@ -1446,7 +1438,6 @@
                     console.log('进度' + percentComplete);
                 },
                 success: function (data) {
-                    console.log(data);
                     _this.unwrap();
                     _this.removeAttr("disabled");
                     if (data.status == 200) {
