@@ -73,6 +73,15 @@ class Product extends Model implements Transformable
         return $this->hasMany(ProductAttrValue::class, 'good_id', 'id');
     }
 
+    /**
+     * @function 获取商品的非销售属性
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function prop()
+    {
+        return $this->hasMany(ProductAttrValue::class, 'good_id', 'id')->whereNull('sku_id');
+    }
+
     public function category()
     {
         return $this->belongsTo(Category::class);
@@ -104,8 +113,11 @@ class Product extends Model implements Transformable
             return array_only($sku->toArray(), ['price', 'value_ids', 'good_stock']);
         });
         // 只取出需要的商品属性字段
-        $arr['properties'] = $this->properties->map(function (ProductProperty $property) {
-            return array_only($property->toArray(), ['name', 'value']);
+        $arr['properties'] = $this->prop->map(function (ProductAttrValue $property) {
+            $item = [];
+            $item['name'] = $property->getAttibute->en_name;
+            $item['value'] = $property->value_name ?: ($property->getAttrValue->en_name ?? '');
+            return $item;
         });
         return $arr;
     }
