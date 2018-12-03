@@ -209,9 +209,13 @@ class PromotionService
         // 验证促销商品价格是否大于商品原价格
         foreach ($promotion_goods['promotion_goods_sku'] as $val) {
             foreach ($sku_info as $v) {
-                if ($val['goods_id'] == $v->good_id && $val['sku_id'] == $v->value_ids) {
-                    if ($val['price'] > $v['supply_price']) {
-                        throw new CustomException('促销价不能大于售价');
+                if ($val['goods_id'] == $v->good_id && $val['sku_id'] == $v->id) {
+                    if ($val['price'] > $v['price']) {
+                        throw new CustomException('商品'.$v->good_id.'促销价不能大于售价');
+                        break;
+                    }
+                    if ($val['price'] <= 0) {
+                        throw new CustomException('商品'.$v->good_id.'促销价不能为0');
                         break;
                     }
                 }
