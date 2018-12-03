@@ -686,3 +686,31 @@ function getPathCate($uri)
     }
     return implode('', $path[$uri]);
 }
+
+/**
+ * @function cdn加速
+ * @param $url
+ * @param bool $is_https
+ * @return \Illuminate\Contracts\Routing\UrlGenerator|mixed|string
+ */
+function cdnUrl($url,$is_https=true)
+{
+    if(!$url || empty($url) || env('APP_ENV', 'local') == 'local')return $url;
+
+    $cdn_image_url = env('CDN_IMAGE_URL','');
+    $cdn_skins_url = env('CDN_SKINS_URL','');
+    $cdn_infos = [
+        "weiweimao-image.oss-ap-south-1.aliyuncs.com" => $cdn_image_url,
+        "cucoe.oss-us-west-1.aliyuncs.com" => $cdn_image_url,
+        "admin.waiwaimall.com" => $cdn_skins_url,
+        "seller.waiwaimall.com" => $cdn_skins_url
+    ];
+
+    foreach (array_keys($cdn_infos) as $index=>$origin_host){
+        if(str_contains($url,$origin_host) && !empty($cdn_infos[$origin_host])){
+            $url=str_replace($origin_host,$cdn_infos[$origin_host],$url);
+            break;
+        }
+    }
+    return $url;
+}

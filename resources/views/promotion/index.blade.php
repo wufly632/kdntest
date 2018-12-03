@@ -93,6 +93,7 @@
                                     <tr>
                                         <td>序号</td>
                                         <td>活动时间</td>
+                                        <td>币种</td>
                                         <td>活动名称</td>
                                         <td>促销详情</td>
                                         <td>货值</td>
@@ -106,6 +107,7 @@
                                         <tr>
                                             <td>{{$promotion->id}}</td>
                                             <td>{{$promotion->start_at.'~'.$promotion->end_at}}</td>
+                                            <td>{{ $promotion->currency_code }}</td>
                                             <td>{{$promotion->title}}</td>
                                             <td>@if($promotion->activity_type!=''){{$promotion->rule_text}}@else{{$promotion->title}}@endif</td>
                                             <td>{{$promotion->goods_value}}</td>
@@ -203,6 +205,43 @@
             }, function () {
                 layer.close();
             });
+        }
+
+        function indexShow(id, el) {
+            var layIndex = layer.confirm('确定在首页显示此活动?', {
+                    btn: ['确定', '取消']
+                }, //按钮
+                function () {
+                    $.ajax({
+                        type: 'post',
+                        url: "{{ secure_route('promotion.homeshow.update',['id'=>1]) }}".replace(1, id),
+                        data: {id: id, _token: "{{csrf_token()}}", _method: 'put'},
+                        success: function (data) {
+                            console.log(data.status);
+                            if (data.status === 200) {
+                                if ($(el).val() === '打开展示') {
+                                    $(el).removeClass('btn-primary').addClass('btn-warning');
+                                    $(el).val('关闭展示');
+                                } else {
+                                    $(el).removeClass('btn-warning').addClass('btn-primary');
+                                    $(el).val('打开展示');
+                                }
+                                layer.close(layIndex);
+                                toastr.success('修改成功');
+                            } else {
+                                toastr.error('修改失败');
+                            }
+
+                        },
+                        error: function (data) {
+                            var json = eval("(" + data.responseText + ")");
+                            toastr.error(json.msg);
+                        }
+                    });
+                }
+                , function () {
+                    layer.close();
+                });
         }
     </script>
 @endsection

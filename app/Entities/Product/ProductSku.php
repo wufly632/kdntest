@@ -17,6 +17,11 @@ class ProductSku extends Model implements Transformable
 
     protected $table = 'good_skus';
 
+    public function getIcon($item)
+    {
+        return cdnUrl($item);
+    }
+
     /**
      * The attributes that are mass assignable.
      *

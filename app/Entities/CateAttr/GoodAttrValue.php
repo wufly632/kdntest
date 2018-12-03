@@ -22,7 +22,7 @@ class GoodAttrValue extends Model implements Transformable
      *
      * @var array
      */
-    protected $fillable = [];
+    protected $guarded = ['id'];
 
     // 需同步的字段
     public static $syncField = ['id', 'good_id', 'sku_id', 'attr_id', 'value_ids', 'value_name'];
@@ -41,7 +41,6 @@ class GoodAttrValue extends Model implements Transformable
     {
         return $this->hasOne(AttributeValue::class, 'id', 'value_ids');
     }
-
 
 
 }

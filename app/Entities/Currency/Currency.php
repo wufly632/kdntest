@@ -23,4 +23,8 @@ class Currency extends Model implements Transformable
      */
     protected $fillable = [];
 
+    public function getNationalFlagAttribute($item)
+    {
+        return cdnUrl($item);
+    }
 }

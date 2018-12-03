@@ -16,6 +16,11 @@ class Banner extends Model implements Transformable
     use TransformableTrait;
 
     protected $table = 'website_banners';
+
+    public function getSrcAttribute($item)
+    {
+        return cdnUrl($item);
+    }
     /**
      * The attributes that are mass assignable.
      *

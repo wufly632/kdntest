@@ -34,9 +34,18 @@ class Kernel extends ConsoleKernel
         //订单30分钟未支付自动取消
         $schedule->command('generate:order_cancel --y')->everyMinute();
 
-        //每天凌晨2点自动备份数据库
-        $schedule->command('backup:clean')->dailyAt('2:00');
-        $schedule->command('backup:run --only-db')->dailyAt('3:00');
+        //每日定时统计商品到货数量
+        $schedule->command('generate:supplier_product_receive --y')->dailyAt('1:00');
+
+        //每月定时生成结算单(1号凌晨12：30）
+        $schedule->command('generate:supplier_settle --y')->monthlyOn(1, '0:30')->timezone('Asia/Shanghai');
+
+        //发货单自动确认
+        $schedule->command('auto:ship_order_confirm --y')->dailyAt('0:10');
+
+        //每天晚上11点自动备份数据库
+        $schedule->command('backup:clean')->dailyAt('15:10');
+        $schedule->command('backup:run --only-db')->dailyAt('15:30');
     }
 
     /**

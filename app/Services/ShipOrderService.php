@@ -2,7 +2,7 @@
 // +----------------------------------------------------------------------
 // | ShipOrderService.php
 // +----------------------------------------------------------------------
-// | Description: 
+// | Description:
 // +----------------------------------------------------------------------
 // | Time: 2018/10/19 下午9:42
 // +----------------------------------------------------------------------
@@ -169,10 +169,11 @@ class ShipOrderService
                 return ApiResponse::failure(g_API_ERROR, '参数错误');
             }
             foreach ($sku_num as $sku_id => $accepted) {
-                ShipOrderItem::where(['ship_order_id' => $ship_order_id, 'sku_id' => $sku_id])->update(['accepted' => $accepted]);
+                ShipOrderItem::where(['ship_order_id' => $ship_order_id, 'sku_id' => $sku_id])->update(['accepted' => $accepted, 'received' => $accepted]);
             }
             $accepted_total = $ship_order->getItems->sum('accepted');
             $ship_order->accepted = $accepted_total;
+            $ship_order->received = $accepted_total;
             if ($accepted_total >= $ship_order->num) {
                 $ship_order->status = ShipOrder::ACCEPTANCE;
             } else {

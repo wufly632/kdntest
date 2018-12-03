@@ -24,7 +24,7 @@ class Category extends Model implements Transformable
      *
      * @var array
      */
-    protected $fillable = ['name','en_name','level','parent_id','category_path','category_ids','is_final','status','sort','created_at','updated_at'];
+    protected $fillable = ['name','en_name','level','parent_id','category_path','category_ids','is_final', 'describe','status','sort','created_at','updated_at'];
 
     /**
      * 子类目

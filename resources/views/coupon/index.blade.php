@@ -43,25 +43,25 @@
                                             <div class="col-xs-8">
                                                 <div class="radio-inline">
                                                     <label>
-                                                        <input type="radio" name="coupon_purpose" class="" id="method1"
+                                                        <input type="radio" name="coupon_purpose" class="coupon-method" id="method1"
                                                                value="1">页面领取
                                                     </label>
                                                 </div>
                                                 <div class="radio-inline">
                                                     <label>
-                                                        <input type="radio" name="coupon_purpose" class="" id="method2"
+                                                        <input type="radio" name="coupon_purpose" class="coupon-method" id="method2"
                                                                value="2">满返活动
                                                     </label>
                                                 </div>
                                                 <div class="radio-inline">
                                                     <label>
-                                                        <input type="radio" name="coupon_purpose" class="" id="method3"
+                                                        <input type="radio" name="coupon_purpose" class="coupon-method" id="method3"
                                                                value="3">新人礼包
                                                     </label>
                                                 </div>
                                                 <div class="radio-inline">
                                                     <label>
-                                                        <input type="radio" name="coupon_purpose" class="" id="method4"
+                                                        <input type="radio" name="coupon_purpose" class="coupon-method" id="method4"
                                                                value="4">通用券
                                                     </label>
                                                 </div>
@@ -88,32 +88,6 @@
                                             <div class="col-xs-7">
                                                 <input type="text" id="coupon_name" class="form-control"
                                                        name="coupon_name">
-                                            </div>
-                                        </div>
-                                        <div class="form-group">
-                                            <div class="col-xs-1"></div>
-                                            <label for="currency" class="col-xs-2 control-label">
-                                                币种：
-                                            </label>
-                                            <div class="col-xs-7">
-                                                <select name="currency_code" id="currency" class="form-control">
-                                                    @foreach($currencys as $currency)
-                                                        <option value="{{ $currency->currency_code }}">{{ $currency->symbol.$currency->name }}</option>
-                                                    @endforeach
-                                                </select>
-                                            </div>
-                                        </div>
-                                        <div class="form-group">
-                                            <div class="col-xs-1"></div>
-                                            <label for="coupon_price" class="col-xs-2 control-label">
-                                                券面额：
-                                            </label>
-                                            <div class="col-xs-7">
-                                                <div class="input-group">
-                                                    <input type="text" id="coupon_price" class="form-control"
-                                                           name="coupon_price"><span
-                                                            class="input-group-addon">元</span>
-                                                </div>
                                             </div>
                                         </div>
                                         <div class="form-group">
@@ -170,6 +144,45 @@
                                         </div>
                                         <div class="form-group">
                                             <div class="col-xs-1"></div>
+                                            <label for="rebate_type" class="col-xs-2 control-label">
+                                                优惠券类型：
+                                            </label>
+                                            <div class="col-xs-7">
+                                                <select name="rebate_type" id="rebate_type" class="form-control">
+                                                    <option value="1">面额券</option>
+                                                    <option value="2">折扣券</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="form-group currency_code">
+                                            <div class="col-xs-1"></div>
+                                            <label for="currency" class="col-xs-2 control-label">
+                                                币种：
+                                            </label>
+                                            <div class="col-xs-7">
+                                                <select name="currency_code" id="currency" class="form-control">
+                                                    <option value="">请选择</option>
+                                                    @foreach($currencys as $currency)
+                                                        <option value="{{ $currency->currency_code }}" data-unit="{{$currency->name}}">{{ $currency->symbol.$currency->name }}</option>
+                                                    @endforeach
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="col-xs-1"></div>
+                                            <label for="coupon_price" class="col-xs-2 control-label">
+                                                券面额：
+                                            </label>
+                                            <div class="col-xs-7">
+                                                <div class="input-group">
+                                                    <input type="text" id="coupon_price" class="form-control"
+                                                           name="coupon_price"><span
+                                                            class="input-group-addon" id="rebate_type_show">元</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="col-xs-1"></div>
                                             <label for="coupon_count" class="col-xs-2 control-label">
                                                 是否限量：
                                             </label>
@@ -201,7 +214,7 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="form-group">
+                                        <div class="form-group use_price_limit">
                                             <div class="col-xs-1"></div>
                                             <label for="coupon_count" class="col-xs-2 control-label">
                                                 使用条件：
@@ -210,7 +223,7 @@
                                                 <div class="input-group">
                                                     <input type="text" id="coupon_count" class="form-control"
                                                            name="coupon_use_price"><span
-                                                            class="input-group-addon">元</span>
+                                                            class="input-group-addon currency_name">元</span>
                                                 </div>
                                             </div>
                                         </div>
@@ -341,7 +354,11 @@
                                                 {{$coupon->coupon_name}}
                                             </td>
                                             <td class="table-center">
-                                                <label for="">￥</label>{{$coupon->coupon_price}}
+                                                @if($coupon->rebate_type==1)
+                                                    <label for="">￥</label>{{$coupon->coupon_price}}
+                                                @else
+                                                    {{$coupon->coupon_price}}<label for="">%</label>
+                                                @endif
                                             </td>
                                             <td class="table-center">
                                                 1/1/{{$coupon->coupon_number}}
@@ -402,23 +419,34 @@
         $('#modal-cancel').click(function () {
             $("#responsive").modal('hide');
         });
-        $('#method1').click(function () {
-            $('.show-info').text('用户可在店铺主页领取，显示最新提交的3张；或在已设置的活动页面领取');
-            $('#coupon_key').addClass('dis-no');
-        });
-
-        $('#method2').click(function () {
-            $('.show-info').text('满返活动券需要在满返活动中进行配置，用户方可在活动中获得返券');
-            $('#coupon_key').addClass('dis-no');
-        });
-
-        $('#method3').click(function () {
-            $('.show-info').text('');
-            $('#coupon_key').addClass('dis-no');
-        });
-        $('#method4').click(function () {
-            $('.show-info').text('');
-            $('#coupon_key').removeClass('dis-no');
+        $('.coupon-method').change(function () {
+            var va = $(this).val();
+            if (va == 1) { //页面领取
+                $('.show-info').text('用户可在店铺主页领取，显示最新提交的3张；或在已设置的活动页面领取');
+                $('#coupon_key').addClass('dis-no');
+            } else if (va == 2) { //满返活动
+                $('.show-info').text('满返活动券需要在满返活动中进行配置，用户方可在活动中获得返券');
+                $('#coupon_key').addClass('dis-no');
+            } else if (va == 3) { //新人礼包
+                $('.show-info').text('');
+                $('#coupon_key').addClass('dis-no');
+            } else if (va == 4) { // 通用券
+                $('.show-info').text('');
+                $('#coupon_key').removeClass('dis-no');
+            }
+            if (va == 3) {
+                //取消币种和面额券
+                $('#rebate_type').val(2);
+                $('#rebate_type').find('option[value=1]').addClass('dis-no');
+                $('#rebate_type_show').html('%');
+                $('.currency_code').addClass('dis-no');
+                $('.use_price_limit').find('input[name=coupon_use_price]').val(0);
+                $('.use_price_limit').addClass('dis-no');
+            }  else {
+                $('#rebate_type').find('option[value=1]').removeClass('dis-no');
+                $('.currency_code').removeClass('dis-no');
+                $('.use_price_limit').removeClass('dis-no');
+            }
         });
         $('.modal-content').css({'box-shadow': 'none'});
         $(function () {
@@ -487,5 +515,23 @@
                 }
             });
         }
+
+        let rebateType = $('#rebate_type');
+        let rebateTypeShow = $('#rebate_type_show')
+        rebateType.change(function () {
+            if (rebateType.val() == 1) {
+                var unit = $('#currency').find('option:checked').data('unit');
+                rebateTypeShow.html(unit);
+            } else {
+                rebateTypeShow.html('%');
+            }
+        })
+        $('#currency').change(function () {
+            var unit = $(this).find('option:checked').data('unit');
+            $('.currency_name').html(unit);
+            if ($('#rebate_type').val() == 1) {
+                $('#rebate_type_show').html(unit);
+            }
+        })
     </script>
 @stop

@@ -23,6 +23,16 @@ class Good extends Model implements Transformable
     protected $table = 'audit_goods';
 
     /**
+     * @function cdn加速
+     * @param $item
+     * @return \Illuminate\Contracts\Routing\UrlGenerator|mixed|string
+     */
+    public function getMainPicAttribute($item)
+    {
+        return cdnUrl($item);
+    }
+
+    /**
      * The attributes that are mass assignable.
      *
      * @var array

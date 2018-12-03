@@ -72,6 +72,18 @@
                 </div>
                 <div class="form-group">
                     <div class="col-xs-1"></div>
+                    <label for="rebate_type" class="col-xs-2 control-label">
+                        优惠券类型：
+                    </label>
+                    <div class="col-xs-7">
+                        <select name="rebate_type" id="rebate_type" class="form-control">
+                            <option value="1">面额券</option>
+                            <option value="2">折扣券</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-xs-1"></div>
                     <label for="currency" class="col-xs-2 control-label">
                         币种：
                     </label>
@@ -92,7 +104,7 @@
                         <div class="input-group">
                             <input type="text" id="coupon_price" class="form-control" name="coupon_price"
                                    value="{{$coupon->coupon_price}}"><span
-                                    class="input-group-addon">元</span>
+                                    class="input-group-addon" id="rebate_type_show">元</span>
                         </div>
                     </div>
                 </div>
@@ -375,5 +387,22 @@
                 }
             });
         });
+
+        let rebateType = $('#rebate_type');
+        let rebateTypeShow = $('#rebate_type_show')
+        rebateType.val('{{ $coupon->rebate_type }}');
+        if (rebateType.val() == 1) {
+            rebateTypeShow.html('元');
+        } else {
+            rebateTypeShow.html('%减免');
+        }
+
+        rebateType.change(function () {
+            if (rebateType.val() == 1) {
+                rebateTypeShow.html('元');
+            } else {
+                rebateTypeShow.html('%减免');
+            }
+        })
     </script>
 @stop
