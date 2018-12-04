@@ -344,8 +344,8 @@
     </div>
 @stop
 @section('script')
-    <script src="{{asset('/assets/js/bower_components/axios/dist/axios.min.js')}}"></script>
-    <script src="{{asset('/assets/admin/js/vue.min.js')}}"></script>
+    <script src="{{cdn_asset('/assets/js/bower_components/axios/dist/axios.min.js')}}"></script>
+    <script src="{{cdn_asset('/assets/admin/js/vue.min.js')}}"></script>
     <script type="text/x-template" id="form-block">
         <div>
             <label for="" style="margin-left:20px;">@{{ anything }}标题:</label>

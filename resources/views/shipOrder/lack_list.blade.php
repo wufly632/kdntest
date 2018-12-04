@@ -1,6 +1,6 @@
 @section('css')
-    <link rel="stylesheet" href="{{ asset('/assets/css/bootstrap-modal.css') }}">
-    <link rel="stylesheet" href="{{ asset('/assets/css/bootstrap-modal-bs3patch.css') }}">
+    <link rel="stylesheet" href="{{ cdn_asset('/assets/css/bootstrap-modal.css') }}">
+    <link rel="stylesheet" href="{{ cdn_asset('/assets/css/bootstrap-modal-bs3patch.css') }}">
     <style>
         #vertical-middle tr td {
             vertical-align: middle;

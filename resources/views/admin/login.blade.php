@@ -8,10 +8,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <link type="image/x-icon" rel="shortcut icon" href="common/images/icon.png">
-    <link rel="stylesheet" href="{{asset('/assets/admin/css/plugins.css')}}">
-    <link rel="stylesheet" href="{{asset('/assets/admin/css/style.css')}}">
-    <script src="{{asset('assets/admin/js/plugins.js')}}"></script>
-    <script src="{{asset('assets/admin/js/index.js')}}"></script>
+    <link rel="stylesheet" href="{{cdn_asset('/assets/admin/css/plugins.css')}}">
+    <link rel="stylesheet" href="{{cdn_asset('/assets/admin/css/style.css')}}">
+    <script src="{{cdn_asset('assets/admin/js/plugins.js')}}"></script>
+    <script src="{{cdn_asset('assets/admin/js/index.js')}}"></script>
 </head>
 <body class="back">
 <div class="logon-admin">

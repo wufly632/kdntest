@@ -477,7 +477,7 @@
     </div>
 @endsection
 @section('script')
-    <script src="{{asset('assets/js/vue.js')}}" type="text/javascript"></script>
+    <script src="{{cdn_asset('assets/js/vue.js')}}" type="text/javascript"></script>
     <script>
         //点击添加属性时点击的按钮所在dom
         var add_sel = '';
