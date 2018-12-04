@@ -8,6 +8,7 @@ use App\Services\Api\ApiResponse;
 use App\Services\Finance\SupplierWithdrawService;
 use App\Services\User\SupplierUserService;
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 
 class WithdrawController extends Controller
@@ -47,7 +48,7 @@ class WithdrawController extends Controller
             return ApiResponse::failure(g_API_ERROR, '操作失败');
         }
         try {
-            $this->supplierWithdrawService->update(['status' => 2, 'note' => $note], $id);
+            $this->supplierWithdrawService->update(['status' => 2, 'note' => $note, 'audited_at' => Carbon::now()->toDateTimeString()], $id);
             return ApiResponse::success();
         } catch (\Exception $e) {
             return ApiResponse::failure(g_API_ERROR, '操作失败');
@@ -68,7 +69,7 @@ class WithdrawController extends Controller
         try {
             DB::beginTransaction();
             $this->supplierUserService->backMoney($withdraw->supplier_id, $withdraw->amout);
-            $this->supplierWithdrawService->update(['status' => 3, 'note' => $note], $id);
+            $this->supplierWithdrawService->update(['status' => 3, 'note' => $note, 'rejected_at' => Carbon::now()->toDateTimeString()], $id);
             DB::commit();
             return ApiResponse::success();
         } catch (\Exception $e) {
@@ -89,7 +90,7 @@ class WithdrawController extends Controller
             return ApiResponse::failure(g_API_ERROR, '操作失败');
         }
         try {
-            $this->supplierWithdrawService->update(['status' => 4, 'swift_number' => $swift_number], $id);
+            $this->supplierWithdrawService->update(['status' => 4, 'swift_number' => $swift_number, 'finished_at' => Carbon::now()->toDateTimeString()], $id);
             return ApiResponse::success();
         } catch (\Exception $e) {
             return ApiResponse::failure(g_API_ERROR, '操作失败');
