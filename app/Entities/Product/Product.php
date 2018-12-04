@@ -105,6 +105,7 @@ class Product extends Model implements Transformable
             'rebate_level_two'
         ]);
         // 类目的 path 字段
+        $arr['category_ids'] = $this->category ? $this->category->category_ids : '';
         $arr['category_path'] = $this->category ? implode(' ', $this->category->getPathArr()) : '';
         // strip_tags 函数可以将 html 标签去除
         $arr['good_en_summary'] = strip_tags($this->good_en_summary);
@@ -119,6 +120,7 @@ class Product extends Model implements Transformable
             $item = [];
             $item['name'] = $property->getAttibute->en_name;
             $item['value'] = $property->value_name ?: ($property->getAttrValue->en_name ?? '');
+            $item['search_value'] = $item['name'].':'.$item['value'];
             return $item;
         })->toArray();
         return $arr;
