@@ -714,3 +714,8 @@ function cdnUrl($url,$is_https=true)
     }
     return $url;
 }
+
+function cdn_asset($path, $secure = null)
+{
+    return cdnUrl(app('url')->asset($path, $secure));
+}

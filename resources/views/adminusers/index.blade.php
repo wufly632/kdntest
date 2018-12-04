@@ -1,6 +1,6 @@
 @section('css')
     <link rel="stylesheet"
-          href="{{ asset('/assets/admin-lte/bower_components/datatables.net-bs/css/dataTables.bootstrap.min.css') }}">
+          href="{{ cdn_asset('/assets/admin-lte/bower_components/datatables.net-bs/css/dataTables.bootstrap.min.css') }}">
     <style>
         .header-image-block {
             width: 80px;
@@ -110,10 +110,10 @@
     </div>
 @stop
 @section('script')
-    <script src="{{ asset('/assets/admin/js/vue.min.js') }}"></script>
-    <script src="{{ asset('/assets/admin-lte/bower_components/datatables.net/js/jquery.dataTables.min.js') }}"></script>
-    <script src="{{ asset('/assets/admin-lte/bower_components/datatables.net-bs/js/dataTables.bootstrap.min.js') }}"></script>
-    <script src="{{ asset('/assets/js/plugincommon.js') }}"></script>
+    <script src="{{ cdn_asset('/assets/admin/js/vue.min.js') }}"></script>
+    <script src="{{ cdn_asset('/assets/admin-lte/bower_components/datatables.net/js/jquery.dataTables.min.js') }}"></script>
+    <script src="{{ cdn_asset('/assets/admin-lte/bower_components/datatables.net-bs/js/dataTables.bootstrap.min.js') }}"></script>
+    <script src="{{ cdn_asset('/assets/js/plugincommon.js') }}"></script>
 
 
     <script>

@@ -189,9 +189,9 @@
     </div>
 @stop
 @section('script')
-    <script src="{{asset('/assets/js/bower_components/axios/dist/axios.min.js')}}"></script>
-    <script src="{{asset('/assets/admin/js/vue.min.js')}}"></script>
-    <script src="{{ asset('/assets/js/plugincommon.js') }}"></script>
+    <script src="{{cdn_asset('/assets/js/bower_components/axios/dist/axios.min.js')}}"></script>
+    <script src="{{cdn_asset('/assets/admin/js/vue.min.js')}}"></script>
+    <script src="{{ cdn_asset('/assets/js/plugincommon.js') }}"></script>
     <script>
         var searchForm = new Vue({
             el: '#search-form',
