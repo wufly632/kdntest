@@ -703,7 +703,8 @@ function cdnUrl($url,$is_https=true)
         "weiweimao-image.oss-ap-south-1.aliyuncs.com" => $cdn_image_url,
         "cucoe.oss-us-west-1.aliyuncs.com" => $cdn_image_url,
         "admin.waiwaimall.com" => $cdn_skins_url,
-        "seller.waiwaimall.com" => $cdn_skins_url
+        "seller.waiwaimall.com" => $cdn_skins_url,
+        "seller.dev.waiwaimall.com" => $cdn_skins_url
     ];
 
     foreach (array_keys($cdn_infos) as $index=>$origin_host){
