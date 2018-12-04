@@ -116,7 +116,7 @@ class Product extends Model implements Transformable
             return $item;
         })->toArray();
         // 只取出需要的商品属性字段
-        $arr['prop'] = $this->prop->map(function (ProductAttrValue $property) {
+        $arr['properties'] = $this->prop->map(function (ProductAttrValue $property) {
             $item = [];
             $item['name'] = $property->getAttibute->en_name;
             $item['value'] = $property->value_name ?: ($property->getAttrValue->en_name ?? '');

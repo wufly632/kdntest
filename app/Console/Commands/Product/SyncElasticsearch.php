@@ -12,7 +12,7 @@ class SyncElasticsearch extends Command
      *
      * @var string
      */
-    protected $signature = 'sync:elasticsearch {--y}';
+    protected $signature = 'sync:elasticsearch {--index=products}';
 
     /**
      * The console command description.
@@ -38,14 +38,7 @@ class SyncElasticsearch extends Command
      */
     public function handle()
     {
-        if($this->option('y'))
-        {
-            $this->handleProgress();
-        }else{
-            if ($this->confirm('Do you want to continue? [y|N]')) {
-                $this->handleProgress();
-            }
-        }
+        $this->handleProgress();
     }
 
     private function handleProgress()
@@ -55,7 +48,7 @@ class SyncElasticsearch extends Command
         Product::query()
             ->where('status', 1)
             // 使用 chunkById 避免一次性加载过多数据
-            ->chunkById(10, function ($products) use ($es) {
+            ->chunkById(100, function ($products) use ($es) {
                 $this->info(sprintf('正在同步 ID 范围为 %s 至 %s 的商品', $products->first()->id, $products->last()->id));
                 // 初始化请求体
                 $req = ['body' => []];
@@ -65,7 +58,7 @@ class SyncElasticsearch extends Command
                     $data = $product->toESArray();
                     $req['body'][] = [
                         'index' => [
-                            '_index' => 'products',
+                            '_index' => $this->option('index'),
                             '_type'  => '_doc',
                             '_id'    => $data['id'],
                         ],
