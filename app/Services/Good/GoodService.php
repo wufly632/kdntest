@@ -173,6 +173,18 @@ class GoodService{
                 DB::rollback();
                 return false;
             }
+            // 同步到ES
+            if ($product = $good->getProduct) {
+                if ($product->status == 1) {
+                    $data = $product->toESArray();
+                    app('es')->index([
+                        'index' => 'products',
+                        'type'  => '_doc',
+                        'id'    => $data['id'],
+                        'body'  => $data,
+                    ]);
+                }
+            }
             DB::commit();
             return true;
         } catch (\Exception $e) {
@@ -349,6 +361,18 @@ class GoodService{
             $this->good->update(['good_en_title' => $request->good_en_title, 'price' => $price], $request->id);
             $this->product->update(['good_en_title' => $request->good_en_title, 'price' => $price, 'origin_price' => $origin_price], $request->id);
             $this->good->update(['status' => Good::EDITED, 'edited_at' => Carbon::now()->toDateTimeString()], $request->id);
+            // 同步到ES
+            if ($product = $this->product->find($request->id)) {
+                if ($product->status == 1) {
+                    $data = $product->toESArray();
+                    app('es')->index([
+                        'index' => 'products',
+                        'type'  => '_doc',
+                        'id'    => $data['id'],
+                        'body'  => $data,
+                    ]);
+                }
+            }
             DB::commit();
             return ApiResponse::success('编辑成功');
         } catch (\Exception $e) {

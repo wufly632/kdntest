@@ -17,13 +17,16 @@ use App\Criteria\Product\ProductIdCriteria;
 use App\Criteria\Product\ProductStatusCriteria;
 use App\Criteria\Product\ProductTitleCriteria;
 use App\Entities\Product\Product;
+use App\Jobs\SyncOneProductToES;
 use App\Repositories\Product\ProductRepository;
 use App\Services\Api\ApiResponse;
 use Carbon\Carbon;
+use Illuminate\Foundation\Bus\DispatchesJobs;
 use Request, DB, Log;
 
 class ProductService
 {
+    use DispatchesJobs;
     /**
      * @var ProductRepository
      */
@@ -66,6 +69,14 @@ class ProductService
                 $product->shelf_at = Carbon::now()->toDateTimeString();
             }
             $product->save();
+            $data = $product->toESArray();
+            app('es')->index([
+                'index' => 'products',
+                'type'  => '_doc',
+                'id'    => $data['id'],
+                'body'  => $data,
+            ]);
+            // $this->dispatch(new SyncOneProductToES($product));
             DB::commit();
             return ApiResponse::success('上架成功');
         } catch (\Exception $e) {
@@ -90,9 +101,16 @@ class ProductService
             }
             $product->status = Product::OFFLINE;
             $product->save();
+            $data = $product->toESArray();
+            app('es')->delete([
+                'index' => 'products',
+                'type'  => '_doc',
+                'id'    => $data['id'],
+            ]);
             DB::commit();
             return ApiResponse::success('下架成功');
         } catch (\Exception $e) {
+            ding('商品下架失败：' . $e->getMessage());
             Log::info('商品下架失败：' . $e->getMessage());
             DB::rollBack();
             return ApiResponse::failure(g_API_ERROR, '商品下架失败');
