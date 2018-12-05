@@ -99,7 +99,7 @@
 </head>
 <body>
 <div class="admin clearfix">
-    <div class="name"><img src="{{url('admin/images/logo.png')}}">运营中心</div>
+    <div class="name"><img src="{{cdn_asset('admin/images/logo.png')}}">运营中心</div>
     <div class="username clearfix">
         <p>{{\Auth::user()->name ?? \Auth::user()->realname}}</p>
         <a href="{{route('logout')}}">退出</a>

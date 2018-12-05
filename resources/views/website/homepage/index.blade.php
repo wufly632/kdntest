@@ -328,7 +328,7 @@
         var panelBanner = new Vue({
             el: '#panel-banner',
             data: {
-                bannerPlaceholder: "{{ url('images/bannerplaceholder.png') }}",
+                bannerPlaceholder: "{{ cdn_asset('images/bannerplaceholder.png') }}",
                 bannerEditShow: false,
                 banners: [
                         @foreach($banners as $banner)
@@ -794,7 +794,7 @@
                                 @endforeach
                             ],
                         rightImg: {
-                            src: "{{ url('/images/rightplaceholder.png') }}",
+                            src: "{{ cdn_asset('/images/rightplaceholder.png') }}",
                             link: "https://www.tmall.com",
                             show: false,
                             catagory: '{{ $card->product_category_id }}',
