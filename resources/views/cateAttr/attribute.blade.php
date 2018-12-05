@@ -3,7 +3,7 @@
     属性管理
 @endsection
 @section('css')
-    <link rel="stylesheet" href="{{asset('assets/admin-lte/plugins/iCheck/all.css')}}">
+    <link rel="stylesheet" href="{{cdn_asset('assets/admin-lte/plugins/iCheck/all.css')}}">
     <style type="text/css">
         .content-item{
             height: 100%;

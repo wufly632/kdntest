@@ -704,7 +704,8 @@ function cdnUrl($url,$is_https=true)
         "cucoe.oss-us-west-1.aliyuncs.com" => $cdn_image_url,
         "admin.waiwaimall.com" => $cdn_skins_url,
         "admin.dev.waiwaimall.com" => $cdn_skins_url,
-        "seller.waiwaimall.com" => $cdn_skins_url
+        "seller.waiwaimall.com" => $cdn_skins_url,
+        "seller.dev.waiwaimall.com" => $cdn_skins_url
     ];
 
     foreach (array_keys($cdn_infos) as $index=>$origin_host){
@@ -714,4 +715,9 @@ function cdnUrl($url,$is_https=true)
         }
     }
     return $url;
+}
+
+function cdn_asset($path, $secure = null)
+{
+    return cdnUrl(app('url')->asset($path, $secure));
 }

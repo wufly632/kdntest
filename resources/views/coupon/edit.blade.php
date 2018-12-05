@@ -1,7 +1,7 @@
 @extends('layouts.blank')
 @section('css')
-    <link rel="stylesheet" href="{{ asset('/assets/css/bootstrap-modal.css') }}">
-    <link rel="stylesheet" href="{{ asset('/assets/css/bootstrap-modal-bs3patch.css') }}">
+    <link rel="stylesheet" href="{{ cdn_asset('/assets/css/bootstrap-modal.css') }}">
+    <link rel="stylesheet" href="{{ cdn_asset('/assets/css/bootstrap-modal-bs3patch.css') }}">
     <style>
         .dis-no {
             display: none;
@@ -231,13 +231,13 @@
     </div>
 @stop
 @section('script')
-    <script src="{{ asset('/assets/admin-lte/bower_components/moment/min/moment.min.js') }}"></script>
-    <script src="{{ asset('/assets/admin-lte/bower_components/bootstrap-daterangepicker/daterangepicker.js') }}"></script>
-    <script src="{{ asset('/assets/js/bootstrap-modalmanager.js') }}"></script>
-    <script src="{{ asset('/assets/js/bootstrap-modal.js') }}"></script>
-    <script src="{{ asset('/assets/admin-lte/bower_components/datatables.net/js/jquery.dataTables.min.js') }}"></script>
-    <script src="{{ asset('/assets/admin-lte/bower_components/bootstrap-datepicker/js/bootstrap-datepicker.js') }}"></script>
-    <script src="{{ asset('/assets/admin-lte/bower_components/datatables.net-bs/js/dataTables.bootstrap.min.js') }}"></script>
+    <script src="{{ cdn_asset('/assets/admin-lte/bower_components/moment/min/moment.min.js') }}"></script>
+    <script src="{{ cdn_asset('/assets/admin-lte/bower_components/bootstrap-daterangepicker/daterangepicker.js') }}"></script>
+    <script src="{{ cdn_asset('/assets/js/bootstrap-modalmanager.js') }}"></script>
+    <script src="{{ cdn_asset('/assets/js/bootstrap-modal.js') }}"></script>
+    <script src="{{ cdn_asset('/assets/admin-lte/bower_components/datatables.net/js/jquery.dataTables.min.js') }}"></script>
+    <script src="{{ cdn_asset('/assets/admin-lte/bower_components/bootstrap-datepicker/js/bootstrap-datepicker.js') }}"></script>
+    <script src="{{ cdn_asset('/assets/admin-lte/bower_components/datatables.net-bs/js/dataTables.bootstrap.min.js') }}"></script>
     <script>
         $.fn.datepicker.dates['zh-cn'] = {
             days: ["星期日", "星期一", "星期二", "星期三", "星期四", "星期五", "星期六"],

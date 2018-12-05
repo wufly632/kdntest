@@ -1,6 +1,6 @@
 @section('css')
-    <link rel="stylesheet" href="{{ asset('/assets/css/bootstrap-modal.css') }}">
-    <link rel="stylesheet" href="{{ asset('/assets/css/bootstrap-modal-bs3patch.css') }}">
+    <link rel="stylesheet" href="{{ cdn_asset('/assets/css/bootstrap-modal.css') }}">
+    <link rel="stylesheet" href="{{ cdn_asset('/assets/css/bootstrap-modal-bs3patch.css') }}">
     <style>
         .text-padding-top {
             padding-top: 6px;
@@ -247,7 +247,7 @@
                                         <input type="hidden" class="poster_pic" name="poster_pic"
                                                value="{{$promotion->poster_pic}}">
                                         <div class="add-upload">
-                                            <img src="{{$promotion->poster_pic ?: asset('images/3840x1066.png')}}"
+                                            <img src="{{$promotion->poster_pic ?: cdn_asset('images/3840x1066.png')}}"
                                                  alt="" class="promotion-pic" width="150px" height="150px">
                                             <input type="file" class="png-add" name="img_file">
                                         </div>
@@ -256,7 +256,7 @@
                                         <input type="hidden" class="poster_pic" name="h5_poster_pic"
                                                value="{{$promotion->poster_pic}}">
                                         <div class="add-upload">
-                                            <img src="{{$promotion->h5_poster_pic ?: asset('images/1500x760.png')}}"
+                                            <img src="{{$promotion->h5_poster_pic ?: cdn_asset('images/1500x760.png')}}"
                                                  alt="" class="promotion-pic" width="150px" height="150px">
                                             <input type="file" class="png-add" name="img_file">
                                         </div>
@@ -877,10 +877,10 @@
     </div>
 @stop
 @section('script')
-    <script src="{{ asset('/assets/js/bootstrap-modalmanager.js') }}"></script>
-    <script src="{{ asset('/assets/js/bootstrap-modal.js') }}"></script>
-    <script src="{{ asset('/assets/admin-lte/bower_components/datatables.net/js/jquery.dataTables.min.js') }}"></script>
-    <script src="{{ asset('/assets/admin-lte/bower_components/datatables.net-bs/js/dataTables.bootstrap.min.js') }}"></script>
+    <script src="{{ cdn_asset('/assets/js/bootstrap-modalmanager.js') }}"></script>
+    <script src="{{ cdn_asset('/assets/js/bootstrap-modal.js') }}"></script>
+    <script src="{{ cdn_asset('/assets/admin-lte/bower_components/datatables.net/js/jquery.dataTables.min.js') }}"></script>
+    <script src="{{ cdn_asset('/assets/admin-lte/bower_components/datatables.net-bs/js/dataTables.bootstrap.min.js') }}"></script>
     <script>
         $(function () {
             var dis = "{{in_array($promotion->activity_type , array_keys(\App\Entities\Promotion\Promotion::$allType))}}" ? true : false;
