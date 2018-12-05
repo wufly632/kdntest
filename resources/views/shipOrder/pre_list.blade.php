@@ -1,6 +1,6 @@
 @section('css')
-    <link rel="stylesheet" href="{{ asset('/assets/css/bootstrap-modal.css') }}">
-    <link rel="stylesheet" href="{{ asset('/assets/css/bootstrap-modal-bs3patch.css') }}">
+    <link rel="stylesheet" href="{{ cdn_asset('/assets/css/bootstrap-modal.css') }}">
+    <link rel="stylesheet" href="{{ cdn_asset('/assets/css/bootstrap-modal-bs3patch.css') }}">
     <style>
         #vertical-middle tr td {
             vertical-align: middle;
@@ -26,7 +26,7 @@
 
     </style>
     <link rel="stylesheet"
-          href="{{ asset('/assets/admin-lte/bower_components/bootstrap-daterangepicker/daterangepicker.css') }}">
+          href="{{ cdn_asset('/assets/admin-lte/bower_components/bootstrap-daterangepicker/daterangepicker.css') }}">
 @stop
 @extends('layouts.default')
 @section('content')
@@ -152,12 +152,12 @@
     </div>
 @stop
 @section('script')
-    <script src="{{ asset('/assets/js/bootstrap-modalmanager.js') }}"></script>
-    <script src="{{ asset('/assets/js/bootstrap-modal.js') }}"></script>
+    <script src="{{ cdn_asset('/assets/js/bootstrap-modalmanager.js') }}"></script>
+    <script src="{{ cdn_asset('/assets/js/bootstrap-modal.js') }}"></script>
 
 
 
-    <script src="{{asset('/assets/js/bower_components/axios/dist/axios.min.js')}}"></script>
+    <script src="{{cdn_asset('/assets/js/bower_components/axios/dist/axios.min.js')}}"></script>
     <script>
 
         if ("{{ old('from_type') }}") {

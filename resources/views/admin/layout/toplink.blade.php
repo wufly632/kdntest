@@ -7,16 +7,16 @@
 <meta name="renderer" content="webkit">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
-<link type="image/x-icon" rel="shortcut icon" href="{{asset('common/images/icon.png')}}; ?>">
+<link type="image/x-icon" rel="shortcut icon" href="{{cdn_asset('common/images/icon.png')}}; ?>">
 
-<link rel="stylesheet" href="{{asset('/assets/admin/css/plugins.css')}}">
-<link rel="stylesheet" href="{{asset('/assets/admin/css/bootstrap.min.css')}}">
+<link rel="stylesheet" href="{{cdn_asset('/assets/admin/css/plugins.css')}}">
+<link rel="stylesheet" href="{{cdn_asset('/assets/admin/css/bootstrap.min.css')}}">
 <link rel="stylesheet" href="{{mix('/assets/admin/css/style.css')}}">
 
-<script src="{{asset('/assets/admin/js/plugins.js')}}"></script>
-<script src="{{asset('/assets/admin/plugins/datepicker/bootstrap-datepicker.js')}}"></script>
-<script src="{{asset('/assets/admin/plugins/daterangepicker/moment.min.js')}}"></script>
-<script src="{{asset('/assets/admin/plugins/daterangepicker/daterangepicker.js')}}"></script>
+<script src="{{cdn_asset('/assets/admin/js/plugins.js')}}"></script>
+<script src="{{cdn_asset('/assets/admin/plugins/datepicker/bootstrap-datepicker.js')}}"></script>
+<script src="{{cdn_asset('/assets/admin/plugins/daterangepicker/moment.min.js')}}"></script>
+<script src="{{cdn_asset('/assets/admin/plugins/daterangepicker/daterangepicker.js')}}"></script>
 <script src="{{mix('/assets/admin/js/index.js')}}"></script>
 @yield('css')
     <script>
@@ -99,7 +99,7 @@
 </head>
 <body>
 <div class="admin clearfix">
-    <div class="name"><img src="{{url('admin/images/logo.png')}}">运营中心</div>
+    <div class="name"><img src="{{cdn_asset('admin/images/logo.png')}}">运营中心</div>
     <div class="username clearfix">
         <p>{{\Auth::user()->name ?? \Auth::user()->realname}}</p>
         <a href="{{route('logout')}}">退出</a>

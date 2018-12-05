@@ -115,8 +115,8 @@
     </div>
 @stop
 @section('script')
-    <script src="{{ asset('/assets/js/bower_components/axios/dist/axios.min.js') }}"></script>
-    <script src="{{ asset('/assets/admin/js/vue.min.js') }}"></script>
+    <script src="{{ cdn_asset('/assets/js/bower_components/axios/dist/axios.min.js') }}"></script>
+    <script src="{{ cdn_asset('/assets/admin/js/vue.min.js') }}"></script>
     <script src="https://unpkg.com/vue-lazyload/vue-lazyload.js"></script>
     <script>
         Vue.use(VueLazyload);

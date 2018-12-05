@@ -98,7 +98,7 @@
     </div>
 @stop
 @section('script')
-    <script src="{{asset('/assets/js/bower_components/axios/dist/axios.min.js')}}"></script>
+    <script src="{{cdn_asset('/assets/js/bower_components/axios/dist/axios.min.js')}}"></script>
     <script>
         $('.order-modify').click(function () {
             showInfo('ICON修改', $(this).attr('data-target-uri'), "65%")

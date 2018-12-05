@@ -1,6 +1,6 @@
 @section('css')
     <link rel="stylesheet"
-          href="{{ asset('/assets/admin-lte/bower_components/datatables.net-bs/css/dataTables.bootstrap.min.css') }}">
+          href="{{ cdn_asset('/assets/admin-lte/bower_components/datatables.net-bs/css/dataTables.bootstrap.min.css') }}">
     <style>
         .header-image-block {
             width: 120px;
@@ -124,8 +124,8 @@
     </div>
 @stop
 @section('script')
-    <script src="{{ asset('/assets/js/bower_components/axios/dist/axios.min.js') }}"></script>
-    <script src="{{ asset('/assets/js/plugincommon.js') }}"></script>
+    <script src="{{ cdn_asset('/assets/js/bower_components/axios/dist/axios.min.js') }}"></script>
+    <script src="{{ cdn_asset('/assets/js/plugincommon.js') }}"></script>
     <script>
         $('#create_user').click(function () {
             showInfo('新建用户', '{{ secure_route("users.create") }}')
