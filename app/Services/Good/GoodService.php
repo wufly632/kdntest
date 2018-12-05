@@ -29,6 +29,7 @@ use App\Exceptions\CustomException;
 use App\Repositories\Good\GoodRepository;
 use App\Repositories\Product\ProductRepository;
 use App\Services\Api\ApiResponse;
+use App\Services\Product\ProductService;
 use App\Validators\Good\GoodValidator;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
@@ -175,15 +176,7 @@ class GoodService{
             }
             // 同步到ES
             if ($product = $good->getProduct) {
-                if ($product->status == 1) {
-                    $data = $product->toESArray();
-                    app('es')->index([
-                        'index' => 'products',
-                        'type'  => '_doc',
-                        'id'    => $data['id'],
-                        'body'  => $data,
-                    ]);
-                }
+                app(ProductService::class)->updateESIndex($product);
             }
             DB::commit();
             return true;
@@ -363,15 +356,7 @@ class GoodService{
             $this->good->update(['status' => Good::EDITED, 'edited_at' => Carbon::now()->toDateTimeString()], $request->id);
             // 同步到ES
             if ($product = $this->product->find($request->id)) {
-                if ($product->status == 1) {
-                    $data = $product->toESArray();
-                    app('es')->index([
-                        'index' => 'products',
-                        'type'  => '_doc',
-                        'id'    => $data['id'],
-                        'body'  => $data,
-                    ]);
-                }
+                app(ProductService::class)->updateESIndex($product);
             }
             DB::commit();
             return ApiResponse::success('编辑成功');
