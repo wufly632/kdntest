@@ -91,7 +91,7 @@ class Product extends Model implements Transformable
     public function toESArray()
     {
         // 只取出需要的字段
-        $arr = array_only($this->toArray(), [
+        $arr = $this->only([
             'id',
             'good_en_title',
             'category_id',
@@ -102,8 +102,10 @@ class Product extends Model implements Transformable
             'main_pic',
             'good_stock',
             'rebate_level_one',
-            'rebate_level_two'
+            'rebate_level_two',
         ]);
+        // 上架时间
+        $arr['new'] = date('Y-m-d H:i:s', strtotime($this->shelf_at));
         // 类目的 path 字段
         $arr['category_ids'] = $this->category ? $this->category->category_ids : '';
         $arr['category_path'] = $this->category ? implode(' ', $this->category->getPathArr()) : '';

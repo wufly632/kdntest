@@ -28,6 +28,7 @@ class ProjectIndex
             'status'        => ['type' => 'integer'],
             'good_stock'    => ['type' => 'integer'],
             'orders'        => ['type' => 'integer'],
+            'new'           => ['type' => 'date', 'format' => 'yyyy-mm-dd hh:mm:ss'],
             'main_pic'      => ['type' => 'text'],
             'skus'          => [
                 'type'       => 'nested',
