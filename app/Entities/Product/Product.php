@@ -82,6 +82,15 @@ class Product extends Model implements Transformable
         return $this->hasMany(ProductAttrValue::class, 'good_id', 'id')->whereNull('sku_id');
     }
 
+    /**
+     * @function 获取商品的销售属性
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function skuProp()
+    {
+        return $this->hasMany(ProductAttrValue::class, 'good_id', 'id')->whereNotNull('sku_id');
+    }
+
     public function category()
     {
         return $this->belongsTo(Category::class);
@@ -125,6 +134,14 @@ class Product extends Model implements Transformable
             $item['search_value'] = $item['name'].':'.$item['value'];
             return $item;
         })->toArray();
+        $sku_properties = $this->skuProp->map(function (ProductAttrValue $property) {
+            $item = [];
+            $item['name'] = $property->getAttibute->en_name;
+            $item['value'] = $property->getAttrValue->en_name ?? '';
+            $item['search_value'] = $item['name'].':'.$item['value'];
+            return $item;
+        })->toArray();
+        $arr['properties'] = array_merge($arr['properties'], $sku_properties);
         return $arr;
     }
 }
