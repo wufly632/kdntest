@@ -58,7 +58,6 @@ class GenerateOrderCancel extends Command
                 ['created_at', '<=', Carbon::now()->subMinutes(30)],
                 ['status', '=', Order::WAIT_PAY]
             ])->update(['status' => Order::CANCEL]);
-            ding('自动取消订单成功');
             DB::commit();
         } catch (\Exception $e) {
             ding('自动取消订单失败:'-$e->getMessage());
