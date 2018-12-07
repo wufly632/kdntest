@@ -32,9 +32,9 @@ class Order extends Model implements Transformable
         return $this->hasMany('App\Entities\Order\OrderGood', 'order_id', 'order_id');
     }
 
-    public function customerAddress()
+    public function orderAddress()
     {
-        return $this->hasOne('App\Entities\Customer\CustomerAddress', 'id', 'address_id');
+        return $this->hasOne('App\Entities\Order\OrderAddress', 'order_id', 'order_id');
     }
 
     public function customerOrderPayment()

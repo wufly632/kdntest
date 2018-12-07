@@ -165,7 +165,7 @@
                                                           style="cursor: pointer">{{ $orders->OriginWords[$orderlist->from_type] }}</span>
                                             </p>
                                             <p class="col-sm-2">收货人: <span class="text-primary"
-                                                                           style="cursor: pointer">{{ isset($orderlist->customer)&&isset($orderlist->customer->firstname)? $orderlist->customer->firstname : '' . ' ' . isset($orderlist->customer)&&isset($orderlist->customer->lastname) ? $orderlist->customer->lastname:'' }}</span>
+                                                                           style="cursor: pointer">{{ isset($orderlist->orderAddress)&&isset($orderlist->orderAddress->firstname)? $orderlist->orderAddress->firstname : '' . ' ' . isset($orderlist->orderAddress)&&isset($orderlist->orderAddress->lastname) ? $orderlist->orderAddress->lastname:'' }}</span>
                                             </p>
                                         </td>
                                     </tr>

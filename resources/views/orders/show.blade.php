@@ -158,7 +158,7 @@
                             </div>
                         </div>
                         <div class="box-body box-wrapper">
-                            <div class="container order-panel">
+                            <div class="container order-panel" style="margin-left: 100px;">
                                 <div class="">
                                     <div class="col-sm-4">
                                         <div class="panel panel-info" style="height: 263px;">
@@ -166,8 +166,24 @@
                                                 订单信息：
                                             </div>
                                             <div class="panel-body">
-                                                @php($addressObject = $order->customerAddress)
+                                                @php($addressObject = $order->orderAddress)
                                                 <table style="height: 200px;width: 100%">
+                                                    <tr>
+                                                        <td style="width: 80px;">收货人：</td>
+                                                        <td style="word-break: break-word">
+                                                            @if(isset($addressObject))
+                                                                {{ ($addressObject->firstname ?? '').' '.($addressObject->lastname ?? '') }}
+                                                            @endif
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td style="width: 80px;">联系方式：</td>
+                                                        <td style="word-break: break-word">
+                                                            @if(isset($addressObject))
+                                                                {{ $addressObject->phone ?? '' }}
+                                                            @endif
+                                                        </td>
+                                                    </tr>
                                                     <tr>
                                                         <td style="width: 80px;">收货地址：</td>
                                                         <td style="word-break: break-word">
