@@ -710,6 +710,11 @@ function cdnUrl($url,$is_https=true)
 
     foreach (array_keys($cdn_infos) as $index=>$origin_host){
         if(str_contains($url,$origin_host) && !empty($cdn_infos[$origin_host])){
+            if (!starts_with($url, 'http://') && !starts_with($url, 'https://')) {
+                $url = $is_https ? secure_url($url) : url($url);
+            } elseif (starts_with($url, 'http://') && $is_https) {
+                $url = 'https://'.ltrim($url,'http://');
+            }
             $url=str_replace($origin_host,$cdn_infos[$origin_host],$url);
             break;
         }
