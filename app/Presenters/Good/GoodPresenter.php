@@ -80,6 +80,7 @@ class GoodPresenter extends FractalPresenter
         $sku_attribute_name       = [];
         $sku_attribute_value_name = [];
         $attr_num                 = 0;
+        $tmp = [];
         foreach ($skus as $key => $sku) {
             foreach ($sku->skuAttributes as $v) {
                 $tmp[$v->attr_id]['value_name'][$v->value_ids] = $v->getAttrValue->name;
