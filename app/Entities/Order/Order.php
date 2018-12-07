@@ -2,6 +2,8 @@
 
 namespace App\Entities\Order;
 
+use App\Entities\CommonTrait\DateToLocalShowTrait;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Prettus\Repository\Contracts\Transformable;
 use Prettus\Repository\Traits\TransformableTrait;
@@ -14,6 +16,7 @@ use Prettus\Repository\Traits\TransformableTrait;
 class Order extends Model implements Transformable
 {
     use TransformableTrait;
+    use DateToLocalShowTrait;
 
     protected $table = 'customer_order';
 
@@ -23,6 +26,19 @@ class Order extends Model implements Transformable
      * @var array
      */
     protected $fillable = ['status','shipper_code', 'waybill_id','delivery_at'];
+
+    /**
+     * @function 创建时间转化
+     * @param $date
+     * @return Carbon
+     */
+    public function getCreatedAtAttribute($date)
+    {
+        if ($date) {
+            return Carbon::parse($date)->addHours(8);
+        }
+        return $date;
+    }
 
     const WAIT_PAY = 1;
     const PYID = 3;
