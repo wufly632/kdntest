@@ -103,7 +103,7 @@ class GoodsController extends Controller
         }
         $result = $this->goodService->auditReject($request);
         if ($result) {
-            return ApiResponse::success('', '审核拒绝成功');
+            return ApiResponse::success('审核拒绝成功');
         }
         return ApiResponse::failure(g_API_ERROR, '审核拒绝失败，请重试');
     }
