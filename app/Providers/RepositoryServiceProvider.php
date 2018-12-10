@@ -65,6 +65,7 @@ class RepositoryServiceProvider extends ServiceProvider
         $this->app->bind(\App\Repositories\Website\PcCategoryRepository::class, \App\Repositories\Website\PcCategoryRepositoryEloquent::class);
         $this->app->bind(\App\Repositories\CateAttr\CategoryAscriptionRepository::class, \App\Repositories\CateAttr\CategoryAscriptionRepositoryEloquent::class);
         $this->app->bind(\App\Repositories\Product\ProductOnOfflineRepository::class, \App\Repositories\Product\ProductOnOfflineRepositoryEloquent::class);
+        $this->app->bind(\App\Repositories\ShipOrder\LogisticsInfoRepository::class, \App\Repositories\ShipOrder\LogisticsInfoRepositoryEloquent::class);
         //:end-bindings:
     }
 }
