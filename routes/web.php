@@ -189,4 +189,6 @@ Route::group(['middleware' => ['auth', 'web']], function () {
         Route::post('confirmgirowithdraw/', 'WithdrawController@confirmGiro')->name('withdraws.confirmgiro');
         Route::post('girofailedwithdraw/', 'WithdrawController@giroFailed')->name('withdraws.girofailed');
     });
+
+    Route::get('/test', 'Common\TestController@kdnView');
 });
