@@ -57,19 +57,21 @@ class KDNiaoService
     {
         // 获取快递鸟传过来的数据
         $kdnInfo = file_get_contents("php://input");
-        $request_info = json_decode($kdnInfo);
-        ding(\GuzzleHttp\json_encode($request_info));
-        // 验证传过来的数据
-        if ($request_info && $request_info->EBusinessID === env('EBUSINESS_ID')) {
-            // 判断状态
-            $status = $request_info->Data[0]->State ?? '';
-            if ($status) {
-                $logistic_code = $request_info->Data[0]->LogisticCode;
-                $shipper_code = $request_info->Data[0]->ShipperCode;
-                $logistic_info = collect($request_info->Data[0]->Traces)->map(function ($item) {
-                    return collect($item)->toArray();
-                })->toJson();
-                try {
+        // 解密
+        $kdnInfo = urldecode($kdnInfo);
+        parse_str($kdnInfo, $kdn_arr);
+        $request_info = json_decode($kdn_arr['RequestData']);
+        try {
+            // 验证传过来的数据
+            if ($request_info && $request_info->EBusinessID === env('EBUSINESS_ID')) {
+                // 判断状态
+                $status = $request_info->Data[0]->State ?? '';
+                if ($status) {
+                    $logistic_code = $request_info->Data[0]->LogisticCode;
+                    $shipper_code = $request_info->Data[0]->ShipperCode;
+                    $logistic_info = collect($request_info->Data[0]->Traces)->map(function ($item) {
+                        return collect($item)->toArray();
+                    })->toJson();
                     // 插入或更新物流表
                     if (LogisticsInfo::updateOrInsert(compact('logistic_code', 'shipper_code'), [
                         'is_dubscribed' => 1,
@@ -83,12 +85,10 @@ class KDNiaoService
                             'Reason' => ''
                         ]);
                     }
-                } catch (\Exception $e) {
-                    ding('接收物流信息失败:'.$e->getMessage());
                 }
-            } else {
-                ding('物流状态不存在');
             }
+        } catch (\Exception $e) {
+            ding('接收物流信息失败:'.$e->getMessage());
         }
         ding('返回失败');
         return response()->json([
