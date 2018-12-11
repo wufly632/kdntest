@@ -57,6 +57,7 @@ class KDNiaoService
     {
         // 获取快递鸟传过来的数据
         $kdnInfo = file_get_contents("php://input");
+        ding($kdnInfo);
         // 解密
         $kdnInfo = urldecode($kdnInfo);
         parse_str($kdnInfo, $kdn_arr);
