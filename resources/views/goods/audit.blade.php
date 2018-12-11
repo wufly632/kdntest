@@ -64,7 +64,7 @@
                             @endif
                             @if(in_array($good->status, \App\Entities\Good\Good::$auditReject))
                             <div class="col-xs-1">
-                                <button type="button" class="btn btn-block btn-warning btn-lg auditReject btn-edit">拒绝</button>
+                                <button type="button" class="btn btn-block btn-warning btn-lg  btn-edit" data-toggle="modal" data-target="#modal-reject">拒绝</button>
                             </div>
                             @endif
                         </div>
@@ -111,7 +111,7 @@
                             <!-- 第四行 -->
                             <div class="col-xs-12">
                                 <div class="form-group col-xs-5">
-                                    <label for="inputPassword3" class="col-sm-4 control-label">商品卖点：</label>
+                                    <label for="inputPassword3" class="col-sm-4 control-label">商品名称：</label>
                                     <div class="col-sm-8">
                                         <input type="text" class="form-control" id="goods_name" placeholder="" value="{{$good->good_title}}" readonly>
                                     </div>
@@ -120,7 +120,7 @@
 
                             <div class="col-xs-12">
                                 <div class="form-group col-xs-5">
-                                    <label for="inputPassword3" class="col-sm-4 control-label">商品名称：</label>
+                                    <label for="inputPassword3" class="col-sm-4 control-label">商品卖点：</label>
                                     <div class="col-sm-8">
                                         <textarea cols="60" rows="5" class="form-control" readonly style="width: 500px;">{{$good->good_summary}}</textarea>
                                     </div>
@@ -316,36 +316,64 @@
                             </div>
                         </div>
                         <!-- /.box -->
-                        <div class="modal fade in" id="modal-return" style="display: none;">
-                            <div class="modal-dialog">
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                            <span aria-hidden="true">×</span></button>
-                                        <h4 class="modal-title">退回原因</h4>
-                                    </div>
-                                    <div class="modal-body">
-                                        <div class="col-xs-12">
-                                            <div class="form-group col-xs-12">
-                                                <label for="inputEmail3" class="col-sm-1 control-label"></label>
-                                                <div class="col-sm-10">
-                                                    <textarea name="return_reason" class="return_reason" cols="30" rows="10" style="width: 100%"></textarea>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="modal-footer">
-                                        <button type="button" class="btn btn-default pull-left col-sm-offset-4" data-dismiss="modal">取消</button>
-                                        <button type="button" class="btn btn-primary auditReturn pull-left" style="margin-left: 50px;">保存</button>
-                                    </div>
-                                </div>
-                                <!-- /.modal-content -->
-                            </div>
-                            <!-- /.modal-dialog -->
-                        </div>
+
                     </div>
                     @endif
                     <!-- /.col -->
+                    <div class="modal fade in" id="modal-return" style="display: none;">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">×</span></button>
+                                    <h4 class="modal-title">退回原因</h4>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="col-xs-12">
+                                        <div class="form-group col-xs-12">
+                                            <label for="inputEmail3" class="col-sm-1 control-label"></label>
+                                            <div class="col-sm-10">
+                                                <textarea name="return_reason" class="return_reason" cols="30" rows="10" style="width: 100%"></textarea>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-default pull-left col-sm-offset-4" data-dismiss="modal">取消</button>
+                                    <button type="button" class="btn btn-primary auditReturn pull-left" style="margin-left: 50px;">保存</button>
+                                </div>
+                            </div>
+                            <!-- /.modal-content -->
+                        </div>
+                        <!-- /.modal-dialog -->
+                    </div>
+                    <div class="modal fade in" id="modal-reject" style="display: none;">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">×</span></button>
+                                    <h4 class="modal-title">拒绝原因</h4>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="col-xs-12">
+                                        <div class="form-group col-xs-12">
+                                            <label for="inputEmail3" class="col-sm-1 control-label"></label>
+                                            <div class="col-sm-10">
+                                                <textarea name="reject_reason" class="reject_reason" cols="30" rows="10" style="width: 100%"></textarea>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-default pull-left col-sm-offset-4" data-dismiss="modal">取消</button>
+                                    <button type="button" class="btn btn-primary auditReject pull-left" style="margin-left: 50px;">保存</button>
+                                </div>
+                            </div>
+                            <!-- /.modal-content -->
+                        </div>
+                        <!-- /.modal-dialog -->
+                    </div>
 
                     <div class="box box-info">
                         <div class="box-header">
@@ -573,15 +601,16 @@
 
             }
         })
-    })
+    });
     /**
      * 审核拒绝
      */
     $('.auditReject').click(function () {
         var _index = $(this);
+        var reject = $('.reject_reason').val();
         $.ajax({
             type: 'post',
-            data: {id: "{{$good->id}}", _token: "{{csrf_token()}}"},
+            data: {id: "{{$good->id}}", reject_reason: reject, _token: "{{csrf_token()}}"},
             url: "{{secure_route('good.auditReject')}}",
             dataType:'json',
             beforeSend: function () {
@@ -590,18 +619,18 @@
             },
             success: function (res) {
                 if (res.status == 200) {
-                    toastr.success(res.msg);
+                    toastr.success(res.content);
                     window.location.reload();
                 } else {
                     toastr.error(res.msg);
                     _index.attr('disabled', false);
-                    _index.html('审核拒绝');
+                    _index.html('拒绝');
                 }
             },
             error: function (data) {
 
             }
         })
-    })
+    });
 </script>
 @endsection

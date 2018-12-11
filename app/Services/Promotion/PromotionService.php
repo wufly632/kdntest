@@ -456,6 +456,7 @@ class PromotionService
     public function getAblePromotionActivityGoods($promotion, $request)
     {
         $request->flash();
+        $activity_id = $promotion->id;
         $category = [
             'one' => $request->category_one,
             'two' => $request->category_two,
@@ -465,16 +466,16 @@ class PromotionService
         $activity_ids = $this->getPromotionModel()->where([['start_at', '<=', $promotion->start_at], ['end_at', '>=', $promotion->start_at]])
             ->orWhere([['start_at', '>=', $promotion->end_at], ['end_at', '<=', $promotion->end_at]])->pluck('id')->toArray();
         //获取所有已参加活动的商品
-        $activity_good_ids = $this->promotionGood->findWhereIn('activity_id', $activity_ids)->pluck('goods_id')->toArray();
+        $activity_good_ids = $this->promotionGood->findWhereIn('activity_id', $activity_ids)->pluck(null,'goods_id')->toArray();
         //获取所有商品列表
         $this->product->pushCriteria(new ProductTitleCriteria($request->good_title));
         $this->product->pushCriteria(new ProductIdCriteria($request->good_id));
         $this->product->pushCriteria(new ProductCodeCriteria($request->good_code));
-        $this->product->pushCriteria(new ProductNotIdCriteria($activity_good_ids));
+        // $this->product->pushCriteria(new ProductNotIdCriteria($activity_good_ids));
         $this->product->pushCriteria(new ProductStatusCriteria(Product::ONLINE));
         $this->product->pushCriteria(new ProductCategoryCriteria($category));
         $goods = $this->product->orderBy('id', 'desc')->paginate(10);
-        $addGoods = view('promotion.addGoods', compact('goods', 'activity_id'));
+        $addGoods = view('promotion.addGoods', compact('goods', 'activity_id','activity_good_ids'));
         $goodStr = response($addGoods)->getContent();
         return $goodStr;
     }
