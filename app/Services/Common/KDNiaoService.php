@@ -58,7 +58,7 @@ class KDNiaoService
         // 获取快递鸟传过来的数据
         $kdnInfo = file_get_contents("php://input");
         $request_info = json_decode($kdnInfo);
-        ding($kdnInfo);
+        ding(\GuzzleHttp\json_encode($request_info));
         // 验证传过来的数据
         if ($request_info && $request_info->EBusinessID === env('EBUSINESS_ID')) {
             // 判断状态
