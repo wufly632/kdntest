@@ -66,25 +66,26 @@ class KDNiaoService
             if ($request_info && $request_info->EBusinessID === env('EBUSINESS_ID')) {
                 // 判断状态
                 $status = $request_info->Data[0]->State ?? '';
-                if ($status) {
-                    $logistic_code = $request_info->Data[0]->LogisticCode;
-                    $shipper_code = $request_info->Data[0]->ShipperCode;
-                    $logistic_info = collect($request_info->Data[0]->Traces)->map(function ($item) {
-                        return collect($item)->toArray();
-                    })->toJson();
-                    // 插入或更新物流表
-                    if (LogisticsInfo::updateOrInsert(compact('logistic_code', 'shipper_code'), [
-                        'is_dubscribed' => 1,
-                        'logistic_info' => $logistic_info
-                    ])) {
-                        ding('返回成功');
-                        return response()->json([
-                            'EBusinessID' => $request_info->EBusinessID,
-                            'UpdateTime' => Carbon::now()->toDateTimeString(),
-                            'Success' => 'True',
-                            'Reason' => ''
-                        ]);
-                    }
+                // 是否签收
+                $is_signed = $status == 3 ? 1 : 2;
+                $logistic_code = $request_info->Data[0]->LogisticCode;
+                $shipper_code = $request_info->Data[0]->ShipperCode;
+                $logistic_info = collect($request_info->Data[0]->Traces)->map(function ($item) {
+                    return collect($item)->toArray();
+                })->toJson();
+                // 插入或更新物流表
+                if (LogisticsInfo::updateOrInsert(compact('logistic_code', 'shipper_code'), [
+                    'is_dubscribed' => 1,
+                    'logistic_info' => $logistic_info,
+                    'is_signed' => $is_signed
+                ])) {
+                    ding('返回成功');
+                    return response()->json([
+                        'EBusinessID' => $request_info->EBusinessID,
+                        'UpdateTime' => Carbon::now()->toDateTimeString(),
+                        'Success' => 'True',
+                        'Reason' => ''
+                    ]);
                 }
             }
         } catch (\Exception $e) {
