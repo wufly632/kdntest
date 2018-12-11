@@ -58,6 +58,7 @@ class KDNiaoService
         // 获取快递鸟传过来的数据
         $kdnInfo = file_get_contents("php://input");
         $request_info = json_decode($kdnInfo);
+        ding($kdnInfo);
         // 验证传过来的数据
         if ($request_info->EBusinessID === env('EBusinessID')) {
             // 判断状态
@@ -71,6 +72,7 @@ class KDNiaoService
                     'status' => $status,
                     'logistic_info' => $logistic_info
                 ])) {
+                    ding('返回成功');
                     return response()->json([
                         'EBusinessID' => $request_info->EBusinessID,
                         'UpdateTime' => Carbon::now()->toDateTimeString(),
@@ -82,6 +84,7 @@ class KDNiaoService
                 ding('物流状态不存在');
             }
         }
+        ding('返回失败');
         return response()->json([
             'EBusinessID' => $request_info->EBusinessID,
             'UpdateTime' => Carbon::now()->toDateTimeString(),
