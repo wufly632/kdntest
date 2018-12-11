@@ -60,25 +60,31 @@ class KDNiaoService
         $request_info = json_decode($kdnInfo);
         ding($kdnInfo);
         // 验证传过来的数据
-        if ($request_info->EBusinessID === env('EBusinessID')) {
+        if ($request_info && $request_info->EBusinessID === env('EBUSINESS_ID')) {
             // 判断状态
             $status = $request_info->Data[0]->State ?? '';
             if ($status) {
                 $logistic_code = $request_info->Data[0]->LogisticCode;
                 $shipper_code = $request_info->Data[0]->ShipperCode;
-                $logistic_info = $request_info->Data[0]->Traces;
-                // 插入或更新物流表
-                if (LogisticsInfo::updateOrInsert(compact('logistic_code', 'shipper_code'), [
-                    'status' => $status,
-                    'logistic_info' => $logistic_info
-                ])) {
-                    ding('返回成功');
-                    return response()->json([
-                        'EBusinessID' => $request_info->EBusinessID,
-                        'UpdateTime' => Carbon::now()->toDateTimeString(),
-                        'Success' => 'True',
-                        'Reason' => ''
-                    ]);
+                $logistic_info = collect($request_info->Data[0]->Traces)->map(function ($item) {
+                    return collect($item)->toArray();
+                })->toJson();
+                try {
+                    // 插入或更新物流表
+                    if (LogisticsInfo::updateOrInsert(compact('logistic_code', 'shipper_code'), [
+                        'is_dubscribed' => 1,
+                        'logistic_info' => $logistic_info
+                    ])) {
+                        ding('返回成功');
+                        return response()->json([
+                            'EBusinessID' => $request_info->EBusinessID,
+                            'UpdateTime' => Carbon::now()->toDateTimeString(),
+                            'Success' => 'True',
+                            'Reason' => ''
+                        ]);
+                    }
+                } catch (\Exception $e) {
+                    ding('接收物流信息失败:'.$e->getMessage());
                 }
             } else {
                 ding('物流状态不存在');
