@@ -14,7 +14,7 @@ namespace App\Services\Common;
 use App\Entities\ShipOrder\LogisticsInfo;
 use App\Services\Api\ApiResponse;
 use Carbon\Carbon;
-use \Wufly\Kuaidiniao\KuaidiniaoService;
+use Wufly\Kuaidiniao\KuaidiniaoService;
 class KDNiaoService
 {
     protected $kdniao;
