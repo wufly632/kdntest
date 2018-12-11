@@ -72,9 +72,7 @@ class Good extends Model implements Transformable
     ];
     //拒绝
     public static $auditReject = [
-        self::WAIT_AUDIT,
-        self::WAIT_EDIT,
-        self::EDITED,
+        self::WAIT_AUDIT
     ];
     //保存编辑
     public static $auditSave = [

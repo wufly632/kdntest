@@ -294,6 +294,7 @@ class GoodService{
             return false;
         }
         $good->status = Good::REJECT;
+        $good->reject_reason = $request->reject_reason;
         $good->audit_at = Carbon::now()->toDateTimeString();
         if ($good->save()){
             return true;

@@ -1,3 +1,9 @@
+<style>
+    .table th, .table td {
+        text-align: center;
+        vertical-align: middle !important;
+    }
+</style>
 <div class="modal-dialog" style="width: 1000px;">
     <div class="modal-content">
         <div class="modal-body col-sm-12">
@@ -42,7 +48,7 @@
                 </div>
             </div>
             <table
-                   class="table table-hover table-striped table-bordered text-center">
+                   class="table table-hover table-striped table-bordered text-center align-content-center">
                 <thead>
                 <tr>
                     <td class="text-left"><input type="checkbox" id="checkAll"></td>
@@ -52,12 +58,13 @@
                     <td>售价</td>
                     <td>最近30天销量</td>
                     <td>库存数量</td>
+                    <td>关联活动</td>
                 </tr>
                 </thead>
                 <tbody>
                 @foreach($goods as $product)
                     <tr>
-                        <td><input type="checkbox" value="{{$product->id}}" class="good-id"></td>
+                        <td>@if(! isset($activity_good_ids[$product->id]))<input type="checkbox" value="{{$product->id}}" class="good-id">@endif</td>
                         <td>
                             <img src="{{ImgResize($product->main_pic, 100)}}" alt="" width="100px" height="100px">
                         </td>
@@ -79,6 +86,15 @@
                         <td>{{$product->price}}</td>
                         <td>{{$product->orders}}</td>
                         <td>{{$product->good_stock}}</td>
+                        <td>
+                            @if(isset($activity_good_ids[$product->id]))
+                                @if($activity_id == $activity_good_ids[$product->id]['activity_id'])
+                                    本活动
+                                @else
+                                    关联活动：{{ $activity_good_ids[$product->id]['activity_id'] }}
+                                @endif
+                            @endif
+                        </td>
                     </tr>
                 @endforeach
                 </tbody>
