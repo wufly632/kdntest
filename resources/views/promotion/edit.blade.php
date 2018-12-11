@@ -1305,7 +1305,7 @@
                     }
                     $('.promotion-price').each(function () {
                         var tmpPrice = $(this).parent().prev().data('price');
-                        var price = parseFloat(tmpPrice) - parseFloat(num);
+                        var price = Math.round((parseFloat(tmpPrice) - parseFloat(num))* 100) / 100;
                         if (price <= 0) price = 0.01;
                         $(this).val(price);
                     });

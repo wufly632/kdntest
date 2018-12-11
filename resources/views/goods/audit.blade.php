@@ -111,7 +111,7 @@
                             <!-- 第四行 -->
                             <div class="col-xs-12">
                                 <div class="form-group col-xs-5">
-                                    <label for="inputPassword3" class="col-sm-4 control-label">商品卖点：</label>
+                                    <label for="inputPassword3" class="col-sm-4 control-label">商品名称：</label>
                                     <div class="col-sm-8">
                                         <input type="text" class="form-control" id="goods_name" placeholder="" value="{{$good->good_title}}" readonly>
                                     </div>
@@ -120,7 +120,7 @@
 
                             <div class="col-xs-12">
                                 <div class="form-group col-xs-5">
-                                    <label for="inputPassword3" class="col-sm-4 control-label">商品名称：</label>
+                                    <label for="inputPassword3" class="col-sm-4 control-label">商品卖点：</label>
                                     <div class="col-sm-8">
                                         <textarea cols="60" rows="5" class="form-control" readonly style="width: 500px;">{{$good->good_summary}}</textarea>
                                     </div>
