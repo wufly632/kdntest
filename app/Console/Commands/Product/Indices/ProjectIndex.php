@@ -12,7 +12,7 @@ class ProjectIndex
 {
     public static function getAliasName()
     {
-        return 'waiwaimall_products';
+        return 'products';
     }
 
     public static function getProperties()
