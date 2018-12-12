@@ -40,10 +40,11 @@ class ESMigrate extends Command
             }
             // 如果索引已经存在，那么尝试更新索引，如果更新失败会抛出异常
             try {
+                echo $this;
                 $this->info('索引存在，准备更新');
                 $this->updateIndex($aliasName, $indexClass);
             } catch (\Exception $e) {
-                dd($e->getMessage());
+                ding($e->getMessage());
                 $this->warn('更新失败，准备重建');
                 $this->reCreateIndex($aliasName, $indexClass);
             }
