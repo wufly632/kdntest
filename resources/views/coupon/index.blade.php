@@ -521,9 +521,17 @@
         rebateType.change(function () {
             if (rebateType.val() == 1) {
                 var unit = $('#currency').find('option:checked').data('unit');
+                if (unit == undefined) {
+                    unit = '元';
+                }
                 rebateTypeShow.html(unit);
+                $('.currency_code').removeClass('dis-no');
+                $('.use_price_limit').removeClass('dis-no');
             } else {
                 rebateTypeShow.html('%');
+                $('.currency_code').addClass('dis-no');
+                $('.use_price_limit').find('input[name=coupon_use_price]').val(0);
+                $('.use_price_limit').addClass('dis-no');
             }
         })
         $('#currency').change(function () {
