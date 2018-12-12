@@ -92,7 +92,7 @@
     </div>
 @endsection
 @section('script')
-    <script src="{{ asset('/assets/js/bower_components/axios/dist/axios.min.js') }}"></script>
+    <script src="{{ cdn_asset('/assets/js/bower_components/axios/dist/axios.min.js') }}"></script>
     <script>
         var index = parent.layer.getFrameIndex(window.name);
 

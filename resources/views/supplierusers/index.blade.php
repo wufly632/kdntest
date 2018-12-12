@@ -1,6 +1,6 @@
 @section('css')
     <link rel="stylesheet"
-          href="{{ asset('/assets/admin-lte/bower_components/datatables.net-bs/css/dataTables.bootstrap.min.css') }}">
+          href="{{ cdn_asset('/assets/admin-lte/bower_components/datatables.net-bs/css/dataTables.bootstrap.min.css') }}">
     <style>
         .header-image-block {
             width: 120px;
@@ -141,7 +141,7 @@
     </div>
 @stop
 @section('script')
-    <script src="{{ asset('/assets/js/bower_components/axios/dist/axios.min.js') }}"></script>
+    <script src="{{ cdn_asset('/assets/js/bower_components/axios/dist/axios.min.js') }}"></script>
     <script>
         function showInfo(title, content) {
             layer.open({

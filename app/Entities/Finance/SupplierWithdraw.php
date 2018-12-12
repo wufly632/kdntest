@@ -30,7 +30,10 @@ class SupplierWithdraw extends Model implements Transformable
         'status',
         'note',
         'charge',
-        'swift_number'
+        'swift_number',
+        'audited_at',
+        'finished_at',
+        'rejected_at'
     ];
 
     public function supplier()

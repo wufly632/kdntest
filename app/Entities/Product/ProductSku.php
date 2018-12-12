@@ -18,7 +18,7 @@ class ProductSku extends Model implements Transformable
 
     protected $table = 'good_skus';
 
-    public function getIcon($item)
+    public function getIconAttribute($item)
     {
         return cdnUrl($item);
     }

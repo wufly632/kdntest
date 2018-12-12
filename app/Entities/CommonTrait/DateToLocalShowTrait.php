@@ -22,7 +22,10 @@ trait DateToLocalShowTrait
      */
     public function getCreatedAtAttribute($date)
     {
-        return Carbon::parse($date)->addHours(8);
+        if ($date) {
+            return Carbon::parse($date)->addHours(8);
+        }
+        return $date;
     }
 
     /**
@@ -32,7 +35,10 @@ trait DateToLocalShowTrait
      */
     public function getUpdatedAtAttribute($date)
     {
-        return Carbon::parse($date)->addHours(8);
+        if ($date) {
+            return Carbon::parse($date)->addHours(8);
+        }
+        return $date;
     }
 
     /**
@@ -42,7 +48,10 @@ trait DateToLocalShowTrait
      */
     public function getAuditedAtAttribute($date)
     {
-        return Carbon::parse($date)->addHours(8);
+        if ($date) {
+            return Carbon::parse($date)->addHours(8);
+        }
+        return $date;
     }
 
     /**
@@ -52,7 +61,10 @@ trait DateToLocalShowTrait
      */
     public function getRejectedAtAttribute($date)
     {
-        return Carbon::parse($date)->addHours(8);
+        if ($date) {
+            return Carbon::parse($date)->addHours(8);
+        }
+        return $date;
     }
 
     /**
@@ -62,7 +74,10 @@ trait DateToLocalShowTrait
      */
     public function getDeletedAtAttribute($date)
     {
-        return Carbon::parse($date)->addHours(8);
+        if ($date) {
+            return Carbon::parse($date)->addHours(8);
+        }
+        return $date;
     }
 
     /**
@@ -72,7 +87,10 @@ trait DateToLocalShowTrait
      */
     public function getPayAtAttribute($date)
     {
-        return Carbon::parse($date)->addHours(8);
+        if ($date) {
+            return Carbon::parse($date)->addHours(8);
+        }
+        return $date;
     }
 
     /**
@@ -82,7 +100,10 @@ trait DateToLocalShowTrait
      */
     public function getDeliveryAtAttribute($date)
     {
-        return Carbon::parse($date)->addHours(8);
+        if ($date) {
+            return Carbon::parse($date)->addHours(8);
+        }
+        return $date;
     }
 
     /**
@@ -92,7 +113,10 @@ trait DateToLocalShowTrait
      */
     public function getSignAtAttribute($date)
     {
-        return Carbon::parse($date)->addHours(8);
+        if ($date) {
+            return Carbon::parse($date)->addHours(8);
+        }
+        return $date;
     }
 
     /**
@@ -102,7 +126,10 @@ trait DateToLocalShowTrait
      */
     public function getShelfAtAttribute($date)
     {
-        return Carbon::parse($date)->addHours(8);
+        if ($date) {
+            return Carbon::parse($date)->addHours(8);
+        }
+        return $date;
     }
 
     /**
@@ -112,7 +139,10 @@ trait DateToLocalShowTrait
      */
     public function getConfirmedAtAttribute($date)
     {
-        return Carbon::parse($date)->addHours(8);
+        if ($date) {
+            return Carbon::parse($date)->addHours(8);
+        }
+        return $date;
     }
 
     /**
@@ -122,7 +152,10 @@ trait DateToLocalShowTrait
      */
     public function getShippedAtAttribute($date)
     {
-        return Carbon::parse($date)->addHours(8);
+        if ($date) {
+            return Carbon::parse($date)->addHours(8);
+        }
+        return $date;
     }
 
     /**
@@ -132,7 +165,10 @@ trait DateToLocalShowTrait
      */
     public function getPartlyinhouseAtAttribute($date)
     {
-        return Carbon::parse($date)->addHours(8);
+        if ($date) {
+            return Carbon::parse($date)->addHours(8);
+        }
+        return $date;
     }
 
     /**
@@ -142,7 +178,10 @@ trait DateToLocalShowTrait
      */
     public function getAcceptanceAtAttribute($date)
     {
-        return Carbon::parse($date)->addHours(8);
+        if ($date) {
+            return Carbon::parse($date)->addHours(8);
+        }
+        return $date;
     }
 
     /**
@@ -152,7 +191,10 @@ trait DateToLocalShowTrait
      */
     public function getCloseAtAttribute($date)
     {
-        return Carbon::parse($date)->addHours(8);
+        if ($date) {
+            return Carbon::parse($date)->addHours(8);
+        }
+        return $date;
     }
 
     /**
@@ -162,7 +204,10 @@ trait DateToLocalShowTrait
      */
     public function getSubmitAtAttribute($date)
     {
-        return Carbon::parse($date)->addHours(8);
+        if ($date) {
+            return Carbon::parse($date)->addHours(8);
+        }
+        return $date;
     }
 
     /**
@@ -172,7 +217,10 @@ trait DateToLocalShowTrait
      */
     public function getEditedAtAttribute($date)
     {
-        return Carbon::parse($date)->addHours(8);
+        if ($date) {
+            return Carbon::parse($date)->addHours(8);
+        }
+        return $date;
     }
 
     /**
@@ -182,7 +230,10 @@ trait DateToLocalShowTrait
      */
     public function getAuditAtAttribute($date)
     {
-        return Carbon::parse($date)->addHours(8);
+        if ($date) {
+            return Carbon::parse($date)->addHours(8);
+        }
+        return $date;
     }
 
     /**
@@ -192,6 +243,9 @@ trait DateToLocalShowTrait
      */
     public function getReturnAtAttribute($date)
     {
-        return Carbon::parse($date)->addHours(8);
+        if ($date) {
+            return Carbon::parse($date)->addHours(8);
+        }
+        return $date;
     }
 }

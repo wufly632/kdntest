@@ -78,9 +78,9 @@
     </div>
 @stop
 @section('script')
-    <script src="{{asset('/assets/js/bower_components/axios/dist/axios.min.js')}}"></script>
-    <script src="{{asset('/assets/js/aliyun-oss-sdk.js')}}"></script>
-    <script src="{{asset('/assets/admin/js/vue.min.js')}}"></script>
+    <script src="{{cdn_asset('/assets/js/bower_components/axios/dist/axios.min.js')}}"></script>
+    <script src="{{cdn_asset('/assets/js/aliyun-oss-sdk.js')}}"></script>
+    <script src="{{cdn_asset('/assets/admin/js/vue.min.js')}}"></script>
     <script>
         var index = parent.layer.getFrameIndex(window.name);
         var bannerBox = new Vue({

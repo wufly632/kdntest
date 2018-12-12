@@ -1,6 +1,6 @@
 @section('css')
-    <link rel="stylesheet" href="{{ asset('/assets/css/bootstrap-modal.css') }}">
-    <link rel="stylesheet" href="{{ asset('/assets/css/bootstrap-modal-bs3patch.css') }}">
+    <link rel="stylesheet" href="{{ cdn_asset('/assets/css/bootstrap-modal.css') }}">
+    <link rel="stylesheet" href="{{ cdn_asset('/assets/css/bootstrap-modal-bs3patch.css') }}">
     <style>
         #vertical-middle tr td {
             vertical-align: middle;
@@ -165,7 +165,7 @@
                                                           style="cursor: pointer">{{ $orders->OriginWords[$orderlist->from_type] }}</span>
                                             </p>
                                             <p class="col-sm-2">收货人: <span class="text-primary"
-                                                                           style="cursor: pointer">{{ isset($orderlist->customer)&&isset($orderlist->customer->firstname)? $orderlist->customer->firstname : '' . ' ' . isset($orderlist->customer)&&isset($orderlist->customer->lastname) ? $orderlist->customer->lastname:'' }}</span>
+                                                                           style="cursor: pointer">{{ isset($orderlist->orderAddress)&&isset($orderlist->orderAddress->firstname)? $orderlist->orderAddress->firstname : '' . ' ' . isset($orderlist->orderAddress)&&isset($orderlist->orderAddress->lastname) ? $orderlist->orderAddress->lastname:'' }}</span>
                                             </p>
                                         </td>
                                     </tr>
@@ -242,9 +242,9 @@
     </div>
 @stop
 @section('script')
-    <script src="{{ asset('/assets/js/bootstrap-modalmanager.js') }}"></script>
-    <script src="{{ asset('/assets/js/bootstrap-modal.js') }}"></script>
-    <script src="{{asset('/assets/js/bower_components/axios/dist/axios.min.js')}}"></script>
+    <script src="{{ cdn_asset('/assets/js/bootstrap-modalmanager.js') }}"></script>
+    <script src="{{ cdn_asset('/assets/js/bootstrap-modal.js') }}"></script>
+    <script src="{{cdn_asset('/assets/js/bower_components/axios/dist/axios.min.js')}}"></script>
     <script>
         if ("{{ old('from_type') }}") {
             $('#from-type').val("{{ old('from_type') }}");

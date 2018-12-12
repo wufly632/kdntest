@@ -209,9 +209,13 @@ class PromotionService
         // 验证促销商品价格是否大于商品原价格
         foreach ($promotion_goods['promotion_goods_sku'] as $val) {
             foreach ($sku_info as $v) {
-                if ($val['goods_id'] == $v->good_id && $val['sku_id'] == $v->value_ids) {
-                    if ($val['price'] > $v['supply_price']) {
-                        throw new CustomException('促销价不能大于售价');
+                if ($val['goods_id'] == $v->good_id && $val['sku_id'] == $v->id) {
+                    if ($val['price'] > $v['price']) {
+                        throw new CustomException('商品'.$v->good_id.'促销价不能大于售价');
+                        break;
+                    }
+                    if ($val['price'] <= 0) {
+                        throw new CustomException('商品'.$v->good_id.'促销价不能为0');
                         break;
                     }
                 }
@@ -452,6 +456,7 @@ class PromotionService
     public function getAblePromotionActivityGoods($promotion, $request)
     {
         $request->flash();
+        $activity_id = $promotion->id;
         $category = [
             'one' => $request->category_one,
             'two' => $request->category_two,
@@ -461,16 +466,16 @@ class PromotionService
         $activity_ids = $this->getPromotionModel()->where([['start_at', '<=', $promotion->start_at], ['end_at', '>=', $promotion->start_at]])
             ->orWhere([['start_at', '>=', $promotion->end_at], ['end_at', '<=', $promotion->end_at]])->pluck('id')->toArray();
         //获取所有已参加活动的商品
-        $activity_good_ids = $this->promotionGood->findWhereIn('activity_id', $activity_ids)->pluck('goods_id')->toArray();
+        $activity_good_ids = $this->promotionGood->findWhereIn('activity_id', $activity_ids)->pluck(null,'goods_id')->toArray();
         //获取所有商品列表
         $this->product->pushCriteria(new ProductTitleCriteria($request->good_title));
         $this->product->pushCriteria(new ProductIdCriteria($request->good_id));
         $this->product->pushCriteria(new ProductCodeCriteria($request->good_code));
-        $this->product->pushCriteria(new ProductNotIdCriteria($activity_good_ids));
+        // $this->product->pushCriteria(new ProductNotIdCriteria($activity_good_ids));
         $this->product->pushCriteria(new ProductStatusCriteria(Product::ONLINE));
         $this->product->pushCriteria(new ProductCategoryCriteria($category));
         $goods = $this->product->orderBy('id', 'desc')->paginate(10);
-        $addGoods = view('promotion.addGoods', compact('goods', 'activity_id'));
+        $addGoods = view('promotion.addGoods', compact('goods', 'activity_id','activity_good_ids'));
         $goodStr = response($addGoods)->getContent();
         return $goodStr;
     }

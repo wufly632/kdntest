@@ -7,19 +7,19 @@
     <!-- Tell the browser to be responsive to screen width -->
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
     <!-- Bootstrap 3.3.7 -->
-    <link rel="stylesheet" href="{{asset('assets/admin-lte/bower_components/bootstrap/dist/css/bootstrap.min.css')}}">
+    <link rel="stylesheet" href="{{cdn_asset('assets/admin-lte/bower_components/bootstrap/dist/css/bootstrap.min.css')}}">
     <!-- Font Awesome -->
-    <link rel="stylesheet" href="{{asset('assets/admin-lte/bower_components/font-awesome/css/font-awesome.min.css')}}">
+    <link rel="stylesheet" href="{{cdn_asset('assets/admin-lte/bower_components/font-awesome/css/font-awesome.min.css')}}">
     <!-- Ionicons -->
-    <link rel="stylesheet" href="{{asset('assets/admin-lte/bower_components/Ionicons/css/ionicons.min.css')}}">
+    <link rel="stylesheet" href="{{cdn_asset('assets/admin-lte/bower_components/Ionicons/css/ionicons.min.css')}}">
     <!-- Theme style -->
-    <link rel="stylesheet" href="{{asset('assets/admin-lte/dist/css/AdminLTE.min.css')}}">
+    <link rel="stylesheet" href="{{cdn_asset('assets/admin-lte/dist/css/AdminLTE.min.css')}}">
     <!-- AdminLTE Skins. Choose a skin from the css/skins
          folder instead of downloading all of them to reduce the load. -->
-    <link rel="stylesheet" href="{{asset('assets/admin-lte/dist/css/skins/_all-skins.min.css')}}">
-    <link rel="stylesheet" href="{{asset('assets/plugins/toastr/toastr.min.css')}}">
-    <link rel="stylesheet" href="{{ asset('/assets/admin/css/select2.min.css') }}">
-    <link rel="stylesheet" href="{{ asset('/assets/admin-lte/bower_components/bootstrap-daterangepicker/daterangepicker.css') }}">
+    <link rel="stylesheet" href="{{cdn_asset('assets/admin-lte/dist/css/skins/_all-skins.min.css')}}">
+    <link rel="stylesheet" href="{{cdn_asset('assets/plugins/toastr/toastr.min.css')}}">
+    <link rel="stylesheet" href="{{ cdn_asset('/assets/admin/css/select2.min.css') }}">
+    <link rel="stylesheet" href="{{ cdn_asset('/assets/admin-lte/bower_components/bootstrap-daterangepicker/daterangepicker.css') }}">
 
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -32,24 +32,24 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
 
     <!-- jQuery 3 -->
-    <script src="{{asset('assets/admin-lte/bower_components/jquery/dist/jquery.min.js')}}"></script>
+    <script src="{{cdn_asset('assets/admin-lte/bower_components/jquery/dist/jquery.min.js')}}"></script>
     <!-- Bootstrap 3.3.7 -->
-    <script src="{{asset('assets/admin-lte/bower_components/bootstrap/dist/js/bootstrap.min.js')}}"></script>
+    <script src="{{cdn_asset('assets/admin-lte/bower_components/bootstrap/dist/js/bootstrap.min.js')}}"></script>
     <!-- SlimScroll -->
-    <script src="{{asset('assets/admin-lte/bower_components/jquery-slimscroll/jquery.slimscroll.min.js')}}"></script>
+    <script src="{{cdn_asset('assets/admin-lte/bower_components/jquery-slimscroll/jquery.slimscroll.min.js')}}"></script>
     <!-- FastClick -->
-    <script src="{{asset('assets/admin-lte/bower_components/fastclick/lib/fastclick.js')}}"></script>
+    <script src="{{cdn_asset('assets/admin-lte/bower_components/fastclick/lib/fastclick.js')}}"></script>
     <!-- AdminLTE App -->
-    <script src="{{asset('assets/admin-lte/dist/js/adminlte.min.js')}}"></script>
+    <script src="{{cdn_asset('assets/admin-lte/dist/js/adminlte.min.js')}}"></script>
     <!-- AdminLTE for demo purposes -->
-    <script src="{{asset('assets/admin-lte/dist/js/demo.js')}}"></script>
+    <script src="{{cdn_asset('assets/admin-lte/dist/js/demo.js')}}"></script>
     <!-- toastr -->
-    <script src="{{asset('assets/plugins/toastr/toastr.min.js')}}"></script>
-    <script src="{{asset('assets/plugins/layui/layer.js')}}"></script>
-    <script src="{{ asset('/assets/admin/js/select2.min.js') }}"></script>
-    <script src="{{ asset('/assets/admin-lte/bower_components/moment/min/moment.min.js') }}"></script>
-    <script src="{{ asset('/assets/admin-lte/bower_components/bootstrap-daterangepicker/daterangepicker.js?v=3') }}"></script>
-    <script src="{{ asset('/assets/js/plugincommon.js?v=4') }}"></script>
+    <script src="{{cdn_asset('assets/plugins/toastr/toastr.min.js')}}"></script>
+    <script src="{{cdn_asset('assets/plugins/layui/layer.js')}}"></script>
+    <script src="{{ cdn_asset('/assets/admin/js/select2.min.js') }}"></script>
+    <script src="{{ cdn_asset('/assets/admin-lte/bower_components/moment/min/moment.min.js') }}"></script>
+    <script src="{{ cdn_asset('/assets/admin-lte/bower_components/bootstrap-daterangepicker/daterangepicker.js?v=3') }}"></script>
+    <script src="{{ cdn_asset('/assets/js/plugincommon.js?v=4') }}"></script>
     @yield('css')
 </head>
 <!-- ADD THE CLASS fixed TO GET A FIXED HEADER AND SIDEBAR LAYOUT -->

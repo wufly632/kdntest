@@ -344,8 +344,8 @@
     </div>
 @stop
 @section('script')
-    <script src="{{asset('/assets/js/bower_components/axios/dist/axios.min.js')}}"></script>
-    <script src="{{asset('/assets/admin/js/vue.min.js')}}"></script>
+    <script src="{{cdn_asset('/assets/js/bower_components/axios/dist/axios.min.js')}}"></script>
+    <script src="{{cdn_asset('/assets/admin/js/vue.min.js')}}"></script>
     <script type="text/x-template" id="form-block">
         <div>
             <label for="" style="margin-left:20px;">@{{ anything }}标题:</label>
@@ -359,7 +359,7 @@
         var panelBanner = new Vue({
             el: '#panel-banner',
             data: {
-                bannerPlaceholder: "{{ url('images/bannerplaceholder.png') }}",
+                bannerPlaceholder: "{{ cdn_asset('images/bannerplaceholder.png') }}",
                 bannerEditShow: false,
                 banners: [
                         @foreach($banners as $banner)
@@ -560,7 +560,7 @@
             el: '#panel-icon',
             data: {
                 show: false,
-                iconPlaceholder: '{{ url('/images/iconplaceholder.png') }}',
+                iconPlaceholder: '{{ cdn_asset('/images/iconplaceholder.png') }}',
                 icons: [
                         @foreach($icons as $key=>$icon)
                     {
@@ -691,19 +691,19 @@
                             content:
                                 [
                                     {
-                                        "src": "{{ url('images/activity1.png') }}",
+                                        "src": "{{ cdn_asset('images/activity1.png') }}",
                                         "link": "http:\/\/www.waiwaimall.com",
                                         "show": false,
                                         "title": "waiwaimall"
                                     },
                                     {
-                                        "src": "{{ url('images/activity2.png') }}",
+                                        "src": "{{ cdn_asset('images/activity2.png') }}",
                                         "link": "http:\/\/www.waiwaimall.com",
                                         "show": false,
                                         "title": "waiwaimall"
                                     },
                                     {
-                                        "src": "{{ url('images/activity3.png') }}",
+                                        "src": "{{ cdn_asset('images/activity3.png') }}",
                                         "link": "http:\/\/www.waiwaimall.com",
                                         "show": false,
                                         "title": "waiwaimall"
@@ -716,7 +716,7 @@
                             content:
                                 [
                                     {
-                                        "src": "{{ url('images/activity4.png') }}",
+                                        "src": "{{ cdn_asset('images/activity4.png') }}",
                                         "link": "http:\/\/www.waiwaimall.com",
                                         "show": false,
                                         "title": "waiwaimall"
@@ -730,7 +730,7 @@
                             content:
                                 [
                                     {
-                                        "src": "{{ url('images/activity4.png') }}",
+                                        "src": "{{ cdn_asset('images/activity4.png') }}",
                                         "link": "http:\/\/www.waiwaimall.com",
                                         "show": false,
                                         "title": "waiwaimall"
