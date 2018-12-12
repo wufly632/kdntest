@@ -116,7 +116,7 @@ class Product extends Model implements Transformable
         // 上架时间
         $arr['new'] = date('Y-m-d H:i:s', strtotime($this->shelf_at));
         // 类目的 path 字段
-        $arr['category_ids'] = $this->category ? $this->category->category_ids : '';
+        $arr['category_ids'] = $this->category ? $this->category->category_ids.','.$this->category->id : '';
         $arr['category_path'] = $this->category ? implode(' ', $this->category->getPathArr()) : '';
         // strip_tags 函数可以将 html 标签去除
         $arr['good_en_summary'] = strip_tags($this->good_en_summary);
