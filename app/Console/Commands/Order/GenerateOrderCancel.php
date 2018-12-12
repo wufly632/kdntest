@@ -5,6 +5,7 @@ namespace App\Console\Commands\Order;
 use App\Entities\Order\Order;
 use Carbon\Carbon;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\DB;
 
 class GenerateOrderCancel extends Command
 {
@@ -51,9 +52,16 @@ class GenerateOrderCancel extends Command
 
     public function handleProgress()
     {
-        Order::where([
-            ['created_at', '<=', Carbon::now()->subMinutes(30)],
-            ['status', '=', Order::WAIT_PAY]
-        ])->update(['status' => Order::CANCEL]);
+        try {
+            DB::beginTransaction();
+            Order::where([
+                ['created_at', '<=', Carbon::now()->subMinutes(30)],
+                ['status', '=', Order::WAIT_PAY]
+            ])->update(['status' => Order::CANCEL]);
+            DB::commit();
+        } catch (\Exception $e) {
+            ding('自动取消订单失败:'-$e->getMessage());
+            DB::rollBack();
+        }
     }
 }

@@ -23,25 +23,25 @@
                     <div class="col-xs-8">
                         <div class="radio-inline">
                             <label>
-                                <input type="radio" name="coupon_purpose" class="" id="method1" value="1"
+                                <input type="radio" name="coupon_purpose" class="coupon-method" value="1"
                                        @if($coupon->coupon_purpose == 1) checked @endif>页面领取
                             </label>
                         </div>
                         <div class="radio-inline">
                             <label>
-                                <input type="radio" name="coupon_purpose" class="" id="method2" value="2"
+                                <input type="radio" name="coupon_purpose" class="coupon-method" value="2"
                                        @if($coupon->coupon_purpose == 2) checked @endif>满返活动
                             </label>
                         </div>
                         <div class="radio-inline">
                             <label>
-                                <input type="radio" name="coupon_purpose" class="" id="method3" value="3"
+                                <input type="radio" name="coupon_purpose" class="coupon-method" value="3"
                                        @if($coupon->coupon_purpose == 3) checked @endif>新人礼包
                             </label>
                         </div>
                         <div class="radio-inline">
                             <label>
-                                <input type="radio" name="coupon_purpose" class="" id="method4" value="4"
+                                <input type="radio" name="coupon_purpose" class="coupon-method" value="4"
                                        @if($coupon->coupon_purpose == 4) checked @endif>通用
                             </label>
                         </div>
@@ -82,7 +82,7 @@
                         </select>
                     </div>
                 </div>
-                <div class="form-group">
+                <div class="form-group currency_code">
                     <div class="col-xs-1"></div>
                     <label for="currency" class="col-xs-2 control-label">
                         币种：
@@ -90,7 +90,7 @@
                     <div class="col-xs-7">
                         <select name="currency_code" id="currency" class="form-control">
                             @foreach($currencys as $currency)
-                                <option value="{{ $currency->currency_code }}">{{ $currency->symbol.$currency->name }}</option>
+                                <option value="{{ $currency->currency_code }}" data-unit="{{$currency->name}}">{{ $currency->symbol.$currency->name }}</option>
                             @endforeach
                         </select>
                     </div>
@@ -198,7 +198,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="form-group">
+                <div class="form-group use_price_limit">
                     <div class="col-xs-1"></div>
                     <label for="coupon_count" class="col-xs-2 control-label">
                         使用条件：
@@ -231,7 +231,6 @@
     </div>
 @stop
 @section('script')
-    <script src="{{ cdn_asset('/assets/admin-lte/bower_components/moment/min/moment.min.js') }}"></script>
     <script src="{{ cdn_asset('/assets/admin-lte/bower_components/bootstrap-daterangepicker/daterangepicker.js') }}"></script>
     <script src="{{ cdn_asset('/assets/js/bootstrap-modalmanager.js') }}"></script>
     <script src="{{ cdn_asset('/assets/js/bootstrap-modal.js') }}"></script>
@@ -255,7 +254,7 @@
             language: 'zh-cn',
 
         });
-        $('[name=currency_code]').val('{{ $coupon->currency_code }}');
+
         let locale = {
             "format": 'YYYY-MM-DD hh:mm:ss',
             "separator": "~",
@@ -291,7 +290,36 @@
         $('#coupon_edit').click(function () {
             $('#responsive').modal('show');
         });
-        $('#method1').click(function () {
+        $('.coupon-method').change(function () {
+            var va = $(this).val();
+            if (va == 1) { //页面领取
+                $('.show-info').text('用户可在店铺主页领取，显示最新提交的3张；或在已设置的活动页面领取');
+                $('#coupon_key').addClass('dis-no');
+            } else if (va == 2) { //满返活动
+                $('.show-info').text('满返活动券需要在满返活动中进行配置，用户方可在活动中获得返券');
+                $('#coupon_key').addClass('dis-no');
+            } else if (va == 3) { //新人礼包
+                $('.show-info').text('');
+                $('#coupon_key').addClass('dis-no');
+            } else if (va == 4) { // 通用券
+                $('.show-info').text('');
+                $('#coupon_key').removeClass('dis-no');
+            }
+            if (va == 3) {
+                //取消币种和面额券
+                $('#rebate_type').val(2);
+                $('#rebate_type').find('option[value=1]').addClass('dis-no');
+                $('#rebate_type_show').html('%');
+                $('.currency_code').addClass('dis-no');
+                $('.use_price_limit').find('input[name=coupon_use_price]').val(0);
+                $('.use_price_limit').addClass('dis-no');
+            }  else {
+                $('#rebate_type').find('option[value=1]').removeClass('dis-no');
+                $('.currency_code').removeClass('dis-no');
+                $('.use_price_limit').removeClass('dis-no');
+            }
+        });
+        /*$('#method1').click(function () {
             $('.show-info').text('用户可在店铺主页领取，显示最新提交的3张；或在已设置的活动页面领取');
             $('#coupon_key').addClass('dis-no');
         });
@@ -308,7 +336,7 @@
         $('#method4').click(function () {
             $('.show-info').text('');
             $('#coupon_key').removeClass('dis-no');
-        });
+        });*/
         $('#coupon_table').DataTable({
             language: {
                 paginate: {
@@ -390,19 +418,33 @@
 
         let rebateType = $('#rebate_type');
         let rebateTypeShow = $('#rebate_type_show')
-        rebateType.val('{{ $coupon->rebate_type }}');
-        if (rebateType.val() == 1) {
-            rebateTypeShow.html('元');
-        } else {
-            rebateTypeShow.html('%减免');
-        }
-
         rebateType.change(function () {
             if (rebateType.val() == 1) {
-                rebateTypeShow.html('元');
+                var unit = $('#currency').find('option:checked').data('unit');
+                if (unit == undefined) {
+                    unit = '元';
+                }
+                rebateTypeShow.html(unit);
+                $('.currency_code').removeClass('dis-no');
+                $('.use_price_limit').removeClass('dis-no');
             } else {
-                rebateTypeShow.html('%减免');
+                rebateTypeShow.html('%');
+                $('.currency_code').addClass('dis-no');
+                $('.use_price_limit').find('input[name=coupon_use_price]').val(0);
+                $('.use_price_limit').addClass('dis-no');
+            }
+        });
+        $('#currency').change(function () {
+            var unit = $(this).find('option:checked').data('unit');
+            $('.currency_name').html(unit);
+            if ($('#rebate_type').val() == 1) {
+                $('#rebate_type_show').html(unit);
             }
         })
+        $(function () {
+            $('[name=currency_code]').val('{{ $coupon->currency_code }}');
+            $('#rebate_type').val({{ $coupon->rebate_type }});
+            $('#rebate_type').trigger('change');
+        });
     </script>
 @stop

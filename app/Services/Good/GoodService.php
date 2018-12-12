@@ -29,6 +29,7 @@ use App\Exceptions\CustomException;
 use App\Repositories\Good\GoodRepository;
 use App\Repositories\Product\ProductRepository;
 use App\Services\Api\ApiResponse;
+use App\Services\Product\ProductService;
 use App\Validators\Good\GoodValidator;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
@@ -172,6 +173,10 @@ class GoodService{
             if (! $this->syncGoodData($good)) {
                 DB::rollback();
                 return false;
+            }
+            // 同步到ES
+            if ($product = $good->getProduct) {
+                app(ProductService::class)->updateESIndex($product);
             }
             DB::commit();
             return true;
@@ -350,6 +355,10 @@ class GoodService{
             $this->good->update(['good_en_title' => $request->good_en_title, 'price' => $price], $request->id);
             $this->product->update(['good_en_title' => $request->good_en_title, 'price' => $price, 'origin_price' => $origin_price], $request->id);
             $this->good->update(['status' => Good::EDITED, 'edited_at' => Carbon::now()->toDateTimeString()], $request->id);
+            // 同步到ES
+            if ($product = $this->product->find($request->id)) {
+                app(ProductService::class)->updateESIndex($product);
+            }
             DB::commit();
             return ApiResponse::success('编辑成功');
         } catch (\Exception $e) {

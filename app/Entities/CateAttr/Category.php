@@ -2,6 +2,8 @@
 
 namespace App\Entities\CateAttr;
 
+use App\Presenters\CateAttr\CategoryPresenter;
+use App\Services\CateAttr\CategoryService;
 use Illuminate\Database\Eloquent\Model;
 use Prettus\Repository\Contracts\Transformable;
 use Prettus\Repository\Traits\TransformableTrait;
@@ -44,5 +46,14 @@ class Category extends Model implements Transformable
     public function parentCategory()
     {
         return $this->hasOne(Category::class,"id","parent_id");
+    }
+
+    /**
+     * @function 获取类目路径
+     * @return mixed
+     */
+    public function getPathArr()
+    {
+        return app(CategoryPresenter::class)->getCatePathArr($this->category_ids.','.$this->id, 'en_name');
     }
 }

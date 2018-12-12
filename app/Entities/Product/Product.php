@@ -2,6 +2,7 @@
 
 namespace App\Entities\Product;
 
+use App\Entities\CateAttr\Category;
 use App\Entities\Good\Good;
 use App\Observers\ProductObserver;
 use Illuminate\Database\Eloquent\Model;
@@ -70,5 +71,77 @@ class Product extends Model implements Transformable
     public function getAttrValue()
     {
         return $this->hasMany(ProductAttrValue::class, 'good_id', 'id');
+    }
+
+    /**
+     * @function 获取商品的非销售属性
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function prop()
+    {
+        return $this->hasMany(ProductAttrValue::class, 'good_id', 'id')->whereNull('sku_id');
+    }
+
+    /**
+     * @function 获取商品的销售属性
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function skuProp()
+    {
+        return $this->hasMany(ProductAttrValue::class, 'good_id', 'id')->whereNotNull('sku_id');
+    }
+
+    public function category()
+    {
+        return $this->belongsTo(Category::class);
+    }
+
+    // 转换ES数组
+    public function toESArray()
+    {
+        // 只取出需要的字段
+        $arr = $this->only([
+            'id',
+            'good_en_title',
+            'category_id',
+            'status',
+            'price',
+            'orders',
+            'good_en_summary',
+            'main_pic',
+            'good_stock',
+            'rebate_level_one',
+            'rebate_level_two',
+        ]);
+        // 上架时间
+        $arr['new'] = date('Y-m-d H:i:s', strtotime($this->shelf_at));
+        // 类目的 path 字段
+        $arr['category_ids'] = $this->category ? $this->category->category_ids.','.$this->category->id : '';
+        $arr['category_path'] = $this->category ? implode(' ', $this->category->getPathArr()) : '';
+        // strip_tags 函数可以将 html 标签去除
+        $arr['good_en_summary'] = strip_tags($this->good_en_summary);
+        // 只取出需要的 SKU 字段
+        $arr['skus'] = $this->productSku->map(function (ProductSku $sku) {
+            $item = array_only($sku->toArray(), ['price', 'good_stock']);
+            $item['desciption'] = $sku->getSkuDescription();
+            return $item;
+        })->toArray();
+        // 只取出需要的商品属性字段
+        $arr['properties'] = $this->prop->map(function (ProductAttrValue $property) {
+            $item = [];
+            $item['name'] = $property->getAttibute->en_name;
+            $item['value'] = $property->value_name ?: ($property->getAttrValue->en_name ?? '');
+            $item['search_value'] = $item['name'].':'.$item['value'];
+            return $item;
+        })->toArray();
+        $sku_properties = $this->skuProp->map(function (ProductAttrValue $property) {
+            $item = [];
+            $item['name'] = $property->getAttibute->en_name;
+            $item['value'] = $property->getAttrValue->en_name ?? '';
+            $item['search_value'] = $item['name'].':'.$item['value'];
+            return $item;
+        })->toArray();
+        $arr['properties'] = array_merge($arr['properties'], $sku_properties);
+        return $arr;
     }
 }
